@@ -1,0 +1,26 @@
+{
+  "name": "basicbot",
+  "version": "2.4.1",
+  "description": "A Discord Bot made by: Tomato#6966",
+  "main": "index.js",
+  "dependencies": {
+    "@discordjs/opus": "^0.3.3",
+    "@ksoft/api": "^3.1.9",
+    "ascii-table": "0.0.9",
+    "canvas": "^2.6.1",
+    "common-tags": "^1.8.0",
+    "discord.js": "^12.5.1",
+    "duratiform": "^2.0.0",
+    "erela.js": "^2.3.2",
+    "got": "^11.8.1",
+    "officegen": "^0.6.4",
+    "string-progressbar": "^1.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Tomato#6966",
+  "license": "ISC"
+}
