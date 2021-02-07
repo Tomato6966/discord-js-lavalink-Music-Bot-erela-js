@@ -30,3 +30,23 @@
 ![](https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js/blob/main/Folder_structure.png)
 
 # SHORT OVERVIEW TUTORIAL!
+
+```bat
+@ECHO OFF
+ECHO ==========================
+ECHO Starting Lavalink
+ECHO ==========================
+start cmd /k java -jar ./Lavalink.jar
+ECHO ==========================
+@ECHO Taking a 5 Second Break for Lavalink
+ECHO ==========================
+timeout /T 5 /nobreak
+ECHO ==========================
+@ECHO Starting BOT
+ECHO ==========================
+start cmd /k node .
+exit /s'
+``` Windows `start.bat` file
+Which starts Lavalink and the Bot together via one click ;)
+
+Have it in the Same folder as `index.js` and `Lavalink.jar`
