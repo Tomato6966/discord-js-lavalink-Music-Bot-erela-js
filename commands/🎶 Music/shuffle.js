@@ -1,0 +1,22 @@
+const {MessageEmbed} = require("discord.js")
+const config = require("../../botconfig/config.json")
+const ee = require("../../botconfig/embed.json")
+const {format} = require("duratiform")
+module.exports = {
+    name: "shuffle",
+    category: "🎶 Music",
+    aliases: ["mix"],
+    description: "Shuffles the Queue",
+    usage: "shuffle",
+    run: async(client, message, args) => {
+      const { channel } = message.member.voice;
+      const player = client.manager.players.get(message.guild.id);
+      if(!player) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("There is nothing playing"));  
+      if(channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to be in my voice channel to use this command!"));
+      player.queue.shuffle();
+      const embed = new MessageEmbed()
+      .setTitle("🔀 The queue is now shuffled.")
+      .setColor(ee.color)
+      return message.channel.send(embed);
+    }
+};
