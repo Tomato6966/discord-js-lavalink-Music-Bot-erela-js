@@ -23,3 +23,8 @@
 #### **NOTE:**
 
 *If you are having errors/problems with starting delete the package.json file and do, before you install the packages `npm init`*
+
+
+# THIS IS HOW IT SHOULD LOOK LIKE!
+
+![](https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js/blob/main/Folder_structure.png)
