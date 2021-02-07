@@ -30,7 +30,9 @@
 ![](https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js/blob/main/Folder_structure.png)
 
 # SHORT OVERVIEW TUTORIAL!
+[![](http://img.youtube.com/vi/_skTgDBMd44/0.jpg)](http://www.youtube.com/watch?v=_skTgDBMd44 "")
 
+## Windows start Command .bat file
 ```bat
 @ECHO OFF
 ECHO ==========================
