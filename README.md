@@ -28,3 +28,5 @@
 # THIS IS HOW IT SHOULD LOOK LIKE!
 
 ![](https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js/blob/main/Folder_structure.png)
+
+# SHORT OVERVIEW TUTORIAL!
