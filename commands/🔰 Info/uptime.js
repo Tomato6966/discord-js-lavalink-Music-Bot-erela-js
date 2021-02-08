@@ -1,4 +1,7 @@
 //Here the command starts
+const {MessageEmbed} = require("discord.js")
+const config = require("../../botconfig/config.json")
+const ee = require("../../botconfig/embed.json")
 module.exports = {
     //definition
      name: "uptime", //the name of the command 
@@ -18,6 +21,8 @@ module.exports = {
             const days = Math.floor(ms / (24*60*60*1000) % 60).toString();
             return `\`${days} Days\`, \`${hrs} Hours\`, \`${min} Minutes\`, \`${sec} Seconds\``
         }
-        message.reply(`:white_check_mark: **${client.user.username}** is since ${duration(client.uptime)} online`); //sending the uptime
+        const embed = new MessageEmbed()
+        .setColor(ee.color).setFooter(ee.footertext, ee.footericon)
+        message.reply(embed.setTitle(`:white_check_mark: **${client.user.username}** is since ${duration(client.uptime)} online`)); //sending the uptime
     }
 }

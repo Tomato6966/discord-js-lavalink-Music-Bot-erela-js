@@ -39,7 +39,7 @@ module.exports = {
             let track = res.tracks[0];
             let embed = new Discord.MessageEmbed()
                 .setTitle(`Added to Queue 🩸 **${track.title}**.`)
-                .setURL(track.uri).setColor(ee.color)
+                .setURL(track.uri).setColor(ee.color).setFooter(ee.footertext, ee.footericon)
                 .setThumbnail(track.displayThumbnail(1))
                 .addField("Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration, '(h:h:)(m:mm:)(s:ss)')}\``, true)
                 .addField("Song By: ", `\`${track.author}\``, true)
@@ -56,14 +56,14 @@ module.exports = {
                 guild: message.guild.id,
                 voiceChannel: message.member.voice.channel.id,
                 textChannel: message.channel.id,
+                selfDeafen: true,
             });
 
             // Connect to the voice channel and add the track to the queue
             player.connect();
             player.queue.add(res.tracks[0]);
 
-            // Checks if the client should play the track if it's the first one added
-            if (!player.playing && !player.paused && !player.queue.size) player.play()
+            player.play()
             let track = res.tracks[0];
             let embed = new Discord.MessageEmbed()
                 .setTitle(`Searching 🔍 **${track.title}**.`)

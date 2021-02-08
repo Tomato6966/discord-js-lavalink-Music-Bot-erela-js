@@ -15,7 +15,7 @@ module.exports = {
       if(channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to be in my voice channel to use this command!"));
       
       const embed = new MessageEmbed()
-      .setColor(ee.color)
+      .setColor(ee.color).setFooter(ee.footertext, ee.footericon)
       if(player.queueRepeat) {
         embed.setDescription(`And **Queue** Repeat got **disabled**`)
         player.setQueueRepeat(false);

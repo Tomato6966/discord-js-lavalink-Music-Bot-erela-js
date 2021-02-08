@@ -17,7 +17,7 @@ module.exports = {
       player.pause(false);
         const embed = new MessageEmbed()
         .setTitle(`${player.playing ? "▶️ Resumed" : "⏸ Paused"} the Player.`)
-        .setColor(ee.color)
+        .setColor(ee.color).setFooter(ee.footertext, ee.footericon)
       return message.channel.send(embed);
     }
 };

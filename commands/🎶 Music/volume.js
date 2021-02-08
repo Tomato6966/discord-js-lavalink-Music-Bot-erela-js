@@ -17,7 +17,7 @@ module.exports = {
       player.setVolume(Number(args));
       const embed = new MessageEmbed()
       .setTitle(`🔊 Volume set to: **${player.volume}%**`)
-      .setColor(ee.color)
+      .setColor(ee.color).setFooter(ee.footertext, ee.footericon)
       return message.channel.send(embed);
     }
 };

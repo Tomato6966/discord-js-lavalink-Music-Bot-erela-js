@@ -18,7 +18,7 @@ module.exports = {
       player.destroy();
       const embed = new MessageEmbed()
       .setTitle("⏹ Stopped and left your channel")
-      .setColor(ee.color)
+      .setColor(ee.color).setFooter(ee.footertext, ee.footericon)
       return message.channel.send(embed);
     }
 };

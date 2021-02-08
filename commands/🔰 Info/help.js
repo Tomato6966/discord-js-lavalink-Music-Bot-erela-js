@@ -28,7 +28,7 @@ const embed = new MessageEmbed() //defining the Embed
     .setColor(ee.color)
     .setThumbnail(client.user.displayAvatarURL())
     .setTitle("HELP MENU")
-    .setFooter(`TO see command descriptions and inforamtion, type: ${config.prefix}help [CMD NAME]`, client.user.displayAvatarURL())
+    .setFooter(`To see command descriptions and inforamtion, type: ${config.prefix}help [CMD NAME]`, client.user.displayAvatarURL())
     const commands = (category) => { //finding all commands and listing them into a string with filter and map
         return client.commands.filter(cmd => cmd.category === category)
                 .map(cmd => `\`${cmd.name}\``).join(", ")

@@ -5,7 +5,7 @@ const {format} = require("duratiform")
 module.exports = {
     name: "loopqueue",
     category: "🎶 Music",
-    aliases: ["repeatqueue", "lq", "rq"],
+    aliases: ["repeatqueue", "lq", "rq", "loopqu", "repeatqu"],
     description: "Repeats the Queue",
     usage: "loopqueue",
     run: async(client, message, args) => {
@@ -15,7 +15,7 @@ module.exports = {
       if(channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to be in my voice channel to use this command!"));
       
       const embed = new MessageEmbed()
-      .setColor(ee.color)
+      .setColor(ee.color).setFooter(ee.footertext, ee.footericon)
 
       if(player.trackRepeat) {
         embed.setDescription(`And **Song** Repeat got **disabled**`)

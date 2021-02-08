@@ -21,7 +21,7 @@ module.exports = {
         .setAuthor("Current song playing:", message.author.displayAvatarURL({dynamic: true}))
         .setThumbnail(player.queue.current.displayThumbnail(1))
         .setURL(uri)
-        .setColor(ee.color)
+        .setColor(ee.color).setFooter(ee.footertext, ee.footericon)
         .setTitle(stripIndents`${player.playing ? "▶" : "⏸"} **${title}**`)
         .addField("Duration: " , "`" +  format(player.queue.current.duration, '(h:h:)(m:mm:)(s:ss)') + "`", true)
         .addField("Song By: ", "`" + author + "`", true)

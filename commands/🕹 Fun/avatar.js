@@ -14,7 +14,8 @@ module.exports = {
 
         const avatar = new Discord.MessageEmbed()
             .setTitle(`${member.user.username}'s Avatar`)
-            .setColor(ee.color).setFooter(ee.footertext+ " | Bittmax.de | Code: x10 == 5%", ee.footericon)
+            .setColor(ee.color)
+        .setFooter(ee.footertext, ee.footericon) 
             .setImage(member.user.displayAvatarURL({dynamic: true}))
             .setURL(member.user.displayAvatarURL({dynamic: true}))
         message.channel.send(avatar)

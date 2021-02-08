@@ -1,4 +1,7 @@
 //Here the command starts
+const {MessageEmbed} = require("discord.js")
+const config = require("../../botconfig/config.json")
+const ee = require("../../botconfig/embed.json")
 module.exports = {
    //definition
 	name: "ping", //the name of the command 
@@ -11,9 +14,11 @@ module.exports = {
 	//running the command with the parameters: client, message, args, user, text, prefix
   run: async (client, message, args, user, text, prefix) => {
         //creating a temporary message
-        const msg = await message.channel.send(`🏓 Pinging....`); 
+        const embed = new MessageEmbed()
+        .setColor(ee.color).setFooter(ee.footertext, ee.footericon)
+        const msg = await message.channel.send( embed.setTitle(`🏓 Pinging....`)); 
         //editing it to the actual latency
-        msg.edit(`🏓 Pong!
-        Ping is ${Math.round(client.ws.ping)}ms`);
+        msg.edit(embed.setTitle(`🏓 Pong!
+        Ping is \`${Math.round(client.ws.ping)} ms\``));
     }
 }

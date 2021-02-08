@@ -73,7 +73,7 @@ function generateQueueEmbed(message, queue) {
 
     const embed = new MessageEmbed()
       .setAuthor(`Current queue for ${message.guild.name}`, message.guild.iconURL())
-      .setColor(ee.color)
+      .setColor(ee.color).setFooter(ee.footertext, ee.footericon)
       .setTitle(`**0)** - [\`${queue.current.title}\`](${queue.current.uri}) - Requested by **${queue.current.requester.tag}**`)
       .setDescription(info)
       .setTimestamp();

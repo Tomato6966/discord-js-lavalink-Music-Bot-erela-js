@@ -3,11 +3,11 @@ const config = require("../../botconfig/config.json")
 const ee = require("../../botconfig/embed.json")
 const {format} = require("duratiform")
 module.exports = {
-    name: "clearfilter",
+    name: "cleareq",
     category: "👀 Filter",
-    aliases: ["cf"],
+    aliases: ["ceq", "reseteq", "clearequalizer", "resetequalizer", "restoreequalizer", "req"],
     description: "Clears the Equalizer",
-    usage: "clearfilter",
+    usage: "clearEQ",
     run: async(client, message, args) => {
       const { channel } = message.member.voice;
       const player = client.manager.players.get(message.guild.id);

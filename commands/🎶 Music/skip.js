@@ -17,7 +17,7 @@ module.exports = {
       player.stop();
       const embed = new MessageEmbed()
       .setTitle("⏭ Skipped to the next song")
-      .setColor(ee.color)
+      .setColor(ee.color).setFooter(ee.footertext, ee.footericon)
       return message.channel.send(embed);
     }
 };

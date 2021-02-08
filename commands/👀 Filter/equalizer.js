@@ -3,11 +3,11 @@ const config = require("../../botconfig/config.json")
 const ee = require("../../botconfig/embed.json")
 const {format} = require("duratiform")
 module.exports = {
-    name: "bassboost",
+    name: "equalizer",
     category: "👀 Filter",
-    aliases: ["bb"],
-    description: "Changes the Bass gain",
-    usage: "bassboost <none/low/medium/high>",
+    aliases: ["eq"],
+    description: "Changes the Equalizer",
+    usage: "bassboost <music/bassboost/earrape>",
     run: async(client, message, args) => {
       const { channel } = message.member.voice;
       const player = client.manager.players.get(message.guild.id);
@@ -16,26 +16,22 @@ module.exports = {
       
       let level = "none";
        
-      if (!args.length || (!client.bassboost[args[0].toLowerCase()] && args[0].toLowerCase() != "none") ) return message.reply("Bass boost level must be one of the following: `none`, `low`, `medium`, `high`, `earrape`");
+      if (!args.length || (!client.eqs[args[0].toLowerCase()] && args[0].toLowerCase() != "none") ) return message.reply("Bass boost level must be one of the following: `music`, `bassboost`, `earrape`");
       level = args[0].toLowerCase();
       switch(level){
-        case "none":
-            player.setEQ(client.bassboost.none)
+        case "music":
+            player.setEQ(client.eqs.music)
           break;
-          case "low":
-            player.setEQ(client.bassboost.low)
+          case "bassboost":
+            player.setEQ(client.eqs.bassboost)
           break;
-          case "medium":
-            player.setEQ(client.bassboost.medium)
-          break;
-          case "high":
-            player.setEQ(client.bassboost.high)
           case "earrape":
-            player.setEQ(client.bassboost.high)
+            player.setVolume(player.volume + 50);
+            player.setEQ(client.eqs.earrape);
           break;
       }
       const embed = new MessageEmbed()
-      .setTitle(`:white_check_mark: Set the bass boost to \`${level}\`.`)
+      .setTitle(`:white_check_mark: Set Equalizer to \`${level}\`.`)
       .setColor(ee.color).setFooter(ee.footertext, ee.footericon)
       return message.reply(embed);
     }
