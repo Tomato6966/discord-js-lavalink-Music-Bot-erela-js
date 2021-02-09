@@ -1,8 +1,13 @@
 const { Manager } = require("erela.js");
 const {MessageEmbed} = require("discord.js")
-const {format} = require("duratiform");
+
 const ee = require("../botconfig/embed.json")
+const Spotify  = require("erela.js-spotify");
+const config = require("../botconfig/config.json")
+const clientID = config.spotify.clientID;
+const clientSecret = config.spotify.clientSecret; 
 module.exports = (client) => {
+
 client.defaultEQ = [
   { band: 0, gain: 0.15 },
   { band: 1, gain: 0.05 }, 
@@ -20,6 +25,7 @@ client.defaultEQ = [
   { band: 13, gain: 0.25 }, 
   { band: 14, gain: 0.25 }
 ]
+
 client.bassboost = {
   none: client.defaultEQ,
   low: [
@@ -91,6 +97,7 @@ client.bassboost = {
     { band: 14, gain: 0.25 }
   ]
 }
+
 client.eqs = {
   music: client.defaultEQ,
   bassboost: client.bassboost.medium,
@@ -105,6 +112,13 @@ client.eqs = {
         password: "youshallnotpass", 
       },
     ],
+    plugins: [
+      // Initiate the plugin and pass the two required options.
+      new Spotify({
+        clientID,
+        clientSecret
+      })
+    ],
 
     send(id, payload) {
       const guild = client.guilds.cache.get(id);
@@ -112,33 +126,34 @@ client.eqs = {
     },
   })
     .on("nodeConnect", node => {
-      console.log(`Node ${node.options.identifier} connected`)
+      console.log(`Node ${node.options.identifier} connected`.green)
     })
     .on("nodeCreate", node => {
-      console.log(`Node ${node.options.identifier} created`)
+      console.log(`Node ${node.options.identifier} created`.bgGreen.black)
     })
     .on("nodeReconnect", node => {
-      console.log(`Node ${node.options.identifier} reconnected`)
+      console.log(`Node ${node.options.identifier} reconnected`.bold.green)
     })
     .on("nodeDisconnect", node => {
-      console.log(`Node ${node.options.identifier} disconnected`)
+      console.log(`Node ${node.options.identifier} disconnected`.red)
     })
     .on("nodeError", (node, error) => {
       console.log(`Node ${node.options.identifier} had an error: ${error.message}`)
     })
     .on("playerCreate", (player) => {
       player.setVolume(50)
-      player.setEQ(client.eqs.music)
+      //player.setEQ(client.eqs.music)
       let embed = new MessageEmbed()
-      .setTitle(`:thumbsup: Joined \`${client.channels.cache.get(player.voiceChannel).name}\``)
-      .setDescription(`And bound to: \`${client.channels.cache.get(player.textChannel).name}\`\n`)
+      .setTitle(`:thumbsup: Joined \`🔈${client.channels.cache.get(player.voiceChannel).name}\``)
+      .setDescription(`And bound to: \`#${client.channels.cache.get(player.textChannel).name}\`\n`)
+      
       .addField("🔊 Volume", `\`${player.volume} %\``,true)
       .addField("\u200b", `\u200b`,true)
-      .addField("🎚 Equalizer: ", `\`🎵 Music\``,true)
+      .addField("🎚 Equalizer: ", `\`❌ Nothing\``,true)
       
-      .addField("🔂 Queue Loop: ", `${player.queueRepeat ? `✔️ Enabled` : `❌ Disabled` }`,true)
+      .addField("🔂 Queue Loop: ", `\`${player.queueRepeat ? `✔️ Enabled` : `❌ Disabled` }\``,true)
       .addField("\u200b", `\u200b`,true)
-      .addField("🔁 Song Loop: ", `${player.trackRepeat ? `✔️ Enabled` : `❌ Disabled`}`,true)
+      .addField("🔁 Song Loop: ", `\`${player.trackRepeat ? `✔️ Enabled` : `❌ Disabled`}\``,true)
       
       .setColor(ee.color)
       .setFooter(ee.footertext, ee.footericon)
@@ -150,10 +165,10 @@ client.eqs = {
     })
     .on("trackStart", (player, track) => {
         let embed = new MessageEmbed()
-        .setTitle("Playing :notes: " + track.title)
+        .setTitle("Started Playing :notes: **`" + track.title + "`**")
         .setURL(track.uri).setColor(ee.color)
         .setThumbnail(track.displayThumbnail())
-        .addField("Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration, '(h:h:)(m:mm:)(s:ss)')}\``, true)
+        .addField("Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
         .addField("Song By: ", `\`${track.author}\``, true)
         .addField("Queue length: ", `\`${player.queue.length} Songs\``, true)
         .setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({dynamic: true}))
@@ -171,8 +186,28 @@ client.eqs = {
         .get(player.textChannel)
         .send(embed);
       player.destroy();
+    })
+    .on("playerMove", async (player, oldChannel, newChannel) => {
+      if(!newChannel) {
+        try{
+          let embed = new MessageEmbed()
+          .setTitle(":x: Queue has ended.")
+          .setDescription(`I left the Channel: \`${client.channels.cache.get(player.voiceChannel).name}\``)
+          .setColor(ee.wrongcolor)
+          .setFooter(ee.footertext, ee.footericon)
+          client.channels.cache
+          .get(player.textChannel)
+          .send(embed);
+        }catch{}
+        player.destroy();
+      }
+      else{
+        player.voiceChannel = newChannel;
+      try{ player.pause(true) } catch (e){ console.log(e) }
+      await setTimeout(() => { console.log("SLEEP") }, 500);
+      try{ player.pause(false)} catch (e){ console.log(e) }
+      }
     });
-  
   client.once("ready", () => {
     client.manager.init(client.user.id);
   });
@@ -180,3 +215,9 @@ client.eqs = {
     client.on("raw", (d) => client.manager.updateVoiceState(d));
   
 }
+function format(millis){
+  var h=Math.floor(millis/360000),m=Math.floor(millis/60000),s=((millis%60000)/1000).toFixed(0);
+  if(h<1) return(m<10?'0':'')+m+":"+(s<10?'0':'')+s;
+  else return(h<10?'0':'')+h+":"+(m<10?'0':'')+m+":"+(s<10?'0':'')+s;
+  }
+  

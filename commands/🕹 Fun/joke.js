@@ -24,7 +24,7 @@ description: "*Image cmd in the style:* " + path.parse(__filename).name ,
       .setAuthor(`${client.user.username} | Joke`)
       .setTimestamp()  
     return message.channel.send(jokeembed);
-    }).catch(console.error);
+    }).catch(e=>console.log(String(e.stack).red));
   }
 
 };

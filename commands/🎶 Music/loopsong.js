@@ -1,7 +1,6 @@
 const {MessageEmbed} = require("discord.js")
 const config = require("../../botconfig/config.json")
 const ee = require("../../botconfig/embed.json")
-const {format} = require("duratiform")
 module.exports = {
     name: "loopsong",
     category: "🎶 Music",
@@ -10,6 +9,8 @@ module.exports = {
     usage: "loopsong",
     run: async(client, message, args) => {
       const { channel } = message.member.voice;
+      if (!channel) return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
+      
       const player = client.manager.players.get(message.guild.id);
       if(!player) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("There is nothing playing"));  
       if(channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to be in my voice channel to use this command!"));

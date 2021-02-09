@@ -29,7 +29,7 @@ module.exports = {
             .addField("Asked by: ", message.author.tag, false)
             .addField("Reply: ", body.magic.answer,  false)
             .setFooter("API provided by Delegator 8ball");
-            message.channel.send(eightBallEmbed);
+            message.channel.send(eightBallEmbed)
         });
     }
 };

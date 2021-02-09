@@ -23,7 +23,7 @@ module.exports = {
       .setTimestamp()
     if(amazeme.toLowerCase().endsWith("png")||amazeme.toLowerCase().endsWith("jpg")||amazeme.toLowerCase().endsWith("jpeg")||amazeme.toLowerCase().endsWith("gif")) jokeembed.setImage(amazeme);
     return message.channel.send(jokeembed);
-    }).catch(console.error);
+    }).catch(e=>console.log(String(e.stack).red));
   }
 
 };

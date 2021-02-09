@@ -22,7 +22,7 @@ module.exports = async (client) => {
             console.error(error.stack); // If there is an error, console log the error stack message
         }
     }
-    console.log(table.toString()); //showing the table
-    console.log("Welcome to SERVICE HANDLER /--/ By https://x10-gaming.eu/service/dc /--/ Discord: Tomato#6966") //logging that it loades
-	console.log("Logging into the BOT..."); //showing loading status
+    console.log(table.toString().cyan); //showing the table
+    console.log("Welcome to SERVICE HANDLER /--/ By https://x10-gaming.eu/service/dc /--/ Discord: Tomato#6966".bold.green) //logging that it loades
+	console.log("Logging into the BOT...".yellow); //showing loading status
 }

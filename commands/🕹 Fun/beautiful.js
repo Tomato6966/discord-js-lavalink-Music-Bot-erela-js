@@ -24,7 +24,7 @@ module.exports = {
         .setFooter(ee.footertext, ee.footericon) 
         .setImage("attachment://beautiful.png")
         .attachFiles(attachment)
-        await message.channel.send(fastembed2);
+        await message.channel.send(fastembed2).catch(e=>console.log(String(e.stack).red));
         await tempmsg.delete();//affect
     }
 }

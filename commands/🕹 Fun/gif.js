@@ -15,5 +15,6 @@ module.exports = {
             .setColor(ee.color)
             .setFooter(ee.footertext, ee.footericon)  
             .setImage(rgif.randomgifs())
-           )}
+           )
+      }
 }

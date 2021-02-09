@@ -1,7 +1,6 @@
 const {MessageEmbed} = require("discord.js")
 const config = require("../../botconfig/config.json")
 const ee = require("../../botconfig/embed.json")
-const {format} = require("duratiform")
 module.exports = {
     name: "cleareq",
     category: "👀 Filter",
@@ -13,10 +12,10 @@ module.exports = {
       const player = client.manager.players.get(message.guild.id);
       if(!player) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("There is nothing playing"));  
       if(channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to be in my voice channel to use this command!"));
-      player.setEQ(client.eqs.music)
+      player.clearEQ();
       const embed = new MessageEmbed()
       .setTitle("✅ Resetted the Equalizer")
-      .addField("🎚 Equalizer: ", `\`🎵 Music | Equalizer\``)
+      .addField("🎚 Equalizer: ", `\`❌ Nothing | Equalizer\``)
       .setColor(ee.color).setFooter(ee.footertext, ee.footericon)
       return message.channel.send(embed);
     }

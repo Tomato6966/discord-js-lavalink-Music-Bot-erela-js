@@ -6,10 +6,10 @@ const config = require("../../botconfig/config.json")
 const ee = require("../../botconfig/embed.json")
 
 module.exports = {
-    name: "search",
+    name: "searchsc",
     category: "🎶 Music",
-    aliases: ["search"],
-    description: "Searches a song from youtube",
+    aliases: ["searchsoundcloud", "scsearch", "soundcloudsearch"],
+    description: "Searches a song from soundcloud",
     usage: "search <Song / URL>",
     run: async (client, message, args) => {
         const {
@@ -23,7 +23,7 @@ module.exports = {
         let res;
         try {
             // Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
-            res = await client.manager.search(search, message.author);
+            res = await client.manager.search({query: search, source: "soundcloud"}, message.author);
             // Check the load type as this command is not that advanced for basics
             if (res.loadType === "LOAD_FAILED") throw res.exception;
             else if (res.loadType === "PLAYLIST_LOADED") throw {

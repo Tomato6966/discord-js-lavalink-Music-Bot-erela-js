@@ -12,17 +12,13 @@ module.exports = {
 description: "*Image cmd in the style:* " + path.parse(__filename).name ,
   run: async (client, message, args) => {
   let owo;
-  async function test() {
     owo = await neko.sfw.fact();
     console.log(owo);
-    const blowjob = new Discord.MessageEmbed()
+    const fact = new Discord.MessageEmbed()
     .setTitle("Fact")
     .setDescription(owo.fact)
     .setColor(ee.color)
     .setFooter(ee.footertext, ee.footericon) 
-    message.channel.send(blowjob);
-
-  }
-  test();
+    message.channel.send(fact).catch(e=>console.log(String(e.stack).red));
 }
  }
