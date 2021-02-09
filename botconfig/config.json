@@ -2,7 +2,17 @@
    "token": "YOURTOKENGOESHERE_PLEASE.XzJhOA.w4faNxi4UwZXJ3UxPfrPT_4_NGg",
   "prefix": "?",
 
-  
+   "clientsettings": {
+    "nodes": [
+      {
+         "host": "localhost",
+         "port": 2333,
+         "password": "youshallnotpass"
+       }
+     ]
+  },
+  "ownerIDS": ["442355791412854784"],
+   
   "status": {
     "text": "?help | milrato.eu",
     "type": "STREAMING", "COMMENT:": "TYPES ARE: PLAYING, STREAMING, WATCHING, LISTENING",
