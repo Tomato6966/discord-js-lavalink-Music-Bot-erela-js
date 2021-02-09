@@ -1,7 +1,6 @@
 const {MessageEmbed} = require("discord.js")
 const config = require("../../botconfig/config.json")
 const ee = require("../../botconfig/embed.json")
-const { stripIndents } = require('common-tags');
 module.exports = {
     name: "nowplaying",
     category: "🎶 Music",
@@ -22,7 +21,7 @@ module.exports = {
         .setThumbnail(player.queue.current.displayThumbnail(1))
         .setURL(uri)
         .setColor(ee.color).setFooter(ee.footertext, ee.footericon)
-        .setTitle(stripIndents`${player.playing ? "▶" : "⏸"} **${title}**`)
+        .setTitle(`${player.playing ? "▶" : "⏸"} **${title}**`)
         .addField("Duration: " , "`" +  format(player.queue.current.duration) + "`", true)
         .addField("Song By: ", "`" + author + "`", true)
         .addField("Queue length: ", `\`${player.queue.length} Songs\``, true)

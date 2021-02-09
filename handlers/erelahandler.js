@@ -104,21 +104,15 @@ client.eqs = {
   earrape: client.bassboost.earrape,
 }
   client.manager = new Manager({
-    
-    nodes: [
-     {
-        host: "localhost",
-        port: 2333,
-        password: "youshallnotpass", 
-      },
-    ],
+    nodes: config.clientsettings.nodes,
+
     plugins: [
-      // Initiate the plugin and pass the two required options.
-      new Spotify({
-        clientID,
-        clientSecret
-      })
-    ],
+       // Initiate the plugin and pass the two required options.
+       new Spotify({
+         clientID,
+         clientSecret
+       })
+     ],
 
     send(id, payload) {
       const guild = client.guilds.cache.get(id);

@@ -1,5 +1,4 @@
 const Discord = require("discord.js")
-const { version } = require("discord.js");
 const moment = require("moment");
 let os = require('os')
 let cpuStat = require("cpu-stat")
@@ -42,7 +41,7 @@ module.exports = {
           .addField("📁 Connected Channels", `\`${connectedchannelsamount}\``, true)
           .addField("\u200b", `\u200b`, true)
 
-          .addField("👾 Discord.js", `\`v${version}\``, true)
+          .addField("👾 Discord.js", `\`v${Discord.version}\``, true)
           .addField("🤖 Node", `\`${process.version}\``, true)
           .addField("\u200b", `\u200b`, true)
 

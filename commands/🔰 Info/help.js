@@ -1,5 +1,4 @@
 const { MessageEmbed } = require("discord.js");
-const { stripIndents } = require("common-tags");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
 //Here the command starts
@@ -31,13 +30,26 @@ const embed = new MessageEmbed() //defining the Embed
     .setFooter(`To see command descriptions and inforamtion, type: ${config.prefix}help [CMD NAME]`, client.user.displayAvatarURL())
     const commands = (category) => { //finding all commands and listing them into a string with filter and map
         return client.commands.filter(cmd => cmd.category === category)
-                .map(cmd => `\`${cmd.name}\``).join(", ")
+                .map(cmd => `\`${cmd.name}\``)
     }
     try {
         for (let i = 0; i < client.categories.length; i += 1) {
             const current = client.categories[i]
             const info = commands(current);
-            embed.addField(`***__${current.toUpperCase()}__***`,`> ${info}`)
+            const items = info
+            const n = 3
+            const result = [[], [], []] 
+            const wordsPerLine = Math.ceil(items.length / 3)
+            for (let line = 0; line < n; line++) {
+              for (let i = 0; i < wordsPerLine; i++) {
+                const value = items[i + line * wordsPerLine]
+                if (!value) continue
+                result[line].push(value)
+              }
+            }
+            embed.addField(`**${current.toUpperCase()}**`,`> ${result[0].join("\n> ")}`,true)
+            embed.addField(`\u200b`,`${result[1].join("\n") ? result[1].join("\n"): "\u200b"}`,true)
+            embed.addField(`\u200b`,`${result[2].join("\n") ? result[2].join("\n"): "\u200b"}`,true)
         }
     } catch (error) {
         console.log(error)

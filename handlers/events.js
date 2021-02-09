@@ -23,6 +23,6 @@ module.exports = async (client) => {
         }
     }
     console.log(table.toString().cyan); //showing the table
-    console.log("Welcome to SERVICE HANDLER /--/ By https://x10-gaming.eu/service/dc /--/ Discord: Tomato#6966".bold.green) //logging that it loades
+    console.log("Welcome to SERVICE HANDLER /--/ By https://milrato.eu /--/ Discord: Tomato#6966".bold.green) //logging that it loades
 	console.log("Logging into the BOT...".yellow); //showing loading status
 }

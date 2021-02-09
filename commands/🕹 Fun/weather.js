@@ -10,20 +10,18 @@ module.exports = {
   useage: `${path.parse(__filename).name} <C/F> <Location>`,
 description: "*Image cmd in the style:* " + path.parse(__filename).name ,
   run: async (client, message, args) => {
-    //get the name to search for
-    let degree;
+      //get the name to search for
+      let degree;
       //check if the user entered a first arg
-      if(args[0]){
-        //check if the first argument was a valid degree type
-        if(args[0] === "C" || args[0] === "c" || args[0] === "F" || args[0] === "f"){
-            degree = args[0].toUpperCase();
-        } else{
-            return message.channel.send("Enter a valid degree type (C | F).");
-        }
+      if(!args[0]) return message.channel.send(`Wrong Format try: \`${config.prefix}weather <C/F> <Location>\``);
+    
+      //check if the first argument was a valid degree type
+      if(args[0].toLowerCase() === "c" || args[0].toLowerCase() === "f"){
+          degree = args[0].toUpperCase();
       } else{
-        return message.channel.send(`Wrong Format try: \`${PREFIX}weather <C/F> <Location>\``);
+          return message.channel.send("Enter a valid degree type (C | F).");
       }
-
+      
       //check if there was a second arg
       if(!args[1]) return message.channel.send("Enter a location to search for.");
 

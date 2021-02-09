@@ -1,4 +1,3 @@
-const Canvas = require('canvas');
 const { MessageEmbed } = require('discord.js');
 const Discord = require(`discord.js`);
 

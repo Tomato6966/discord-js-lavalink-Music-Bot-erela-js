@@ -2,7 +2,7 @@ const { readdirSync } = require("fs"); //requireing, the module for reading file
 const ascii = require("ascii-table"); //requiring ascii-table which is a great tool for creating ascii tables
 let table = new ascii("Commands"); //creating a new table with the name "Commands"
 table.setHeading("Command", "Load status");
-console.log("Welcome to SERVICE HANDLER /--/ By https://x10-gaming.eu/service/dc /--/ Discord: Tomato#6966".yellow) //logging that it loades
+console.log("Welcome to SERVICE HANDLER /--/ By https://milrato.eu /--/ Discord: Tomato#6966".yellow) //logging that it loades
 module.exports = (client) => {
     readdirSync("./commands/").forEach(dir => { //reading each command
         const commands = readdirSync(`./commands/${dir}/`).filter(file => file.endsWith(".js")); //it will be only a command if it ends with .js
