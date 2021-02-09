@@ -1,11 +1,15 @@
 {
-  "token": "NzQyNjcyYOURTOKENGOESHERE.SWAPITOUT!UwZXJ3UxPfrPT_4_NGg",
-  "prefix": "!",
+   "token": "YOURTOKENGOESHERE_PLEASE.XzJhOA.w4faNxi4UwZXJ3UxPfrPT_4_NGg",
+  "prefix": "?",
 
   
   "status": {
-    "text": "!help | milrato.eu",
+    "text": "?help | milrato.eu",
     "type": "STREAMING", "COMMENT:": "TYPES ARE: PLAYING, STREAMING, WATCHING, LISTENING",
     "url": "https://twitch.tv/milratoDiscordBot"
+  },
+  "spotify": {
+    "clientSecret": "7ee111111111111111111137ea153b066",
+    "clientID": "a3939d641111111111111111a6e6f8f1509"
   }
 }
