@@ -103,22 +103,37 @@ client.eqs = {
   bassboost: client.bassboost.medium,
   earrape: client.bassboost.earrape,
 }
-  client.manager = new Manager({
-    nodes: config.clientsettings.nodes,
 
-    plugins: [
-       // Initiate the plugin and pass the two required options.
-       new Spotify({
-         clientID,
-         clientSecret
-       })
-     ],
-
-    send(id, payload) {
-      const guild = client.guilds.cache.get(id);
-      if (guild) guild.shard.send(payload);
-    },
-  })
+  if(config.spotify.enable){
+    client.manager = new Manager({
+      nodes: config.clientsettings.nodes,
+  
+      plugins: [
+         // Initiate the plugin and pass the two required options.
+         new Spotify({
+           clientID,
+           clientSecret
+         })
+       ],
+  
+      send(id, payload) {
+        const guild = client.guilds.cache.get(id);
+        if (guild) guild.shard.send(payload);
+      },
+    })
+  }
+  else{
+    client.manager = new Manager({
+      nodes: config.clientsettings.nodes,
+  
+      send(id, payload) {
+        const guild = client.guilds.cache.get(id);
+        if (guild) guild.shard.send(payload);
+      },
+    })
+  }
+  
+  client.manager
     .on("nodeConnect", node => {
       console.log(`Node ${node.options.identifier} connected`.green)
     })
