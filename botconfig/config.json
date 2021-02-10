@@ -19,7 +19,7 @@
     "url": "https://twitch.tv/milratoDiscordBot"
   },
   "spotify": {
-    "enable",
+    "enable" : false,
     "clientSecret": "",
     "clientID": ""
   }
