@@ -48,7 +48,8 @@ ECHO ==========================
 ECHO ==========================
 start cmd /k node .
 exit /s'
-``` Windows `start.bat` file
+``` 
+Windows `start.bat` file
 Which starts Lavalink and the Bot together via one click ;)
 
 Have it in the Same folder as `index.js` and `Lavalink.jar`
