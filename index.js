@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 const { Client, Collection } = require("discord.js");
 const config = require("./botconfig/config.json"); //loading config file with token and prefix
 const ee = require("./botconfig/embed.json");
+const colors = require("colors")
 const prefix = (config.prefix); //defining the prefix as a constant variable
 const fs = require("fs"); //this package is for reading files and getting their inputs
 const client = new Client({

@@ -7,14 +7,21 @@
     "@discordjs/opus": "^0.3.3",
     "@ksoft/api": "^3.1.9",
     "ascii-table": "0.0.9",
+    "canvacord": "^5.0.8",
     "canvas": "^2.6.1",
+    "colors": "^1.4.0",
     "common-tags": "^1.8.0",
+    "cpu-stat": "^2.0.1",
     "discord.js": "^12.5.1",
+    "discord.js-pagination": "^1.0.3",
     "duratiform": "^2.0.0",
     "erela.js": "^2.3.2",
+    "erela.js-spotify": "^1.2.0",
     "got": "^11.8.1",
+    "nekos.life": "^2.0.7",
     "officegen": "^0.6.4",
-    "string-progressbar": "^1.0.3"
+    "string-progressbar": "^1.0.3",
+    "weather-js": "^2.0.0"
   },
   "devDependencies": {},
   "scripts": {
