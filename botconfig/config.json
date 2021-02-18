@@ -1,8 +1,10 @@
 {
-   "token": "YOURTOKENGOESHERE_PLEASE.XzJhOA.w4faNxi4UwZXJ3UxPfrPT_4_NGg",
+  "token": "NzQyNjcyMDIxNDIyMzQyMTY1.XzJhOA.w4faNxi4UwZXJ3UxPfrPT_4_NGg",
   "prefix": "?",
 
-   "clientsettings": {
+
+
+  "clientsettings": {
     "nodes": [
       {
          "host": "localhost",
@@ -11,16 +13,41 @@
        }
      ]
   },
+
+  "spotify": {
+    "clientSecret": "7eecbfee188e4904b63d737ea153b066",
+    "clientID": "a3939d643a8149f6a5011a6e6f8f1509"
+  },
+
+  "settings": {
+    "COMMENT": "time_delay 0 === insta leave",
+    "progressbar_emoji": "🔶",
+    "leaveOnEmpty_Channel" : {
+      "enabled": true,
+      "time_delay": 600 
+    },
+    "LeaveOnEmpty_Queue": {
+      "enabled": true,
+      "time_delay": 10
+    }
+  },
+
+  "lyricssettings": {
+    "lyrics_finder": true,         "COMMENT": "my suggestion is to use ksoft_api on true and paste in the api key u can sign up, until u get the key use lyrics_finder which is way weaker but better the nothing",
+    "ksoft_api": {
+      "use_this_instead": true,
+      "api_key": "694639638970789aded89f89f5fc1c12fccc26b3"
+    }
+  },
+
+
   "ownerIDS": ["442355791412854784"],
-   
+
+
   "status": {
     "text": "?help | milrato.eu",
     "type": "STREAMING", "COMMENT:": "TYPES ARE: PLAYING, STREAMING, WATCHING, LISTENING",
     "url": "https://twitch.tv/milratoDiscordBot"
-  },
-  "spotify": {
-    "enable" : false,
-    "clientSecret": "",
-    "clientID": ""
   }
+
 }
