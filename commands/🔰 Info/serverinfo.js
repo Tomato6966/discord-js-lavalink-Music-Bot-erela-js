@@ -7,14 +7,10 @@ module.exports = {
   category: "🔰 Info",
   description: "Shows info about a server",
   usage: "serverinfo",
-  run: async (client, message, args) => {
-
-    //command
-    let servericon = message.guild.iconURL;
+  run: async (client, message, args, cmduser, text, prefix) => {
     let serverembed = new Discord.MessageEmbed()
       .setTitle("Server Information")
       .setColor(ee.color)
-
       .addField("Server Name", "\`" + message.guild.name + "\`")
       .addField("Owner", "\`" + `${message.guild.owner.user.username}#${message.guild.owner.user.discriminator}\`"`, true)
       .addField("Channels", "\`" + message.guild.channels.cache.size + "\`", true)
@@ -22,13 +18,9 @@ module.exports = {
       .addField("Created On", "\`" + message.guild.createdAt + "\`")
       .addField("You Joined", "\`" + message.member.joinedAt + "\`")
       .addField("Total Members", "\`" + message.guild.memberCount + "\`")
-      .setThumbnail(message.guild.iconURL({
-        dynamic: true
-      }))
+      .setThumbnail(message.guild.iconURL({dynamic: true }))
       .setTimestamp()
-      .setFooter(message.guild.name, message.guild.iconURL({
-        dynamic: true
-      }))
+      .setFooter(message.guild.name, message.guild.iconURL({dynamic: true}))
     message.channel.send(serverembed);
   }
 };

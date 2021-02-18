@@ -6,12 +6,9 @@ module.exports = {
     category: "🕹 Fun",
     description: "Gets the avatar of a user or yourself",
     usage: "avatar [@USER]",
-    run: async(client, message, args) => {
-       /* If user isnt found it selects ur profile */
+    run: async(client, message, args, cmduser, text, prefix) => {
         const member = message.mentions.members.first() || message.member;
-
         if (!member.user.avatarURL) return message.channel.send(`That user does not have an avatar`);
-
         const avatar = new Discord.MessageEmbed()
             .setTitle(`${member.user.username}'s Avatar`)
             .setColor(ee.color)

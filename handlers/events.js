@@ -1,28 +1,27 @@
-const fs = require("fs"); //requireing, the module for reading files 
-const ascii = require("ascii-table"); //requiring ascii-table which is a great tool for creating ascii tables
-let table = new ascii("Events"); //creating a new table with the name "Commands"
+const fs = require("fs");
+const ascii = require("ascii-table");
+let table = new ascii("Events");
 table.setHeading("Events", "Load status");
 module.exports = async (client) => {
-    let theevents; //global variable
-    fs.readdirSync("./events/").forEach(file => { //reading each command
-        theevents =  fs.readdirSync(`./events/`).filter(file => file.endsWith(".js")); //it will be only a command if it ends with .js
-        fs.readdir("./events/", (err, files) => { //for each file we will "LOAD THE EVENT"
-            if (err) return console.error(err); //if an error log it
-                    const event = require(`../events/${file}`); //create the event from the filename
-                    let eventName = file.split(".")[0]; //get the eventname from it
-                    theevents = eventName; //set it into the global variable
-                    client.on(eventName, event.bind(null, client)); //LOAD THE EVENT
-            });
+    let theevents;
+    fs.readdirSync("./events/").forEach((file) => {
+        theevents = fs.readdirSync(`./events/`).filter((file) => file.endsWith(".js"));
+        fs.readdir("./events/", (e, files) => {
+            if (e) return console.log(String(e.stack).red);
+            const event = require(`../events/${file}`);
+            let eventName = file.split(".")[0];
+            theevents = eventName;
+            client.on(eventName, event.bind(null, client));
+        });
     });
-    //now we have an array for all events in the event folder, we can load it in loop and pass it onto our beautiful table
-    for(let i = 0; i< theevents.length; i++){
+    for (let i = 0; i < theevents.length; i++) {
         try {
-            table.addRow(theevents[i], 'Ready'); //log in table ready
-        } catch (error) {
-            console.error(error.stack); // If there is an error, console log the error stack message
+            table.addRow(theevents[i], "Ready");
+        } catch (e) {
+            console.log(String(e.stack).red);
         }
     }
-    console.log(table.toString().cyan); //showing the table
-    console.log("Welcome to SERVICE HANDLER /--/ By https://milrato.eu /--/ Discord: Tomato#6966".bold.green) //logging that it loades
-	console.log("Logging into the BOT...".yellow); //showing loading status
-}
+    console.log(table.toString().cyan);
+    console.log("Welcome to SERVICE HANDLER /--/ By https://milrato.eu /--/ Discord: Tomato#6966".bold.green);
+    console.log("Logging into the BOT...".yellow);
+};
