@@ -1,6 +1,6 @@
 {
-  "name": "basicbot",
-  "version": "2.4.1",
+  "name": "lavalink_music_bot",
+  "version": "3.2.7",
   "description": "A Discord Bot made by: Tomato#6966",
   "main": "index.js",
   "dependencies": {
@@ -13,14 +13,12 @@
     "common-tags": "^1.8.0",
     "cpu-stat": "^2.0.1",
     "discord.js": "^12.5.1",
-    "discord.js-pagination": "^1.0.3",
-    "duratiform": "^2.0.0",
+    "enmap": "^5.8.4",
     "erela.js": "^2.3.2",
     "erela.js-spotify": "^1.2.0",
     "got": "^11.8.1",
+    "lyrics-finder": "^21.7.0",
     "nekos.life": "^2.0.7",
-    "officegen": "^0.6.4",
-    "string-progressbar": "^1.0.3",
     "weather-js": "^2.0.0"
   },
   "devDependencies": {},

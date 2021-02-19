@@ -3,9 +3,13 @@ const Discord = require("discord.js");
 const { Client, Collection } = require("discord.js");
 const config = require("./botconfig/config.json"); //loading config file with token and prefix
 const ee = require("./botconfig/embed.json");
+const { createBar, format, databasing, escapeRegex} = require("./handlers/functions");
 const colors = require("colors")
 const prefix = (config.prefix); //defining the prefix as a constant variable
 const fs = require("fs"); //this package is for reading files and getting their inputs
+
+const Enmap = require("enmap");
+
 const client = new Client({
   messageCacheLifetime: 60,
   fetchAllMembers: false,
@@ -27,44 +31,28 @@ client.categories = fs.readdirSync("./commands/"); //categories
 ["command"].forEach(handler => {
     require(`./handlers/command`)(client);
 }); //this is for command loading in the handler file, one fireing for each cmd
-const eventhandler = require("./handlers/events"); 
-eventhandler(client); //this is for event handling  
 
-const erelahandler = require("./handlers/erelahandler");erelahandler(client);
+require("./handlers/events")(client); //this is for event handling  
+require("./handlers/erelahandler")(client);
+require("./handlers/clientvariables")(client);
 
+client.premium = new Enmap({name: "premium", dataDir: "./databases/premium"})
 
 //fires each time the bot receives a message
 client.on("message", async message => {
-
-    if (message.author.bot) return;// if the message  author is a bot, return aka ignore the inputs
     if (!message.guild) return; //if the message is not in a guild (aka in dms), return aka ignore the inputs
-   
-    const { inspect } = require('util');
-    if (message.content.startsWith(prefix + "eval")) { //if cmd == eval
-        const evalargs = message.content.split(' ');
-        evalargs.shift();
-        //Allowed user:
-        if (message.author.id !== '442355791412854784') return;
-        let evaled;
-        try {
-            if(evalargs.join(' ').includes("token")) return console.log("ERROR NO TOKEN GRABBING ;)");
-            evaled = await eval(evalargs.join(' '));
-            if(evaled.toString().includes(client.token)) return console.log("ERROR NO TOKEN GRABBING ;)"); //just to be 100% sure
-            return message.channel.send("\`\`\`" + inspect(evaled) + "\`\`\`");
-        }
-        catch (error) {
-            console.error(error);
-            return message.reply('there was an error during evaluation.');
-        }
-    }
-    //CHECK IF IN A BOT CHANNEL OR NOT
-    if(!message.content.startsWith(prefix)&& message.content.startsWith(client.user.id)) return message.reply(`My Prefix is: **\`${prefix}\`**, tpye \`${prefix}help\` for more information!`); //if the messages is not a command and someone tags the bot, then send an info msg
-    if (!message.content.startsWith(prefix)) return; //if the message does not starts with the prefix, return, so only commands are fired!
+    databasing(client, message.guild.id, message.author.id)
+    if (message.author.bot) return;// if the message  author is a bot, return aka ignore the inputs
     
-    const args = message.content.slice(prefix.length).trim().split(/ +/g); //creating the argumest (each space == 1 arg)
+
+    const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`);
+    if (!prefixRegex.test(message.content)) return;
+    const [, matchedPrefix] = message.content.match(prefixRegex);
+    const args = message.content.slice(matchedPrefix.length).trim().split(/ +/);
+
     const cmd = args.shift().toLowerCase(); //creating the cmd argument by shifting the args by 1
     
-    if (cmd.length === 0) return; //if no cmd, then return
+    if (cmd.length === 0) return message.reply(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle(`Unkown command, try: **\`${prefix}help\`**`).setDescription(`To play Music simply type \`${prefix}play <Title / Url>\``).setFooter(ee.footertext, ee.footericon))
     
     let command = client.commands.get(cmd); //get the command from the collection
     if (!command) command = client.commands.get(client.aliases.get(cmd)); //if the command does not exist, try to get it by his alias
@@ -94,31 +82,15 @@ client.on("message", async message => {
         timestamps.set(message.author.id, now); //if he is not on cooldown, set it to the cooldown
         setTimeout(() => timestamps.delete(message.author.id), cooldownAmount); //set a timeout function with the cooldown, so it gets deleted later on again
       try{
-        command.run(client, message, args, message.author, args.join(" "), prefix); //run the command with the parameters:  client, message, args, user, text, prefix, 
-        /* /////////////////////////////////////////
-        HERE AN EXAMPLE:
-
-            User: Tomato#6966   types command:
-
-                !say Hello World, HEY!
-
-                what you can get from say cmd parameters: 
-                    client is: the <DiscordClient>
-                    message is: the <Message>
-                    user is: the <DiscordUser>
-                    text is: <everything fter the command:   Hello World, HEY!>
-                    prefix is: <config.prefix:   !>
-        */ ///////////////////////////////////////////////////////
-      }catch (error){
-        console.log(error)
+        command.run(client, message, args, message.member, args.join(" "), matchedPrefix); //run the command with the parameters:  client, message, args, user, text, prefix, 
+      }catch (e){
+        console.log(String(e.stack).red)
         return message.reply("Something went wrong while, running the: `" + command.name + "` command")
       }
     } 
     else //if the command is not found send an info msg
-    return message.reply(`Unkown command, try: **\`${prefix}help\`**`)
+    return message.reply(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle(`Unkown command, try: **\`${prefix}help\`**`).setDescription(`To play Music simply type \`${prefix}play <Title / Url>\``).setFooter(ee.footertext, ee.footericon))
     
 });
-
-
 
 client.login(config.token); //login into the bot
