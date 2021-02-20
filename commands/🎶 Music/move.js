@@ -28,9 +28,9 @@ module.exports = {
             new MessageEmbed()
                 .setColor(ee.color)
                 .setFooter(ee.footertext, ee.footericon)
-                .setTitle(`✅|Successfully moved the Song in the Queue from Position ${args[0]}to Position:${args[1]}`)
+                .setTitle(`✅ Successfully moved the Song in the Queue from Position \`${args[0]}\` to Position: \`${args[1]}\``)
                 .setThumbnail(song.displayThumbnail())
-                .setDescription(`[${song.title}](${song.uri})\`${format(song.duration)}\``)
+                .setDescription(`[${song.title}](${song.uri}) - \`${format(song.duration)}\``)
         );
     },
 };

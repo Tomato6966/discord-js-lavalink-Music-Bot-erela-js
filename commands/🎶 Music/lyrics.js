@@ -41,10 +41,8 @@ module.exports = {
             }
         }
         let lyricsEmbed = new MessageEmbed().setTitle(`Lyrics for:📃\`${title}\``.substr(0, 256)).setDescription(lyrics).setColor(ee.color).setFooter(ee.footertext, ee.footericon);
-        if (lyricsEmbed.description.length >= 2048);
-        lyricsEmbed.setDescription(lyricsEmbed.description.substr(2040) + " ...");
-        message.channel.send(lyricsEmbed).then((msg) => {
-            player.set("lyricsmessage", msg.id);
-        });
+        let k = lyricsEmbed.description;
+        for(let i = 0; i < k.length; i += 2048)
+        message.channel.send(lyricsEmbed.setDescription(k.substr(i,  i + 2048)))
     },
 };

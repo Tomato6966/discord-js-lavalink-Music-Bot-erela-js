@@ -18,7 +18,7 @@ module.exports = {
         let trackn = Number(args[0]);
         if (trackn > player.queue.size) return message.reply("That song is not in the queue, sorry");
         player.queue.remove(trackn - 1);
-        const embed = new MessageEmbed().setTitle(`🌀I removed the track at position:\`${trackn}\``).setColor(ee.color).setFooter(ee.footertext, ee.footericon);
+        const embed = new MessageEmbed().setTitle(`🌀 I removed the track at position: \`${trackn}\``).setColor(ee.color).setFooter(ee.footertext, ee.footericon);
         return message.channel.send(embed);
     },
 };

@@ -61,11 +61,11 @@ module.exports = {
         } catch {
             message.channel.send("Something went wrong!");
         }
-        message.channel.send(`✅|${member.user}got**MUTED**for\`${ms(mutetime, { long: true })}\`${reason ? `\n**REASON**\n>${reason.substr(0, 1800)}` : "\nNO REASON"}`).catch((e) => console.log(String(e.stack).red));
-        member.send(`✅|**${message.author.tag}**muted you for\`${ms(mutetime, { long: true })}\`${reason ? `\n**REASON**\n>${reason.substr(0, 1800)}` : "\nNO REASON"}`).catch((e) => console.log(String(e.stack).red));
+        message.channel.send(`✅ ${member.user} got **MUTED** for \`${ms(mutetime, { long: true })}\` ${reason ? `\n**REASON**\n> ${reason.substr(0, 1800)}` : "\nNO REASON"}`).catch((e) => console.log(String(e.stack).red));
+        member.send(`✅ **${message.author.tag}** muted you for \`${ms(mutetime, { long: true })}\` ${reason ? `\n**REASON**\n> ${reason.substr(0, 1800)}` : "\nNO REASON"}`).catch((e) => console.log(String(e.stack).red));
         setTimeout(() => {
             try {
-                message.channel.send(`✅|${member.user}got**UNMUTED**after\`${ms(mutetime, { long: true })}\`${reason ? `\n**REASON**\n>${reason.substr(0, 1800)}` : "\nNO REASON"}`).catch((e) => console.log(String(e.stack).red));
+                message.channel.send(`✅ ${member.user} got **UNMUTED** after\`${ms(mutetime, { long: true })}\` ${reason ? `\n**REASON**\n> ${reason.substr(0, 1800)}` : "\nNO REASON"}`).catch((e) => console.log(String(e.stack).red));
                 member.roles.remove(mutedrole);
             } catch {
                 message.channel.send("Something went wrong!");

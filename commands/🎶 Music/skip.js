@@ -13,9 +13,11 @@ module.exports = {
         const player = client.manager.players.get(message.guild.id);
         if (!player) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("There is nothing playing"));
         if (channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to be in my voice channel to use this command!"));
-        if (player.queue.size == 0) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("There is no song i could skip to.").setDescription("You can end the Queue with: `stop`"));
+        if (player.queue.size == 0) {
+          message.channel.send(new MessageEmbed().setTitle("⏹ Stopped and left your channel").setColor(ee.color).setFooter(ee.footertext, ee.footericon));
+          player.destroy();
+        }
         player.stop();
-        const embed = new MessageEmbed().setTitle("⏭ Skipped to the next song").setColor(ee.color).setFooter(ee.footertext, ee.footericon);
-        return message.channel.send(embed);
+        return message.channel.send(new MessageEmbed().setTitle("⏭ Skipped to the next song").setColor(ee.color).setFooter(ee.footertext, ee.footericon));
     },
 };

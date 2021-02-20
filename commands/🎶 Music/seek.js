@@ -17,16 +17,8 @@ module.exports = {
         if (Number(args[0]) < 0 || Number(args[0]) >= player.queue.current.duration / 1000) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`You may seek from\`0\`-\`${player.queue.current.duration}\``));
         player.seek(Number(args[0]) * 1000);
         const embed = new MessageEmbed()
-            .setTitle(`✅Seeked song to:${format(Number(args[0]) * 1000)}`)
-            .addField(
-                "Progress: ",
-                createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji) +
-                    "\n**" +
-                    new Date(player.position).toISOString().substr(11, 8) +
-                    " / " +
-                    (player.queue.current.duration == 0 ? " ◉ LIVE" : new Date(player.queue.current.duration).toISOString().substr(11, 8)) +
-                    "**"
-            )
+            .setTitle(`✅ Seeked song to: ${format(Number(args[0]) * 1000)}`)
+            .addField("⏳ Progress: ", createBar(player))
             .setColor(ee.color)
             .setFooter(ee.footertext, ee.footericon);
         return message.channel.send(embed);

@@ -19,6 +19,6 @@ module.exports = {
             player.setQueueRepeat(false);
         }
         player.setTrackRepeat(!player.trackRepeat);
-        return message.channel.send(embed.setTitle(`🔀Track Loop is now ${player.trackRepeat ? "active" : "disabled"}.`));
+        return message.channel.send(embed.setTitle(`🔀 Track Loop is now ${player.trackRepeat ? "active" : "disabled"}.`));
     },
 };

@@ -21,7 +21,7 @@ function getAll(client, message) {
         .setColor(ee.color)
         .setThumbnail(client.user.displayAvatarURL())
         .setTitle("HELP MENU")
-        .setFooter(`To see command descriptions and inforamtion,type:${config.prefix}help[CMD NAME]`, client.user.displayAvatarURL());
+        .setFooter(`To see command descriptions and inforamtion, type: ${config.prefix}help [CMD NAME]`, client.user.displayAvatarURL());
     const commands = (category) => {
         return client.commands.filter((cmd) => cmd.category === category).map((cmd) => `\`${cmd.name}\``);
     };
@@ -46,7 +46,7 @@ function getAll(client, message) {
             if (current.toLowerCase().includes("owner")) {
                 if (!config.ownerIDS.includes(message.author.id)) continue;
             }
-            embed.addField(`**${current.toUpperCase()}**`, `>${result[0].join("\n> ")}`, true);
+            embed.addField(`**${current.toUpperCase()}**`, `> ${result[0].join("\n> ")}`, true);
             embed.addField(`\u200b`, `${result[1].join("\n") ? result[1].join("\n") : "\u200b"}`, true);
             embed.addField(`\u200b`, `${result[2].join("\n") ? result[2].join("\n") : "\u200b"}`, true);
         }
@@ -59,13 +59,13 @@ function getCMD(client, message, input) {
     const embed = new MessageEmbed();
     const cmd = client.commands.get(input.toLowerCase()) || client.commands.get(client.aliases.get(input.toLowerCase()));
     if (!cmd) {
-        return message.channel.send(embed.setColor(ee.wrongcolor).setDescription(`No Information found for command**${input.toLowerCase()}**`));
+        return message.channel.send(embed.setColor(ee.wrongcolor).setDescription(`No Information found for command **${input.toLowerCase()}**`));
     }
     if (cmd.name) embed.addField("**Command name**", `\`${cmd.name}\``);
     if (cmd.name) embed.setTitle(`Detailed Information about:\`${cmd.name}\``);
     if (cmd.description) embed.addField("**Description**", `\`${cmd.description}\``);
     if (cmd.aliases) embed.addField("**Aliases**", `\`${cmd.aliases.map((a) => `${a}`).join("`, `")}\``);
-    if (cmd.cooldown) embed.addField("**Cooldown**", `\`${cmd.cooldown}Seconds\``);
+    if (cmd.cooldown) embed.addField("**Cooldown**", `\`${cmd.cooldown} Seconds\``);
     else embed.addField("**Cooldown**", `\`1 Second\``);
     if (cmd.usage) {
         embed.addField("**Usage**", `\`${config.prefix}${cmd.usage}\``);

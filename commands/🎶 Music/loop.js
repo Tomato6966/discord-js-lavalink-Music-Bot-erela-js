@@ -17,19 +17,19 @@ module.exports = {
         if (args[0].toLowerCase() === "song" || args[0].toLowerCase() === "track") {
             const embed = new MessageEmbed().setColor(ee.color).setFooter(ee.footertext, ee.footericon);
             if (player.queueRepeat) {
-                embed.setDescription(`And**Queue**Repeat got**disabled**`);
+                embed.setDescription(`And **Queue** Repeat got **disabled**`);
                 player.setQueueRepeat(false);
             }
             player.setTrackRepeat(!player.trackRepeat);
-            return message.channel.send(embed.setTitle(`🔀Track Loop is now ${player.trackRepeat ? "active" : "disabled"}.`));
+            return message.channel.send(embed.setTitle(`🔀 Track Loop is now ${player.trackRepeat ? "active" : "disabled"}.`));
         } else if (args[0].toLowerCase() === "queue") {
             const embed = new MessageEmbed().setColor(ee.color).setFooter(ee.footertext, ee.footericon);
             if (player.trackRepeat) {
-                embed.setDescription(`And**Song**Repeat got**disabled**`);
+                embed.setDescription(`And **Song** Repeat got **disabled**`);
                 player.setTrackRepeat(false);
             }
             player.setQueueRepeat(!player.queueRepeat);
-            return message.channel.send(embed.setTitle(`🔀Queue Loop is now ${player.queueRepeat ? "active" : "disabled"}.`));
+            return message.channel.send(embed.setTitle(`🔀 Queue Loop is now ${player.queueRepeat ? "active" : "disabled"}.`));
         } else {
             return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("Please add your method!").setDescription("`loop song` / `loop queue`"));
         }

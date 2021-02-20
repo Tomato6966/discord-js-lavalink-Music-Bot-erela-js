@@ -22,10 +22,10 @@ module.exports = {
         const tracks = queue.slice(start, end);
         if (queue.current) embed.addField("Current", `[${queue.current.title}](${queue.current.uri})`);
         if (!tracks.length) embed.setDescription(`No tracks in ${page > 1 ? `page ${page}` : "the queue"}.`);
-        else embed.setDescription(tracks.map((track, i) => `**${start + ++i})**[${track.title.substr(0, 60)}](${track.uri})-\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``).join("\n"));
+        else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** [${track.title.substr(0, 60)}](${track.uri}) - \`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``).join("\n"));
         embed.setColor(ee.color);
         const maxPages = Math.ceil(queue.length / multiple);
-        embed.setFooter(`Page ${page > maxPages ? maxPages : page}of ${maxPages}|Type?queue<Number>`);
+        embed.setFooter(`Page ${page > maxPages ? maxPages : page} of ${maxPages} | Type \`?queue <Number>\``);
         return message.reply(embed);
     },
 };

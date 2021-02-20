@@ -19,6 +19,6 @@ module.exports = {
             player.setTrackRepeat(false);
         }
         player.setQueueRepeat(!player.queueRepeat);
-        return message.channel.send(embed.setTitle(`🔀Queue Loop is now ${player.queueRepeat ? "active" : "disabled"}.`));
+        return message.channel.send(embed.setTitle(`🔀 Queue Loop is now ${player.queueRepeat ? "active" : "disabled"}.`));
     },
 };

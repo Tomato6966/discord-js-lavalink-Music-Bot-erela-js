@@ -16,7 +16,6 @@ module.exports = {
         if (Number(args[0]) <= 0 || Number(args[0]) > 150) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You may set the volume `1` - `150`"));
         if(isNaN(args[0])) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You may set the volume `1` - `150`").setDescription("It Must be a Number"));
         player.setVolume(Number(args[0]));
-        const embed = new MessageEmbed().setTitle(`🔊Volume set to:**${player.volume}%**`).setColor(ee.color).setFooter(ee.footertext, ee.footericon);
-        return message.channel.send(embed);
+        return message.channel.send(new MessageEmbed().setTitle(`🔊 Volume set to: **\`${player.volume} %\`**`).setColor(ee.color).setFooter(ee.footertext, ee.footericon));
     },
 };

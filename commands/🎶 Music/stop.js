@@ -16,7 +16,6 @@ module.exports = {
         if (channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to be in my voice channel to use this command!"));
         if (!player.queue.current) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("No song is currently playing in this guild."));
         player.destroy();
-        const embed = new MessageEmbed().setTitle("⏹ Stopped and left your channel").setColor(ee.color).setFooter(ee.footertext, ee.footericon);
-        return message.channel.send(embed);
+        return message.channel.send(new MessageEmbed().setTitle("⏹ Stopped and left your channel").setColor(ee.color).setFooter(ee.footertext, ee.footericon));
     },
 };

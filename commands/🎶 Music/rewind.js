@@ -14,27 +14,17 @@ module.exports = {
         const player = client.manager.players.get(message.guild.id);
         if (!player) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("There is nothing playing"));
         if (channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to be in my voice channel to use this command!"));
-        if (Number(args[0]) <= 0 || Number(args[0]) >= player.queue.current.duration / 1000)
-            return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`You may set the volume\`1\`-\`${player.queue.current.duration}\``));
+        if (!args[0]) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`You may rewind for \`1\`-\`${player.queue.current.duration}\``));
         let seektime = player.position - Number(args[0]) * 1000;
-        if (seektime < 0) seektime = 0;
-        if (seektime >= player.queue.current.duration - player.position) {
+        if (seektime >= player.queue.current.duration - player.position || seektime < 0) {
             seektime = 0;
         }
         player.seek(Number(seektime));
-        const embed = new MessageEmbed()
-            .setTitle(`⏪ Rewinded the song for:\`${args[0]}Seconds\`,to:${format(Number(player.queue.position))}`)
-            .addField(
-                "Progress: ",
-                createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji) +
-                    "\n**" +
-                    new Date(player.position).toISOString().substr(11, 8) +
-                    " / " +
-                    (player.queue.current.duration == 0 ? " ◉ LIVE" : new Date(player.queue.current.duration).toISOString().substr(11, 8)) +
-                    "**"
-            )
+        return message.channel.send(new MessageEmbed()
+            .setTitle(`⏪ Rewinded the song for: \`${args[0]} Seconds\`, to: ${format(Number(player.position))}`)
+            .addField("⏳ Progress: ", createBar(player))
             .setColor(ee.color)
-            .setFooter(ee.footertext, ee.footericon);
-        return message.channel.send(embed);
+            .setFooter(ee.footertext, ee.footericon)
+          );
     },
 };

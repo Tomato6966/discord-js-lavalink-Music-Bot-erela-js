@@ -11,7 +11,10 @@ const config = require("../botconfig/config.json");
 const {
     createBar,
     format,
-    databasing
+    databasing,
+    playANewTrack,
+    isrequestchannel,
+    edit_request_message_track_info
 } = require("../handlers/functions");
 const clientID = config.spotify.clientID;
 const clientSecret = config.spotify.clientSecret;
@@ -30,19 +33,19 @@ module.exports = (client) => {
         });
         client.manager
             .on("nodeConnect", (node) => {
-                console.log(`Node ${node.options.identifier}connected`.green);
+                console.log(`Node ${node.options.identifier} connected`.green);
             })
             .on("nodeCreate", (node) => {
-                console.log(`Node ${node.options.identifier}created`.bgGreen.black);
+                console.log(`Node ${node.options.identifier} created`.bgGreen.black);
             })
             .on("nodeReconnect", (node) => {
-                console.log(`Node ${node.options.identifier}reconnected`.bold.green);
+                console.log(`Node ${node.options.identifier} reconnected`.bold.green);
             })
             .on("nodeDisconnect", (node) => {
-                console.log(`Node ${node.options.identifier}disconnected`.red);
+                console.log(`Node ${node.options.identifier} disconnected`.yellow);
             })
             .on("nodeError", (node, error) => {
-                console.log(`Node ${node.options.identifier}had an error:${error.message}`);
+                console.log(`Node ${node.options.identifier} had an error: ${error.message}`);
             })
             .on("playerCreate", async (player) => {
                 setTimeout(async () => {
@@ -59,16 +62,16 @@ module.exports = (client) => {
                         } catch {}
                     }
                     let embed = new MessageEmbed()
-                    try{embed.setTitle(`:thumbsup:Joined\`🔈${client.channels.cache.get(player.voiceChannel).name}\``)}catch{}
-                        try{embed.setDescription(`And bound to:\`#${client.channels.cache.get(player.textChannel).name}\`\n`)}catch{}
+                    try{embed.setTitle(`:thumbsup: Joined \`🔈${client.channels.cache.get(player.voiceChannel).name}\``)}catch{}
+                        try{embed.setDescription(`And bound to: \`#${client.channels.cache.get(player.textChannel).name}\`\n`)}catch{}
                         try{embed.addField("🔊 Volume", `\`${player.volume}%\``, true)}catch{}
                         try{embed.addField("🎚 Equalizer: ", `\`🎵 Music\``, true)}catch{}
-                        try{embed.addField(`${player.queueRepeat ? "🔂 Queue Loop: " : "🔁 Song Loop: "}`, `\`${player.queueRepeat ? `\`✔️Enabled\`` : player.trackRepeat ? `\`✔️Enabled\`` : `\`❌Disabled\``}\``, true)}catch{}
-                        try{embed.addField("🗣️ Leave on Empty Channel: ", `${config.settings.leaveOnEmpty_Channel.enabled ? `\`✔️Enabled\`` : `\`❌Disabled\``}`, true)}catch{}
-                        try{embed.addField("⌛ Leave on Empty Queue: ", `${config.settings.LeaveOnEmpty_Queue.enabled ? `\`✔️Enabled\`` : `\`❌Disabled\``}`, true)}catch{}
+                        try{embed.addField(`${player.queueRepeat ? "🔂 Queue Loop: " : "🔁 Song Loop: "}`, `\`${player.queueRepeat ? `\`✔️ Enabled\`` : player.trackRepeat ? `\`✔️ Enabled\`` : `\`❌ Disabled\``}\``, true)}catch{}
+                        try{embed.addField("🗣️ Leave on Empty Channel: ", `${config.settings.leaveOnEmpty_Channel.enabled ? `\`✔️ Enabled\`` : `\`❌ Disabled\``}`, true)}catch{}
+                        try{embed.addField("⌛ Leave on Empty Queue: ", `${config.settings.LeaveOnEmpty_Queue.enabled ? `\`✔️ Enabled\`` : `\`❌ Disabled\``}`, true)}catch{}
                         try{embed.addField("\u200b", "\u200b")}catch{}
-                        try{embed.addField("💰 Player Premium", `${ppremium ? (ppremium.enabled ? `\`✔️Enabled\`` : `\`❌Disabled\`\nDm to enable:\n>${ownerstringarray.substr(0, ownerstringarray.length - 1)}`.substr(0, 1020)) : `\`❌Disabled\``}`, true)}catch{}
-                        try{embed.addField("💰 Guild Premium", `${gpremium ? (gpremium.enabled ? `\`✔️Enabled\`` : `\`❌Disabled\`\nDm to enable:\n>${ownerstringarray.substr(0, ownerstringarray.length - 1)}`.substr(0, 1020)) : `\`❌Disabled\``}`, true)}catch{}
+                        try{embed.addField("💰 Player Premium", `${ppremium ? (ppremium.enabled ? `\`✔️ Enabled\`` : `\`❌ Disabled\`\nDm to enable:\n> ${ownerstringarray.substr(0, ownerstringarray.length - 1)}`.substr(0, 1020)) : `\`❌ Disabled\``}`, true)}catch{}
+                        try{embed.addField("💰 Guild Premium", `${gpremium ? (gpremium.enabled ? `\`✔️ Enabled\`` : `\`❌ Disabled\`\nDm to enable:\n> ${ownerstringarray.substr(0, ownerstringarray.length - 1)}`.substr(0, 1020)) : `\`❌ Disabled\``}`, true)}catch{}
                         try{embed.setColor(ee.color)}catch{}
                         try{embed.setFooter(ee.footertext, ee.footericon);}catch{}
                     if ((ppremium && ppremium.enabled) || (gpremium && gpremium.enabled))
@@ -76,17 +79,18 @@ module.exports = (client) => {
                             "💰 PREMIUM **24/7 Music**:",
                             `${
                             gpremium.twentyfourseven
-                                ? `\`✔️Enabled\``
+                                ? `\`✔️ Enabled\``
                                 : ppremium.twentyfourseven
-                                ? `\`✔️Enabled\`\nTo disable type:\`?24/7\``
-                                : `\`❌Disabled\`${gpremium.enabled || ppremium.enabled ? "\nTo disable type: `?24/7`" : "\nTo enable type: `?24/7`"}`
+                                ? `\`✔️ Enabled\`\nTo disable type:\`?24/7\``
+                                : `\`❌ Disabled\`${gpremium.enabled || ppremium.enabled ? "\nTo disable type: `?24/7`" : "\nTo enable type: `?24/7`"}`
                         }`,
                             true
                         );}catch{}
+                    if(isrequestchannel(client, player.get("message"))) return;
                     client.channels.cache
                         .get(player.textChannel)
                         .send(embed)
-                        .then((msg) => player.set("playermessage", msg.id));
+                        .then((msg) => player.set("PlayerQueueMessage", msg.id));
                 }, 100);
             })
             .on("playerMove", (player, oldChannel, newChannel) => {
@@ -100,24 +104,14 @@ module.exports = (client) => {
                         client.channels.cache
                             .get(player.textChannel)
                             .send(embed)
-                            .then((msg) => msg.delete({
-                                timeout: 5000
-                            }));
+                            .then((msg) => msg.delete({timeout: 5000}).catch(e=>console.log(String(e.stack).yellow)));
                     try {
                         client.channels.cache
                             .get(player.textChannel)
                             .messages.fetch(player.get("playermessage"))
-                            .then((msg) => msg.delete());
+                            .then((msg) =>msg.delete());
                     } catch (e) {
-                        console.log(String(e.stack).red);
-                    }
-                    try {
-                        client.channels.cache
-                            .get(player.textChannel)
-                            .messages.fetch(player.get("lyricsmessage"))
-                            .then((msg) => msg.delete());
-                    } catch (e) {
-                        console.log(String(e.stack).red);
+                        console.log(String(e.stack).yellow);
                     }
                     player.destroy();
                 } else {
@@ -125,28 +119,30 @@ module.exports = (client) => {
                     if (player.paused) return;
                     setTimeout(() => {
                         player.pause(true);
-                        setTimeout(() => player.pause(false), client.ws.ping);
-                    }, client.ws.ping);
+                        setTimeout(() => player.pause(false), client.ws.ping * 2);
+                    }, client.ws.ping * 2);
                 }
             })
-            .on("trackStart", (player, track) => {
+            .on("trackStart", async (player, track) => {
+                client.stats.inc(player.guild, "songs");
+                client.stats.inc("global", "songs");
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(2);
+                    }, 500);
+                });
+                // playANewTrack(client,player,track);
                 let embed = new MessageEmbed()
-                try{embed.setTitle("Started Playing :notes: **`" + track.title + "`**")}catch{}
-                    try{embed.setURL(track.uri)}catch{}
-                    try{embed.setColor(ee.color)}catch{}
-                    try{embed.setThumbnail(track.displayThumbnail(1))}catch{}
-                    try{embed.addField("Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)}catch{}
-                    try{embed.addField("Song By: ", `\`${track.author}\``, true)}catch{}
-                    try{embed.addField("Queue length: ", `\`${player.queue.length}Songs\``, true)}catch{}
-                    try{embed.setFooter(`Requested by:${track.requester.tag}`, track.requester.displayAvatarURL({
-                        dynamic: true
-                    }));}catch{}
-                client.channels.cache
-                    .get(player.textChannel)
-                    .send(embed)
-                    .then((msg) => msg.delete({
-                        timeout: 5000
-                    }));
+                try{embed.setTitle("Playing :notes: **`" + track.title + "`**")}catch{}
+                try{embed.setURL(track.uri)}catch{}
+                try{embed.setColor(ee.color)}catch{}
+                try{embed.setThumbnail(track.displayThumbnail(1))}catch{}
+                try{embed.addField("Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)}catch{}
+                try{embed.addField("Song By: ", `\`${track.author}\``, true)}catch{}
+                try{embed.addField("Queue length: ", `\`${player.queue.length} Songs\``, true)}catch{}
+                try{embed.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({dynamic: true}));}catch{}
+                if(isrequestchannel(client, player.get("message"))) return edit_request_message_track_info(client, player, track);
+                client.channels.cache.get(player.textChannel).send(embed)
             })
             .on("trackStuck", (player, track, payload) => {
                 let embed = new MessageEmbed()
@@ -160,7 +156,7 @@ module.exports = (client) => {
                     .send(embed)
                     .then((msg) => msg.delete({
                         timeout: 5000
-                    }));
+                    }).catch(e=>console.log(String(e.stack).yellow)));
                 player.stop();
             })
             .on("trackError", (player, track, payload) => {
@@ -175,7 +171,7 @@ module.exports = (client) => {
                     .send(embed)
                     .then((msg) => msg.delete({
                         timeout: 5000
-                    }));
+                    }).catch(e=>console.log(String(e.stack).yellow)));
                 player.stop();
             })
             .on("queueEnd", (player) => {
@@ -193,7 +189,7 @@ module.exports = (client) => {
                         .send(embed)
                         .then((msg) => msg.delete({
                             timeout: 5000
-                        }));
+                        }).catch(e=>console.log(String(e.stack).yellow)));
                 }
                 if (config.settings.LeaveOnEmpty_Queue.enabled) {
                     setTimeout(() => {
@@ -201,7 +197,7 @@ module.exports = (client) => {
                             if (player.queue.size === 0) {
                                 let embed = new MessageEmbed()
                                 try{embed.setTitle(":x: Queue has ended.")}catch{}
-                                try{embed.setDescription(`I left the Channel:\`${client.channels.cache.get(player.voiceChannel).name}\`because the Queue was empty for:\`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\``)}catch{}
+                                try{embed.setDescription(`I left the Channel: \`${client.channels.cache.get(player.voiceChannel).name}\` because the Queue was empty for: \`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\``)}catch{}
                                 try{embed.setColor(ee.wrongcolor)}catch{}
                                     try{embed.setFooter(ee.footertext, ee.footericon);}catch{}
                                 client.channels.cache
@@ -209,27 +205,19 @@ module.exports = (client) => {
                                     .send(embed)
                                     .then((msg) => msg.delete({
                                         timeout: 5000
-                                    }));
+                                    }).catch(e=>console.log(String(e.stack).yellow)));
                                 try {
                                     client.channels.cache
                                         .get(player.textChannel)
                                         .messages.fetch(player.get("playermessage"))
-                                        .then((msg) => msg.delete());
+                                        .then((msg) => msg ?msg.delete() : console.log("ZzzZ"));
                                 } catch (e) {
-                                    console.log(String(e.stack).red);
-                                }
-                                try {
-                                    client.channels.cache
-                                        .get(player.textChannel)
-                                        .messages.fetch(player.get("lyricsmessage"))
-                                        .then((msg) => msg.delete());
-                                } catch (e) {
-                                    console.log(String(e.stack).red);
+                                    console.log(String(e.stack).yellow);
                                 }
                                 player.destroy();
                             }
                         } catch (e) {
-                            console.log(String(e.stack).red);
+                            console.log(String(e.stack).yellow);
                         }
                     }, config.settings.LeaveOnEmpty_Queue.time_delay);
                 }
@@ -254,7 +242,7 @@ module.exports = (client) => {
                             if (player && oldState.guild.channels.cache.get(player.voiceChannel).members.size === 1) {
                                 let embed = new MessageEmbed()
                                     .setTitle(":x: Queue has ended.")
-                                    .setDescription(`I left the Channel:\`${client.channels.cache.get(player.voiceChannel).name}\`because the Channel was empty for:\`${ms(config.settings.leaveOnEmpty_Channel.time_delay, { long: true })}\``)
+                                    .setDescription(`I left the Channel: \`${client.channels.cache.get(player.voiceChannel).name}\` because the Channel was empty for: \`${ms(config.settings.leaveOnEmpty_Channel.time_delay, { long: true })}\``)
                                     .setColor(ee.wrongcolor)
                                     .setFooter(ee.footertext, ee.footericon);
                                 client.channels.cache.get(player.textChannel).send(embed);
@@ -262,22 +250,14 @@ module.exports = (client) => {
                                     client.channels.cache
                                         .get(player.textChannel)
                                         .messages.fetch(player.get("playermessage"))
-                                        .then((msg) => msg.delete());
+                                        .then((msg) =>msg.delete());
                                 } catch (e) {
-                                    console.log(String(e.stack).red);
-                                }
-                                try {
-                                    client.channels.cache
-                                        .get(player.textChannel)
-                                        .messages.fetch(player.get("lyricsmessage"))
-                                        .then((msg) => msg.delete());
-                                } catch (e) {
-                                    console.log(String(e.stack).red);
+                                    console.log(String(e.stack).yellow);
                                 }
                                 player.destroy();
                             }
                         } catch (e) {
-                            console.log(String(e.stack).red);
+                            console.log(String(e.stack).yellow);
                         }
                     }, config.settings.leaveOnEmpty_Channel.time_delay);
                 }

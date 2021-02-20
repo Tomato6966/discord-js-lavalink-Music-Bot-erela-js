@@ -26,16 +26,8 @@ module.exports = {
             .addField("Duration: ", "`" + format(player.queue.current.duration) + "`", true)
             .addField("Song By: ", "`" + author + "`", true)
             .addField("Queue length: ", `\`${player.queue.length}Songs\``, true)
-            .addField(
-                "Progress: ",
-                createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji) +
-                    "\n**" +
-                    new Date(player.position).toISOString().substr(11, 8) +
-                    " / " +
-                    (player.queue.current.duration == 0 ? " ◉ LIVE" : new Date(player.queue.current.duration).toISOString().substr(11, 8)) +
-                    "**"
-            )
-            .setFooter(`Requested by:${player.queue.current.requester.tag}`, player.queue.current.requester.displayAvatarURL({ dynamic: true }));
+            .addField("⏳ Progress: ", createBar(player))
+            .setFooter(`Requested by: ${player.queue.current.requester.tag}`, player.queue.current.requester.displayAvatarURL({ dynamic: true }));
         return message.channel.send(embed);
     },
 };
