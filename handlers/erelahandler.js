@@ -52,6 +52,15 @@ module.exports = (client) => {
                     player.setVolume(50);
                     player.setEQ(client.eqs.music);
                     databasing(client, player.guild, player.get("playerauthor"));
+                    let gpremium = client.premium.get(player.guild);
+                    let ppremium = client.premium.get(player.get("playerauthor"));
+                    let ownerstringarray = "";
+                    for (let i = 0; i < config.ownerIDS.length; i++) {
+                        try {
+                            let user = await client.users.fetch(config.ownerIDS[i]);
+                            ownerstringarray += `\`${user.tag}\`/`;
+                        } catch {}
+                    }
                     let embed = new MessageEmbed()
                     try{embed.setTitle(`:thumbsup: Joined \`🔈${client.channels.cache.get(player.voiceChannel).name}\``)}catch{}
                         try{embed.setDescription(`And bound to: \`#${client.channels.cache.get(player.textChannel).name}\`\n`)}catch{}
@@ -61,9 +70,13 @@ module.exports = (client) => {
                         try{embed.addField("🗣️ Leave on Empty Channel: ", `${config.settings.leaveOnEmpty_Channel.enabled ? `\`✔️ Enabled\`` : `\`❌ Disabled\``}`, true)}catch{}
                         try{embed.addField("⌛ Leave on Empty Queue: ", `${config.settings.LeaveOnEmpty_Queue.enabled ? `\`✔️ Enabled\`` : `\`❌ Disabled\``}`, true)}catch{}
                         try{embed.addField("\u200b", "\u200b")}catch{}
+                        try{embed.addField("💰 Player Premium", `${ppremium ? (ppremium.enabled ? `\`✔️ Enabled\`` : `\`❌ Disabled\`\nDm to enable:\n> ${ownerstringarray.substr(0, ownerstringarray.length - 1)}`.substr(0, 1020)) : `\`❌ Disabled\``}`, true)}catch{}
+                        try{embed.addField("💰 Guild Premium", `${gpremium ? (gpremium.enabled ? `\`✔️ Enabled\`` : `\`❌ Disabled\`\nDm to enable:\n> ${ownerstringarray.substr(0, ownerstringarray.length - 1)}`.substr(0, 1020)) : `\`❌ Disabled\``}`, true)}catch{}
                         try{embed.setColor(ee.color)}catch{}
                         try{embed.setFooter(ee.footertext, ee.footericon);}catch{}
-                      if(isrequestchannel(client, player.get("message"))) return;
+                    if ((ppremium && ppremium.enabled) || (gpremium && gpremium.enabled))
+                        try{embed.addField("💰 PREMIUM **24/7 Music**:",`${gpremium.twentyfourseven  ? `\`✔️ Enabled\``  : ppremium.twentyfourseven ? `\`✔️ Enabled\`\nTo disable type:\`?afk\``: `\`❌ Disabled\`\nTo enable type: \`?afk\``}`,true);}catch{}
+                    if(isrequestchannel(client, player.get("message"))) return;
                     client.channels.cache
                         .get(player.textChannel)
                         .send(embed)
@@ -360,6 +373,18 @@ module.exports = (client) => {
             })
             .on("queueEnd", (player) => {
                 databasing(client, player.guild, player.get("playerauthor"));
+                let gpremium = client.premium.get(player.guild);
+                let ppremium = client.premium.get(player.get("playerauthor"));
+                if ((ppremium && ppremium.enabled && ppremium.twentyfourseven) || (gpremium && gpremium.enabled && gpremium.twentyfourseven)) {
+                    let embed = new MessageEmbed()
+                    try{embed.setTitle("❌ Queue has ended.")}catch{}
+                        try{embed.setDescription(`I will not leave the Channel:\`${client.channels.cache.get(player.voiceChannel).name}\`because\`AFK-MODE\`is active!`)}catch{}
+                        try{embed.setColor(ee.wrongcolor)}catch{}
+                        try{embed.setFooter(ee.footertext, ee.footericon);}catch{}
+                    return client.channels.cache
+                        .get(player.textChannel)
+                        .send(embed)
+                }
                 if (config.settings.LeaveOnEmpty_Queue.enabled) {
                     setTimeout(() => {
                         try {
@@ -396,6 +421,10 @@ module.exports = (client) => {
             const player = client.manager.players.get(newState.guild.id);
             if (!player) return;
             databasing(client, player.guild, player.get("playerauthor"));
+            let gpremium = client.premium.get(player.guild);
+            let ppremium = client.premium.get(player.get("playerauthor"));
+            if (gpremium && gpremium.enabled && gpremium.twentyfourseven) return;
+            if (ppremium && ppremium.enabled && ppremium.twentyfourseven) return;
             if (config.settings.leaveOnEmpty_Channel.enabled && oldState && oldState.channel) {
                 const player = client.manager.players.get(oldState.guild.id);
                 if (player && oldState.guild.channels.cache.get(player.voiceChannel).members.size === 1) {
