@@ -1,23 +1,23 @@
 # Discord.js Lavalink Music Bot using erela.js
 
-[erela.js docs](https://solaris.codes/projects/erelajs)
+[Erela.js docs](https://solaris.codes/projects/erelajs) **Note this Discord Bot Repository is the Same as for the Public Bot [Lava Music](https://lava.milrato.eu) if u want to support me, then please [invite](https://lava.milrato.eu) him!**
 
 ## Installation | How to use the Bot
 
  **1.** Install [node.js v12+](https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode) or higher
 
  **2.** Download this repo and unzip it    |    or git clone it
- 
+
  **3.** Install all of the packages with **`npm install`**     |  the important packages are   **`npm install discord.js erela.js`**
- 
- **4** Fill in the parameters, RIGHT in config.json!
- 
+
+ **4** Fill in the parameters, RIGHT in `botconfig/config.json`!
+
  **5.** [Download Lavalink](https://ci.fredboat.com/viewLog.html?buildId=lastSuccessful&buildTypeId=Lavalink_Build&tab=artifacts&guest=1) and download Java 15 (Java 13 recommended)
- 
+
  **5.1** Run the Lavalink file with: **`java -jar Lavalink.jar`**
- 
- **MAKE SURE THAT THERE IS THE application.yml FILE OTHERWISE IT WILL NOT WORK!
- 
+
+ **MAKE SURE THAT THERE IS THE `application.yml` FILE OTHERWISE IT WILL NOT WORK!
+
  **6.** start the bot with **`node index.js`**
 
 #### **NOTE:**
@@ -48,7 +48,7 @@ ECHO ==========================
 ECHO ==========================
 start cmd /k node .
 exit /s'
-``` 
+```
 Windows `start.bat` file
 Which starts Lavalink and the Bot together via one click ;)
 
@@ -99,4 +99,3 @@ Like For games..
 
 **Website:**
 [mc-host24.de](https://mc-host24.de/user/affiliate/3121])
-
