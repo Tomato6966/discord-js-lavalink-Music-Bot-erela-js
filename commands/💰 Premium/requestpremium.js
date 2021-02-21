@@ -26,23 +26,23 @@ module.exports = {
                   try{
                     let id = collected.first().content;
                     let guild = client.guilds.cache.get(id);
-                    if(!guild) return message.reply("sorry i cant find that guild please make sure i am in there! or DM: `Tomato#6966`");
+                    if(!guild) return message.channel.send("sorry i cant find that guild please make sure i am in there! or DM: `Tomato#6966`");
                     databasing(client, id)
-                    if(client.premium.get(id, "enabled")) return message.reply("This Server is alreayd a Premium Member!")
+                    if(client.premium.get(id, "enabled")) return message.channel.send("This Server is alreayd a Premium Member!")
                     let tomato = await client.users.fetch("442355791412854784");
                     tomato.send(`**${message.author.tag}**, request GUILD PREMIUM for: ${guild.name}: \`${id}\`\n\n> \`\`\`?tp guild ${id}\`\`\``)
-                    message.reply("✅ Successfully applied as a Premium GUILD for: `" + guild.name + "`\nPlease wait..")
+                    message.channel.send("✅ Successfully applied as a Premium GUILD for: `" + guild.name + "`\nPlease wait..")
                   }catch (e){
                     console.log(String(e.stack).red)
-                    return message.reply("sorry i cant find that guild please make sure i am in there! or DM: `Tomato#6966`");
+                    return message.channel.send("sorry i cant find that guild please make sure i am in there! or DM: `Tomato#6966`");
                   }
                 }).catch(e=>{
                   console.log(String(e.stack).red)
-                  return message.reply("Your time ran out, CANCELLED!")
+                  return message.channel.send("Your time ran out, CANCELLED!")
                   })
               }).catch(e=>{
                 console.log(String(e.stack).red)
-                return message.reply("Your time ran out, CANCELLED!")
+                return message.channel.send("Your time ran out, CANCELLED!")
                 })
               
             }
@@ -50,20 +50,20 @@ module.exports = {
                   try{
                     let id = message.author.id;
                     let user = await client.users.fetch(id);
-                    if(!user) return message.reply("sorry i cant find you make sure I am in a guild with you! or DM: `Tomato#6966`");
+                    if(!user) return message.channel.send("sorry i cant find you make sure I am in a guild with you! or DM: `Tomato#6966`");
                     databasing(client, "", id)
-                    if(client.premium.get(id, "enabled")) return message.reply("You are already a Premium Member!")
+                    if(client.premium.get(id, "enabled")) return message.channel.send("You are already a Premium Member!")
                     let tomato = await client.users.fetch("442355791412854784");
                     tomato.send(`**${message.author.tag}**, request USER PREMIUM: \`${id}\`\n\n> \`\`\`?tp user ${id}\`\`\``)
-                    message.reply("✅ Successfully applied as a Premium USER!\nPlease wait..")
+                    message.channel.send("✅ Successfully applied as a Premium USER!\nPlease wait..")
                   }catch (e){
                     console.log(String(e.stack).red)
-                    return message.reply("sorry i cant find you make sure I am in a guild with you! or DM: `Tomato#6966`");
+                    return message.channel.send("sorry i cant find you make sure I am in a guild with you! or DM: `Tomato#6966`");
                   }
             }
           }).catch(e=>{
             console.log(String(e.stack).red)
-            return message.reply("Your time ran out, CANCELLED!")
+            return message.channel.send("Your time ran out, CANCELLED!")
             })
         })
     }

@@ -17,6 +17,6 @@ module.exports = {
             return `\`${days}Days\`,\`${hrs}Hours\`,\`${min}Minutes\`,\`${sec}Seconds\``;
         }
         const embed = new MessageEmbed().setColor(ee.color).setFooter(ee.footertext, ee.footericon);
-        message.reply(embed.setTitle(`:white_check_mark:**${client.user.username}**is since ${duration(client.uptime)}online`));
+        message.channel.send(embed.setTitle(`:white_check_mark:**${client.user.username}**is since ${duration(client.uptime)}online`));
     },
 };

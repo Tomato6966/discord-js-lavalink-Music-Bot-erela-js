@@ -80,7 +80,7 @@ module.exports = {
         }
       }
       else {
-        return message.reply("Unknown Format Usage! either use `none` / `all` to see **Guilds** && **Users** with permissions, or too see each one: `guilds` / `users`. Usage: `?premiumlist [users/guilds]`")
+        return message.channel.send("Unknown Format Usage! either use `none` / `all` to see **Guilds** && **Users** with permissions, or too see each one: `guilds` / `users`. Usage: `?premiumlist [users/guilds]`")
       }
     }
 

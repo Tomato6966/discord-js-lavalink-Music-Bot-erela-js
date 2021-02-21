@@ -10,21 +10,21 @@ module.exports = {
     usage: "move <from> <to>",
     run: async (client, message, args, cmduser, text, prefix) => {
         const { channel } = message.member.voice;
-        if (!channel) return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
+        if (!channel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
         const player = message.client.manager.get(message.guild.id);
-        if (!player) return message.reply("there is no player for this guild.");
-        if (!args[0]) return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle(":x: | Wrong Command Usage!").setDescription(`Usage:\`?move<from><to>\`\nExample:\`?move 4 1\``));
-        if (!args[1]) return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle(":x: | Wrong Command Usage!").setDescription(`Usage:\`?move<from><to>\`\nExample:\`?move 4 1\``));
+        if (!player) return message.channel.send("there is no player for this guild.");
+        if (!args[0]) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle("❌ | Wrong Command Usage!").setDescription(`Usage:\`?move<from><to>\`\nExample:\`?move 4 1\``));
+        if (!args[1]) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle("❌ | Wrong Command Usage!").setDescription(`Usage:\`?move<from><to>\`\nExample:\`?move 4 1\``));
         if (isNaN(args[0]) || args[0] <= 1 || args[0] > player.queue.length)
-            return message.reply(
+            return message.channel.send(
                 new MessageEmbed()
                     .setColor(ee.wrongcolor)
                     .setFooter(ee.footertext, ee.footericon)
-                    .setTitle(":x: | Error Your Input must be a Number greater then `1` and smaller then `" + player.queue.length + "`")
+                    .setTitle("❌ | Error Your Input must be a Number greater then `1` and smaller then `" + player.queue.length + "`")
             );
         let song = player.queue[args[0] - 1];
         player.queue = arrayMove(player.queue, args[0] - 1, args[1] - 1);
-        message.reply(
+        message.channel.send(
             new MessageEmbed()
                 .setColor(ee.color)
                 .setFooter(ee.footertext, ee.footericon)

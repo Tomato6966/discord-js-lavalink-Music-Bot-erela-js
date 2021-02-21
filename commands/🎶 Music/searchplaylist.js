@@ -16,9 +16,9 @@ module.exports = {
         /*const {
             channel
         } = message.member.voice;
-        if (!channel) return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
+        if (!channel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
 
-        if (!args.length) return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle("you need to give me a URL or a search term."));
+        if (!args.length) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("you need to give me a URL or a search term."));
 
         const search = args.join(" ");
         let res;
@@ -29,7 +29,7 @@ module.exports = {
             if (res.loadType === "LOAD_FAILED") throw res.exception;
         } catch (e) {
         console.log(String(e.stack).red)
-           return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`There was an error while searching:`).setDescription(`\`\`\`${e.message}\`\`\``));
+           return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`There was an error while searching:`).setDescription(`\`\`\`${e.message}\`\`\``));
         }
         try {
 
@@ -58,16 +58,16 @@ module.exports = {
                 });
             } catch (e) {
                 if (!player.queue.current) player.destroy();
-                return message.reply("you didn't provide a selection.");
+                return message.channel.send("you didn't provide a selection.");
             }
             const first = collected.first().content;
             if (first.toLowerCase() === 'end') {
                 if (!player.queue.current) player.destroy();
-                return message.channel.send(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle(':x: Cancelled selection.'));
+                return message.channel.send(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle('❌ Cancelled selection.'));
             }
             const index = Number(first) - 1;
-            if (index < 0 || index > max - 1) return message.reply(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle(`:x:The number you provided too small or too big (1-${max}).`));
-            // Create the player 
+            if (index < 0 || index > max - 1) return message.channel.send(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle(`❌The number you provided too small or too big (1-${max}).`));
+            // Create the player
             const player = client.manager.create({
                 guild: message.guild.id,
                 voiceChannel: message.member.voice.channel.id,
@@ -79,7 +79,7 @@ module.exports = {
             if (player.state !== "CONNECTED") {
                 // Connect to the voice channel and add the track to the queue
                 player.connect();
-                
+
                 player.queue.add(res.tracks);
                 player.play()
             } else {
@@ -94,13 +94,11 @@ module.exports = {
             try{embed.setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
                 dynamic: true
             }))}catch{}
-        return message.channel.send(embed).then(msg => msg.delete({
-            timeout: 4000
-        }).catch(e => console.log(String(e.stack).red)));
+        return message.channel.send(embed)
         } catch (e) {
             console.log(String(e.stack).red)
-            message.channel.send(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle(":x: Found nothing for: " + search))
+            message.channel.send(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle("❌ Found nothing for: " + search))
         }*/
-        message.reply("THIS CMD IS NOT FINISHED YET!")
+        message.channel.send("THIS CMD IS NOT FINISHED YET!")
     }
 };

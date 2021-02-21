@@ -10,39 +10,101 @@ module.exports = {
     description: "Shows The Lyrics of the current track",
     usage: "lyrics [Songtitle]",
     run: async (client, message, args, cmduser, text, prefix) => {
+        //get the channel of the member
         const { channel } = message.member.voice;
-        if (!channel) return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
+        //if not in a channel return error
+        if (!channel)
+            return message.channel.send(new MessageEmbed()
+                .setColor(ee.wrongcolor)
+                .setFooter(ee.footertext,ee.footericon)
+                .setTitle("❌ Error | You need to join a voice channel.")
+            );
+        //get the player
         const player = client.manager.players.get(message.guild.id);
-        if (!player) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("There is nothing playing"));
-        if (channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to be in my voice channel to use this command!"));
+        //if no player return error
+        if (!player)
+            return message.channel.send(new MessageEmbed()
+                .setColor(ee.wrongcolor)
+                .setFooter(ee.footertext, ee.footericon)
+                .setTitle("❌ Error | There is nothing playing")
+            );
+        //if not in the same channel return error
+        if (channel.id !== player.voiceChannel)
+            return message.channel.send(new MessageEmbed()
+                .setColor(ee.wrongcolor)
+                .setFooter(ee.footertext, ee.footericon)
+                .setTitle(`❌ Error | You need to be in \`${message.guild.channels.cache.get(player.voiceChannel).name}\`!`)
+            );
+        //get the Song Title
         let title = player.queue.current.title;
+        //get the song Creator Author
         let author = player.queue.current.author;
+        //if there are search terms, search for the lyrics
         if (args[0]) {
+            //get the new title
             title = args.join(" ");
-            const embed = new MessageEmbed().setColor(ee.color).setFooter(ee.footertext, ee.footericon).setTitle(`Searching lyrics for:🔎\`${title}\``.substr(0, 256));
-            message.channel.send(embed).then((msg) => msg.delete({ timeout: 5000 }));
+            //sending the Embed and deleting it afterwards
+            message.channel.send(new MessageEmbed()
+                .setColor(ee.color)
+                .setFooter(ee.footertext, ee.footericon)
+                .setTitle(`Searching lyrics for: 🔎 \`${title}\``.substr(0, 256))
+            )
         }
+        //set the lyrics temp. to null
         let lyrics = null;
+        //if there is the use of lyrics_finder
         if (config.lyricssettings.lyrics_finder) {
+            //if there is the use of ksoft api which is way better
             if (config.lyricssettings.ksoft_api.use_this_instead) {
+                //create a new Ksoft Client
                 const ksoft = new KSoftClient(config.lyricssettings.ksoft_api.api_key);
+                //get the lyrics
                 await ksoft.lyrics.get(title).then(async (track) => {
-                    if (!track.lyrics) return message.repply(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle(":x: Error | No Lyrics found for:"));
+                    //send error if no lyrics
+                    if (!track.lyrics)
+                        return message.channel.send(new MessageEmbed()
+                            .setColor(ee.wrongcolor)
+                            .setFooter(ee.footertext, ee.footericon)
+                            .setTitle("❌ Error | No Lyrics found for:")
+                        );
+                    //safe the lyrics on the temp. variable
                     lyrics = track.lyrics;
                 });
+            //if no ksoft api use the worse lyrics_finder scraper
             } else {
                 try {
+                    //get the lyrics
                     lyrics = await lyricsFinder(title, author ? author : "");
-                    if (!lyrics) return message.repply(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle(":x: Error | No Lyrics found for:"));
+                    //if no lyrics send and error
+                    if (!lyrics)
+                    return message.channel.send(new MessageEmbed()
+                        .setColor(ee.wrongcolor)
+                        .setFooter(ee.footertext, ee.footericon)
+                        .setTitle("❌ Error | No Lyrics found for:")
+                    );
+                    //catch any errors
                 } catch (e) {
-                    console.log(String(e.stack).red);
-                    return message.repply(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle(":x: Error | No Lyrics found for:"));
+                    //log the Error
+                    console.log(String(e.stack).yellow);
+                    return message.channel.send(new MessageEmbed()
+                        .setColor(ee.wrongcolor)
+                        .setFooter(ee.footertext, ee.footericon)
+                        .setTitle("❌ Error | No Lyrics found for:")
+                    );
                 }
             }
         }
-        let lyricsEmbed = new MessageEmbed().setTitle(`Lyrics for:📃\`${title}\``.substr(0, 256)).setDescription(lyrics).setColor(ee.color).setFooter(ee.footertext, ee.footericon);
+        //create the lyrics Embed
+        let lyricsEmbed = new MessageEmbed()
+            .setTitle(`Lyrics for:📃\`${title}\``.substr(0, 256))
+            .setDescription(lyrics)
+            .setColor(ee.color)
+            .setFooter(ee.footertext, ee.footericon);
+        //safe the description on a temp. variable
         let k = lyricsEmbed.description;
-        for(let i = 0; i < k.length; i += 2048)
-        message.channel.send(lyricsEmbed.setDescription(k.substr(i,  i + 2048)))
+        //loop for the length
+        for (let i = 0; i < k.length; i += 2048)
+            //send an embed for each embed which is too big
+            message.channel.send(lyricsEmbed.setDescription(k.substr(i,  i + 2048)))
     },
 };

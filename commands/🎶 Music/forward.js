@@ -11,7 +11,7 @@ module.exports = {
     run: async(client, message, args, cmduser, text, prefix) => {
       const { channel } = message.member.voice;
 
-      if (!channel) return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
+      if (!channel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
 
       const player = client.manager.players.get(message.guild.id);
 
@@ -24,7 +24,7 @@ module.exports = {
       if (Number(seektime) >= player.queue.current.duration) { seektime = player.queue.current.duration- 1000; }
 
       player.seek(Number(seektime));
-        
+
       return message.channel.send(new MessageEmbed()
         .setTitle(`⏩ Forwarded the Song for: \`${args[0]} Seconds\`, to: ${format(Number(player.position))}`)
         .addField("⏳ Progress: ", createBar(player))

@@ -34,7 +34,7 @@ async function search(client, message, args, type){
             };
         } catch (e) {
             console.log(String(e.stack).red)
-           return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`There was an error while searching:`).setDescription(`\`\`\`${e.message}\`\`\``));
+           return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`There was an error while searching:`).setDescription(`\`\`\`${e.message}\`\`\``));
         }
 
 
@@ -64,15 +64,15 @@ async function search(client, message, args, type){
             });
         } catch (e) {
             if (!player.queue.current) player.destroy();
-            return message.reply("you didn't provide a selection.");
+            return message.channel.send("you didn't provide a selection.");
         }
         const first = collected.first().content;
         if (first.toLowerCase() === 'end') {
             if (!player.queue.current) player.destroy();
-            return message.channel.send(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle(':x: Cancelled selection.'));
+            return message.channel.send(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle('❌ Cancelled selection.'));
         }
         const index = Number(first) - 1;
-        if (index < 0 || index > max - 1) return message.reply(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle(`:x:The number you provided too small or too big (1-${max}).`));
+        if (index < 0 || index > max - 1) return message.channel.send(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle(`❌The number you provided too small or too big (1-${max}).`));
         track = res.tracks[index];
 
 
@@ -84,8 +84,9 @@ async function search(client, message, args, type){
             selfDeafen: config.settings.selfDeaf,
         });
         player.set("message", message);
+        player.set("votes", 0);
         player.set("playerauthor", message.author.id);
-        if(!res.tracks[0])return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`There was an error while searching!`).setDescription(`Please retry!`));
+        if(!res.tracks[0])return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`There was an error while searching!`).setDescription(`Please retry!`));
         if (player.state !== "CONNECTED") {
             // Connect to the voice channel and add the track to the queue
             try{player.connect();}catch{}
@@ -103,12 +104,12 @@ async function search(client, message, args, type){
                 .addField("Queue length: ", `\`${player.queue.length} Songs\``, true)
                 .setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({dynamic: true}))
             if(isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
-            return message.channel.send(embed).then(msg => msg.delete({timeout: 4000}).catch(e => console.log(String(e.stack).yellow)));
+            return message.channel.send(embed)
         }
 
     } catch (e) {
         console.log(String(e.stack).red)
-        message.channel.send(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle(String(":x: Found nothing for: **`" + search2).substr(0, 256-3) + "`**"))
+        message.channel.send(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle(String("❌ Found nothing for: **`" + search2).substr(0, 256-3) + "`**"))
     }
 }
 
@@ -127,7 +128,7 @@ async function playlist(client, message, args, type){
             };
         } catch (e) {
             console.log(String(e.stack).red)
-           return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`There was an error while searching:`).setDescription(`\`\`\`${e.message}\`\`\``));
+           return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`There was an error while searching:`).setDescription(`\`\`\`${e.message}\`\`\``));
         }
 
     // Create the player
@@ -138,8 +139,9 @@ async function playlist(client, message, args, type){
         selfDeafen: config.settings.selfDeaf,
     });
     player.set("message", message);
+    player.set("votes", 0);
     player.set("playerauthor", message.author.id);
-    if(!res.tracks[0])return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`There was an error while searching!`).setDescription(`Please retry!`));
+    if(!res.tracks[0])return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`There was an error while searching!`).setDescription(`Please retry!`));
     // Connect to the voice channel and add the track to the queue
     if (player.state !== "CONNECTED") {
         try{player.connect();}catch{}
@@ -153,9 +155,7 @@ async function playlist(client, message, args, type){
             .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
                 dynamic: true
             }))
-        message.channel.send(nembed).then(msg => msg.delete({
-            timeout: 4000
-        }).catch(e => console.log(String(e.stack).yellow)));
+        message.channel.send(nembed)
         player.play();
         if(isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
     } else {
@@ -170,14 +170,12 @@ async function playlist(client, message, args, type){
                 dynamic: true
             }))
         if(isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
-        return message.channel.send(embed).then(msg => msg.delete({
-            timeout: 4000
-        }).catch(e => console.log(String(e.stack).yellow)));
+        return message.channel.send(embed)
     }
 
 } catch (e) {
     console.log(String(e.stack).red)
-    message.channel.send(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle(String(":x: Found nothing for: **`" + search).substr(0, 256-3) + "`**"))
+    message.channel.send(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle(String("❌ Found nothing for: **`" + search).substr(0, 256-3) + "`**"))
 }
 }
 
@@ -199,7 +197,7 @@ async function song(client, message, args, type){
         };
     } catch (e) {
         console.log(String(e.stack).red)
-        return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`There was an error while searching:`).setDescription(`\`\`\`${e.message}\`\`\``));
+        return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`There was an error while searching:`).setDescription(`\`\`\`${e.message}\`\`\``));
     }
     // Create the player
     const player = client.manager.create({
@@ -209,8 +207,9 @@ async function song(client, message, args, type){
         selfDeafen: config.settings.selfDeaf,
     });
     player.set("message", message);
+    player.set("votes", 0);
     player.set("playerauthor", message.author.id);
-    if(!res.tracks[0])return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`There was an error while searching!`).setDescription(`Please retry!`));
+    if(!res.tracks[0])return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`There was an error while searching!`).setDescription(`Please retry!`));
     // Connect to the voice channel and add the track to the queue
     if (player.state !== "CONNECTED") {
         try{player.connect();}catch{}
@@ -232,11 +231,11 @@ async function song(client, message, args, type){
             console.log(isrequestchannel(client, message))
         if(isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
 
-        return message.channel.send(embed).then(msg => msg.delete({ timeout: 4000  }).catch(e => console.log(String(e.stack).yellow)));
+        return message.channel.send(embed)
     }
 } catch (e) {
     console.log(String(e.stack).red)
-    message.channel.send(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle(String(":x: Found nothing for: **`" + search).substr(0, 256-3) + "`**"))
+    message.channel.send(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle(String("❌ Found nothing for: **`" + search).substr(0, 256-3) + "`**"))
 }
 
 }

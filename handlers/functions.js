@@ -192,6 +192,12 @@ module.exports = {
                 message_queue_info: "0",
                 message_track_info: "0"
             });
+            client.settings.ensure(guildid, {
+                prefix: config.prefix,
+                djroles: [],
+                djonlycmds: ["clearqueue", "forward", "loop", "jump", "loopqueue", "loopsong", "move", "pause", "resume", "removetrack", "restart", "rewind", "seek", "shuffle", "skip", "stop", "volume"],
+                botchannel: [],
+            });
         }
         if (userid) {
             client.premium.ensure(userid, { enabled: false, twentyfourseven: false });

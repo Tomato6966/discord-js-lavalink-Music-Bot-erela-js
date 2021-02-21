@@ -4,6 +4,7 @@ const config = require("../botconfig/config.json")
 const ee = require("../botconfig/embed.json")
 const {format,databasing,escapeRegex} = require("../handlers/functions")
 const playermanager = require("../handlers/playermanager");
+let hasmap = new Map();
 module.exports = async (client, message) => {
   client.on("messageReactionAdd",async (reaction, user)=>{
     if (reaction.message.channel.partial) await reaction.message.channel.fetch();
@@ -24,11 +25,22 @@ module.exports = async (client, message) => {
     //getting the Voice Channel Data of the Message Member
     const { channel } = member.voice;
     //if not in a Voice Channel return!
-    if (!channel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle(":x: ERROR | You need to join a voice channel."));
+    if (!channel)
+      return message.channel.send(new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle("❌ ERROR | You need to join a voice channel.")
+      );
     //get the lavalink erela.js player information
     const player = client.manager.players.get(message.guild.id);
     //if there is a player and the user is not in the same channel as the Bot return information message
-    if (player && channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle(":x: ERROR | I am already playing somewhere else!").setDescription(`You can listen to me in: \`${message.guild.channels.cache.get(player.VoiceChannel).name}\``));
+    if (player && channel.id !== player.voiceChannel)
+    return message.channel.send(new MessageEmbed()
+      .setColor(ee.wrongcolor)
+      .setFooter(ee.footertext, ee.footericon)
+      .setTitle("❌ ERROR | I am already playing somewhere else!")
+      .setDescription(`You can listen to me in: \`${message.guild.channels.cache.get(player.VoiceChannel).name}\``)
+    );
     //if the user is not in the channel as in the db voice channel return error
     if (channel.id !== db.voicechannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle(`You need to be in the: \`${message.guild.channels.cache.get(db.voicechannel).name}\` VoiceChannel`));
     //switch case for every single reaction emoji someone makes
@@ -150,12 +162,12 @@ module.exports = async (client, message) => {
       break;
       case "🔁": //change repeat mode --> track --> Queue --> none
         //if both repeat modes are off
-        if(!player.trackRepeat){
-          console.log("ON")
-            //set track repeat mode to on
-            player.setTrackRepeat(true);
+        if(!player.trackRepeat && !hasmap.get(message.guild.id)){
+            hasmap.set(message.guild.id, 1)
             //and queue repeat mode to off
-            player.setQueueRepeat(false);
+            player.setQueueRepeat(!player.queueRepeat);
+            //set track repeat mode to on
+            player.setTrackRepeat(!player.trackRepeat);
             //Send an informational message
             message.channel.send(new MessageEmbed()
               .setTitle(`🔀 Track Loop is now ${player.trackRepeat ? "active" : "disabled"}.`)
@@ -165,12 +177,12 @@ module.exports = async (client, message) => {
             );
         }
         //if track repeat mode is on and queue repeat mode off
-        else if(player.trackRepeat){
-          console.log("ON2")
+        else if(player.trackRepeat && hasmap.get(message.guild.id) === 1){
+          hasmap.set(message.guild.id, 2)
           //set track repeat mode off
-          player.setTrackRepeat(false);
+          player.setTrackRepeat(!player.trackRepeat);
           //set queue repeat mode on
-          player.setQueueRepeat(true);
+          player.setQueueRepeat(!player.queueRepeat);
           //send informational message
           message.channel.send(new MessageEmbed()
             .setTitle(`🔀 Queue Loop is now ${player.queueRepeat ? "active" : "disabled"}.`)
@@ -181,6 +193,7 @@ module.exports = async (client, message) => {
         }
         //otherwise like queue on and track should be off...
         else{
+            hasmap.delete(message.guild.id)
           //set track repeat mode off
           player.setTrackRepeat(false);
           //set queue repeat mode off

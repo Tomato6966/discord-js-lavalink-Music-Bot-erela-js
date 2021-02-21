@@ -10,9 +10,9 @@ module.exports = {
     usage: "queue",
     run: async (client, message, args, cmduser, text, prefix) => {
         const { channel } = message.member.voice;
-        if (!channel) return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
+        if (!channel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
         const player = message.client.manager.get(message.guild.id);
-        if (!player) return message.reply("there is no player for this guild.");
+        if (!player) return message.channel.send("there is no player for this guild.");
         const queue = player.queue;
         const embed = new MessageEmbed().setAuthor(`Queue for ${message.guild.name}`);
         const multiple = 20;
@@ -26,6 +26,6 @@ module.exports = {
         embed.setColor(ee.color);
         const maxPages = Math.ceil(queue.length / multiple);
         embed.setFooter(`Page ${page > maxPages ? maxPages : page} of ${maxPages} | Type \`?queue <Number>\``);
-        return message.reply(embed);
+        return message.channel.send(embed);
     },
 };

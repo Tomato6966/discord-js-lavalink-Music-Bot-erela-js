@@ -7,17 +7,15 @@ module.exports = {
     cooldown: 4,
     usage: "unmute @User",
     description: "Unmutes a User!",
+    memberpermissions: ["KICK_MEMBERS"],
     run: async (client, message, args, cmduser, text, prefix) => {
      try{
-        message.delete({ timeout: 350 }).catch((e) => console.log(String(e.stack).red));
-        if (!message.member.hasPermission("KICK_MEMBERS")) return message.reply("You are not allowed to run this command!");
         let member = message.mentions.members.first();
-        if (!member) return message.reply("ERROR, please ping a USER! Usage: `mute @User <Time> [REASON]` example: `mute @User 10m He is doing bad stuff!`");
+        if (!member) return message.channel.send("ERROR, please ping a USER! Usage: `mute @User <Time> [REASON]` example: `mute @User 10m He is doing bad stuff!`");
         args.shift();
         if (!message.member.hasPermission("ADMINISTRATOR") && member.roles.highest.position >= message.member.roles.highest.position) {
-            return message.reply(":x: I cannot mute this Member, because he is higher/Equal to your Rang Position!");
+            return message.channel.send("❌ I cannot mute this Member, because he is higher/Equal to your Rang Position!");
         }
-        if (!message.guild.me.hasPermission("MANAGE_ROLES")) return message.reply("I need the permission, to Manage Roles aka give roles");
         let allguildroles = message.guild.roles.cache.array();
         let mutedrole = false;
         for (let i = 0; i < allguildroles.length; i++) {
@@ -27,10 +25,10 @@ module.exports = {
             }
         }
         if (!mutedrole) {
-            return message.reply(":x: You never muted someone, there is no muted role yet!");
+            return message.channel.send("❌ You never muted someone, there is no muted role yet!");
         }
         if (mutedrole.position > message.guild.me.roles.highest.position) {
-            return message.reply(":x: I cannot access the Role, because it's above me!");
+            return message.channel.send("❌ I cannot access the Role, because it's above me!");
         }
         try {
             member.roles.remove(mutedrole);
@@ -44,7 +42,7 @@ module.exports = {
         return message.channel.send(
             new MessageEmbed()
             .setColor("RED")
-            .setTitle(`:x: ERROR | An error occurred`)
+            .setTitle(`❌ ERROR | An error occurred`)
             .setDescription(`\`\`\`${e.stack}\`\`\``)
         );
     }

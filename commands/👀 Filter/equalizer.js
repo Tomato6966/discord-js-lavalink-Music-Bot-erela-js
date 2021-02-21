@@ -13,7 +13,7 @@ module.exports = {
         if (!player) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("There is nothing playing"));
         if (channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to be in my voice channel to use this command!"));
         let level = "none";
-        if (!args.length || (!client.eqs[args[0].toLowerCase()] && args[0].toLowerCase() != "none")) return message.reply("Bass boost level must be one of the following: `music`, `bassboost`, `earrape`");
+        if (!args.length || (!client.eqs[args[0].toLowerCase()] && args[0].toLowerCase() != "none")) return message.channel.send("Bass boost level must be one of the following: `music`, `bassboost`, `earrape`");
         level = args[0].toLowerCase();
         switch (level) {
             case "music":
@@ -28,6 +28,6 @@ module.exports = {
                 break;
         }
         const embed = new MessageEmbed().setTitle(`:white_check_mark:Set Equalizer to\`${level}\`.`).setColor(ee.color).setFooter(ee.footertext, ee.footericon);
-        return message.reply(embed);
+        return message.channel.send(embed);
     },
 };

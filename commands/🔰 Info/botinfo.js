@@ -7,7 +7,7 @@ const ee = require("../../botconfig/embed.json");
 module.exports = {
     name: "botinfo",
     aliases: ["info"],
-    category: "utility",
+    category: "🔰 Info",
     description: "Sends detailed info about the client",
     usage: "botinfo",
     run: async (client, message, args, cmduser, text, prefix) => {

@@ -7,11 +7,10 @@ module.exports = {
     aliases: [""],
     description: "Kicks a Member from a Guild",
     usage: "kick @User",
+    memberpermissions: ["KICK_MEMBERS"],
     run: async (client, message, args, cmduser, text, prefix) => {
-        message.delete({ timeout: 350 }).catch((e) => console.log(String(e.stack).red));
-        if (!message.member.hasPermission("KICK_MEMBERS")) return message.reply("You are not allowed to run this command!");
         let kickmember = message.mentions.members.first() || message.guild.members.cache.get(args[0] ? args[0] : "");
-        if (!kickmember) return message.reply("Please add a Member you want to kick!");
+        if (!kickmember) return message.channel.send("Please add a Member you want to kick!");
         let reason = args.slice(1).join(" ");
         if (!reason) {
             reason = "NO REASON";
@@ -19,10 +18,10 @@ module.exports = {
         const memberPosition = kickmember.roles.highest.position;
         const moderationPosition = message.member.roles.highest.position;
         if (moderationPosition <= memberPosition) {
-            return message.reply("I cannot kick someone, who is above/equal you");
+            return message.channel.send("I cannot kick someone, who is above/equal you");
         }
         if (!kickmember.kickable) {
-            return message.reply("The Member is not kickable, sorry!");
+            return message.channel.send("The Member is not kickable, sorry!");
         }
         try {
             kickmember.kick(reason).then(() => {
@@ -30,7 +29,7 @@ module.exports = {
             });
         } catch (e) {
             console.log(String(e.stack).red);
-            return message.reply("there was an error trying to kick the Member.");
+            return message.channel.send("there was an error trying to kick the Member.");
         }
     },
 };

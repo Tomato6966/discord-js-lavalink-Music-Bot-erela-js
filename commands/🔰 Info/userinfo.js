@@ -8,8 +8,8 @@ module.exports = {
     description: "Get information about a user",
     usage: "userinfo [@USER]",
     run: async (client, message, args, cmduser, text, prefix) => {
-        const user = message.mentions.users.first();
-        if (!user) return message.reply("Please mention the user who you want info about.");
+        const user = message.mentions.users.first() || message.author;
+        if (!user) return message.channel.send("Please mention the user who you want info about.");
         var playing = "[ " + user.presence.activities + " ]";
         const who = new Discord.MessageEmbed()
             .setTitle("User Info:")

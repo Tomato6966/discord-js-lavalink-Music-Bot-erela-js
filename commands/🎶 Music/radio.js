@@ -13,10 +13,10 @@ module.exports = {
     usage: "radio <1-183>",
     run: async (client, message, args, cmduser, text, prefix) => {
         const { channel } = message.member.voice;
-        if (!channel) return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
+        if (!channel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
         if (!args[0]) return stations(client, config.prefix, message);
         if (isNaN(args[0])) {
-            return message.reply(
+            return message.channel.send(
                 new Discord.MessageEmbed()
                     .setColor(ee.wrongcolor)
                     .setAuthor(`Error`, ee.footericon, "https://milrato.eu")
@@ -24,8 +24,8 @@ module.exports = {
                     .setTitle(`Not a valid radio station please use a Number between\`1\`and\`183\``)
             );
         }
-        if (Number(args[1]) > 150) return message.reply("**Maximum Volume is `150`!**");
-        if (Number(args[1]) < 1) return message.reply("**Minimum Volume is `1`!**");
+        if (Number(args[1]) > 150) return message.channel.send("**Maximum Volume is `150`!**");
+        if (Number(args[1]) < 1) return message.channel.send("**Minimum Volume is `1`!**");
         let volume;
         if (isNaN(args[1])) {
             volume = 50;
@@ -68,16 +68,16 @@ module.exports = {
         } else if (Number([args[0]]) > 160 && Number(args[0]) <= 183) {
             args2 = radios.OTHERS.request[Number(args[0]) - 160 - 1].split(` `);
         } else {
-            return message.reply("This radio station was not found");
+            return message.channel.send("This radio station was not found");
         }
-        
+
         const song = { title: args2[0].replace("-", " "), url: args2[1] };
         let embed = new Discord.MessageEmbed()
         embed.setColor(ee.color)
         embed.setTitle("Searching: " + song.title)
         try{embed.setURL(song.url)}catch{}
         embed.setFooter(ee.footertext, ee.footericon)
-        message.reply(embed).then((msg) => msg.delete({ timeout: 5000 }).catch((e) => console.log(String(e.stack).red)));
+        message.channel.send(embed)
         playermanager(client, message, Array(song.url), "song:radio");
     },
 };

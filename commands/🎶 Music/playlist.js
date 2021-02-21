@@ -10,8 +10,21 @@ module.exports = {
     description: "Plays a playlist from youtube",
     usage: "playlist <URL>",
     run: async (client, message, args, cmduser, text, prefix) => {
-        if (!message.member.voice.channel) return message.reply("you need to join a voice channel.");
-        if (!args.length) return message.reply(new MessageEmbed().setColor(ee.wrongcolor).setTitle("you need to give me a URL or a search term."));
+        //if not in a voice Channel return error
+        if (!message.member.voice.channel)
+            return message.channel.send(new MessageEmbed()
+                .setColor(ee.wrongcolor)
+                .setFooter(ee.footertext, ee.footericon)
+                .setTitle("❌ Error | You need to join a voice channel.")
+            );
+        //if no args return error
+        if (!args.length)
+            return message.channel.send(new MessageEmbed()
+                .setColor(ee.wrongcolor)
+                .setFooter(ee.footertext, ee.footericon)
+                .setTitle("❌ Error | You need to give me a URL or a search term.")
+            );
+        //play the playlist
         playermanager(client, message, args, "playlist");
     },
 };

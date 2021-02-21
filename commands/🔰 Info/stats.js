@@ -54,6 +54,6 @@ module.exports = {
         .addField("🎵 SERVER Songs played:", `>>> \`${guild.songs} Songs\` played in\n**this** Server`,true)
         .addField("📰 GLOBAL Premium list:", `>>> \`${guilds.length} Guilds\`\n\`${users.length} Users\`\n having Premium`,true)
         .setImage("https://cdn.discordapp.com/attachments/754700756170440774/812443980293603329/lavamusic.gif")
-        message.reply(embed.setTitle(`💿 The Stats of ${client.user.username}`));
+        message.channel.send(embed.setTitle(`💿 The Stats of ${client.user.username}`));
     },
 };
