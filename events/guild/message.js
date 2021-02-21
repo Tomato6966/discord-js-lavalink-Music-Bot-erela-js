@@ -92,14 +92,18 @@ module.exports = async (client, message) => {
       try{  message.delete();   }catch{}
       //if Command has specific permission return error
       if(command.memberpermissions) {
-        if (!message.member.hasPermission(command.memberpermissions))
-          return message.channel.send(new Discord.MessageEmbed()
+        if (!message.member.hasPermission(command.memberpermissions)) {
+          message.channel.send(new Discord.MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
             .setTitle("❌ Error | You are not allowed to run this command!")
             .setDescription(`You need these Permissions: \`${command.memberpermissions.join("`, ``")}\``)
           ).then(msg=>msg.delete({timeout: 5000}).catch(e=>console.log("Couldn't Delete --> Ignore")));
-      }
+          throw {
+            message: "❌ Error | You are not allowed to run this command!" + `You need these Permissions: \`${command.memberpermissions.join("`, ``")}\``
+            }
+          }
+        }
       //if Command has specific permission return error
       if(client.settings.get(message.guild.id, `djonlycmds`).join(" ").toLowerCase().split(" ").includes(command.name.toLowerCase())) {
         //Check if there is a Dj Setup
@@ -120,24 +124,30 @@ module.exports = async (client, message) => {
 
             if(!isdj && !message.member.hasPermission("ADMINISTRATOR")) {
               if(player && player.queue.current.requester.id !== message.author.id) {
-                return message.channel.send(new Discord.MessageEmbed()
+                 message.channel.send(new Discord.MessageEmbed()
                   .setColor(ee.wrongcolor)
                   .setFooter(ee.footertext, ee.footericon)
                   .setTitle("❌ Error | You are not allowed to run this command!")
                   .setDescription(`You need to have one of those Roles:\n${leftb.substr(0, leftb.length-3)}\n\nOr be the Requester (${player.queue.current.requester}) of the current Track!`)
                 ).then(msg=>msg.delete({timeout: 5000}).catch(e=>console.log("Couldn't Delete --> Ignore")));
+                  throw  {
+                    message: "❌ Error | You are not allowed to run this command!" + `You need to have one of those Roles:\n${leftb.substr(0, leftb.length-3)}\n\nOr be the Requester (${player.queue.current.requester}) of the current Track!`
+                  }
               }
             }
           }
       }
       //if the Bot has not enough permissions return error
-      if(!message.guild.me.hasPermission("ADMINISTRATOR"))
-        return message.channel.send(new Discord.MessageEmbed()
+      if(!message.guild.me.hasPermission("ADMINISTRATOR")){
+        message.channel.send(new Discord.MessageEmbed()
         .setColor(ee.wrongcolor)
         .setFooter(ee.footertext, ee.footericon)
         .setTitle("❌ Error | I don't have enough Permissions!")
-        .setDescription("Please give me ADMINISTRATOR, because i need it to delete Messages, Create Channel and execute all Admin Commands ;)")
-      )
+        .setDescription("Please give me ADMINISTRATOR, because i need it to delete Messages, Create Channel and execute all Admin Commands "))
+        throw {
+          message: "❌ Error | I don't have enough Permissions!" + `Please give me ADMINISTRATOR, because i need it to delete Messages, Create Channel and execute all Admin Commands ;)`
+        }
+      }
       //run the command with the parameters:  client, message, args, user, text, prefix,
       command.run(client, message, args, message.member, args.join(" "), prefix);
     }catch (e) {
@@ -146,7 +156,7 @@ module.exports = async (client, message) => {
         .setColor(ee.wrongcolor)
         .setFooter(ee.footertext, ee.footericon)
         .setTitle("❌ Something went wrong while, running the: `" + command.name + "` command")
-        .setDescription(`\`\`\`${e.stack}\`\`\``)
+        .setDescription(`\`\`\`${e.message}\`\`\``)
       ).then(msg=>msg.delete({timeout: 5000}).catch(e=>console.log("Couldn't Delete --> Ignore")));
     }
   }
