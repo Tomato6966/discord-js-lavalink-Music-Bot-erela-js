@@ -172,14 +172,12 @@ module.exports = {
         message.channel.send(stationsembed3);
     },
     databasing: function (client, guildid, userid) {
-        client.premium.ensure("premiumlist", { list: [] });
         client.stats.ensure("global", {
             commands: 0,
             songs: 0,
             setups: 0
         });
         if (guildid) {
-            client.premium.ensure(guildid, { enabled: false, twentyfourseven: false });
             client.stats.ensure(guildid, {
                 commands: 0,
                 songs: 0
@@ -198,9 +196,6 @@ module.exports = {
                 djonlycmds: ["clearqueue", "forward", "loop", "jump", "loopqueue", "loopsong", "move", "pause", "resume", "removetrack", "restart", "rewind", "seek", "shuffle", "skip", "stop", "volume"],
                 botchannel: [],
             });
-        }
-        if (userid) {
-            client.premium.ensure(userid, { enabled: false, twentyfourseven: false });
         }
         return;
     },
@@ -293,11 +288,11 @@ module.exports = {
           return `**[${bar[0]}]**`;
       }
       function edit_10_s_np(track_info_msg, track, queue_info_msg, client, player) {
-        queue_info_msg.edit(QueueEmbed(client, player)).catch(e=>String(e.stack).yellow);
+        track_info_msg.edit(SongEmbed(track)).catch(e=>String(e.stack).yellow);
         if(oldQueueSize != player.queue.size)
         {
-          oldQueueSize = player.queue.size;
-          track_info_msg.edit(SongEmbed(track)).catch(e=>String(e.stack).yellow);
+            oldQueueSize = player.queue.size;
+            queue_info_msg.edit(QueueEmbed(client, player)).catch(e=>String(e.stack).yellow);
         }
       }
       //GET QUEUE INFO MSG
@@ -356,7 +351,7 @@ module.exports = {
         .setFooter(ee.footertext, ee.footericon)
         .setTitle("Lava Music | Currently no song is playing!")
         .setDescription(`Join a voice channel and enter a song name or url to play.\n[Invite Lava Music](https://lava.milrato.eu) • [Support Server](https://discord.com/invite/wvCp7q88G3)`)
-        .setImage("https://media.discordapp.net/attachments/754700756170440774/812443980293603329/lavamusic.gif")
+        .setImage("https://i.gifer.com/OSOD.gif")
         track_info_msg.edit(embed3).catch(e=>String(e.stack).yellow);
         queue_info_msg.edit(embed2).catch(e=>String(e.stack).yellow);
       }

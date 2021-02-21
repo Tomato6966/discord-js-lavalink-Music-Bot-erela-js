@@ -4,15 +4,6 @@ const config = require("../botconfig/config.json")
 const ee = require("../botconfig/embed.json")
 const { format,isrequestchannel,edit_request_message_queue_info } = require("../handlers/functions")
 module.exports = async (client, message, args, type) => {
-    client.premium.ensure(message.guild.id, {
-        "enabled": false,
-        "twentyfourseven": false,
-      })
-      //ensuring MEMBER premium
-      client.premium.ensure(message.author.id, {
-        "enabled": false,
-        "twentyfourseven": false,
-      })
     if(type.includes("song")) song(client, message, args, type);
     if(type.includes("playlist")) playlist(client, message, args, type);
     if(type.includes("search")) search(client, message, args, type);

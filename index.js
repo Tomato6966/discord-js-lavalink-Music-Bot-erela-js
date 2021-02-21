@@ -29,7 +29,6 @@ const client = new Discord.Client({
     require(`./handlers/${handler}`)(client);
 });
 //Each Database gets a own file and folder which is pretty handy!
-client.premium = new Enmap({name: "premium", dataDir: "./databases/premium"})
 client.stats = new Enmap({name: "stats", dataDir: "./databases/stats"})
 client.settings = new Enmap({name: "setups", dataDir: "./databases/settings"})
 client.setups = new Enmap({name: "setups", dataDir: "./databases/setups"})

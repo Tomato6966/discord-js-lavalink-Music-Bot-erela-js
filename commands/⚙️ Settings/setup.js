@@ -66,7 +66,7 @@ module.exports = {
                       },
                       { //giving the Bot himself permissions
                         id: client.user.id,
-                        allow: ["MANAGE_MESSAGES", "MANAGE_CHANNEL","ADD_REACTIONS","SEND_MESSAGES","MANAGE_ROLES"]
+                        allow: ["ADMINISTRATOR"]
                       }
                     ],
                   })
@@ -90,7 +90,7 @@ module.exports = {
                       .setFooter(ee.footertext, ee.footericon)
                       .setTitle("Lava Music | Currently no song is playing!")
                       .setDescription(`Join a voice channel and enter a song name or url to play.\n[Invite Lava Music](https://lava.milrato.eu) • [Support Server](https://discord.com/invite/wvCp7q88G3)`)
-                      .setImage("https://media.discordapp.net/attachments/754700756170440774/812443980293603329/lavamusic.gif")
+                      .setImage("https://i.gifer.com/OSOD.gif")
                       //send a temp message
                     channel3.send(new MessageEmbed().setColor(ee.color)).then(msg => {
                         //react with embed 1
