@@ -90,7 +90,7 @@ module.exports = {
                       .setFooter(ee.footertext, ee.footericon)
                       .setTitle("Lava Music | Currently no song is playing!")
                       .setDescription(`Join a voice channel and enter a song name or url to play.\n[Invite Lava Music](https://lava.milrato.eu) • [Support Server](https://discord.com/invite/wvCp7q88G3)`)
-                      .setImage("https://i.gifer.com/OSOD.gif")
+                      .setImage("https://cdn.discordapp.com/attachments/754700756170440774/812443980293603329/lavamusic.gif")
                       //send a temp message
                     channel3.send(new MessageEmbed().setColor(ee.color)).then(msg => {
                         //react with embed 1
