@@ -351,7 +351,7 @@ module.exports = {
         .setFooter(ee.footertext, ee.footericon)
         .setTitle("Lava Music | Currently no song is playing!")
         .setDescription(`Join a voice channel and enter a song name or url to play.\n[Invite Lava Music](https://lava.milrato.eu) • [Support Server](https://discord.com/invite/wvCp7q88G3)`)
-        .setImage("https://i.gifer.com/OSOD.gif")
+        .setImage("https://cdn.discordapp.com/attachments/754700756170440774/812443980293603329/lavamusic.gif")
         track_info_msg.edit(embed3).catch(e=>String(e.stack).yellow);
         queue_info_msg.edit(embed2).catch(e=>String(e.stack).yellow);
       }
