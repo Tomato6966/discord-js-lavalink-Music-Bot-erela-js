@@ -8,6 +8,7 @@ const Discord = require("discord.js"); //this is the official discord.js wrapper
 const { createBar, format, databasing, escapeRegex, isrequestchannel} = require("../../handlers/functions"); //Loading all needed functions
 //here the event starts
 module.exports = async (client, message) => {
+  try{
   //if the message is not in a guild (aka in dms), return aka ignore the inputs
   if (!message.guild) return;
   //if the channel is on partial fetch it
@@ -167,4 +168,5 @@ module.exports = async (client, message) => {
     .setTitle(`❌ Unkown command, try: **\`${prefix}help\`**`)
     .setDescription(`To play Music simply type \`${prefix}play <Title / Url>\``)
   ).then(msg=>msg.delete({timeout: 5000}).catch(e=>console.log("Couldn't Delete --> Ignore")));
+   }catch{}
 }

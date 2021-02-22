@@ -10,19 +10,37 @@ module.exports = {
     description: "Plays a playlist from youtube",
     usage: "playlist <URL>",
     run: async (client, message, args, cmduser, text, prefix) => {
-        //if not in a voice Channel return error
-        if (!message.member.voice.channel)
+      //get the channel instance
+          const { channel } = message.member.voice;
+          //if not in a voice Channel return error
+          if (!channel)
+              return message.channel.send(new MessageEmbed()
+                  .setColor(ee.wrongcolor)
+                  .setFooter(ee.footertext, ee.footericon)
+                  .setTitle("❌ Error | You need to join a voice channel.")
+              );
+          //if no args return error
+          if (!args.length)
+              return message.channel.send(new MessageEmbed()
+                  .setColor(ee.wrongcolor)
+                  .setFooter(ee.footertext, ee.footericon)
+                  .setTitle("❌ Error | You need to give me a URL or a search term.")
+              );
+          //get the player instance
+          const player = client.manager.players.get(message.guild.id);
+          //f not in the same channel --> return
+          if(player && channel.id !== player.voiceChannel)
             return message.channel.send(new MessageEmbed()
-                .setColor(ee.wrongcolor)
-                .setFooter(ee.footertext, ee.footericon)
-                .setTitle("❌ Error | You need to join a voice channel.")
+              .setColor(ee.wrongcolor)
+              .setFooter(ee.footertext, ee.footericon)
+              .setTitle("❌ Error | You need to be in my voice channel to use this command!")
+              .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
             );
-        //if no args return error
-        if (!args.length)
+          if (!args.length)
             return message.channel.send(new MessageEmbed()
-                .setColor(ee.wrongcolor)
-                .setFooter(ee.footertext, ee.footericon)
-                .setTitle("❌ Error | You need to give me a URL or a search term.")
+              .setFooter(ee.footertext, ee.footericon)
+              .setColor(ee.wrongcolor)
+              .setTitle("you need to give me a URL.")
             );
         //play the playlist
         playermanager(client, message, args, "playlist");

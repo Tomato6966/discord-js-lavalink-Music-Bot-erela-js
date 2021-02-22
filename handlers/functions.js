@@ -288,11 +288,11 @@ module.exports = {
           return `**[${bar[0]}]**`;
       }
       function edit_10_s_np(track_info_msg, track, queue_info_msg, client, player) {
-        queue_info_msg.edit(QueueEmbed(client, player)).catch(e=>String(e.stack).yellow);
+        track_info_msg.edit(SongEmbed(track)).catch(e=>String(e.stack).yellow);
         if(oldQueueSize != player.queue.size)
         {
-          oldQueueSize = player.queue.size;
-          track_info_msg.edit(SongEmbed(track)).catch(e=>String(e.stack).yellow);
+            oldQueueSize = player.queue.size;
+            queue_info_msg.edit(QueueEmbed(client, player)).catch(e=>String(e.stack).yellow);
         }
       }
       //GET QUEUE INFO MSG
