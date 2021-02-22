@@ -44,7 +44,7 @@ module.exports = {
                 console.log(String(e.stack).red)
                 return message.channel.send("Your time ran out, CANCELLED!")
                 })
-              
+
             }
             if(collected.first().emoji.name === "2️⃣"){
                   try{
@@ -53,8 +53,14 @@ module.exports = {
                     if(!user) return message.channel.send("sorry i cant find you make sure I am in a guild with you! or DM: `Tomato#6966`");
                     databasing(client, "", id)
                     if(client.premium.get(id, "enabled")) return message.channel.send("You are already a Premium Member!")
-                    let tomato = await client.users.fetch("442355791412854784");
-                    tomato.send(`**${message.author.tag}**, request USER PREMIUM: \`${id}\`\n\n> \`\`\`?tp user ${id}\`\`\``)
+                    for(let i = 0; i<config.ownerIDS.length;i++){
+                      try{
+                        let owner = await client.users.fetch(ownerIDS[i]);
+                        owner.send(`**${message.author.tag}**, request USER PREMIUM: \`${id}\`\n\n> \`\`\`?tp user ${id}\`\`\``)
+                      }catch(e){
+                        console.log(String(e.stack).red)
+                      }
+                    }
                     message.channel.send("✅ Successfully applied as a Premium USER!\nPlease wait..")
                   }catch (e){
                     console.log(String(e.stack).red)
