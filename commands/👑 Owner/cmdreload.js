@@ -19,16 +19,21 @@ module.exports = {
                         client.commands.delete(args[0])
                         const pull = require(`../../commands/${dir}/${args[0]}.js`)
                         client.commands.set(args[0], pull)
-                        reload = true;            
+                        reload = true;
                 }catch{ }
             }
             if(reload) return message.channel.send(`Successfully reloaded \`${args[0]}\``);
             message.channel.send(`Could not reload: \`${args[0]}\``)
-            
-        
-        } catch (e) {
-            console.log(String(e.stack).red);
-            return message.channel.send("there was an error");
-        }
+
+
+          } catch (e) {
+              console.log(String(e.stack).bgRed)
+              return message.channel.send(new MessageEmbed()
+                  .setColor(ee.wrongcolor)
+      						.setFooter(ee.footertext, ee.footericon)
+                  .setTitle(`❌ ERROR | An error occurred`)
+                  .setDescription(`\`\`\`${e.stack}\`\`\``)
+              );
+          }
     },
 };

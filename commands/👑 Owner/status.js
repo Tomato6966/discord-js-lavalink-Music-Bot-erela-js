@@ -26,9 +26,14 @@ module.exports = {
                 }
                 return message.channel.send(new MessageEmbed().setFooter(ee.footertext,ee.footericon).setColor(ee.color).setTitle("✅ Successfully set the new Status"))
               });
-        }catch(e){
-            console.log(String(e.stack).red);
-            message.channel.send(new MessageEmbed().setFooter(ee.footertext,ee.footericon).setColor(ee.wrongcolor).setTitle("❌ ERROR Something went wrong running this Command").setDescription(`\`\`\`${e.stack}\`\`\``))
-        }
+            } catch (e) {
+                console.log(String(e.stack).bgRed)
+                return message.channel.send(new MessageEmbed()
+                    .setColor(ee.wrongcolor)
+        						.setFooter(ee.footertext, ee.footericon)
+                    .setTitle(`❌ ERROR | An error occurred`)
+                    .setDescription(`\`\`\`${e.stack}\`\`\``)
+                );
+            }
     },
 };

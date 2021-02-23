@@ -4,48 +4,77 @@ const ee = require("../../botconfig/embed.json");
 module.exports = {
     name: "removevoteskip",
     category: "🎶 Music",
-    aliases: ["rvs", "rs", "removeskip", "removevs"],
+    aliases: ["rvs", "removeskip", "removevs", "votestop", "stopvote"],
     description: "Removes your Vote of the VoteSkip!",
     usage: "removevoteskip",
     run: async (client, message, args, cmduser, text, prefix) => {
-        const { channel } = message.member.voice;
-        if (!channel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
-        const player = client.manager.players.get(message.guild.id);
-        if (!player) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("There is nothing playing"));
-        if (channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to be in my voice channel to use this command!"));
-        //Check if there is a Dj Setup
-        if(client.settings.get(message.guild.id, `djroles`).toString()!==""){
-          let channelmembersize = channel.members.size;
-          let voteamount = 0;
-          if(channelmembersize <= 3) voteamount = 1;
+    try{
+      //get the channel instance from the Member
+      const { channel } = message.member.voice;
+      //if the member is not in a channel, return
+      if (!channel)
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setTitle("❌ Error | You need to join a voice channel.")
+        );
+      //get the player instance
+      const player = client.manager.players.get(message.guild.id);
+      //if no player available return error | aka not playing anything
+      if (!player)
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setTitle("❌ Error | There is nothing playing")
+        );
+      //if not in the same channel as the player, return Error
+      if (channel.id !== player.voiceChannel)
+        return message.channel.send(new MessageEmbed()
+          .setFooter(ee.footertext, ee.footericon)
+          .setColor(ee.wrongcolor)
+          .setTitle("❌ Error | You need to be in my voice channel to use this command!")
+          .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
+        );
+      //Check if there is a Dj Setup
+      if(client.settings.get(message.guild.id, `djroles`).toString()!==""){
+        let channelmembersize = channel.members.size;
+        let voteamount = 0;
+        if(channelmembersize <= 3) voteamount = 1;
 
-          voteamount = Math.ceil(channelmembersize / 3);
+        voteamount = Math.ceil(channelmembersize / 3);
 
-            if(player.get(`vote-${message.author.id}`)) {
-              player.set(`vote-${message.author.id}`, false)
-              player.set("votes", String(Number(player.get("votes")) - 1));
-                return message.channel.send(new MessageEmbed()
-                  .setColor(ee.color)
-                  .setFooter(ee.footertext, ee.footericon)
-                  .setTitle(`✅ Success | Removed your Vote!`)
-                  .setDescription(`There are now: \`${player.get("votes")}\` of \`${voteamount}\` needed Votes`)
-                );
-            }
-            else {
-                return message.channel.send(new MessageEmbed()
-                  .setColor(ee.wrongcolor)
-                  .setFooter(ee.footertext, ee.footericon)
-                  .setTitle(`❌ ERROR | You havn't voted yet!!`)
-                  .setDescription(`There are: \`${player.get("votes")}\` of \`${voteamount}\` needed Votes`)
-                );
-              }
+          if(player.get(`vote-${message.author.id}`)) {
+            player.set(`vote-${message.author.id}`, false)
+            player.set("votes", String(Number(player.get("votes")) - 1));
+              return message.channel.send(new MessageEmbed()
+                .setColor(ee.color)
+                .setFooter(ee.footertext, ee.footericon)
+                .setTitle(`✅ Success | Removed your Vote!`)
+                .setDescription(`There are now: \`${player.get("votes")}\` of \`${voteamount}\` needed Votes`)
+              );
           }
-          else{
-            return message.channel.send(new MessageEmbed()
+          else {
+              return message.channel.send(new MessageEmbed()
+                .setColor(ee.wrongcolor)
+                .setFooter(ee.footertext, ee.footericon)
+                .setTitle(`❌ ERROR | You havn't voted yet!!`)
+                .setDescription(`There are: \`${player.get("votes")}\` of \`${voteamount}\` needed Votes`)
+              );
+            }
+        }
+        else
+          return message.channel.send(new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setFooter(ee.footertext, ee.footericon)
+            .setTitle(`❌ ERROR | Cannot remove your Vote!`)
+            .setDescription(`Because ther is no DJ-Role Setup created yet, create it by typing \`${prefix}adddj @DJ-Setup\``)
+          );
+      } catch (e) {
+          console.log(String(e.stack).bgRed)
+          return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
-              .setFooter(ee.footertext, ee.footericon)
-              .setTitle(`❌ ERROR | Cannot remove your Vote!`)
-              .setDescription(`Because ther is no DJ-Role Setup created yet, create it by typing \`${prefix}adddj @DJ-Setup\``)
-            );}
-    },
-};
+  						.setFooter(ee.footertext, ee.footericon)
+              .setTitle(`❌ ERROR | An error occurred`)
+              .setDescription(`\`\`\`${e.stack}\`\`\``)
+          );
+      }
+    }
+  };

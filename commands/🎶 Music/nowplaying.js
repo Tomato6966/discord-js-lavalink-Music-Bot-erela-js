@@ -9,25 +9,62 @@ module.exports = {
     description: "Shows information about the current Song",
     usage: "nowplaying",
     run: async (client, message, args, cmduser, text, prefix) => {
-        const { channel } = message.member.voice;
-        if (!channel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
-        const player = client.manager.players.get(message.guild.id);
-        if (!player) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("There is nothing playing"));
-        if (channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to be in my voice channel to use this command!"));
-        if (!player.queue.current) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("No song is currently playing in this guild."));
-        const { title, author, uri } = player.queue.current;
-        const embed = new MessageEmbed()
-            .setAuthor("Current song playing:", message.author.displayAvatarURL({ dynamic: true }))
-            .setThumbnail(player.queue.current.displayThumbnail(1))
-            .setURL(uri)
-            .setColor(ee.color)
-            .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`${player.playing ? "▶" : "⏸"}**${title}**`)
-            .addField("Duration: ", "`" + format(player.queue.current.duration) + "`", true)
-            .addField("Song By: ", "`" + author + "`", true)
-            .addField("Queue length: ", `\`${player.queue.length}Songs\``, true)
-            .addField("⏳ Progress: ", createBar(player))
-            .setFooter(`Requested by: ${player.queue.current.requester.tag}`, player.queue.current.requester.displayAvatarURL({ dynamic: true }));
-        return message.channel.send(embed);
-    },
+    try{
+      //get the channel instance from the Member
+      const { channel } = message.member.voice;
+      //if the member is not in a channel, return
+      if (!channel)
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setFooter(client.user.username, ee.footericon)
+          .setTitle("❌ Error | You need to join a voice channel.")
+        );
+      //get the player instance
+      const player = client.manager.players.get(message.guild.id);
+      //if no player available return error | aka not playing anything
+      if (!player)
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setFooter(client.user.username, ee.footericon)
+          .setTitle("❌ Error | There is nothing playing")
+        );
+      //if not in the same channel as the player, return Error
+      if (channel.id !== player.voiceChannel)
+        return message.channel.send(new MessageEmbed()
+          .setFooter(ee.footertext, ee.footericon)
+          .setColor(ee.wrongcolor)
+          .setTitle("❌ Error | You need to be in my voice channel to use this command!")
+          .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
+        );
+      //if no current song return error
+      if (!player.queue.current)
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setFooter(ee.footertext, ee.footericon)
+          .setTitle("❌ Error | There is nothing playing")
+        );
+      //Send Now playing Message
+      return message.channel.send(new MessageEmbed()
+          .setAuthor("Current song playing:", message.author.displayAvatarURL({ dynamic: true }))
+          .setThumbnail(player.queue.current.displayThumbnail(1))
+          .setURL(player.queue.current.uri)
+          .setColor(ee.color)
+          .setFooter(ee.footertext, ee.footericon)
+          .setTitle(`${player.playing ? "▶" : "⏸"} **${player.queue.current.title}**`)
+          .addField("⌛️ Duration: ", "`" + format(player.queue.current.duration) + "`", true)
+          .addField("💯 Song By: ", "`" + player.queue.current.author + "`", true)
+          .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
+          .addField("⏳ Progress: ", createBar(player))
+          .setFooter(`Requested by: ${player.queue.current.requester.tag}`, player.queue.current.requester.displayAvatarURL({ dynamic: true }))
+        );
+    } catch (e) {
+        console.log(String(e.stack).bgRed)
+        return message.channel.send(new MessageEmbed()
+            .setColor(ee.wrongcolor)
+						.setFooter(ee.footertext, ee.footericon)
+            .setTitle(`❌ ERROR | An error occurred`)
+            .setDescription(`\`\`\`${e.stack}\`\`\``)
+        );
+    }
+  }
 };

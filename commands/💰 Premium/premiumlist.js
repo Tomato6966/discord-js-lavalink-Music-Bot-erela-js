@@ -10,11 +10,12 @@ module.exports = {
     description: "Shows all active premium Members",
     usage: "premiumlist [users/guilds]",
     run: async (client, message, args, cmduser, text, prefix) => {
+    try{
       //[{"g":args[1]}, {"g":args[1]}, {"g":args[1]}]
       let premiums = client.premium.get("premiumlist", "list");
       let guilds = [];
       let users = [];
-      
+
       for(let i = 0; i< premiums.length; i++){
         try{
           if(Object.keys(premiums[i])[0] === "g")
@@ -26,7 +27,7 @@ module.exports = {
             }
             guilds.push(guild.name)
           }
-          
+
         }catch (e){
           console.log(String(e.stack).red)
         }
@@ -42,11 +43,11 @@ module.exports = {
             }
             users.push(user.tag)
           }
-          
+
         }catch (e){
           console.log(String(e.stack).red)
         }
-      } 
+      }
       if(!args[0]){
         let guildembed = new MessageEmbed().setColor(ee.color).setFooter(ee.footertext, ee.footericon)
         .setTitle("All Guilds with premium access")
@@ -82,6 +83,14 @@ module.exports = {
       else {
         return message.channel.send("Unknown Format Usage! either use `none` / `all` to see **Guilds** && **Users** with permissions, or too see each one: `guilds` / `users`. Usage: `?premiumlist [users/guilds]`")
       }
+    } catch (e) {
+        console.log(String(e.stack).bgRed)
+        return message.channel.send(new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setFooter(ee.footertext, ee.footericon)
+            .setTitle(`❌ ERROR | An error occurred`)
+            .setDescription(`\`\`\`${e.stack}\`\`\``)
+        );
     }
-
+  }
 };

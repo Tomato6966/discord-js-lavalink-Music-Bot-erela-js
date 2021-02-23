@@ -10,8 +10,8 @@ module.exports = {
     description: "Request Premium for a Guild/User",
     usage: "premiumlist [users/guilds]",
     run: async (client, message, args, cmduser, text, prefix) => {
-    message.channel.send("Do u want to request Premium for a Guild or for yourself?\n\nreact with :one: for **guild**\nreact with :two: for **yourself**").then(msg=>
-      {
+    try{
+      message.channel.send("Do u want to request Premium for a Guild or for yourself?\n\nreact with :one: for **guild**\nreact with :two: for **yourself**").then(msg=>{
         msg.react("1️⃣");
         msg.react("2️⃣");
         const filter = (reaction, user) => {
@@ -72,6 +72,14 @@ module.exports = {
             return message.channel.send("Your time ran out, CANCELLED!")
             })
         })
+      } catch (e) {
+          console.log(String(e.stack).bgRed)
+          return message.channel.send(new MessageEmbed()
+              .setColor(ee.wrongcolor)
+              .setFooter(ee.footertext, ee.footericon)
+              .setTitle(`❌ ERROR | An error occurred`)
+              .setDescription(`\`\`\`${e.stack}\`\`\``)
+          );
+      }
     }
-
 };

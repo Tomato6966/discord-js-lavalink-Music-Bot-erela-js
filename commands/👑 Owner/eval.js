@@ -18,9 +18,14 @@ module.exports = {
             let string = inspect(evaled);
             for(let i = 0; i < string.length; i += 1990)
             message.channel.send("```" + string.substr(i, i + 1990) + "```");
-        } catch (e) {
-            console.log(String(e.stack).red);
-            return message.channel.send("there was an error during evaluation.");
-        }
+          } catch (e) {
+              console.log(String(e.stack).bgRed)
+              return message.channel.send(new MessageEmbed()
+                  .setColor(ee.wrongcolor)
+      						.setFooter(ee.footertext, ee.footericon)
+                  .setTitle(`❌ ERROR | An error occurred`)
+                  .setDescription(`\`\`\`${e.stack}\`\`\``)
+              );
+          }
     },
 };

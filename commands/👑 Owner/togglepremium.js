@@ -23,7 +23,6 @@ module.exports = {
                 } catch (e) {
                     console.log(String(e.stack).red);
                 }
-                console.log(client.premium.get("premiumlist", "list"));
                 let user = await client.users.fetch(args[1]);
                 if (!user) {
                     try {
@@ -62,9 +61,14 @@ module.exports = {
                 message.channel.send(`✅**${guild.name}**is now ${client.premium.get(args[1], "enabled") ? "" : "**not**"}allowed to use the Premium Commands!`);
                 channel.send(`${client.premium.get(args[1], "enabled") ? "✅This Guild is now allowed and able to use Premium Commands" : "❌ This Guild is not allowed and able to use Premium Commands anymore"}`);
             }
-        } catch (e) {
-            console.log(String(e.stack).red);
-            message.channel.send("there was an error executeing this command");
-        }
+          } catch (e) {
+              console.log(String(e.stack).bgRed)
+              return message.channel.send(new MessageEmbed()
+                  .setColor(ee.wrongcolor)
+      						.setFooter(ee.footertext, ee.footericon)
+                  .setTitle(`❌ ERROR | An error occurred`)
+                  .setDescription(`\`\`\`${e.stack}\`\`\``)
+              );
+          }
     },
 };

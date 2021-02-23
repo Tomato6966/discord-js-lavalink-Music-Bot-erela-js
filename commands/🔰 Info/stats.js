@@ -9,12 +9,13 @@ module.exports = {
     usage: "stats",
     description: "Shows music Stats, like amount of Commands and played Songs etc.",
     run: async (client, message, args, user, text, prefix) => {
-        let global = client.stats.get("global");
-        let guild = client.stats.get(message.guild.id);
-        let premiums = client.premium.get("premiumlist", "list");
-        let guilds = [];
-        let users = [];
-        
+    try{
+      let global = client.stats.get("global");
+      let guild = client.stats.get(message.guild.id);
+      let premiums = client.premium.get("premiumlist", "list");
+      let guilds = [];
+      let users = [];
+
       for(let i = 0; i< premiums.length; i++){
         try{
           if(Object.keys(premiums[i])[0] === "g")
@@ -44,8 +45,8 @@ module.exports = {
         }catch (e){
           console.log(String(e.stack).red)
         }
-      } 
-        const embed = new MessageEmbed().setColor(ee.color).setFooter(ee.footertext, ee.footericon)
+      }
+      message.channel.send(new MessageEmbed().setColor(ee.color).setFooter(ee.footertext, ee.footericon)
         .addField("⚙️ GLOBAL Commands used:", `>>> \`${global.commands} Commands\` used\nin **all** Servers`,true)
         .addField("🎵 GLOBAL Songs played:", `>>> \`${global.songs} Songs\` played in\n**all** Servers`,true)
         .addField("📰 GLOBAL Setups created:", `>>> \`${global.setups} Setups\` created in\n**all** Servers`,true)
@@ -54,6 +55,16 @@ module.exports = {
         .addField("🎵 SERVER Songs played:", `>>> \`${guild.songs} Songs\` played in\n**this** Server`,true)
         .addField("📰 GLOBAL Premium list:", `>>> \`${guilds.length} Guilds\`\n\`${users.length} Users\`\n having Premium`,true)
         .setImage("https://cdn.discordapp.com/attachments/754700756170440774/812443980293603329/lavamusic.gif")
-        message.channel.send(embed.setTitle(`💿 The Stats of ${client.user.username}`));
-    },
-};
+        .setTitle(`💿 The Stats of ${client.user.username}`)
+      );
+    } catch (e) {
+        console.log(String(e.stack).bgRed)
+        return message.channel.send(new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setFooter(ee.footertext, ee.footericon)
+            .setTitle(`❌ ERROR | An error occurred`)
+            .setDescription(`\`\`\`${e.stack}\`\`\``)
+        );
+    }
+  }
+}

@@ -4,6 +4,7 @@ let table = new ascii("Commands");
 table.setHeading("Command", "Load status");
 console.log("Welcome to SERVICE HANDLER /--/ By https://milrato.eu /--/ Discord: Tomato#6966".yellow);
 module.exports = (client) => {
+  try{
     readdirSync("./commands/").forEach((dir) => {
         const commands = readdirSync(`./commands/${dir}/`).filter((file) => file.endsWith(".js"));
         for (let file of commands) {
@@ -19,4 +20,7 @@ module.exports = (client) => {
         }
     });
     console.log(table.toString().cyan);
+  }catch (e){
+    console.log(String(e.stack).bgRed)
+  }
 };

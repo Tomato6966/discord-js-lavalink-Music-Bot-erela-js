@@ -10,6 +10,7 @@ module.exports = {
     description: "Creates an unique Music Setup for Requesting Songs",
     memberpermissions: ["ADMINISTRATOR"],
     run: async (client, message, args, cmduser, text, prefix) => {
+      try{
         let musiccmds = [];
         const commands = (category) => {
             return client.commands.filter((cmd) => cmd.category.toLowerCase().includes("music")).map((cmd) => `\`${cmd.name}\``);
@@ -66,7 +67,7 @@ module.exports = {
                       },
                       { //giving the Bot himself permissions
                         id: client.user.id,
-                        allow: ["MANAGE_MESSAGES", "MANAGE_CHANNEL","ADD_REACTIONS","SEND_MESSAGES","MANAGE_ROLES"]
+                        allow: ["MANAGE_MESSAGES", "MANAGE_CHANNELS", "ADD_REACTIONS", "SEND_MESSAGES", "MANAGE_ROLES"]
                       }
                     ],
                   })
@@ -90,7 +91,7 @@ module.exports = {
                       .setFooter(ee.footertext, ee.footericon)
                       .setTitle("Lava Music | Currently no song is playing!")
                       .setDescription(`Join a voice channel and enter a song name or url to play.\n[Invite Lava Music](https://lava.milrato.eu) • [Support Server](https://discord.com/invite/wvCp7q88G3)`)
-                      .setImage("https://media.discordapp.net/attachments/754700756170440774/812443980293603329/lavamusic.gif")
+                      .setImage("https://cdn.discordapp.com/attachments/754700756170440774/812443980293603329/lavamusic.gif")
                       //send a temp message
                     channel3.send(new MessageEmbed().setColor(ee.color)).then(msg => {
                         //react with embed 1
@@ -140,5 +141,14 @@ module.exports = {
                                   }
             })
           })
+        } catch (e) {
+            console.log(String(e.stack).bgRed)
+            return message.channel.send(new MessageEmbed()
+                .setColor(ee.wrongcolor)
+    						.setFooter(ee.footertext, ee.footericon)
+                .setTitle(`❌ ERROR | An error occurred`)
+                .setDescription(`\`\`\`${e.stack}\`\`\``)
+            );
+        }
     },
 };

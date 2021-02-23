@@ -8,63 +8,107 @@ module.exports = {
     description: "Skips the track, but if there is a DJ Setup u will have to vote first!",
     usage: "voteskip",
     run: async (client, message, args, cmduser, text, prefix) => {
-        const { channel } = message.member.voice;
-        if (!channel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
-        const player = client.manager.players.get(message.guild.id);
-        if (!player) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("There is nothing playing"));
-        if (channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to be in my voice channel to use this command!"));
-        //Check if there is a Dj Setup
-        if(client.settings.get(message.guild.id, `djroles`).toString()!==""){
+    try{
+      //get the channel instance from the Member
+      const { channel } = message.member.voice;
+      //if the member is not in a channel, return
+      if (!channel)
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setFooter(ee.footertext, ee.footericon)
+          .setTitle("❌ Error | You need to join a voice channel.")
+        );
+      //get the player instance
+      const player = client.manager.players.get(message.guild.id);
+      //if no player available return error | aka not playing anything
+      if (!player)
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setFooter(ee.footertext, ee.footericon)
+          .setTitle("❌ Error | There is nothing playing")
+        );
+      //if not in the same channel as the player, return Error
+      if (channel.id !== player.voiceChannel)
+        return message.channel.send(new MessageEmbed()
+          .setFooter(ee.footertext, ee.footericon)
+          .setColor(ee.wrongcolor)
+          .setTitle("❌ Error | You need to be in my voice channel to use this command!")
+          .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
+        );
+      //Check if there is a Dj Setup
+      if(client.settings.get(message.guild.id, `djroles`).toString()!==""){
 
-              let channelmembersize = channel.members.size;
-              let voteamount = 0;
-              if(channelmembersize <= 3) voteamount = 1;
+        let channelmembersize = channel.members.size;
+        let voteamount = 0;
+        if(channelmembersize <= 3) voteamount = 1;
+        voteamount = Math.ceil(channelmembersize / 3);
 
-              voteamount = Math.ceil(channelmembersize / 3);
-
-              if(!player.get(`vote-${message.author.id}`)) {
-                player.set(`vote-${message.author.id}`, true);
-                player.set("votes", String(Number(player.get("votes")) + 1));
-                if(voteamount <= Number(player.get("votes"))){
-                  message.channel.send(new MessageEmbed()
-                    .setColor(ee.color)
-                    .setFooter(ee.footertext, ee.footericon)
-                    .setTitle(`✅ Success | Added your Vote!`)
-                    .setDescription(`There are now: \`${player.get("votes")}\` of \`${voteamount}\` needed Votes\n\n> Amount reached! Skipping ⏭`)
-                  );
-                  if (player.queue.size == 0) {
-                      player.destroy();
-                  }
-                  else{
-                    player.stop();
-                  }
-                }
-                else{
-                  return message.channel.send(new MessageEmbed()
-                    .setColor(ee.color)
-                    .setFooter(ee.footertext, ee.footericon)
-                    .setTitle(`✅ Success | Added your Vote!`)
-                    .setDescription(`There are now: \`${player.get("votes")}\` of \`${voteamount}\` needed Votes`)
-                  );
-                }
-              }
-              else {
-                return message.channel.send(new MessageEmbed()
-                  .setColor(ee.wrongcolor)
-                  .setFooter(ee.footertext, ee.footericon)
-                  .setTitle(`❌ ERROR | You have already Voted!!`)
-                  .setDescription(`There are: \`${player.get("votes")}\` of \`${voteamount}\` needed Votes`)
-                );
+        if(!player.get(`vote-${message.author.id}`)) {
+          player.set(`vote-${message.author.id}`, true);
+          player.set("votes", String(Number(player.get("votes")) + 1));
+          if(voteamount <= Number(player.get("votes"))){
+            message.channel.send(new MessageEmbed()
+              .setColor(ee.color)
+              .setFooter(ee.footertext, ee.footericon)
+              .setTitle(`✅ Success | Added your Vote!`)
+              .setDescription(`There are now: \`${player.get("votes")}\` of \`${voteamount}\` needed Votes\n\n> Amount reached! Skipping ⏭`)
+            );
+            if (player.queue.size == 0) {
+                player.destroy();
             }
-
+            else{
+              player.stop();
+            }
           }
           else{
-            if (player.queue.size == 0) {
-              message.channel.send(new MessageEmbed().setTitle("⏹ Stopped and left your channel").setDescription(`Because there is no DJ - SETUP Add a dj by typing: \`${prefix}adddj @ROLE\``).setColor(ee.color).setFooter(ee.footertext, ee.footericon));
-              player.destroy();
-            }
-            player.stop();
-            return message.channel.send(new MessageEmbed().setTitle("⏭ Skipped to the next song").setDescription(`Because there is no DJ - SETUP Add a dj by typing: \`${prefix}adddj @ROLE\``).setColor(ee.color).setFooter(ee.footertext, ee.footericon));
+            return message.channel.send(new MessageEmbed()
+              .setColor(ee.color)
+              .setFooter(ee.footertext, ee.footericon)
+              .setTitle(`✅ Success | Added your Vote!`)
+              .setDescription(`There are now: \`${player.get("votes")}\` of \`${voteamount}\` needed Votes`)
+            );
           }
-    },
+        }
+        else {
+          return message.channel.send(new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setFooter(ee.footertext, ee.footericon)
+            .setTitle(`❌ ERROR | You have already Voted!!`)
+            .setDescription(`There are: \`${player.get("votes")}\` of \`${voteamount}\` needed Votes`)
+          );
+        }
+      }
+      else{
+        //if ther is nothing more to skip then stop music and leave the Channel
+        if (player.queue.size == 0) {
+          //if its on autoplay mode, then do autoplay before leaving...
+          if(player.get("autoplay")) return autoplay(client, player, "skip");
+          //stop playing
+          player.destroy();
+          //send success message
+          return message.channel.send(new MessageEmbed()
+            .setTitle("✅ Success | ⏹ Stopped and left your Channel")
+            .setColor(ee.color)
+            .setFooter(ee.footertext, ee.footericon)
+          );
+        }
+        //skip the track
+        player.stop();
+        //send success message
+        return message.channel.send(new MessageEmbed()
+          .setTitle("✅ Success | ⏭ Skipped to the next Song")
+          .setColor(ee.color)
+          .setFooter(ee.footertext, ee.footericon)
+        );
+      }
+    } catch (e) {
+        console.log(String(e.stack).bgRed)
+        return message.channel.send(new MessageEmbed()
+            .setColor(ee.wrongcolor)
+						.setFooter(ee.footertext, ee.footericon)
+            .setTitle(`❌ ERROR | An error occurred`)
+            .setDescription(`\`\`\`${e.stack}\`\`\``)
+        );
+    }
+  }
 };

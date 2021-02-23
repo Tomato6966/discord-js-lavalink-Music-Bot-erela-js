@@ -13,6 +13,7 @@ module.exports = {
     description: "Searches a playlist from youtube",
     usage: "searchplaylist <Name / URL>",
     run: async (client, message, args, cmduser, text, prefix) => {
+      try{
         /*const {
             channel
         } = message.member.voice;
@@ -100,5 +101,14 @@ module.exports = {
             message.channel.send(new Discord.MessageEmbed().setColor(ee.wrongcolor).setTitle("❌ Found nothing for: " + search))
         }*/
         message.channel.send("THIS CMD IS NOT FINISHED YET!")
+    } catch (e) {
+        console.log(String(e.stack).bgRed)
+        return message.channel.send(new MessageEmbed()
+            .setColor(ee.wrongcolor)
+						.setFooter(ee.footertext, ee.footericon)
+            .setTitle(`❌ ERROR | An error occurred`)
+            .setDescription(`\`\`\`${e.stack}\`\`\``)
+        );
     }
+  }
 };

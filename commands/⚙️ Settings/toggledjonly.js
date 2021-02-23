@@ -2,23 +2,24 @@ const { MessageEmbed } = require("discord.js");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
 module.exports = {
-  name: "toggledjonly",
-  aliases: ["adddjonly", "djonly", "setdjonly", ""],
-  category: "⚙️ Settings",
-  description: "Set's a Command to the DJ ONLY State, by typing it again, it gets to not DJ ONLY aka its a toggle",
-  usage: "adddj @role",
-  memberpermissions: ["ADMINISTRATOR"],
-  run: async (client, message, args) => {
-    //get the role of the mention
-    let cmd = args[0]
-    //if no pinged role return error
-    if (!cmd)
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle("❌ Error | Please add a cmd!")
-        .setDescription("Example: `toggledjonly skip`")
-      );
+    name: "toggledjonly",
+    aliases: ["adddjonly", "djonly", "setdjonly", ""],
+    category: "⚙️ Settings",
+    description: "Set's a Command to the DJ ONLY State, by typing it again, it gets to not DJ ONLY aka its a toggle",
+    usage: "adddj @role",
+    memberpermissions: ["ADMINISTRATOR"],
+    run: async (client, message, args) => {
+    try{
+      //get the role of the mention
+      let cmd = args[0]
+      //if no pinged role return error
+      if (!cmd)
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setFooter(ee.footertext, ee.footericon)
+          .setTitle("❌ Error | Please add a cmd!")
+          .setDescription("Example: `toggledjonly skip`")
+        );
 
       let musiccmds = [];
       const commands = (category) => {
@@ -76,5 +77,14 @@ module.exports = {
           .setTitle(`❌ Error | Could not find Music Command \`${args[0]}\``)
         );
       }
+    } catch (e) {
+        console.log(String(e.stack).bgRed)
+        return message.channel.send(new MessageEmbed()
+            .setColor(ee.wrongcolor)
+						.setFooter(ee.footertext, ee.footericon)
+            .setTitle(`❌ ERROR | An error occurred`)
+            .setDescription(`\`\`\`${e.stack}\`\`\``)
+        );
+    }
   }
 };
