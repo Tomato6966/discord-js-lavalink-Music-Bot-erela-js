@@ -33,7 +33,7 @@ module.exports = {
         //after right user answered
         .then(async collected => {
           //and if its yes
-          if(collected.toLowerCase() === "yes")
+          if(collected.first().content.toLowerCase() === "yes")
           {
             //reset the database of the setup
             client.setups.set(message.guild.id, {
