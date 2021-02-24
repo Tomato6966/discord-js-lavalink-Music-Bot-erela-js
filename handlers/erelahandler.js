@@ -106,47 +106,42 @@ module.exports = (client) => {
                         try{embed.addField("💰 24/7 AFK Setup", `PLAYER: ${player.get(`afk-${player.get("playerauthor")}`) ? `\`✔️ Enabled\`` : `\`❌ Disabled\``}\nGUILD: ${player.get(`afk-${player.guild}`) ? `\`✔️ Enabled\`` : `\`❌ Disabled\``}`, true)}catch{}
                         try{embed.setColor(ee.color)}catch{}
                         try{embed.setFooter(ee.footertext, ee.footericon);}catch{}
-                      if(isrequestchannel(client, player.get("message"))) return;
-                    client.channels.cache
-                        .get(player.textChannel)
-                        .send(embed)
-                        .then((msg) => player.set("PlayerQueueMessage", msg.id));
+                        if(isrequestchannel(client, player.get("message"))) return;
+                        client.channels.cache.get(player.textChannel).send(embed).then(msg => { try { msg.delete({timeout: 10000}); }catch{/* */}});
                 }, 100);
             })
             .on("playerMove", (player, oldChannel, newChannel) => {
                 if (!newChannel) {
-                    try {
-                        let embed = new MessageEmbed()}catch{}
-                        try{embed.setTitle("❌ Queue has ended.")}catch{}
-                        try{embed.setDescription(`I left the Channel:\`${client.channels.cache.get(player.voiceChannel).name}\``)}catch{}
-                        try{embed.setColor(ee.wrongcolor)}catch{}
-                        try{embed.setFooter(ee.footertext, ee.footericon);}catch{}
-                        client.channels.cache
-                            .get(player.textChannel)
-                            .send(embed)
-                    try {
-                        client.channels.cache
-                            .get(player.textChannel)
-                            .messages.fetch(player.get("playermessage"))
-                            .then((msg) => msg ? msg.delete() : console.log("ZzzZ"));
-                    } catch (e) {
-                        console.log(String(e.stack).yellow);
-                    }
-                    player.destroy();
+                  try {let embed = new MessageEmbed()}catch{}
+                  try{embed.setTitle("❌ Queue has ended.")}catch{}
+                  try{embed.setDescription(`I left the Channel:\`${client.channels.cache.get(player.voiceChannel).name}\``)}catch{}
+                  try{embed.setColor(ee.wrongcolor)}catch{}
+                  try{embed.setFooter(ee.footertext, ee.footericon);}catch{}
+                  client.channels.cache.get(player.textChannel).send(embed).then(msg => { try { msg.delete({timeout: 7500}); }catch{/* */}});
+                  try {
+                      client.channels.cache.get(player.textChannel).messages.fetch(player.get("playermessage")).then(msg => { try { msg.delete({timeout: 4000}); }catch{/* */}});
+                  } catch (e) {
+                      console.log(String(e.stack).yellow);
+                  }
+                  player.destroy();
                 } else {
-                    player.voiceChannel = newChannel;
-                    if (player.paused) return;
-                    setTimeout(() => {
-                        player.pause(true);
-                        setTimeout(() => player.pause(false), client.ws.ping * 2);
-                    }, client.ws.ping * 2);
+                  player.voiceChannel = newChannel;
+                  if (player.paused) return;
+                  setTimeout(() => {
+                      player.pause(true);
+                      setTimeout(() => player.pause(false), client.ws.ping * 2);
+                  }, client.ws.ping * 2);
                 }
             })
             .on("trackStart", async (player, track) => {
+                //votes for skip --> 0
                 player.set("votes", "0");
+                //set the previous track just have idk where its used ^-^
                 player.set("previoustrack", track);
+                //increasing the stats of the BOT
                 client.stats.inc(player.guild, "songs");
                 client.stats.inc("global", "songs");
+                //wait 500 ms
                 await new Promise((resolve) => {
                     setTimeout(() => {
                         resolve(2);
@@ -163,7 +158,14 @@ module.exports = (client) => {
                 try{embed.addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)}catch{}
                 try{embed.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({dynamic: true}));}catch{}
                 if(isrequestchannel(client, player.get("message"))) return edit_request_message_track_info(client, player, track);
-                client.channels.cache.get(player.textChannel).send(embed).then(msg =>{
+                //if pruning is enabled --> send the msg
+                if(client.settings.get(player.guild, "pruning"))
+                  client.channels.cache.get(player.textChannel).send(embed).then(msg =>{
+                  //try to delete the old playingsongmsg informational track if not available / get able --> catch and dont crash
+                  try{ player.get("playingsongmsg").delete(); }catch{ /* */ }
+                  //set the old message information to a variable
+                  player.set("playingsongmsg", msg)
+                  //react with all emojis
                   msg.react("⏪") //rewind 20 seconds
                   msg.react("⏯") //pause / resume
                   msg.react("⏹") //stop playing music
@@ -173,7 +175,7 @@ module.exports = (client) => {
                   msg.react("🔊")  //raise volume by 10%
                   msg.react("🔁") //change repeat mode --> track --> Queue --> none
                   msg.react("🔀") //shuffle the Queue
-
+                  //create the collector
                   var collector = msg.createReactionCollector((reaction, user) => user.id !== client.user.id, {
                     time: track.duration > 0 ? track.duration : 600000
                   });
@@ -215,7 +217,7 @@ module.exports = (client) => {
                           .setTitle(`⏪ Rewinded the song for: \`20 Seconds\`, to: ${format(Number(player.position))}`)
                           .setColor(ee.color)
                           .setFooter(ee.footertext, ee.footericon)
-                        );
+                        ).then(msg => { try { msg.delete({timeout: 4000}); }catch{/* */}});
                       break;
                       /**
                         * @REACTION_INFO ⏯
@@ -229,7 +231,7 @@ module.exports = (client) => {
                             .setTitle(`${player.playing ? "▶️ Resumed" : "⏸ Paused"} the Player.`)
                             .setColor(ee.color)
                             .setFooter(ee.footertext, ee.footericon)
-                          );
+                          ).then(msg => { try { msg.delete({timeout: 4000}); }catch{/* */}});
                       break;
                       /**
                         * @REACTION_INFO ⏹
@@ -243,7 +245,7 @@ module.exports = (client) => {
                           .setTitle("⏹ Stopped and left your channel")
                           .setColor(ee.color)
                           .setFooter(ee.footertext, ee.footericon)
-                        );
+                        ).then(msg => { try { msg.delete({timeout: 4000}); }catch{/* */}});
                       break;
                       /**
                         * @REACTION_INFO ⏩
@@ -261,7 +263,7 @@ module.exports = (client) => {
                           .setTitle(`⏩ Forwarded the Song for: \`20 Seconds\`, to: ${format(Number(player.position))}`)
                           .setColor(ee.color)
                           .setFooter(ee.footertext, ee.footericon)
-                        );
+                        ).then(msg => { try { msg.delete({timeout: 4000}); }catch{/* */}});
                       break;
                       //skip track / stop playing
                       case "⏭":
@@ -276,7 +278,7 @@ module.exports = (client) => {
                             .setTitle("⏹ Stopped and left your channel")
                             .setColor(ee.color)
                             .setFooter(ee.footertext, ee.footericon)
-                          );
+                          ).then(msg => { try { msg.delete({timeout: 4000}); }catch{/* */}});
                         }
                         //skip the track
                         player.stop();
@@ -285,7 +287,7 @@ module.exports = (client) => {
                           .setTitle("⏭ Skipped to the next song")
                           .setColor(ee.color)
                           .setFooter(ee.footertext, ee.footericon)
-                        );
+                        ).then(msg => { try { msg.delete({timeout: 4000}); }catch{/* */}});
                       break;
                       case "🔉": //reduce volume by 10%
                         //get the volume
@@ -299,7 +301,7 @@ module.exports = (client) => {
                           .setTitle(`🔊 Volume set to: **\`${player.volume} %\`**`)
                           .setColor(ee.color)
                           .setFooter(ee.footertext, ee.footericon)
-                        );
+                        ).then(msg => { try { msg.delete({timeout: 4000}); }catch{/* */}});
                       break;
                       case "🔊": //raise volume by 10%
                         //get the volume
@@ -313,7 +315,7 @@ module.exports = (client) => {
                           .setTitle(`🔊 Volume set to: **\`${player.volume} %\`**`)
                           .setColor(ee.color)
                           .setFooter(ee.footertext, ee.footericon)
-                        );
+                        ).then(msg => { try { msg.delete({timeout: 4000}); }catch{/* */}});
                       break;
                       case "🔁": //change repeat mode --> track --> Queue --> none
                         //if both repeat modes are off
@@ -329,7 +331,7 @@ module.exports = (client) => {
                               .setDescription(`And Queue Loop is now ${player.queueRepeat ? "active" : "disabled"}.`)
                               .setColor(ee.color)
                               .setFooter(ee.footertext, ee.footericon)
-                            );
+                            ).then(msg => { try { msg.delete({timeout: 4000}); }catch{/* */}});
                         }
                         //if track repeat mode is on and queue repeat mode off
                         else if(player.trackRepeat && hasmap.get(message.guild.id) === 1){
@@ -344,7 +346,7 @@ module.exports = (client) => {
                             .setDescription(`And Track Loop is now ${player.trackRepeat ? "active" : "disabled"}.`)
                             .setColor(ee.color)
                             .setFooter(ee.footertext, ee.footericon)
-                          );
+                          ).then(msg => { try { msg.delete({timeout: 4000}); }catch{/* */}});
                         }
                         //otherwise like queue on and track should be off...
                         else{
@@ -359,7 +361,7 @@ module.exports = (client) => {
                             .setDescription(`And Track Loop is now ${player.trackRepeat ? "active" : "disabled"}.`)
                             .setColor(ee.color)
                             .setFooter(ee.footertext, ee.footericon)
-                          );
+                          ).then(msg => { try { msg.delete({timeout: 4000}); }catch{/* */}});
                         }
                       break;
                       case "🔀": //shuffle the Queue
@@ -370,78 +372,88 @@ module.exports = (client) => {
                           .setTitle("🔀 The queue is now shuffled.")
                           .setColor(ee.color)
                           .setFooter(ee.footertext, ee.footericon)
-                        );
+                        ).then(msg => { try { msg.delete({timeout: 4000}); }catch{/* */}});
                       break;
                     }
 
                   });
-
+                  //once the collector ends --> try to delete the msg
                   collector.on("end", () => {
-                    msg.reactions.removeAll().catch(console.error);
+                    //try to delete the old playingsongmsg informational track if not available / get able --> catch and dont crash
+                    try{ player.get("playingsongmsg").delete(); }catch{ /* */ }
+                    //remove all reactions
+                    try{ msg.reactions.removeAll() }catch{ /* */ }
+                  });
+                  //once the collector disposes --> try to delete the msg
+                  collector.on("dispose", () => {
+                    //try to delete the old playingsongmsg informational track if not available / get able --> catch and dont crash
+                    try{ player.get("playingsongmsg").delete(); }catch{ /* */ }
+                    //remove all reactions
+                    try{ msg.reactions.removeAll() }catch{ /* */ }
                   });
                 })
-            })
-            .on("trackStuck", (player, track, payload) => {
-                let embed = new MessageEmbed()
-                try{embed.setTitle("❌ Track got stuck!")}catch{}
-                try{embed.setDescription(`I skipped the track:[${track.title}](${track.uri})`)}catch{}
-                try{embed.setThumbnail(track.displayThumbnail(1))}catch{}
-                try{embed.setColor(ee.wrongcolor)}catch{}
-                try{embed.setFooter(ee.footertext, ee.footericon);}catch{}
-                client.channels.cache
-                    .get(player.textChannel)
-                    .send(embed)
-                player.stop();
-            })
-            .on("trackError", (player, track, payload) => {
-                let embed = new MessageEmbed()
-                try{embed.setTitle("❌ Track got errored!")}catch{}
-                try{embed.setDescription(`I skipped the track:[${track.title}](${track.uri})`)}catch{}
-                try{embed.setThumbnail(track.displayThumbnail(1))}catch{}
-                try{embed.setColor(ee.wrongcolor)}catch{}
-                try{embed.setFooter(ee.footertext, ee.footericon);}catch{}
-                client.channels.cache
-                    .get(player.textChannel)
-                    .send(embed)
-                player.stop();
-            })
-            .on("queueEnd", async (player) => {
-                // "uncomment" to enable trackEnd also for one song long Queus
-                // client.manager.emit("trackEnd", player, track)
-                databasing(client, player.guild, player.get("playerauthor"));
-                if(player.get("autoplay")) return autoplay(client, player);
-                //DELET TIME OUT
-                if (config.settings.LeaveOnEmpty_Queue.enabled) {
-                  setTimeout(() => {
-                      try {
-                        player = client.manager.players.get(player.guild);
-                          if (player.queue.size === 0) {
-                              let embed = new MessageEmbed()
-                              try{embed.setTitle("❌ Queue has ended.")}catch{}
-                              try{embed.setDescription(`I left the Channel: \`${client.channels.cache.get(player.voiceChannel).name}\` because the Queue was empty for: \`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\``)}catch{}
-                              try{embed.setColor(ee.wrongcolor)}catch{}
-                              try{embed.setFooter(ee.footertext, ee.footericon);}catch{}
-                              //if        player afk                              or      guild afk     is enbaled return and not destroy the PLAYER
-                              if(player.get(`afk-${player.get("playerauthor")}`) || player.get(`afk-${player.guild}`))
-                                return client.channels.cache.get(player.textChannel).send(embed.setDescription(`I will not Leave the Channel, cause \`afk\` is \`✔️ Enabled\``))
-                              //send information message
-                              client.channels.cache.get(player.textChannel).send(embed)
+          })
+          .on("trackStuck", (player, track, payload) => {
+              let embed = new MessageEmbed()
+              try{embed.setTitle("❌ Track got stuck!")}catch{}
+              try{embed.setDescription(`I skipped the track: [${track.title}](${track.uri})`)}catch{}
+              try{embed.setThumbnail(track.displayThumbnail(1))}catch{}
+              try{embed.setColor(ee.wrongcolor)}catch{}
+              try{embed.setFooter(ee.footertext, ee.footericon);}catch{}
+              client.channels.cache
+                  .get(player.textChannel)
+                  .send(embed).then(msg => { try { msg.delete({timeout: 7500}); }catch{/* */}});
+              player.stop();
+          })
+          .on("trackError", (player, track, payload) => {
+              let embed = new MessageEmbed()
+              try{embed.setTitle("❌ Track got errored!")}catch{}
+              try{embed.setDescription(`I skipped the track: [${track.title}](${track.uri})`)}catch{}
+              try{embed.setThumbnail(track.displayThumbnail(1))}catch{}
+              try{embed.setColor(ee.wrongcolor)}catch{}
+              try{embed.setFooter(ee.footertext, ee.footericon);}catch{}
+              client.channels.cache
+                  .get(player.textChannel)
+                  .send(embed).then(msg => { try { msg.delete({timeout: 7500}); }catch{/* */}});
+              player.stop();
+          })
+          .on("queueEnd", async (player) => {
+              // "uncomment" to enable trackEnd also for one song long Queus
+              // client.manager.emit("trackEnd", player, track)
+              databasing(client, player.guild, player.get("playerauthor"));
+              if(player.get("autoplay")) return autoplay(client, player);
+              //DELET TIME OUT
+              if (config.settings.LeaveOnEmpty_Queue.enabled) {
+                setTimeout(() => {
+                    try {
+                      player = client.manager.players.get(player.guild);
+                        if (player.queue.size === 0) {
+                            let embed = new MessageEmbed()
+                            try{embed.setTitle("❌ Queue has ended.")}catch{}
+                            try{embed.setDescription(`I left the Channel: \`${client.channels.cache.get(player.voiceChannel).name}\` because the Queue was empty for: \`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\``)}catch{}
+                            try{embed.setColor(ee.wrongcolor)}catch{}
+                            try{embed.setFooter(ee.footertext, ee.footericon);}catch{}
+                            //if        player afk                              or      guild afk     is enbaled return and not destroy the PLAYER
+                            if(player.get(`afk-${player.get("playerauthor")}`) || player.get(`afk-${player.guild}`))
+                              return client.channels.cache.get(player.textChannel).send(embed.setDescription(`I will not Leave the Channel, cause \`afk\` is \`✔️ Enabled\``)).then(msg => { try { msg.delete({timeout: 7500}); }catch{/* */}});
+                            //send information message
+                            client.channels.cache.get(player.textChannel).send(embed).then(msg => { try { msg.delete({timeout: 7500}); }catch{/* */}});
 
-                              try {
-                                client.channels.cache
-                                    .get(player.textChannel)
-                                    .messages.fetch(player.get("playermessage"))
-                                    .then((msg) => msg ? msg.delete() : console.log("ZzzZ"));
-                              } catch (e) {
-                                  console.log(String(e.stack).yellow);
-                              }
-                              player.destroy();
-                          }
-                      } catch (e) {
-                          console.log(String(e.stack).yellow);
-                      }
-                  }, config.settings.LeaveOnEmpty_Queue.time_delay);
-                }
+                            try {
+                              client.channels.cache
+                                  .get(player.textChannel)
+                                  .messages.fetch(player.get("playermessage"))
+                                  .then(msg => { try { msg.delete({timeout: 4000}); }catch{/* */}});
+                            } catch (e) {
+                                console.log(String(e.stack).yellow);
+                            }
+                            player.destroy();
+                        }
+                    } catch (e) {
+                        console.log(String(e.stack).yellow);
+                    }
+                }, config.settings.LeaveOnEmpty_Queue.time_delay);
+              }
             });
         client.once("ready", () => {
             client.manager.init(client.user.id);
@@ -468,13 +480,13 @@ module.exports = (client) => {
                                     .setFooter(ee.footertext, ee.footericon);
                                 //if        player afk                              or      guild afk     is enbaled return and not destroy the PLAYER
                                 if(player.get(`afk-${player.get("playerauthor")}`) || player.get(`afk-${player.guild}`))
-                                  return client.channels.cache.get(player.textChannel).send(embed.setDescription(`I will not Leave the Channel, cause \`afk\` is \`✔️ Enabled\``))
-                                client.channels.cache.get(player.textChannel).send(embed);
+                                  return client.channels.cache.get(player.textChannel).send(embed.setDescription(`I will not Leave the Channel, cause \`afk\` is \`✔️ Enabled\``)).then(msg => { try { msg.delete({timeout: 7500}); }catch{/* */}});
+                                client.channels.cache.get(player.textChannel).send(embed).then(msg => { try { msg.delete({timeout: 7500}); }catch{/* */}});
                                 try {
                                     client.channels.cache
                                         .get(player.textChannel)
                                         .messages.fetch(player.get("playermessage"))
-                                        .then((msg) => msg ? msg.delete() : console.log("ZzzZ"));
+                                        .then(msg => { try { msg.delete({timeout: 4000}); }catch{/* */}});
                                 } catch (e) {
                                     console.log(String(e.stack).yellow);
                                 }
@@ -491,3 +503,12 @@ module.exports = (client) => {
       console.log(String(e.stack).bgRed)
     }
 };
+/**
+  * @INFO
+  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+  * @INFO
+  * Work for Milrato Development | https://milrato.eu
+  * @INFO
+  * Please mention Him / Milrato Development, when using this Code!
+  * @INFO
+*/
