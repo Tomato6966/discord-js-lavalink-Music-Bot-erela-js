@@ -26,7 +26,7 @@ module.exports = {
         .setColor(ee.color)
         .setTitle("💢 Dj Mode")
         .setDescription("If a Command is listed here, and at least one role exists, then it means that you have to have this Role, in order to be able to use these listed Commands")
-        .addField("⚠️ Dj Only Commands active for:", `${client.settings.get(message.guild.id, `djonlycmds`).sort(function(a, b){if(a < b) { return -1; }if(a > b) { return 1; }  return 0;}).join("`, `")}`.substr(0, 1024))
+        .addField("⚠️ Dj Only Commands active for:", `\`${client.settings.get(message.guild.id, `djonlycmds`).sort(function(a, b){if(a < b) { return -1; }if(a > b) { return 1; }  return 0;}).join("`, `")}\``.substr(0, 1024))
         .addField("🎧 Dj Roles", `${leftb.substr(0, leftb.length-2)}`, true)
         .setFooter(ee.footertext, ee.footericon)
       );
@@ -41,3 +41,12 @@ module.exports = {
     }
   }
 }
+/**
+  * @INFO
+  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+  * @INFO
+  * Work for Milrato Development | https://milrato.eu
+  * @INFO
+  * Please mention Him / Milrato Development, when using this Code!
+  * @INFO
+*/

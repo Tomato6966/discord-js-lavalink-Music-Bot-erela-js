@@ -10,7 +10,11 @@ module.exports = {
     useage: `${path.parse(__filename).name}[@User]`,
     description: "*Image cmd in the style:* " + path.parse(__filename).name,
     run: async (client, message, args, cmduser, text, prefix) => {
-        let tempmsg = await message.channel.send(new MessageEmbed().setColor(ee.color).setFooter(ee.footertext, ee.footericon).setAuthor("Loading...", "https://cdn.discordapp.com/emojis/769935094285860894.gif"));
+        let tempmsg = await message.channel.send(new MessageEmbed()
+          .setColor(ee.color)
+          .setFooter(ee.footertext, ee.footericon)
+          .setAuthor("Loading...", "https://cdn.discordapp.com/emojis/769935094285860894.gif")
+        );
         let user = message.mentions.users.first() || message.author;
         let user2 = message.mentions.users.last() || message.author;
         if (user === user2) user2 = message.author;
@@ -23,3 +27,12 @@ module.exports = {
         await tempmsg.delete();
     },
 };
+/**
+  * @INFO
+  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+  * @INFO
+  * Work for Milrato Development | https://milrato.eu
+  * @INFO
+  * Please mention Him / Milrato Development, when using this Code!
+  * @INFO
+*/

@@ -7,14 +7,38 @@ module.exports = {
     description: "Gets the avatar of a user or yourself",
     usage: "avatar [@USER]",
     run: async(client, message, args, cmduser, text, prefix) => {
-        const member = message.mentions.members.first() || message.member;
-        if (!member.user.avatarURL) return message.channel.send(`That user does not have an avatar`);
-        const avatar = new Discord.MessageEmbed()
-            .setTitle(`${member.user.username}'s Avatar`)
-            .setColor(ee.color)
-        .setFooter(ee.footertext, ee.footericon) 
-            .setImage(member.user.displayAvatarURL({dynamic: true}))
-            .setURL(member.user.displayAvatarURL({dynamic: true}))
-        message.channel.send(avatar)
+    try{
+      const member = message.mentions.members.first() || message.member;
+      if (!member.user.displayAvatarURL({dynamic: true}))
+        return message.channel.send(new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setFooter(ee.footertext, ee.footericon)
+            .setTitle(`❌ ERROR | That user does not have an Avatar`)
+            .setDescription(`\`\`\`${e.stack}\`\`\``)
+        );
+      message.channel.send(new Discord.MessageEmbed()
+          .setTitle(`${member.user.username}'s Avatar`)
+          .setColor(ee.color)
+          .setFooter(ee.footertext, ee.footericon)
+          .setImage(member.user.displayAvatarURL({dynamic: true, size: 1024}))
+          .setURL(member.user.displayAvatarURL({dynamic: true, size: 1024})))
+    } catch (e) {
+        console.log(String(e.stack).bgRed)
+        return message.channel.send(new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setFooter(ee.footertext, ee.footericon)
+            .setTitle(`❌ ERROR | An error occurred`)
+            .setDescription(`\`\`\`${e.stack}\`\`\``)
+        );
     }
-};
+  }
+}
+/**
+  * @INFO
+  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+  * @INFO
+  * Work for Milrato Development | https://milrato.eu
+  * @INFO
+  * Please mention Him / Milrato Development, when using this Code!
+  * @INFO
+*/

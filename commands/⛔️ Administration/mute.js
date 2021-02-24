@@ -76,7 +76,7 @@ module.exports = {
         );
       }
         return message.channel.send("ERROR, please add a TIME! Usage: `mute @User <Time+Format(e.g: 10m)> [REASON]` example: `mute @User 10m He is doing bad stuff!`");
-      
+
       if (!mutetime || mutetime === undefined) return message.channel.send("ERROR, please add a TIME! Usage: `mute @User <Time+Format(e.g: 10m)> [REASON]` example: `mute @User 10m He is doing bad stuff!`");
       await message.guild.channels.cache.forEach((ch) => {
           try {
@@ -137,3 +137,12 @@ module.exports = {
     }
   }
 };
+/**
+  * @INFO
+  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+  * @INFO
+  * Work for Milrato Development | https://milrato.eu
+  * @INFO
+  * Please mention Him / Milrato Development, when using this Code!
+  * @INFO
+*/
