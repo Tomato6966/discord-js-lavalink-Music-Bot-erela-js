@@ -322,7 +322,7 @@ module.exports = {
                   client.channels.cache
                     .get(player.textChannel)
                     .messages.fetch(player.get("playermessage"))
-                    .then((msg) => msg ? msg.delete().catch(e => String(e.stack).yellow); : console.log("ZzzZ"));
+                    .then((msg) => msg ? msg.delete().catch(e => String(e.stack).yellow) : console.log("ZzzZ"));
                 } catch (e) {
                   console.log(String(e.stack).yellow);
                 }

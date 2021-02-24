@@ -48,7 +48,7 @@ module.exports = async (client, message) => {
               .setFooter(ee.footertext, ee.footericon)
               .setTitle(`❌ Error | Not in the Bot Chat!`)
               .setDescription(`There is a Bot chat setup in this GUILD! try using the Bot Commands here:\n> ${leftb.substr(0, leftb.length - 3)}`)
-            ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow);
+            ).then(msg=> msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow));
         }
     }
     //create the arguments with sliceing of of the rightprefix length
@@ -63,7 +63,7 @@ module.exports = async (client, message) => {
         .setFooter(ee.footertext, ee.footericon)
         .setTitle(`❌ Unkown command, To see a Documentation of all available Commands, type: **\`${prefix}help\`**`)
         .setDescription(`The prefix for this Guild is: \`${prefix}\`\nYou can also ping me, instead of using a Prefix!\n\nTo play Music simply type \`${prefix}play <Title / Url>\`\n\nTo create a unique Requesting Setup type \`${prefix}setup\``)
-      ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow);
+      ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow));
     }//get the command from the collection
     let command = client.commands.get(cmd);
     //if the command does not exist, try to get it by his alias
@@ -103,7 +103,7 @@ module.exports = async (client, message) => {
               .setFooter(ee.footertext, ee.footericon)
               .setTitle("❌ Error | You are not allowed to run this command!")
               .setDescription(`You need these Permissions: \`${command.memberpermissions.join("`, ``")}\``)
-            ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow);
+            ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow));
             throw {
               message: "❌ Error | You are not allowed to run this command!" + `You need these Permissions: \`${command.memberpermissions.join("`, ``")}\``
               }
@@ -135,7 +135,7 @@ module.exports = async (client, message) => {
                     .setFooter(ee.footertext, ee.footericon)
                     .setTitle("❌ Error | You are not allowed to run this command!")
                     .setDescription(`You need to have one of those Roles:\n${leftb.substr(0, leftb.length-3)}\n\nOr be the Requester (${player.queue.current.requester}) of the current Track!`)
-                  ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow);
+                  ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow));
                     throw  {
                       message: "❌ Error | You are not allowed to run this command!" + `You need to have one of those Roles:\n${leftb.substr(0, leftb.length-3)}\n\nOr be the Requester (${player.queue.current.requester}) of the current Track!`
                     }
@@ -183,7 +183,7 @@ module.exports = async (client, message) => {
           .setFooter(ee.footertext, ee.footericon)
           .setTitle("❌ Something went wrong while, running the: `" + command.name + "` command")
           .setDescription(`\`\`\`${e.message}\`\`\``)
-        ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow);
+        ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow));
       }
     }
     else //if the command is not found send an info msg
@@ -192,7 +192,7 @@ module.exports = async (client, message) => {
       .setFooter(ee.footertext, ee.footericon)
       .setTitle(`❌ Unkown command, try: **\`${prefix}help\`**`)
       .setDescription(`The prefix for this Guild is: \`${prefix}\`\nYou can also ping me, instead of using a Prefix!\n\nTo play Music simply type \`${prefix}play <Title / Url>\`\n\nTo create a unique Requesting Setup type \`${prefix}setup\``)
-    ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow);
+    ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow));
   }catch (e){
     return message.channel.send(new MessageEmbed()
       .setColor("RED")
