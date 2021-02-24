@@ -5,7 +5,7 @@
 const config = require("../../botconfig/config.json"); //loading config file with token and prefix, and settings
 const ee = require("../../botconfig/embed.json"); //Loading all embed settings like color footertext and icon ...
 const Discord = require("discord.js"); //this is the official discord.js wrapper for the Discord Api, which we use!
-const { createBar, format, databasing, escapeRegex, isrequestchannel} = require("../../handlers/functions"); //Loading all needed functions
+const { createBar, format, databasing, escapeRegex, isrequestchannel, getRandomInt} = require("../../handlers/functions"); //Loading all needed functions
 const requestcmd = require("../../handlers/requestcmds");
 //here the event starts
 module.exports = async (client, message) => {
@@ -42,12 +42,13 @@ module.exports = async (client, message) => {
                 leftb  +="<#" +client.settings.get(message.guild.id, `botchannel`)[i] + "> / "
             }
             //send informational message
+            try{ message.react("❌"); }catch{}
             return message.channel.send(new Discord.MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
               .setTitle(`❌ Error | Not in the Bot Chat!`)
               .setDescription(`There is a Bot chat setup in this GUILD! try using the Bot Commands here:\n> ${leftb.substr(0, leftb.length - 3)}`)
-            ).then(msg=>msg.delete({timeout: 5000}).catch(e=>console.log("Couldn't Delete --> Ignore")));
+            ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow);
         }
     }
     //create the arguments with sliceing of of the rightprefix length
@@ -55,13 +56,15 @@ module.exports = async (client, message) => {
     //creating the cmd argument by shifting the args by 1
     const cmd = args.shift().toLowerCase();
     //if no cmd added return error
-    if (cmd.length === 0) return message.channel.send(new Discord.MessageEmbed()
-      .setColor(ee.wrongcolor)
-      .setFooter(ee.footertext, ee.footericon)
-      .setTitle(`❌ Unkown command, try: **\`${prefix}help\`**`)
-      .setDescription(`To play Music simply type \`${prefix}play <Title / Url>\`\n\nTo create a unique Requesting Setup type \`${prefix}setup\``)
-    )
-    //get the command from the collection
+    if (cmd.length === 0) {
+      try{ message.react("❌"); }catch{}
+        return message.channel.send(new Discord.MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle(`❌ Unkown command, To see a Documentation of all available Commands, type: **\`${prefix}help\`**`)
+        .setDescription(`The prefix for this Guild is: \`${prefix}\`\nYou can also ping me, instead of using a Prefix!\n\nTo play Music simply type \`${prefix}play <Title / Url>\`\n\nTo create a unique Requesting Setup type \`${prefix}setup\``)
+      ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow);
+    }//get the command from the collection
     let command = client.commands.get(cmd);
     //if the command does not exist, try to get it by his alias
     if (!command) command = client.commands.get(client.aliases.get(cmd));
@@ -77,10 +80,12 @@ module.exports = async (client, message) => {
           const expirationTime = timestamps.get(message.author.id) + cooldownAmount; //get the amount of time he needs to wait until he can run the cmd again
           if (now < expirationTime) { //if he is still on cooldonw
             const timeLeft = (expirationTime - now) / 1000; //get the lefttime
+            try{ message.react("❌"); }catch{}
             return message.channel.send(new Discord.MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext,ee.footericon)
               .setTitle(`❌ Please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`)
+              .addField("Why a delay?", "Because that's the only way how I can prevent you from abusing(spamming) me!")
             ); //send an information message
           }
         }
@@ -89,17 +94,16 @@ module.exports = async (client, message) => {
       try{
         client.stats.inc(message.guild.id, "commands"); //counting our Database stats for SERVER
         client.stats.inc("global", "commands"); //counting our Database Stats for GLOBAL
-        //try to delete the message of the user who ran the cmd
-        try{  message.delete();   }catch{}
         //if Command has specific permission return error
         if(command.memberpermissions) {
           if (!message.member.hasPermission(command.memberpermissions)) {
+            try{ message.react("❌"); }catch{}
             message.channel.send(new Discord.MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
               .setTitle("❌ Error | You are not allowed to run this command!")
               .setDescription(`You need these Permissions: \`${command.memberpermissions.join("`, ``")}\``)
-            ).then(msg=>msg.delete({timeout: 5000}).catch(e=>console.log("Couldn't Delete --> Ignore")));
+            ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow);
             throw {
               message: "❌ Error | You are not allowed to run this command!" + `You need these Permissions: \`${command.memberpermissions.join("`, ``")}\``
               }
@@ -125,12 +129,13 @@ module.exports = async (client, message) => {
 
               if(!isdj && !message.member.hasPermission("ADMINISTRATOR")) {
                 if(player && player.queue.current.requester.id !== message.author.id) {
+                  try{ message.react("❌"); }catch{}
                    message.channel.send(new Discord.MessageEmbed()
                     .setColor(ee.wrongcolor)
                     .setFooter(ee.footertext, ee.footericon)
                     .setTitle("❌ Error | You are not allowed to run this command!")
                     .setDescription(`You need to have one of those Roles:\n${leftb.substr(0, leftb.length-3)}\n\nOr be the Requester (${player.queue.current.requester}) of the current Track!`)
-                  ).then(msg=>msg.delete({timeout: 5000}).catch(e=>console.log("Couldn't Delete --> Ignore")));
+                  ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow);
                     throw  {
                       message: "❌ Error | You are not allowed to run this command!" + `You need to have one of those Roles:\n${leftb.substr(0, leftb.length-3)}\n\nOr be the Requester (${player.queue.current.requester}) of the current Track!`
                     }
@@ -143,6 +148,7 @@ module.exports = async (client, message) => {
           (command.category.toLowerCase().includes("music") || command.category.toLowerCase().includes("filter")) &&
            client.setups.get(message.guild.id, "textchannel") !== message.channel.id &&
            client.settings.get(message.guild.id, `requestonly`)){
+             try{ message.react("❌"); }catch{}
             return message.channel.send(new Discord.MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
@@ -153,6 +159,7 @@ module.exports = async (client, message) => {
         }
         //if the Bot has not enough permissions return error
         if(!message.guild.me.hasPermission("ADMINISTRATOR")){
+          try{ message.react("❌"); }catch{}
           message.channel.send(new Discord.MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
@@ -162,6 +169,11 @@ module.exports = async (client, message) => {
             message: "❌ Error | I don't have enough Permissions!" + `Please give me ADMINISTRATOR, because i need it to delete Messages, Create Channel and execute all Admin Commands ;)`
           }
         }
+        //try to delete the message of the user who ran the cmd
+        //try{  message.delete(); }catch{}
+        //react with an random emoji, ... "random"
+        let emojis = ["👌", "👌", "👌", "👍", "👍", "✅", "✅", "✅", "✌", "🎧", "❤", "✨"]
+        try{ message.react(emojis[getRandomInt(emojis.length)]); }catch{}
         //run the command with the parameters:  client, message, args, user, text, prefix,
         command.run(client, message, args, message.member, args.join(" "), prefix);
       }catch (e) {
@@ -171,7 +183,7 @@ module.exports = async (client, message) => {
           .setFooter(ee.footertext, ee.footericon)
           .setTitle("❌ Something went wrong while, running the: `" + command.name + "` command")
           .setDescription(`\`\`\`${e.message}\`\`\``)
-        ).then(msg=>msg.delete({timeout: 5000}).catch(e=>console.log("Couldn't Delete --> Ignore")));
+        ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow);
       }
     }
     else //if the command is not found send an info msg
@@ -179,14 +191,22 @@ module.exports = async (client, message) => {
       .setColor(ee.wrongcolor)
       .setFooter(ee.footertext, ee.footericon)
       .setTitle(`❌ Unkown command, try: **\`${prefix}help\`**`)
-      .setDescription(`To play Music simply type \`${prefix}play <Title / Url>\``)
-    ).then(msg=>msg.delete({timeout: 5000}).catch(e=>console.log("Couldn't Delete --> Ignore")));
+      .setDescription(`The prefix for this Guild is: \`${prefix}\`\nYou can also ping me, instead of using a Prefix!\n\nTo play Music simply type \`${prefix}play <Title / Url>\`\n\nTo create a unique Requesting Setup type \`${prefix}setup\``)
+    ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow);
   }catch (e){
-    return message.channel.send(
-    new MessageEmbed()
-    .setColor("RED")
-    .setTitle(`❌ ERROR | An error occurred`)
-    .setDescription(`\`\`\`${e.stack}\`\`\``)
-);
+    return message.channel.send(new MessageEmbed()
+      .setColor("RED")
+      .setTitle(`❌ ERROR | An error occurred`)
+      .setDescription(`\`\`\`${e.stack}\`\`\``)
+    );
   }
 }
+/**
+  * @INFO
+  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+  * @INFO
+  * Work for Milrato Development | https://milrato.eu
+  * @INFO
+  * Please mention Him / Milrato Development, when using this Code!
+  * @INFO
+*/
