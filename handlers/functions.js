@@ -247,12 +247,12 @@ module.exports = {
         });
         client.settings.ensure(guildid, {
           prefix: config.prefix,
+          pruning: true,
           requestonly: true,
           djroles: [],
           djonlycmds: ["autoplay", "clearqueue", "forward", "loop", "jump", "loopqueue", "loopsong", "move", "pause", "resume", "removetrack", "removedupe", "restart", "rewind", "seek", "shuffle", "skip", "stop", "volume"],
           botchannel: [],
         });
-
       }
       return;
     }catch (e){
@@ -307,7 +307,7 @@ module.exports = {
                   client.channels.cache
                     .get(player.textChannel)
                     .messages.fetch(player.get("playermessage"))
-                    .then((msg) => msg ? msg.delete() : console.log("ZzzZ"));
+                    .then((msg) => msg ? msg.delete().catch(e => String(e.stack).yellow) : console.log("ZzzZ"));
                 } catch (e) {
                   console.log(String(e.stack).yellow);
                 }
@@ -452,7 +452,7 @@ module.exports = {
         message.edit(QueueEmbed(client, player)).catch(e => String(e.stack).yellow);
         client.setups.set(message.guild.id, msg.id, "message_queue_info");
         let track_info_msg = await message.channel.messages.fetch(db.message_track_info);
-        if (track_info_msg) track_info_msg.delete();
+        if (track_info_msg) track_info_msg.delete().catch(e => String(e.stack).yellow);
         return message.channel.send(new MessageEmbed()).then(msg => {
           msg.edit(SongEmbed(player.queue.current)).catch(e => String(e.stack).yellow);
           client.setups.set(message.guild.id, msg.id, "message_track_info");
@@ -592,7 +592,7 @@ module.exports = {
         message.edit(embed).catch(e => String(e.stack).yellow);
         client.setups.set(message.guild.id, msg.id, "message_queue_info");
         let track_info_msg = await message.channel.messages.fetch(db.message_track_info);
-        if (track_info_msg) track_info_msg.delete();
+        if (track_info_msg) track_info_msg.delete().catch(e => String(e.stack).yellow);
         return message.channel.send(new MessageEmbed()).then(msg => {
           msg.edit(SongEmbed(player.queue.current)).catch(e => String(e.stack).yellow);
           client.setups.set(message.guild.id, msg.id, "message_track_info");
@@ -607,9 +607,17 @@ module.exports = {
         if (h < 1) return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
         else return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
       }
-
-  }catch (e){
-    console.log(String(e.stack).bgRed)
+    }catch (e){
+      console.log(String(e.stack).bgRed)
+    }
   }
 }
-}
+/**
+  * @INFO
+  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+  * @INFO
+  * Work for Milrato Development | https://milrato.eu
+  * @INFO
+  * Please mention Him / Milrato Development, when using this Code!
+  * @INFO
+*/

@@ -7,7 +7,7 @@ module.exports = {
     aliases: ["musicsettings"],
     cooldown: 10,
     usage: "settings",
-    description: "Shows you the current settings, like which commands are on DJ ONLY, the DJ ROLES and BOT CHANNELS ....",
+    description: "Shows you the current settings, like Premium, which commands are on DJ ONLY, the DJ ROLES and BOT CHANNELS ....",
     run: async (client, message, args, cmduser, text, prefix) => {
       try{
         //these lines creates the string for all botchannels
@@ -54,3 +54,12 @@ module.exports = {
       }
     },
 };
+/**
+  * @INFO
+  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+  * @INFO
+  * Work for Milrato Development | https://milrato.eu
+  * @INFO
+  * Please mention Him / Milrato Development, when using this Code!
+  * @INFO
+*/

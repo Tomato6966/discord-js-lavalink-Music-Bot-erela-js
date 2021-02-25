@@ -515,11 +515,19 @@ async function skiptrack(client, message, args, type) {
       }
   } catch (e) {
       console.log(String(e.stack).red)
-        return message.channel.send(new Discord.MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256-3) + "`**")
-        )
+      return message.channel.send(new Discord.MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256-3) + "`**")
+      )
   }
-
 }
+/**
+  * @INFO
+  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+  * @INFO
+  * Work for Milrato Development | https://milrato.eu
+  * @INFO
+  * Please mention Him / Milrato Development, when using this Code!
+  * @INFO
+*/

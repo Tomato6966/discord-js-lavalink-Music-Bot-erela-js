@@ -2,22 +2,22 @@ const { MessageEmbed } = require("discord.js");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
 module.exports = {
-    name: "togglerequestonly",
-    aliases: ["togglerequest", "tro"],
+    name: "togglepruning",
+    aliases: ["toggleprunning", "pruning", "prunning"],
     category: "⚙️ Settings",
-    description: "Toggles if u are allowed to use MUSIC and FILTER Comamnds in different channels too! Default: true == Not allowed",
-    usage: "togglerequestonly",
+    description: "Toggles pruning. If its true a message of playing a new track will be sent, even if your afk. If false it wont send any message if a new Track plays! | Default: true aka send new Track information",
+    usage: "togglepruning",
     memberpermissions: ["ADMINISTRATOR"],
     run: async (client, message, args) => {
     try{
       //set the new prefix
-      client.settings.set(message.guild.id, !client.settings.get(message.guild.id, `requestonly`), `requestonly`);
+      client.settings.set(message.guild.id, !client.settings.get(message.guild.id, `pruning`), `pruning`);
       //return success embed
       return message.channel.send(new MessageEmbed()
         .setColor(ee.color)
         .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`✅ Success | ${client.settings.get(message.guild.id, `requestonly`) ? `\`✔️ Enabled\`` : `\`❌ Disabled\``} Request Only`)
-        .setDescription(`You are now ${client.settings.get(message.guild.id, `requestonly`) ? `` : `not`} allowed to use Commands in different Channels`)
+        .setTitle(`✅ Success | ${client.settings.get(message.guild.id, `pruning`) ? `\`✔️ Enabled\`` : `\`❌ Disabled\``} Pruning`)
+        .setDescription(`I will now ${client.settings.get(message.guild.id, `pruning`) ? `` : `not`} send a message with Track Information, if I am on "AFK"`)
       );
     } catch (e) {
         console.log(String(e.stack).bgRed)
