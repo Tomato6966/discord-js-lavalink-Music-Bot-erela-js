@@ -8,6 +8,9 @@ module.exports = async (client, message, args, type) => {
     if(!message.guild) return;
     //just visual for the console
     try{
+      let guildstring = ` - ${message.guild.name} `.substr(0, 22)
+      let userstring = ` - ${message.author.tag} `.substr(0, 22)
+
       const stringlength = 69;
       console.log("\n")
       console.log(`     ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓`.bold.brightRed)
@@ -16,10 +19,10 @@ module.exports = async (client, message, args, type) => {
       console.log(`     ┃ `.bold.brightRed + ` - ${args.join(" ")}`.substr(0, 60).bold.cyan + " ".repeat(-1+stringlength-` ┃ `.length-` - ${args.join(" ")}`.substr(0, 60).length)+ "┃".bold.brightRed)
       console.log(`     ┃ `.bold.brightRed + " ".repeat(-1+stringlength-` ┃ `.length)+ "┃".bold.brightRed)
       console.log(`     ┃ `.bold.brightRed + `REQUESTED BY: `.bold.green + " ".repeat(-1+stringlength-` ┃ `.length-`REQUESTED BY: `.length)+ "┃".bold.brightRed)
-      console.log(`     ┃ `.bold.brightRed + ` - ${message.author.tag} `.bold.cyan + "━".repeat(stringlength/3- ` - ${message.author.tag} `.length).bold.brightRed+ "━━>".bold.brightRed+` ${message.author.id}`.bold.cyan + " ".repeat(-1+stringlength-` ┃ `.length-` - ${message.author.tag} `.length-"━━>".length-` ${message.author.id}`.length - "━".repeat(stringlength/3- ` - ${message.author.tag} `.length).length)+ "┃".bold.brightRed)
+      console.log(`     ┃ `.bold.brightRed + userstring.bold.cyan + "━".repeat(stringlength/3- userstring.length).bold.brightRed+ "━━>".bold.brightRed+` ${message.author.id}`.bold.cyan + " ".repeat(-1+stringlength-` ┃ `.length-userstring.length-"━━>".length-` ${message.author.id}`.length - "━".repeat(stringlength/3- userstring.length).length)+ "┃".bold.brightRed)
       console.log(`     ┃ `.bold.brightRed + " ".repeat(-1+stringlength-` ┃ `.length)+ "┃".bold.brightRed)
       console.log(`     ┃ `.bold.brightRed + `REQUESTED IN: `.bold.green + " ".repeat(-1+stringlength-` ┃ `.length-`REQUESTED IN: `.length)+ "┃".bold.brightRed)
-      console.log(`     ┃ `.bold.brightRed + ` - ${message.guild.name} `.substr(0, 25).bold.cyan+"━".repeat(stringlength/3- ` - ${message.guild.name} `.substr(0, 25).length).bold.brightRed+"━━>".bold.brightRed+` ${message.guild.id}`.bold.cyan + " ".repeat(-1+stringlength-` ┃ `.length-` - ${message.guild.name} `.length-"━━>".length-` ${message.guild.id}`.length - "━".repeat(stringlength/3- ` - ${message.guild.name} `.length).length)+ "┃".bold.brightRed)
+      console.log(`     ┃ `.bold.brightRed + guildstring.bold.cyan + "━".repeat(stringlength/3 - guildstring.length).bold.brightRed+"━━>".bold.brightRed+` ${message.guild.id}`.bold.cyan + " ".repeat(-1+stringlength-` ┃ `.length-guildstring.length-"━━>".length-` ${message.guild.id}`.length - "━".repeat(stringlength/3- guildstring.length).length)+ "┃".bold.brightRed)
       console.log(`     ┃ `.bold.brightRed + " ".repeat(-1+stringlength-` ┃ `.length)+ "┃".bold.brightRed)
       console.log(`     ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛`.bold.brightRed)
       console.log("\n")
