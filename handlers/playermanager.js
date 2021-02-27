@@ -8,8 +8,11 @@ module.exports = async (client, message, args, type) => {
     if(!message.guild) return;
     //just visual for the console
     try{
+      let guildstring = ` - ${message.guild.name} `.substr(0, 22)
+      let userstring = ` - ${message.author.tag} `.substr(0, 22)
+
       const stringlength = 69;
-       console.log("\n")
+      console.log("\n")
       console.log(`     ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓`.bold.brightRed)
       console.log(`     ┃ `.bold.brightRed + " ".repeat(-1+stringlength-` ┃ `.length)+ "┃".bold.brightRed)
       console.log(`     ┃ `.bold.brightRed + `NEW SONG REQUEST: `.bold.green + " ".repeat(-1+stringlength-` ┃ `.length-`NEW SONG REQUEST: `.length)+ "┃".bold.brightRed)
