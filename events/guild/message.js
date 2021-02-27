@@ -56,14 +56,16 @@ module.exports = async (client, message) => {
     //creating the cmd argument by shifting the args by 1
     const cmd = args.shift().toLowerCase();
     //if no cmd added return error
-    if (cmd.length === 0)
+    if (cmd.length === 0){
       if(matchedPrefix.includes(client.user.id))
         return message.channel.send(new Discord.MessageEmbed()
-          .setColor(ee.wrongcolor)
+          .setColor(ee.color)
           .setFooter(ee.footertext,ee.footericon)
           .setTitle(`Hugh? I got pinged? Imma give you some help`)
-          .addField(`To see all Commands type: \`${prefix}help\`\n\nTo setup a Unique Song Request System type \`${prefix}setup\`\n\nOther then that, start listening to some music with \`${prefix}play <Song/Url>\``)
+          .setDescription(`To see all Commands type: \`${prefix}help\`\n\nTo setup a Unique Song Request System type \`${prefix}setup\`\n\nOther then that, start listening to some music with \`${prefix}play <Song/Url>\``)
         );
+      return;
+      }
     //get the command from the collection
     let command = client.commands.get(cmd);
     //if the command does not exist, try to get it by his alias
