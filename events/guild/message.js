@@ -56,15 +56,15 @@ module.exports = async (client, message) => {
     //creating the cmd argument by shifting the args by 1
     const cmd = args.shift().toLowerCase();
     //if no cmd added return error
-    if (cmd.length === 0) {
-      try{ message.react("❌"); }catch{}
+    if (cmd.length === 0)
+      if(matchedPrefix.includes(client.user.id))
         return message.channel.send(new Discord.MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`❌ Unkown command, To see a Documentation of all available Commands, type: **\`${prefix}help\`**`)
-        .setDescription(`The prefix for this Guild is: \`${prefix}\`\nYou can also ping me, instead of using a Prefix!\n\nTo play Music simply type \`${prefix}play <Title / Url>\`\n\nTo create a unique Requesting Setup type \`${prefix}setup\``)
-      ).then(msg=>msg.delete({timeout: 5000}).catch(e => String(e.stack).yellow));
-    }//get the command from the collection
+          .setColor(ee.wrongcolor)
+          .setFooter(ee.footertext,ee.footericon)
+          .setTitle(`Hugh? I got pinged? Imma give you some help`)
+          .addField(`To see all Commands type: \`${prefix}help\`\n\nTo setup a Unique Song Request System type \`${prefix}setup\`\n\nOther then that, start listening to some music with \`${prefix}play <Song/Url>\``)
+        );
+    //get the command from the collection
     let command = client.commands.get(cmd);
     //if the command does not exist, try to get it by his alias
     if (!command) command = client.commands.get(client.aliases.get(cmd));
