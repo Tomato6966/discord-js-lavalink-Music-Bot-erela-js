@@ -59,8 +59,6 @@ BY [INVITING MY PUBLIC MUSIC BOT 24/7 UPTIME!](https://discord.com/api/oauth2/au
 
 This repository only exists, because of this DISCORD BOT, so make sure to invite it, so that i can keep this Repo up to date ;)
 
-![](https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js/blob/main/aha.png)
-
 ## BEST HOSTING | Bittmax.de
 BITTMAX Quality is their solution.
 Bittmax is our first and probably most important sponsor!
