@@ -19,8 +19,6 @@ const client = new Discord.Client({
 //  messageCacheMaxSize: 10,
   restTimeOffset: 0,
   restWsBridgetimeout: 100,
-  shards: "auto",
-  shardCount: 5,
   disableEveryone: true,
   partials: ['MESSAGE', 'CHANNEL', 'REACTION']
 });
@@ -29,9 +27,13 @@ const client = new Discord.Client({
     require(`./handlers/${handler}`)(client);
 });
 //Each Database gets a own file and folder which is pretty handy!
+client.premium = new Enmap({name: "premium", dataDir: "./databases/premium", ensureProps: false})
 client.stats = new Enmap({name: "stats", dataDir: "./databases/stats", ensureProps: false})
 client.settings = new Enmap({name: "setups", dataDir: "./databases/settings", ensureProps: false})
 client.setups = new Enmap({name: "setups", dataDir: "./databases/setups", ensureProps: false})
+client.modActions = new Enmap({name: 'actions'});
+client.userProfiles = new Enmap({name: 'userProfiles' });
+
 //login into the bot
 client.login(require("./botconfig/config.json").token);
 /**
