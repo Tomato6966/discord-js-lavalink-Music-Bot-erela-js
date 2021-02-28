@@ -248,17 +248,12 @@ async function search(client, message, args, type) {
           );
         track = res.tracks[index];
         // Create the player
-        let player = client.manager.players.get(message.guild);
-        if(!player) {
-          player = client.manager.create({
+        let player = client.manager.create({
               guild: message.guild.id,
               voiceChannel: message.member.voice.channel.id,
               textChannel: message.channel.id,
               selfDeafen: config.settings.selfDeaf,
           });
-          player.set("message", message);
-          player.set("playerauthor", message.author.id);
-        }
         if(!res.tracks[0])
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
@@ -268,7 +263,9 @@ async function search(client, message, args, type) {
           );
         if (player.state !== "CONNECTED") {
             // Connect to the voice channel and add the track to the queue
-            try{player.connect();}catch{}
+            player.connect();
+            player.set("message", message);
+            player.set("playerauthor", message.author.id);
             player.queue.add(track);
             player.play();
             if(isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
@@ -318,17 +315,12 @@ async function playlist(client, message, args, type) {
              .setDescription(`\`\`\`${e.message}\`\`\``)
            );
         }
-    let player = client.manager.players.get(message.guild);
-    if(!player) {
-      player = client.manager.create({
+    let player = client.manager.create({
           guild: message.guild.id,
           voiceChannel: message.member.voice.channel.id,
           textChannel: message.channel.id,
           selfDeafen: config.settings.selfDeaf,
       });
-      player.set("message", message);
-      player.set("playerauthor", message.author.id);
-    }
     if(!res.tracks[0])
       return message.channel.send(new MessageEmbed()
         .setColor(ee.wrongcolor)
@@ -338,7 +330,9 @@ async function playlist(client, message, args, type) {
       );
     // Connect to the voice channel and add the track to the queue
     if (player.state !== "CONNECTED") {
-        try{player.connect();}catch{}
+        player.connect();
+        player.set("message", message);
+        player.set("playerauthor", message.author.id);
         player.queue.add(res.tracks);
         message.channel.send(new Discord.MessageEmbed()
           .setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256-3) + "`**")
@@ -399,17 +393,12 @@ async function song(client, message, args, type) {
         );
     }
     // Create the player
-    let player = client.manager.players.get(message.guild);
-    if(!player) {
-      player = client.manager.create({
+    let player = client.manager.create({
           guild: message.guild.id,
           voiceChannel: message.member.voice.channel.id,
           textChannel: message.channel.id,
           selfDeafen: config.settings.selfDeaf,
       });
-      player.set("message", message);
-      player.set("playerauthor", message.author.id);
-    }
     if(!res.tracks[0])
       return message.channel.send(new MessageEmbed()
         .setColor(ee.wrongcolor)
@@ -419,7 +408,9 @@ async function song(client, message, args, type) {
       );
     // Connect to the voice channel and add the track to the queue
     if (player.state !== "CONNECTED") {
-        try{player.connect();}catch{}
+        player.connect();
+        player.set("message", message);
+        player.set("playerauthor", message.author.id);
         player.queue.add(res.tracks[0]);
         player.play();
         if(isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
@@ -476,17 +467,12 @@ async function skiptrack(client, message, args, type) {
             );
       }
       // Create the player
-      let player = client.manager.players.get(message.guild);
-      if(!player) {
-        player = client.manager.create({
+      let player = client.manager.create({
             guild: message.guild.id,
             voiceChannel: message.member.voice.channel.id,
             textChannel: message.channel.id,
             selfDeafen: config.settings.selfDeaf,
         });
-        player.set("message", message);
-        player.set("playerauthor", message.author.id);
-      }
       if(!res.tracks[0])
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
@@ -496,7 +482,9 @@ async function skiptrack(client, message, args, type) {
         );
       // Connect to the voice channel and add ?the track to the queue
       if (player.state !== "CONNECTED") {
-          try{player.connect();}catch{}
+          player.connect();
+          player.set("message", message);
+          player.set("playerauthor", message.author.id);
           player.queue.add(res.tracks[0]);
           player.play();
           if(isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
