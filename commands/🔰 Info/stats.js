@@ -27,9 +27,7 @@ module.exports = {
             }
             guilds.push(guild.name)
           }
-        }catch (e){
-          console.log(String(e.stack).red)
-        }
+        }catch {  }
       }
       for(let i = 0; i< premiums.length; i++){
         try{
@@ -42,14 +40,13 @@ module.exports = {
             }
             users.push(user.tag)
           }
-        }catch (e){
-          console.log(String(e.stack).red)
-        }
+        }catch {  }
       }
+
       message.channel.send(new MessageEmbed().setColor(ee.color).setFooter(ee.footertext, ee.footericon)
         .addField("⚙️ GLOBAL Commands used:", `>>> \`${global.commands} Commands\` used\nin **all** Servers`,true)
         .addField("🎵 GLOBAL Songs played:", `>>> \`${global.songs} Songs\` played in\n**all** Servers`,true)
-        .addField("📰 GLOBAL Setups created:", `>>> \`${global.setups} Setups\` created in\n**all** Servers`,true)
+        .addField("📰 GLOBAL Setups created:", `>>> \`${client.setups.filter(s => s.textchannel != "0").size} Setups\` created in\n**all** Servers`,true)
         .addField("\u200b", "\u200b")
         .addField("⚙️ SERVER Commands used:", `>>> \`${guild.commands} Commands\` used in\n**this** Server`,true)
         .addField("🎵 SERVER Songs played:", `>>> \`${guild.songs} Songs\` played in\n**this** Server`,true)
