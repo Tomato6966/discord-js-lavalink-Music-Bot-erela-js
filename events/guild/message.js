@@ -187,7 +187,6 @@ module.exports = async (client, message) => {
         //react with an random emoji, ... "random"
           //let emojis = ["👌", "👌", "👌", "👍", "👍", "✅", "✅", "✅", "✌", "🎧", "❤", "✨"]
           //try{ message.react(emojis[getRandomInt(emojis.length)]); }catch{}
-
         //run the command with the parameters:  client, message, args, user, text, prefix,
         command.run(client, message, args, message.member, args.join(" "), prefix);
       }catch (e) {

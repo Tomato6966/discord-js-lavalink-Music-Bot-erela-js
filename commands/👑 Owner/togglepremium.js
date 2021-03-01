@@ -9,7 +9,13 @@ module.exports = {
     description: "Toggles premium Mode of a User / Guild",
     usage: "togglepremium <user/guild> <Userid/Guildid>",
     run: async (client, message, args, cmduser, text, prefix) => {
-        if (!config.ownerIDS.includes(message.author.id)) return message.channel.send("You are not allowed to run this command! Only the Owner is allowed to run this Cmd");
+        if (!config.ownerIDS.includes(message.author.id))
+          return message.channel.send(new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setFooter(client.user.username, ee.footericon)
+            .setTitle("❌ Error | You are not allowed to run this command! Only the Owner is allowed to run this Cmd")
+          );
+
         if (!args[0]) return message.channel.send("Please add the **type**! Useage: `togglepremium <user/guild> <Userid/Guildid>`");
         if (!args[1]) return message.channel.send("Please add a **ID**! Useage: `togglepremium <user/guild> <Userid/Guildid>`");
         if (args[1].length !== 18) return message.channel.send("Please add a **valid ID**! Useage: `togglepremium <user/guild> <Userid/Guildid>`");

@@ -10,10 +10,15 @@ module.exports = {
     description: "Changes the Bot Status",
     usage: "status <Type> <TEXT>",
     run: async (client, message, args, cmduser, text, prefix) => {
-        if (!config.ownerIDS.includes(message.author.id)) return message.channel.send("You are not allowed to run this command! Only the Owner is allowed to run this Cmd");
+      if (!config.ownerIDS.includes(message.author.id))
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setFooter(client.user.username, ee.footericon)
+          .setTitle("❌ Error | You are not allowed to run this command! Only the Owner is allowed to run this Cmd")
+        );
         try{
-            if(!args[0]) message.channel.send(new MessageEmbed().setFooter(ee.footertext,ee.footericon).setColor(ee.wrongcolor).setTitle("❌ ERROR Wrong Command Usage | Include a Status Type").setDescription(`Try this: \`${prefix}\`status <Type> <TEXT>`))
-            if(!args[1]) message.channel.send(new MessageEmbed().setFooter(ee.footertext,ee.footericon).setColor(ee.wrongcolor).setTitle("❌ ERROR Wrong Command Usage | Include a Status Text").setDescription(`Try this: \`${prefix}\`status <Type> <TEXT>`))
+            if(!args[0]) return message.channel.send(new MessageEmbed().setFooter(ee.footertext,ee.footericon).setColor(ee.wrongcolor).setTitle("❌ ERROR Wrong Command Usage | Include a Status Type").setDescription(`Try this: \`${prefix}\`status <Type> <TEXT>`))
+            if(!args[1]) return message.channel.send(new MessageEmbed().setFooter(ee.footertext,ee.footericon).setColor(ee.wrongcolor).setTitle("❌ ERROR Wrong Command Usage | Include a Status Text").setDescription(`Try this: \`${prefix}\`status <Type> <TEXT>`))
 
             let status = config
             status.status.text = args.slice(1).join(" ").substr(0, 50);

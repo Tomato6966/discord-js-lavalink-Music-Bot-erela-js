@@ -9,7 +9,12 @@ module.exports = {
     description: "eval Command",
     usage: "eval <CODE>",
     run: async (client, message, args, cmduser, text, prefix) => {
-        if (!config.ownerIDS.includes(message.author.id)) return message.channel.send("You are not allowed to run this command! Only the Owner is allowed to run this Cmd");
+      if (!config.ownerIDS.includes(message.author.id))
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setFooter(client.user.username, ee.footericon)
+          .setTitle("❌ Error | You are not allowed to run this command! Only the Owner is allowed to run this Cmd")
+        );
         let evaled;
         try {
             if (args.join(" ").includes("token")) return console.log("ERROR NO TOKEN GRABBING ;)".red);

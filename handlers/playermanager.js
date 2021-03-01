@@ -8,7 +8,7 @@ module.exports = async (client, message, args, type) => {
     if(!message.guild) return;
     //just visual for the console
     try{
-      let guildstring = ` - ${message.guild.name} `.substr(0, 22)
+      let guildstring = ` - ${message.guild ? message.guild.name : "Unknown Guild Name"} `.substr(0, 22)
       let userstring = ` - ${message.author.tag} `.substr(0, 22)
 
       const stringlength = 69;

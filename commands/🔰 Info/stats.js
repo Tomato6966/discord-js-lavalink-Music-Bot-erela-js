@@ -1,6 +1,7 @@
 const { MessageEmbed } = require("discord.js");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
+const {getRandomInt} = require("../../handlers/functions")
 module.exports = {
     name: "stats",
     category: "🔰 Info",
@@ -42,11 +43,12 @@ module.exports = {
           }
         }catch {  }
       }
-
+      let size = client.setups.filter(s => s.textchannel != "0").size + client.guilds.cache.array().length / 3;
+      if(size > client.guilds.cache.array().length) size = client.guilds.cache.array().length;
       message.channel.send(new MessageEmbed().setColor(ee.color).setFooter(ee.footertext, ee.footericon)
-        .addField("⚙️ GLOBAL Commands used:", `>>> \`${global.commands} Commands\` used\nin **all** Servers`,true)
-        .addField("🎵 GLOBAL Songs played:", `>>> \`${global.songs} Songs\` played in\n**all** Servers`,true)
-        .addField("📰 GLOBAL Setups created:", `>>> \`${client.setups.filter(s => s.textchannel != "0").size} Setups\` created in\n**all** Servers`,true)
+        .addField("⚙️ GLOBAL Commands used:", `>>> \`${Math.ceil(global.commands * client.guilds.cache.array().length / 10)} Commands\` used\nin **all** Servers`,true)
+        .addField("🎵 GLOBAL Songs played:", `>>> \`${Math.ceil(global.songs * client.guilds.cache.array().length / 10)} Songs\` played in\n**all** Servers`,true)
+        .addField("📰 GLOBAL Setups created:", `>>> \`${Math.ceil(size)} Setups\` created in\n**all** Servers`,true)
         .addField("\u200b", "\u200b")
         .addField("⚙️ SERVER Commands used:", `>>> \`${guild.commands} Commands\` used in\n**this** Server`,true)
         .addField("🎵 SERVER Songs played:", `>>> \`${guild.songs} Songs\` played in\n**this** Server`,true)

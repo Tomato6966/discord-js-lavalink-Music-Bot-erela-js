@@ -8,7 +8,7 @@ const config = require("../botconfig/config.json");
 const { createBar, delay, format, databasing, playANewTrack, isrequestchannel, edit_request_message_track_info, getRandomInt, autoplay } = require("../handlers/functions");
 const clientID = config.spotify.clientID;
 const clientSecret = config.spotify.clientSecret;
-const playermanager = require("../handlers/playermanager");
+let playermanager = require("../handlers/playermanager");
 let hasmap = new Map();
 module.exports = (client) => {
     try {
@@ -95,7 +95,7 @@ module.exports = (client) => {
                     databasing(client, player.guild, player.get("playerauthor"));
                     let embed = new MessageEmbed()
                     try{embed.setTitle(`:thumbsup: Joined \`🔈${client.channels.cache.get(player.voiceChannel).name}\``)}catch{}
-                        try{embed.setDescription(`And bound to: \`#${client.channels.cache.get(player.textChannel).name}\`\n`)}catch{}
+                        try{embed.setDescription(`And bound to: \`#${client.channels.cache.get(player.textChannel).name}\`\n💬 Pruning \`${client.settings.get(message.guild.id, `pruning`) ? `\`✔️ Enabled\`` : `\`❌ Disabled\``}`)}catch{}
                         try{embed.addField("🔊 Volume", `\`${player.volume}%\``, true)}catch{}
                         try{embed.addField("🎚 Equalizer: ", `\`🎵 Music\``, true)}catch{}
                         try{embed.addField(`${player.queueRepeat ? "🔂 Queue Loop: " : "🔁 Song Loop: "}`, `\`${player.queueRepeat ? `\`✔️ Enabled\`` : player.trackRepeat ? `\`✔️ Enabled\`` : `\`❌ Disabled\``}\``, true)}catch{}
@@ -223,7 +223,7 @@ module.exports = (client) => {
                       //if not in a Voice Channel return!
                       if (!channel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle("❌ ERROR | You need to join a voice channel."));
                       //get the lavalink erela.js player information
-                      const player = client.manager.players.get(message.guild.id);
+                      let player = client.manager.players.get(message.guild.id);
                       //if there is a player and the user is not in the same channel as the Bot return information message
                       if (player && channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle("❌ ERROR | I am already playing somewhere else!").setDescription(`You can listen to me in: \`${message.guild.channels.cache.get(player.VoiceChannel).name}\``));
                       //switch case for every single reaction emoji someone
@@ -708,56 +708,96 @@ module.exports = (client) => {
           * @INFO - THis event handles the LEAVE ON EMPTY Thing
           * With premium
         */
+        //Log if a Channel gets deleted, and the Bot was in, then delete the player if the player exists!
+        client.on("channelDelete", channel => {
+          try{
+            if(channel.members.has(client.user.id)){
+              let player = client.manager.players.get(channel.guild.id);
+              if (!player) return;
+              //destroy
+              player.destroy();
+            }
+          }catch{ }
+        })
+        //If the Bot gets Remove from the Guild and there is still a player, remove it ;)
+        client.on("guildRemove", guild => {
+          try{
+              let player = client.manager.players.get(guild.id);
+              if (!player) return;
+              //destroy
+              player.destroy();
+          }catch{ /* */ }
+        })
         client.on("voiceStateUpdate", (oldState, newState) => {
-            const player = client.manager.players.get(newState.guild.id);
-            if (!player) return;
-            databasing(client, player.guild, player.get("playerauthor"));
-            if (config.settings.leaveOnEmpty_Channel.enabled && oldState && oldState.channel) {
-                const player = client.manager.players.get(oldState.guild.id);
-                if (player && oldState.guild.channels.cache.get(player.voiceChannel).members.size === 1) {
-                    setTimeout(() => {
-                        try {
-                            if (player && oldState.guild.channels.cache.get(player.voiceChannel).members.size === 1) {
-                                let embed = new MessageEmbed()
-                                    .setTitle("❌ Queue has ended | Channel Empty")
-                                    .setDescription(`I left the Channel: \`${client.channels.cache.get(player.voiceChannel).name}\` because the Channel was empty for: \`${ms(config.settings.leaveOnEmpty_Channel.time_delay, { long: true })}\``)
-                                    .setColor(ee.wrongcolor)
-                                    .setFooter(ee.footertext, ee.footericon);
-                                //if        player afk                              or      guild afk     is enbaled return and not destroy the PLAYER
-                                if(player.get(`afk-${player.get("playerauthor")}`) || player.get(`afk-${player.guild}`))
-                                  return client.channels.cache.get(player.textChannel).send(embed.setDescription(`I will not Leave the Channel, cause \`afk\` is \`✔️ Enabled\``)).then(async msg => {
-                                    try{
-                                      await delay(7500)
-                                      if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
-                                    }catch{ /* */ }
-                                  });
-                                client.channels.cache.get(player.textChannel).send(embed).then(async msg => {
+          // LEFT V12
+          if (oldState.channelID && !newState.channelID) {
+            //if bot left
+            try{
+              if(oldState.member.user.id === client.user.id){
+                let player = client.manager.players.get(oldState.guild.id);
+                if (!player) return;
+                  //destroy
+                  player.destroy();
+              }
+            }catch{}
+          }
+          let player = client.manager.players.get(newState.guild.id);
+          if (!player) return;
+          databasing(client, player.guild, player.get("playerauthor"));
+          if (config.settings.leaveOnEmpty_Channel.enabled && oldState && oldState.channel) {
+              player = client.manager.players.get(oldState.guild.id);
+              //if not connect return player.destroy()
+              if(!oldState.guild.me.voice.channel) return player.destroy();
+              //wait some time...
+              if (player && oldState.guild.channels.cache.get(player.voiceChannel).members.size === 1) {
+                  setTimeout(() => {
+                      try {
+                          player = client.manager.players.get(oldState.guild.id);
+                          //if not connect return player.destroy()
+                          if(!oldState.guild.me.voice.channel) return player.destroy();
+                          //wait some time...
+                          if (player && oldState.guild.channels.cache.get(player.voiceChannel).members.size === 1) {
+                              let embed = new MessageEmbed()
+                                  .setTitle("❌ Queue has ended | Channel Empty")
+                                  .setDescription(`I left the Channel: \`${client.channels.cache.get(player.voiceChannel).name}\` because the Channel was empty for: \`${ms(config.settings.leaveOnEmpty_Channel.time_delay, { long: true })}\``)
+                                  .setColor(ee.wrongcolor)
+                                  .setFooter(ee.footertext, ee.footericon);
+                              //if        player afk                              or      guild afk     is enbaled return and not destroy the PLAYER
+                              if(player.get(`afk-${player.get("playerauthor")}`) || player.get(`afk-${player.guild}`))
+                                return client.channels.cache.get(player.textChannel).send(embed.setDescription(`I will not Leave the Channel, cause \`afk\` is \`✔️ Enabled\``)).then(async msg => {
                                   try{
                                     await delay(7500)
                                     if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
                                   }catch{ /* */ }
                                 });
-                                try {
-                                    client.channels.cache
-                                        .get(player.textChannel)
-                                        .messages.fetch(player.get("playermessage")).then(async msg => {
-                                          try{
-                                            await delay(7500)
-                                            if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
-                                          }catch{ /* */ }
-                                        });
-                                } catch (e) {
-                                    console.log(String(e.stack).yellow);
-                                }
-                                player.destroy();
-                            }
-                        } catch (e) {
-                            console.log(String(e.stack).yellow);
-                        }
-                    }, config.settings.leaveOnEmpty_Channel.time_delay);
-                }
-            }
+                              client.channels.cache.get(player.textChannel).send(embed).then(async msg => {
+                                try{
+                                  await delay(7500)
+                                  if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                                }catch{ /* */ }
+                              });
+                              try {
+                                  client.channels.cache
+                                      .get(player.textChannel)
+                                      .messages.fetch(player.get("playermessage")).then(async msg => {
+                                        try{
+                                          await delay(7500)
+                                          if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                                        }catch{ /* */ }
+                                      });
+                              } catch (e) {
+                                  console.log(String(e.stack).yellow);
+                              }
+                              player.destroy();
+                          }
+                      } catch (e) {
+                          console.log(String(e.stack).yellow);
+                      }
+                  }, config.settings.leaveOnEmpty_Channel.time_delay);
+              }
+          }
         });
+
     }catch (e){
       console.log(String(e.stack).bgRed)
     }
