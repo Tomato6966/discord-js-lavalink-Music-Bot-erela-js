@@ -1,5 +1,6 @@
 const config = require("../../botconfig/config.json");
 const ms = require("ms");
+const {MessageEmbed} =require("discord.js")
 module.exports = {
     name: "unmute",
     category: "⛔️ Admin",
@@ -74,7 +75,7 @@ module.exports = {
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
             .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
   }
