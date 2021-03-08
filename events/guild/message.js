@@ -122,7 +122,8 @@ module.exports = async (client, message) => {
             }
           }
         //if Command has specific permission return error
-        if(client.settings.get(message.guild.id, `djonlycmds`).join(" ").toLowerCase().split(" ").includes(command.name.toLowerCase())) {
+
+        if(client.settings.get(message.guild.id, `djonlycmds`) && client.settings.get(message.guild.id, `djonlycmds`).join(" ").toLowerCase().split(" ").includes(command.name.toLowerCase())) {
           //Check if there is a Dj Setup
           if(client.settings.get(message.guild.id, `djroles`).toString()!==""){
             const player = client.manager.players.get(message.guild.id);
@@ -172,13 +173,15 @@ module.exports = async (client, message) => {
 
         }
         //if the Bot has not enough permissions return error
-        if(!message.guild.me.hasPermission("ADMINISTRATOR")){
+        let required_perms = ["KICK_MEMBERS","BAN_MEMBERS","MANAGE_CHANNELS","ADD_REACTIONS","PRIORITY_SPEAKER","VIEW_CHANNEL","SEND_MESSAGES","MANAGE_MESSAGES"
+        ,"EMBED_LINKS", "ATTACH_FILES","CONNECT","SPEAK","DEAFEN_MEMBERS","MANAGE_ROLES"]
+        if(!message.guild.me.hasPermission(required_perms)){
           try{ message.react("❌"); }catch{}
           return message.channel.send(new Discord.MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
             .setTitle("❌ Error | I don't have enough Permissions!")
-            .setDescription("Please give me ADMINISTRATOR, because i need it to delete Messages, Create Channel and execute all Admin Commands ")
+            .setDescription("Please give me just `ADMINISTRATOR`, because I need it to delete Messages, Create Channel and execute all Admin Commands.\n If you don't want to give me them, then those are the exact Permissions which I need: \n> `" + required_perms.join("`, `") +"`")
           )
         }
         //try to delete the message of the user who ran the cmd
@@ -220,7 +223,7 @@ module.exports = async (client, message) => {
     return message.channel.send(new MessageEmbed()
       .setColor("RED")
       .setTitle(`❌ ERROR | An error occurred`)
-      .setDescription(`\`\`\`${e.stack}\`\`\``)
+      .setDescription(`\`\`\`${e.message}\`\`\``)
     );
   }
 }

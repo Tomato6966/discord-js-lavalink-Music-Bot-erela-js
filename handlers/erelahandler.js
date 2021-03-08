@@ -111,7 +111,7 @@ module.exports = (client) => {
                         client.channels.cache.get(player.textChannel).send(embed).then(async msg => {
                           try{
                             await delay(10000)
-                            if(msg && client.channels.cache.get(player.textChannel).messages.cache.get(msg.id)) msg.delete();
+                            msg.delete().catch();
                           }catch{ /* */ }
                         });
                 }, 100);
@@ -126,14 +126,14 @@ module.exports = (client) => {
                   client.channels.cache.get(player.textChannel).send(embed).then(async msg => {
                     try{
                       await delay(7000)
-                      if(msg && client.channels.cache.get(player.textChannel).messages.cache.get(msg.id)) msg.delete();
+                       msg.delete().catch();
                     }catch{ /* */ }
                   });;
                   try {
                       client.channels.cache.get(player.textChannel).messages.fetch(player.get("playermessage")).then(async msg => {
                         try{
                           await delay(2500)
-                          if(msg && client.channels.cache.get(player.textChannel).messages.cache.get(msg.id)) msg.delete();
+                           msg.delete().catch();
                         }catch{ /* */ }
                       });
                   } catch (e) {
@@ -153,6 +153,9 @@ module.exports = (client) => {
               try{
                 //votes for skip --> 0
                 player.set("votes", "0");
+                //set the vote of every user to FALSE so if they voteskip it will vote skip and not remove voteskip if they have voted before bruh
+                for(const userid of client.guilds.cache.get(player.guild).members.cache.map(member => member.user.id))
+                  player.set(`vote-${userid}`, false);
                 //set the previous track just have idk where its used ^-^
                 player.set("previoustrack", track);
                 //increasing the stats of the BOT
@@ -245,7 +248,7 @@ module.exports = (client) => {
                         ).then(async msg => {
                           try{
                             await delay(4000)
-                            if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                            msg.delete().catch();
                           }catch{ /* */ }
                         });
                       break;
@@ -264,7 +267,7 @@ module.exports = (client) => {
                         ).then(async msg => {
                           try{
                             await delay(4000)
-                            if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                            msg.delete().catch();
                           }catch{ /* */ }
                         });
                       break;
@@ -279,7 +282,7 @@ module.exports = (client) => {
                           ).then(async msg => {
                             try{
                               await delay(4000)
-                              if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                              msg.delete().catch();
                             }catch{ /* */ }
                           });
                       break;
@@ -297,7 +300,7 @@ module.exports = (client) => {
                         ).then(async msg => {
                           try{
                             await delay(4000)
-                            if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                            msg.delete().catch();
                           }catch{ /* */ }
                         });
                       break;
@@ -311,7 +314,7 @@ module.exports = (client) => {
                           ).then(async msg => {
                             try{
                               await delay(4000)
-                              if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                              msg.delete().catch();
                             }catch{ /* */ }
                           });
                         message.channel.send(new MessageEmbed()
@@ -321,7 +324,7 @@ module.exports = (client) => {
                         ).then(async msg => {
                           try{
                             await delay(4000)
-                            if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                            msg.delete().catch();
                           }catch{ /* */ }
                         })
                         //define the type
@@ -346,7 +349,7 @@ module.exports = (client) => {
                           ).then(async msg => {
                             try{
                               await delay(4000)
-                              if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                              msg.delete().catch();
                             }catch{ /* */ }
                           });
                         }
@@ -360,7 +363,7 @@ module.exports = (client) => {
                         ).then(async msg => {
                           try{
                             await delay(4000)
-                            if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                            msg.delete().catch();
                           }catch{ /* */ }
                         });
                       break;
@@ -378,7 +381,7 @@ module.exports = (client) => {
                         ).then(async msg => {
                           try{
                             await delay(4000)
-                            if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                            msg.delete().catch();
                           }catch{ /* */ }
                         });
                       break;
@@ -397,7 +400,7 @@ module.exports = (client) => {
                         ).then(async msg => {
                           try{
                             await delay(4000)
-                            if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                            msg.delete().catch();
                           }catch{ /* */ }
                         });
                       break;
@@ -416,7 +419,7 @@ module.exports = (client) => {
                         ).then(async msg => {
                           try{
                             await delay(4000)
-                            if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                            msg.delete().catch();
                           }catch{ /* */ }
                         });
                       break;
@@ -436,7 +439,7 @@ module.exports = (client) => {
                         ).then(async msg => {
                           try{
                             await delay(4000)
-                            if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                            msg.delete().catch();
                           }catch{ /* */ }
                         });
                       break;
@@ -457,7 +460,7 @@ module.exports = (client) => {
                             ).then(async msg => {
                               try{
                                 await delay(4000)
-                                if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                                msg.delete().catch();
                               }catch{ /* */ }
                             });
                         }
@@ -477,7 +480,7 @@ module.exports = (client) => {
                           ).then(async msg => {
                             try{
                               await delay(4000)
-                              if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                              msg.delete().catch();
                             }catch{ /* */ }
                           });
                         }
@@ -497,7 +500,7 @@ module.exports = (client) => {
                           ).then(async msg => {
                             try{
                               await delay(4000)
-                              if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                              msg.delete().catch();
                             }catch{ /* */ }
                           });
                         }
@@ -513,7 +516,7 @@ module.exports = (client) => {
                         ).then(async msg => {
                           try{
                             await delay(4000)
-                            if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                            msg.delete().catch();
                           }catch{ /* */ }
                         });
                       break;
@@ -531,7 +534,7 @@ module.exports = (client) => {
                         ).then(async msg => {
                           try{
                             await delay(4000)
-                            if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                            msg.delete().catch();
                           }catch{ /* */ }
                         });
                       break;
@@ -549,7 +552,7 @@ module.exports = (client) => {
                           return message.channel.send(embed.setDescription(`❌ No tracks in the queue`)).then(async msg => {
                             try{
                               await delay(5000)
-                              if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                              msg.delete().catch();
                             }catch{ /* */ }
                           })
                         //if not too big send queue in channel
@@ -557,7 +560,7 @@ module.exports = (client) => {
                           return message.channel.send(embed.setDescription(tracks.map((track, i) => `**${++i})** [${track.title.substr(0, 35)}](${track.uri}) - \`${track.isStream ? "LIVE STREAM" : format(track.duration).split(" | ")[0]}\` - **requested by: ${track.requester.tag}**`).join("\n"))).then(async msg => {
                             try{
                               await delay(5000)
-                              if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                              msg.delete().catch();
                             }catch{ /* */ }
                           })
                         //get an array of quelist where 15 tracks is one index in the array
@@ -582,7 +585,7 @@ module.exports = (client) => {
                         ).then(async msg => {
                           try{
                             await delay(4000)
-                            if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                            msg.delete().catch();
                           }catch{ /* */ }
                         })
 
@@ -604,7 +607,7 @@ module.exports = (client) => {
                         ).then(async msg => {
                           try{
                             await delay(5000)
-                            if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                            msg.delete().catch();
                           }catch{ /* */ }
                         })
                       break;
@@ -626,7 +629,7 @@ module.exports = (client) => {
                     .send(embed).then(async msg => {
                       try{
                         await delay(7500)
-                        if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                        msg.delete().catch();
                       }catch{ /* */ }
                     });
                 player.stop();
@@ -643,7 +646,7 @@ module.exports = (client) => {
                     .send(embed).then(async msg => {
                       try{
                         await delay(7500)
-                        if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                        msg.delete().catch();
                       }catch{ /* */ }
                     });
                 player.stop();
@@ -669,14 +672,14 @@ module.exports = (client) => {
                               return client.channels.cache.get(player.textChannel).send(embed.setDescription(`I will not Leave the Channel, cause \`afk\` is \`✔️ Enabled\``)).then(async msg => {
                                 try{
                                   await delay(7500)
-                                  if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                                  msg.delete().catch();
                                 }catch{ /* */ }
                               });
                             //send information message
                             client.channels.cache.get(player.textChannel).send(embed).then(async msg => {
                               try{
                                 await delay(7500)
-                                if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                                msg.delete().catch();
                               }catch{ /* */ }
                             });
 
@@ -686,7 +689,7 @@ module.exports = (client) => {
                                   .messages.fetch(player.get("playermessage")).then(async msg => {
                                     try{
                                       await delay(7500)
-                                      if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                                      msg.delete().catch();
                                     }catch{ /* */ }
                                   });
                             } catch (e) {
@@ -711,11 +714,15 @@ module.exports = (client) => {
         //Log if a Channel gets deleted, and the Bot was in, then delete the player if the player exists!
         client.on("channelDelete", channel => {
           try{
-            if(channel.members.has(client.user.id)){
-              let player = client.manager.players.get(channel.guild.id);
-              if (!player) return;
-              //destroy
-              player.destroy();
+            if(channel.type === "voice"){
+              if(channel.members.has(client.user.id)){
+                let player = client.manager.players.get(channel.guild.id);
+                if (!player) return;
+                if(channel.id === player.voiceChannel){
+                  //destroy
+                  player.destroy();
+                }
+              }
             }
           }catch{ }
         })
@@ -724,8 +731,10 @@ module.exports = (client) => {
           try{
               let player = client.manager.players.get(guild.id);
               if (!player) return;
-              //destroy
-              player.destroy();
+              if(guild.id == player.guild){
+                //destroy
+                player.destroy();
+              }
           }catch{ /* */ }
         })
         client.on("voiceStateUpdate", (oldState, newState) => {
@@ -767,13 +776,13 @@ module.exports = (client) => {
                                 return client.channels.cache.get(player.textChannel).send(embed.setDescription(`I will not Leave the Channel, cause \`afk\` is \`✔️ Enabled\``)).then(async msg => {
                                   try{
                                     await delay(7500)
-                                    if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                                    msg.delete().catch();
                                   }catch{ /* */ }
                                 });
                               client.channels.cache.get(player.textChannel).send(embed).then(async msg => {
                                 try{
                                   await delay(7500)
-                                  if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                                  msg.delete().catch();
                                 }catch{ /* */ }
                               });
                               try {
@@ -782,7 +791,7 @@ module.exports = (client) => {
                                       .messages.fetch(player.get("playermessage")).then(async msg => {
                                         try{
                                           await delay(7500)
-                                          if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                                          msg.delete().catch();
                                         }catch{ /* */ }
                                       });
                               } catch (e) {

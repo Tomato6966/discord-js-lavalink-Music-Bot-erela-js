@@ -27,12 +27,13 @@ const client = new Discord.Client({
     require(`./handlers/${handler}`)(client);
 });
 //Each Database gets a own file and folder which is pretty handy!
-client.premium = new Enmap({name: "premium", dataDir: "./databases/premium", ensureProps: false})
-client.stats = new Enmap({name: "stats", dataDir: "./databases/stats", ensureProps: false})
-client.settings = new Enmap({name: "setups", dataDir: "./databases/settings", ensureProps: false})
-client.setups = new Enmap({name: "setups", dataDir: "./databases/setups", ensureProps: false})
-client.modActions = new Enmap({name: 'actions'});
-client.userProfiles = new Enmap({name: 'userProfiles' });
+client.premium = new Enmap({name: "premium", dataDir: "./databases/premium"})
+client.stats = new Enmap({name: "stats", dataDir: "./databases/stats"})
+client.settings = new Enmap({name: "setups", dataDir: "./databases/settings"})
+client.setups = new Enmap({name: "setups", dataDir: "./databases/setups",})
+client.queuesaves = new Enmap({name: "queuesaves", dataDir: "./databases/queuesaves", ensureProps: false})
+client.modActions = new Enmap({name: 'actions', dataDir: "./databases/warns"});
+client.userProfiles = new Enmap({name: 'userProfiles', dataDir: "./databases/warns" });
 
 //login into the bot
 client.login(require("./botconfig/config.json").token);

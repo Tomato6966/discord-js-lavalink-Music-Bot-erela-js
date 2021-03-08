@@ -92,7 +92,7 @@ module.exports = async (client, message) => {
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
           .setTitle("❌ Something went wrong while, running the: `" + command.name + "` command")
-          .setDescription(`\`\`\`${e.stack}\`\`\``)
+          .setDescription(`\`\`\`${e.message}\`\`\``)
         )
       }
     }

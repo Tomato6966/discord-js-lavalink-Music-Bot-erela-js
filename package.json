@@ -1,8 +1,8 @@
 {
-  "name": "lavalink_music_bot",
-  "version": "3.2.7",
+  "name": "lava_music",
+  "version": "5.0.2",
   "description": "A Discord Bot made by: Tomato#6966",
-  "main": "index.js",
+  "main": "shard.js",
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
     "@ksoft/api": "^3.1.9",
@@ -29,5 +29,33 @@
     "start": "node index.js"
   },
   "author": "Tomato#6966",
-  "license": "ISC"
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js.git"
+  },
+  "keywords": [
+    "lavalink",
+    "music",
+    "discord",
+    "discordjs",
+    "erela.js",
+    "music",
+    "bot",
+    "lava",
+    "lava",
+    "music",
+    "audio",
+    "mp3",
+    "radio",
+    "radiostation",
+    "stream",
+    "premium",
+    "reaction",
+    "reactions"
+  ],
+  "bugs": {
+    "url": "https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js/issues"
+  },
+  "homepage": "https://milrato.eu"
 }
