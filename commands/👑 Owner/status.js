@@ -17,8 +17,20 @@ module.exports = {
           .setTitle("❌ Error | You are not allowed to run this command! Only the Owner is allowed to run this Cmd")
         );
         try{
-            if(!args[0]) return message.channel.send(new MessageEmbed().setFooter(ee.footertext,ee.footericon).setColor(ee.wrongcolor).setTitle("❌ ERROR Wrong Command Usage | Include a Status Type").setDescription(`Try this: \`${prefix}\`status <Type> <TEXT>`))
-            if(!args[1]) return message.channel.send(new MessageEmbed().setFooter(ee.footertext,ee.footericon).setColor(ee.wrongcolor).setTitle("❌ ERROR Wrong Command Usage | Include a Status Text").setDescription(`Try this: \`${prefix}\`status <Type> <TEXT>`))
+            if(!args[0])
+              return message.channel.send(new MessageEmbed()
+                .setFooter(ee.footertext,ee.footericon)
+                .setColor(ee.wrongcolor)
+                .setTitle("❌ ERROR | Wrong Command Usage | Include a Status Type")
+                .setDescription(`Try this: \`${prefix}\`status <Type> <TEXT>`)
+              )
+            if(!args[1])
+              return message.channel.send(new MessageEmbed()
+                .setFooter(ee.footertext,ee.footericon)
+                .setColor(ee.wrongcolor)
+                .setTitle("❌ ERROR | Wrong Command Usage | Include a Status Text")
+                .setDescription(`Try this: \`${prefix}\`status <Type> <TEXT>`)
+              )
 
             let status = config
             status.status.text = args.slice(1).join(" ").substr(0, 50);
@@ -27,9 +39,18 @@ module.exports = {
             fs.writeFile("./botconfig/config.json", JSON.stringify(status, null, 3), (e) => {
                 if (e) {
                   console.log(String(e.stack).red);
-                  return message.channel.send(new MessageEmbed().setFooter(ee.footertext,ee.footericon).setColor(ee.wrongcolor).setTitle("❌ ERROR Writing the File").setDescription(`\`\`\`${e.stack}\`\`\``))
+                  return message.channel.send(new MessageEmbed()
+                    .setFooter(ee.footertext,ee.footericon)
+                    .setColor(ee.wrongcolor)
+                    .setTitle("❌ ERROR Writing the File")
+                    .setDescription(`\`\`\`${e.message}\`\`\``)
+                  )
                 }
-                return message.channel.send(new MessageEmbed().setFooter(ee.footertext,ee.footericon).setColor(ee.color).setTitle("✅ Successfully set the new Status"))
+                return message.channel.send(new MessageEmbed()
+                  .setFooter(ee.footertext,ee.footericon)
+                  .setColor(ee.color)
+                  .setTitle("✅ Successfully set the new Status")
+                )
               });
             } catch (e) {
                 console.log(String(e.stack).bgRed)
@@ -37,7 +58,7 @@ module.exports = {
                     .setColor(ee.wrongcolor)
         						.setFooter(ee.footertext, ee.footericon)
                     .setTitle(`❌ ERROR | An error occurred`)
-                    .setDescription(`\`\`\`${e.stack}\`\`\``)
+                    .setDescription(`\`\`\`${e.message}\`\`\``)
                 );
             }
     },

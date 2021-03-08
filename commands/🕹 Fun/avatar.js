@@ -14,7 +14,7 @@ module.exports = {
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
             .setTitle(`❌ ERROR | That user does not have an Avatar`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
       message.channel.send(new Discord.MessageEmbed()
           .setTitle(`${member.user.username}'s Avatar`)
@@ -28,7 +28,7 @@ module.exports = {
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
             .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
   }

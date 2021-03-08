@@ -1,6 +1,7 @@
 const config = require("../../botconfig/config.json");
 const ms = require("ms");
 const ee = require("../../botconfig/embed.json")
+const {MessageEmbed} =require("discord.js")
 module.exports = {
     name: "mute",
     category: "⛔️ Admin",
@@ -75,9 +76,13 @@ module.exports = {
             .setDescription(` Usage: \`${prefix}mute @User <Time+Format(e.g: 10m)> [REASON]\`\n\nExample: \`${prefix}mute @User 10m He is doing bad stuff!\``)
         );
       }
-        return message.channel.send("ERROR, please add a TIME! Usage: `mute @User <Time+Format(e.g: 10m)> [REASON]` example: `mute @User 10m He is doing bad stuff!`");
 
-      if (!mutetime || mutetime === undefined) return message.channel.send("ERROR, please add a TIME! Usage: `mute @User <Time+Format(e.g: 10m)> [REASON]` example: `mute @User 10m He is doing bad stuff!`");
+      if (!mutetime || mutetime === undefined)   return message.channel.send(new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setFooter(ee.footertext, ee.footericon)
+            .setTitle(`❌ ERROR | please add a TIME!`)
+            .setDescription(` Usage: \`${prefix}mute @User <Time+Format(e.g: 10m)> [REASON]\`\n\nExample: \`${prefix}mute @User 10m He is doing bad stuff!\``)
+        );
       await message.guild.channels.cache.forEach((ch) => {
           try {
               ch.updateOverwrite(mutedrole, { SEND_MESSAGES: false, ADD_REACTIONS: false, CONNECT: false, SPEAK: false });
@@ -92,7 +97,7 @@ module.exports = {
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
             .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
       }
 
@@ -122,7 +127,7 @@ module.exports = {
                 .setColor(ee.wrongcolor)
                 .setFooter(ee.footertext, ee.footericon)
                 .setTitle(`❌ ERROR | An error occurred`)
-                .setDescription(`\`\`\`${e.stack}\`\`\``)
+                .setDescription(`\`\`\`${e.message}\`\`\``)
             );
           }
       }, mutetime);
@@ -132,7 +137,7 @@ module.exports = {
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
             .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
   }

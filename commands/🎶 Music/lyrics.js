@@ -3,6 +3,7 @@ const config = require("../../botconfig/config.json");
 const { KSoftClient } = require("@ksoft/api");
 const ee = require("../../botconfig/embed.json");
 const lyricsFinder = require("lyrics-finder");
+const { format, delay, swap_pages } = require("../../handlers/functions");
 module.exports = {
     name: "lyrics",
     category: "🎶 Music",
@@ -95,6 +96,9 @@ module.exports = {
               }
           }
       }
+      //return susccess message
+      return swap_pages(client, message, lyrics, `Lyrics for: 📃 \`${title}\``.substr(0, 256))
+    /*
       //create the lyrics Embed
       let lyricsEmbed = new MessageEmbed()
           .setTitle(`Lyrics for: 📃 \`${title}\``.substr(0, 256))
@@ -107,13 +111,14 @@ module.exports = {
       for (let i = 0; i < k.length; i += 2048)
         //send an embed for each embed which is too big
         message.channel.send(i >= 2048 ? lyricsEmbed.setDescription(k.substr(i,  i + 2048)).setTitle("\u200b"): lyricsEmbed.setDescription(k.substr(i,  i + 2048)))
+    */
     } catch (e) {
         console.log(String(e.stack).bgRed)
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
             .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
   }

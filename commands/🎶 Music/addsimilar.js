@@ -45,7 +45,7 @@ module.exports = {
             .setColor(ee.color)
 						.setFooter(ee.footertext, ee.footericon)
             .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
   }

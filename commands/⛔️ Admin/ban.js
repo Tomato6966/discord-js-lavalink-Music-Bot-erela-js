@@ -6,7 +6,7 @@ module.exports = {
     category: "⛔️ Admin",
     aliases: ["banhammer"],
     description: "Bans a Member from a Guild",
-    usage: "ban @User [Reason]",
+    usage: "ban @User [0-7 Days, 0 == Infinite] [Reason]",
     memberpermissions: ["BAN_MEMBERS"],
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
@@ -19,13 +19,17 @@ module.exports = {
           .setDescription(`Useage: \`${prefix}ban @User [Reason]\``)
         );
 
-      let reason = args.slice(1).join(" ");
+      let days = args[1];
+      if(Number(days) >= 7) days = 7;
+      if(Number(days) <= 0) days = 0;
+
+      let reason = args.slice(2).join(" ");
       if (!reason) {
           reason = "NO REASON";
       }
 
-      const memberPosition = kickmember.roles.highest.position;
-      const moderationPosition = message.member.roles.highest.position;
+      const memberPosition = kickmember.roles.highest.rawPosition;
+      const moderationPosition = message.member.roles.highest.rawPosition;
 
       if (moderationPosition <= memberPosition)
         return message.channel.send(new MessageEmbed()
@@ -42,11 +46,11 @@ module.exports = {
         );
 
       try {
-          kickmember.ban(reason).then(() => {
+          kickmember.ban({days: days, reason: reason}).then(() => {
             return message.channel.send(new MessageEmbed()
               .setColor(ee.color)
               .setFooter(ee.footertext, ee.footericon)
-              .setTitle(`✅ Success | Banned ${kickmember.user.tag}`)
+              .setTitle(`✅ Success | Banned ${kickmember.user.tag} for ${days === 0 ? `Infinite Days` : `${days} Days`}`)
               .setDescription(`Reason:\n> ${reason}`)
             );
           });
@@ -56,7 +60,7 @@ module.exports = {
               .setColor(ee.wrongcolor)
   						.setFooter(ee.footertext, ee.footericon)
               .setTitle(`❌ ERROR | An error occurred`)
-              .setDescription(`\`\`\`${e.stack}\`\`\``)
+              .setDescription(`\`\`\`${e.message}\`\`\``)
           );
       }
     } catch (e) {
@@ -65,7 +69,7 @@ module.exports = {
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
             .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
   }

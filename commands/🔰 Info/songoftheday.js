@@ -5,7 +5,7 @@ const ee = require("../../botconfig/embed.json");
 const songoftheday = require("../../botconfig/songoftheday.json");
 module.exports = {
     name: "songoftheday",
-    category: "🎶 Music",
+    category: "🔰 Info",
     aliases: ["songoftheday"],
     description: "Shows you the Current Song of the Day!",
     usage: "songoftheday",
@@ -27,7 +27,7 @@ module.exports = {
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
             .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
   }

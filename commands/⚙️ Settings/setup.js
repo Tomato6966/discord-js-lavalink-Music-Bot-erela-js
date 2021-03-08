@@ -45,8 +45,20 @@ module.exports = {
             ],
           })
           .then((channel1) => {
+            try{
+            //set the maximumbitrate limit
+            let maxbitrate = 96000;
+            //get the boosts amount
+            let boosts = message.guild.premiumSubscriptionCount;
+            //change the bitrate limit regarding too boost level from https://support.discord.com/hc/de/articles/360028038352-Server-Boosting-
+            if(boosts >= 2) maxbitrate = 128000;
+            if(boosts >= 15) maxbitrate = 256000;
+            if(boosts >= 30) maxbitrate = 384000;
+
              message.guild.channels.create(`🎧｜Music`, {
-              type: 'voice',
+              type: 'voice', //voice Channel
+              bitrate: maxbitrate, //set the bitrate to the maximum possible
+              userLimit: 10, //set the limit for voice users
               parent: channel1.id, //ADMINISTRATOR
               permissionOverwrites: [
                 {
@@ -58,8 +70,10 @@ module.exports = {
             .then((channel2) => {
                 try{
                 message.guild.channels.create(`🎵｜requests`, {
-                    type: 'text',
-                    parent: channel1.id, //ADMINISTRATOR
+                    type: 'text', // text channel
+                    rateLimitPerUser: 6, //set chat delay
+                    topic: `To request a Track, simply Type the **SONG NAME** into the Channel or the **URL** and the Bot will play it! Make sure that you are in the **right** Voice Channel (🎧｜Music)!\n\nhttps://lava.milrato.eu by: Tomato#6966`,
+                    parent: channel1.id,
                     permissionOverwrites: [
                       {
                         id: message.guild.id,
@@ -134,6 +148,7 @@ module.exports = {
                                 client.setups.set(message.guild.id, channel3.id,"textchannel");
                                 client.setups.set(message.guild.id, channel2.id,"voicechannel");
                                 client.setups.set(message.guild.id, channel1.id,"category");
+                                client.stats.inc("global", "setups");
                             });
                         })
                     })
@@ -149,8 +164,19 @@ module.exports = {
                       .setTitle("❌ Error | Something went Wrong")
                       .setDescription(String("```"+e.stack+"```").substr(0, 2048))
                     );
-                                  }
+                }
             })
+          }catch (e){
+              //log them
+              console.log(String(e.stack).red)
+              //send information
+              return message.channel.send(new MessageEmbed()
+                .setColor(ee.wrongcolor)
+                .setFooter(ee.footertext, ee.footericon)
+                .setTitle("❌ Error | Something went Wrong")
+                .setDescription(String("```"+e.stack+"```").substr(0, 2048))
+              );
+          }
           })
         } catch (e) {
             console.log(String(e.stack).bgRed)
@@ -158,7 +184,7 @@ module.exports = {
                 .setColor(ee.wrongcolor)
     						.setFooter(ee.footertext, ee.footericon)
                 .setTitle(`❌ ERROR | An error occurred`)
-                .setDescription(`\`\`\`${e.stack}\`\`\``)
+                .setDescription(`\`\`\`${e.message}\`\`\``)
             );
         }
     },

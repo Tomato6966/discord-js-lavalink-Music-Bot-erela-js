@@ -28,9 +28,7 @@ module.exports = {
             guilds.push(guild.name)
           }
 
-        }catch (e){
-          console.log(String(e.stack).red)
-        }
+        }catch { }
       }
       for(let i = 0; i< premiums.length; i++){
         try{
@@ -44,9 +42,7 @@ module.exports = {
             users.push(user.tag)
           }
 
-        }catch (e){
-          console.log(String(e.stack).red)
-        }
+        }catch { }
       }
       if(!args[0]){
         let guildembed = new MessageEmbed().setColor(ee.color).setFooter(ee.footertext, ee.footericon)
@@ -89,7 +85,7 @@ module.exports = {
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
             .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
   }

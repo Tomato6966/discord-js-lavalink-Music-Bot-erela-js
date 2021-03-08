@@ -52,7 +52,7 @@ module.exports = {
           .setThumbnail(message.guild.iconURL({dynamic:true}))
           .addField("🤖 Bot Channels", leftb.substr(0, leftb.length - 3).substr(0, 1024), true)
           .addField("🎧 DJ Roles", leftd.substr(0, leftb.length - 3).substr(0, 1024), true)
-          .addField("💰 Guild Premium", `${gpremium ? (gpremium.enabled ? `\`✔️ Enabled\`` : `\`❌ Disabled\`\nDm to enable:\n> ${ownerstringarray.substr(0, ownerstringarray.length - 1)}`.substr(0, 1020)) : `\`❌ Disabled\``}`, true)
+          .addField("💰 Guild Premium", `${gpremium ? (gpremium.enabled ? `\`✔️ Enabled\`` : `\`❌ Disabled\`\nDm to enable:\n> ${ownerstringarray.substr(0, ownerstringarray.length)}`.substr(0, 1020)) : `\`❌ Disabled\``}`, true)
           .addField("⚙️ Setup", `VoiceChannel: \`${db.voicechannel != 0 ? message.guild.channels.cache.get(db.voicechannel).name  : "❌ Disabled"}\`\nTextChannel: \`${db.textchannel != 0 ? message.guild.channels.cache.get(db.textchannel).name  : "❌ Disabled"}\``, true)
           .addField("🎧 DJ-Only-Commands", leftdj.substr(0, leftdj.length - 3).substr(0, 1024), true)
         )
@@ -62,7 +62,7 @@ module.exports = {
               .setColor(ee.wrongcolor)
   						.setFooter(ee.footertext, ee.footericon)
               .setTitle(`❌ ERROR | An error occurred`)
-              .setDescription(`\`\`\`${e.stack}\`\`\``)
+              .setDescription(`\`\`\`${e.message}\`\`\``)
           );
       }
     },

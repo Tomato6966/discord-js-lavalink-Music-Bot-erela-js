@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed, splitMessage } = require("discord.js");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
 const { inspect } = require("util");
@@ -15,23 +15,48 @@ module.exports = {
           .setFooter(client.user.username, ee.footericon)
           .setTitle("❌ Error | You are not allowed to run this command! Only the Owner is allowed to run this Cmd")
         );
-        let evaled;
-        try {
-            if (args.join(" ").includes("token")) return console.log("ERROR NO TOKEN GRABBING ;)".red);
-            evaled = await eval(args.join(" "));
-            if (evaled.toString().includes(client.token)) return console.log("ERROR NO TOKEN GRABBING ;)".red);
-            let string = inspect(evaled);
-            for(let i = 0; i < string.length; i += 1990)
-            message.channel.send("```" + string.substr(i, i + 1990) + "```");
-          } catch (e) {
-              console.log(String(e.stack).bgRed)
-              return message.channel.send(new MessageEmbed()
-                  .setColor(ee.wrongcolor)
-      						.setFooter(ee.footertext, ee.footericon)
-                  .setTitle(`❌ ERROR | An error occurred`)
-                  .setDescription(`\`\`\`${e.stack}\`\`\``)
-              );
-          }
+      if(!args[0])
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setFooter(client.user.username, ee.footericon)
+          .setTitle("❌ Error | You have to at least include one evaluation arguments")
+        );
+      let evaled;
+      try {
+        if (args.join(" ").includes("token")) return console.log("ERROR NO TOKEN GRABBING ;)".red);
+
+        evaled = await eval(args.join(" "));
+        //make string out of the evaluation
+        let string = inspect(evaled);
+        //if the token is included return error
+        if (string.includes(client.token)) return console.log("ERROR NO TOKEN GRABBING ;)".red);
+        //define queueembed
+        let evalEmbed = new MessageEmbed()
+          .setTitle("Lava Music | Evaluation")
+          .setColor(ee.color);
+        //split the description
+        const splitDescription = splitMessage(string, {
+          maxLength: 2040,
+          char: "\n",
+          prepend: "",
+          append: ""
+        });
+        //For every description send a new embed
+        splitDescription.forEach(async (m) => {
+          //(over)write embed description
+          evalEmbed.setDescription("```" + m + "```");
+          //send embed
+          message.channel.send(evalEmbed);
+        });
+      } catch (e) {
+          console.log(String(e.stack).bgRed)
+          return message.channel.send(new MessageEmbed()
+              .setColor(ee.wrongcolor)
+  						.setFooter(ee.footertext, ee.footericon)
+              .setTitle(`❌ ERROR | An error occurred`)
+              .setDescription(`\`\`\`${e.message}\`\`\``)
+          );
+      }
     },
 };
 /**

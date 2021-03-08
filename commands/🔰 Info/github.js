@@ -12,12 +12,12 @@ module.exports = {
 		try{
         message.channel.send(new MessageEmbed()
         .setTitle(`This Bot is made by \`Tomato#6966\` and **this** is the Source Code link to this Bot`)
-        .setURL("https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js/commit/768f6fbe3314340043cbc341fcc70700b8dc1bdb")
+        .setURL("https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js/")
         .addField("Discord.js: ", "[\`v12.5.1\`](https://discord.js.org)", true)
         .addField("Erela.js: ", "[\`v2.3.2\`](https://solaris.codes/projects/erelajs/)", true)
         .addField("Node.js: ", "[\`v15.3.4\`](https://nodejs.org/en/)", true)
         .addField("Lavalink: ", "[\`v3.3.2.3\`](https://github.com/Frederikam/Lavalink/releases/tag/3.3.2.3)" )
-        .addField("Source Code. ", "Don't just use the source for yourself,... please [invite](https://discord.com/api/oauth2/authorize?client_id=742672021422342165&permissions=8&scope=bot) me too![\`Click here\`](https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js/commit/768f6fbe3314340043cbc341fcc70700b8dc1bdb)")
+        .addField("Source Code. ", "Don't just use the source for yourself,... please [invite](https://discord.com/api/oauth2/authorize?client_id=742672021422342165&permissions=8&scope=bot) me too![\`Click here\`](https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js/)")
         .setColor(ee.color)
 				.setFooter(ee.footertext, ee.footericon)
 			);
@@ -27,7 +27,7 @@ module.exports = {
 						.setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
 						.setTitle(`❌ ERROR | An error occurred`)
-						.setDescription(`\`\`\`${e.stack}\`\`\``)
+						.setDescription(`\`\`\`${e.message}\`\`\``)
 				);
 		}
 	}

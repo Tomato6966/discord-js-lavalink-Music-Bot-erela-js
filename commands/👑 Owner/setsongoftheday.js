@@ -7,7 +7,7 @@ const { format } = require("../../handlers/functions");
 const fs = require("fs")
 module.exports = {
     name: "setsongoftheday",
-    category: "🎶 Music",
+    category: "👑 Owner",
     aliases: ["setsongoftheday"],
     description: "Sets the Song of the Day!",
     usage: "setsongoftheday",
@@ -75,7 +75,7 @@ module.exports = {
               fs.writeFile("./botconfig/songoftheday.json", JSON.stringify(ss, null, 3), (e) => {
                   if (e) {
                     console.log(String(e.stack).red);
-                    return message.channel.send(new MessageEmbed().setFooter(ee.footertext,ee.footericon).setColor(ee.wrongcolor).setTitle("❌ ERROR Writing the File").setDescription(`\`\`\`${e.stack}\`\`\``))
+                    return message.channel.send(new MessageEmbed().setFooter(ee.footertext,ee.footericon).setColor(ee.wrongcolor).setTitle("❌ ERROR Writing the File").setDescription(`\`\`\`${e.message}\`\`\``))
                   }
                   let songoftheday2 = require("../../botconfig/songoftheday.json")
                   message.channel.send(new MessageEmbed()
@@ -97,7 +97,7 @@ module.exports = {
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
             .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
   }

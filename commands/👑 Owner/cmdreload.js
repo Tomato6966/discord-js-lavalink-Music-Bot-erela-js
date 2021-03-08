@@ -19,25 +19,37 @@ module.exports = {
             for (let i = 0; i < client.categories.length; i += 1) {
                 let dir = client.categories[i];
                 try{
-                    if(!args[0]) return message.channel.send("Write command name")
-                        delete require.cache[require.resolve(`../../commands/${dir}/${args[0]}.js`)] // usage !reload <name>
-                        client.commands.delete(args[0])
-                        const pull = require(`../../commands/${dir}/${args[0]}.js`)
-                        client.commands.set(args[0], pull)
-                        reload = true;
+                    if(!args[0])
+                      return message.channel.send(new MessageEmbed()
+                        .setColor(ee.wrongcolor)
+            						.setFooter(ee.footertext, ee.footericon)
+                        .setTitle(`❌ ERROR | Please include an argument`)
+                      );
+                      delete require.cache[require.resolve(`../../commands/${dir}/${args[0]}.js`)] // usage !reload <name>
+                      client.commands.delete(args[0])
+                      const pull = require(`../../commands/${dir}/${args[0]}.js`)
+                      client.commands.set(args[0], pull)
+                      reload = true;
                 }catch{ }
             }
-            if(reload) return message.channel.send(`Successfully reloaded \`${args[0]}\``);
-            message.channel.send(`Could not reload: \`${args[0]}\``)
-
-
+            if(reload)
+              return message.channel.send(new MessageEmbed()
+                .setColor(ee.wrongcolor)
+                .setFooter(ee.footertext, ee.footericon)
+                .setTitle(`✅ SUCCESS | Reloaded \`${args[0]}\``)
+              );
+              return message.channel.send(new MessageEmbed()
+                .setColor(ee.wrongcolor)
+                .setFooter(ee.footertext, ee.footericon)
+                .setTitle(`❌ ERROR | Could not reload: \`${args[0]}\``)
+              );
           } catch (e) {
               console.log(String(e.stack).bgRed)
               return message.channel.send(new MessageEmbed()
                   .setColor(ee.wrongcolor)
       						.setFooter(ee.footertext, ee.footericon)
                   .setTitle(`❌ ERROR | An error occurred`)
-                  .setDescription(`\`\`\`${e.stack}\`\`\``)
+                  .setDescription(`\`\`\`${e.message}\`\`\``)
               );
           }
     },
