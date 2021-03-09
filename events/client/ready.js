@@ -17,9 +17,9 @@ module.exports = client => {
 
     change_status(client);
     //loop through the status per each 10 minutes
-    setTimeout(()=>{
+    setInterval(()=>{
       change_status(client);
-    }, 10*60000);
+    }, 10*1000);
   }catch (e){
     console.log(String(e.stack).bgRed)
   }
