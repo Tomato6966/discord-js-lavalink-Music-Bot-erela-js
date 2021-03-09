@@ -1,28 +1,29 @@
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const ee = require("../../botconfig/embed.json");
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
-    name: "warn",
-    category: "⛔️ Admin",
-    aliases: [""],
+    name: `warn`,
+    category: `⛔️ Admin`,
+    aliases: [``],
     cooldown: 0.5,
-    description: "Warns a Member with a Reason",
-    usage: "warn @User [Reason]",
-    memberpermissions: ["KICK_MEMBERS"],
+    description: `Warns a Member with a Reason`,
+    usage: `warn @User [Reason]`,
+    memberpermissions: [`KICK_MEMBERS`],
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
-      let warnmember = message.mentions.members.first() || message.guild.members.cache.get(args[0] ? args[0] : "");
+      let warnmember = message.mentions.members.first() || message.guild.members.cache.get(args[0] ? args[0] : ``);
       if (!warnmember)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | Please add a Member you want to warn!")
+          .setTitle(`${emoji.msg.ERROR} Error | Please add a Member you want to warn!`)
           .setDescription(`Useage: \`${prefix}warn @User [Reason]\``)
         );
 
-      let reason = args.slice(1).join(" ");
+      let reason = args.slice(1).join(` `);
       if (!reason) {
-          reason = "NO REASON";
+          reason = `NO REASON`;
       }
 
       const memberPosition = warnmember.roles.highest.position;
@@ -32,7 +33,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | I cannot warn someone, who is above/equal you")
+          .setTitle(`${emoji.msg.ERROR} Error | I cannot warn someone, who is above/equal you`)
         );
 
       try {
@@ -50,8 +51,8 @@ module.exports = {
             type: 'warning',
             moderator: message.author.id,
             reason: reason,
-            when: new Date().toLocaleString("de"),
-            oldhighesrole: warnmember.roles ? warnmember.roles.highest : "Had No Roles",
+            when: new Date().toLocaleString(`de`),
+            oldhighesrole: warnmember.roles ? warnmember.roles.highest : `Had No Roles`,
             oldthumburl: warnmember.user.displayAvatarURL({dynamic:true})
         });
         // Push the action to the user's warnings
@@ -67,7 +68,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.color)
           .setFooter(ee.footertext, ee.footericon)
-          .setAuthor(`✅ Success | Warned ${warnmember.user.tag}`, warnmember.user.displayAvatarURL({dynamic:true}))
+          .setAuthor(`${emoji.msg.SUCCESS} Success | Warned ${warnmember.user.tag}`, warnmember.user.displayAvatarURL({dynamic:true}))
           .setDescription(`**He now has: ${warnIDs.length} Warnings**\n\nReason:\n> ${reason}`.substr(0, 2048))
         );
       } catch (e) {
@@ -75,7 +76,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
   						.setFooter(ee.footertext, ee.footericon)
-              .setTitle(`❌ ERROR | An error occurred`)
+              .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
               .setDescription(`\`\`\`${e.message}\`\`\``)
           );
       }
@@ -84,7 +85,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
             .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }

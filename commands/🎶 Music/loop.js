@@ -1,12 +1,13 @@
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const ee = require("../../botconfig/embed.json");
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
-    name: "loop",
-    category: "🎶 Music",
-    aliases: ["repeat", "l"],
-    description: "Repeats the current song",
-    usage: "loopsong",
+    name: `loop`,
+    category: `🎶 Music`,
+    aliases: [`repeat`, `l`],
+    description: `Repeats the current song`,
+    usage: `loopsong`,
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
         //get the channel instance from the Member
@@ -16,7 +17,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(client.user.username, ee.footericon)
-            .setTitle("❌ Error | You need to join a voice channel.")
+            .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
           );
         //get the player instance
         const player = client.manager.players.get(message.guild.id);
@@ -25,14 +26,14 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(client.user.username, ee.footericon)
-            .setTitle("❌ Error | There is nothing playing")
+            .setTitle(`${emoji.msg.ERROR} Error | There is nothing playing`)
           );
         //if not in the same channel as the player, return Error
         if (channel.id !== player.voiceChannel)
           return message.channel.send(new MessageEmbed()
             .setFooter(ee.footertext, ee.footericon)
             .setColor(ee.wrongcolor)
-            .setTitle("❌ Error | You need to be in my voice channel to use this command!")
+            .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
             .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
           );
         //if no args send error
@@ -41,19 +42,19 @@ module.exports = {
             .setColor(ee.wrongcolor)
             .setFooter(client.user.username, ee.footericon)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle("❌ Error | Please add your method!")
-            .setDescription("`loop song` / `loop queue`")
+            .setTitle(`${emoji.msg.ERROR} Error | Please add your method!`)
+            .setDescription(`\`loop song\` / \`loop queue\``)
           );
         //if arg is somehow song / track
-        if (args[0].toLowerCase() === "song" || args[0].toLowerCase() === "track" || args[0].toLowerCase() === "s" || args[0].toLowerCase() === "t") {
+        if (args[0].toLowerCase() === `song` || args[0].toLowerCase() === `track` || args[0].toLowerCase() === `s` || args[0].toLowerCase() === `t`) {
             //Create the Embed
             let embed = new MessageEmbed()
-              .setTitle(`✅ Success | 🔀 Changed Track loop to: ${player.trackRepeat ? "active" : "disabled"}`)
+              .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.repeat_mode} Changed Track loop to: ${player.trackRepeat ? `${emoji.msg.enabled} active` : `${emoji.msg.disabled} disabled`}`)
               .setColor(ee.color)
               .setFooter(ee.footertext, ee.footericon)
             //If Queue loop is enabled add embed info + disable it
             if (player.queueRepeat) {
-                embed.setDescription(`And **Queue** Repeat got **disabled**`);
+                embed.setDescription(`And **Queue** Repeat got **${emoji.msg.disabled} disabled**`);
                 player.setQueueRepeat(false);
             }
             //toggle track repeat to the reverse old mode
@@ -62,15 +63,15 @@ module.exports = {
             return message.channel.send(embed)
         }
         //if input is queue
-        else if (args[0].toLowerCase() === "queue" || args[0].toLowerCase() === "qu" || args[0].toLowerCase() === "q") {
+        else if (args[0].toLowerCase() === `queue` || args[0].toLowerCase() === `qu` || args[0].toLowerCase() === `q`) {
             //Create the Embed
             let embed = new MessageEmbed()
-              .setTitle(`✅ Success | 🔀 Changed Queue loop to: ${player.queueRepeat ? "active" : "disabled"}`)
+              .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.repeat_mode} Changed Queue loop to: ${player.queueRepeat ? `${emoji.msg.enabled} active` : `${emoji.msg.disabled} disabled`}`)
               .setColor(ee.color)
               .setFooter(ee.footertext, ee.footericon)
             //If Track loop is enabled add embed info + disable it
             if (player.trackRepeat) {
-                embed.setDescription(`And **Song** Repeat got **disabled**`);
+                embed.setDescription(`And **Song** Repeat got **${emoji.msg.disabled} disabled**`);
                 player.setTrackRepeat(false);
             }
             //toggle queue repeat to the reverse old mode
@@ -83,8 +84,8 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle("❌ Error | Please add your method!")
-            .setDescription("`loop song` / `loop queue`")
+            .setTitle(`${emoji.msg.ERROR} Error | Please add your method!`)
+            .setDescription(`\`loop song\` / \`loop queue\``)
           );
         }
       } catch (e) {
@@ -92,7 +93,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
-              .setTitle(`❌ ERROR | An error occurred`)
+              .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
               .setDescription(`\`\`\`${e.message}\`\`\``)
           );
       }

@@ -1,20 +1,22 @@
-const config = require("../../botconfig/config.json");
-const {MessageEmbed} =require("discord.js")
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
+const {MessageEmbed} =require(`discord.js`)
 module.exports = {
-    name: "say",
-    category: "⛔️ Admin",
-    aliases: ["say", "sayit"],
+    name: `say`,
+    category: `⛔️ Admin`,
+    aliases: [`say`, `sayit`],
     cooldown: 4,
-    usage: "say <Text>",
-    description: "Resends the message",
-    memberpermissions: ["MANAGE_GUILD"],
+    usage: `say <Text>`,
+    description: `Resends the message`,
+    memberpermissions: [`MANAGE_GUILD`],
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
       if (!text)
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | please add a Text!`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | please add a Text!`)
             .setDescription(` Usage: \`${prefix}say <TEXT>\`\n\nExample: \`${prefix}say Hello World! Check out: https://milrato.eu\``)
         );
       message.channel.send(text);
@@ -23,7 +25,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
             .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }

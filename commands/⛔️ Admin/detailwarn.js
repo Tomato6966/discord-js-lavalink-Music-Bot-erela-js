@@ -1,20 +1,21 @@
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const ee = require("../../botconfig/embed.json");
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
-    name: "detailwarn",
-    category: "⛔️ Admin",
-    aliases: ["warninfo","snipe","infowarn","infowarning","detailwarning","warninginfo"],
-    description: "Shows details about one warn Command of a Member",
-    usage: "warn @User [Reason]",
+    name: `detailwarn`,
+    category: `⛔️ Admin`,
+    aliases: [`warninfo`,`snipe`,`infowarn`,`infowarning`,`detailwarning`,`warninginfo`],
+    description: `Shows details about one warn Command of a Member`,
+    usage: `warn @User [Reason]`,
     run: async (client, message, args, cmduser, text, prefix) => {
       try{
-        let warnmember = message.mentions.members.first() || message.guild.members.cache.get(args[0] ? args[0] : "");
+        let warnmember = message.mentions.members.first() || message.guild.members.cache.get(args[0] ? args[0] : ``);
         if (!warnmember)
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle("❌ Error | Please add a Member you want to unwarn!")
+            .setTitle(`${emoji.msg.ERROR} Error | Please add a Member you want to unwarn!`)
             .setDescription(`Useage: \`${prefix}unwarn @User <WARN_ID>\``)
           );
 
@@ -22,7 +23,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle("❌ Error | Please add the Warning you want to remove from him")
+            .setTitle(`${emoji.msg.ERROR} Error | Please add the Warning you want to remove from him`)
             .setDescription(`See his warns: \`${prefix}unwarn @User <WARN_ID>\``)
           );
 
@@ -33,7 +34,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle("❌ Error | I cannot warn someone, who is above/equal you")
+            .setTitle(`${emoji.msg.ERROR} Error | I cannot warn someone, who is above/equal you`)
           );
 
         try {
@@ -50,13 +51,13 @@ module.exports = {
             return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
-              .setTitle("❌ Error | User has no Warnings")
+              .setTitle(`${emoji.msg.ERROR} Error | User has no Warnings`)
             );
           if(Number(args[1]) >= warnIDs.length || Number(args[1]) < 0 )
             return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
-              .setTitle("❌ Error | Value out of range")
+              .setTitle(`${emoji.msg.ERROR} Error | Value out of range`)
               .setDescription(`Usage: \`${prefix}unwarn @User <WARN_ID>\` Highest ID: ${warnIDs.length - 1}`)
             );
 
@@ -69,20 +70,20 @@ module.exports = {
             .setColor(ee.color)
             .setFooter(ee.footertext, ee.footericon)
             .setAuthor(`Warn from ${warnmember.user.tag}`,warnmember.user.displayAvatarURL({dynamic:true}))
-            .setDescription(`**Reason:**\n\`\`\`${warning.reason.length > 2030 ? warning.reason.substr(0, 2030) + " ..." : warning.reason}\`\`\``)
-            .addField("Warn:", `\`${parseInt(args[1]) + 1}\` out of **${warnIDs.length} Warns**`, true)
-            .addField("Warned by:", `\`${warned_by}\``, true)
-            .addField("Warned at:", `\`${warning.when}\``, true)
-            .addField("Warned in:", `\`${warned_in}\``, true)
-            .addField("Old Thumbnail URL", `[\`Click here\`](${warning.oldthumburl})`, true)
-            .addField("Old Highest Role:", `${message.guild.roles.cache.get(warning.oldhighesrole.id) ? "<@&"+message.guild.roles.cache.get(warning.oldhighesrole.id)+">" : `\`${warning.oldhighesrole.name} (${warning.oldhighesrole.id})\``}`, true)
+            .setDescription(`**Reason:**\n\`\`\`${warning.reason.length > 2030 ? warning.reason.substr(0, 2030) + ` ...` : warning.reason}\`\`\``)
+            .addField(`Warn:`, `\`${parseInt(args[1]) + 1}\` out of **${warnIDs.length} Warns**`, true)
+            .addField(`Warned by:`, `\`${warned_by}\``, true)
+            .addField(`Warned at:`, `\`${warning.when}\``, true)
+            .addField(`Warned in:`, `\`${warned_in}\``, true)
+            .addField(`Old Thumbnail URL`, `[\`Click here\`](${warning.oldthumburl})`, true)
+            .addField(`Old Highest Role:`, `${message.guild.roles.cache.get(warning.oldhighesrole.id) ? `<@&`+message.guild.roles.cache.get(warning.oldhighesrole.id)+`>` : `\`${warning.oldhighesrole.name} (${warning.oldhighesrole.id})\``}`, true)
           );
         } catch (e) {
             console.log(String(e.stack).red);
             return message.channel.send(new MessageEmbed()
                 .setColor(ee.wrongcolor)
     						.setFooter(ee.footertext, ee.footericon)
-                .setTitle(`❌ ERROR | An error occurred`)
+                .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
                 .setDescription(`\`\`\`${e.message}\`\`\``)
             );
         }
@@ -91,7 +92,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
   						.setFooter(ee.footertext, ee.footericon)
-              .setTitle(`❌ ERROR | An error occurred`)
+              .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
               .setDescription(`\`\`\`${e.message}\`\`\``)
           );
       }

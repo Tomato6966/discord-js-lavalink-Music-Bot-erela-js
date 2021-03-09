@@ -1,21 +1,22 @@
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const ee = require("../../botconfig/embed.json");
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
-    name: "removeallwarns",
-    category: "⛔️ Admin",
-    aliases: ["removeallwarn", "removeallwarnings"],
-    description: "Removes all Warns from a Member",
-    usage: "removeallwarns @User",
-    memberpermissions: ["KICK_MEMBERS"],
+    name: `removeallwarns`,
+    category: `⛔️ Admin`,
+    aliases: [`removeallwarn`, `removeallwarnings`],
+    description: `Removes all Warns from a Member`,
+    usage: `removeallwarns @User`,
+    memberpermissions: [`KICK_MEMBERS`],
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
-      let warnmember = message.mentions.members.first() || message.guild.members.cache.get(args[0] ? args[0] : "");
+      let warnmember = message.mentions.members.first() || message.guild.members.cache.get(args[0] ? args[0] : ``);
       if (!warnmember)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | Please add a Member you want to unwarn!")
+          .setTitle(`${emoji.msg.ERROR} Error | Please add a Member you want to unwarn!`)
           .setDescription(`Useage: \`${prefix}unwarn @User <WARN_ID>\``)
         );
 
@@ -26,7 +27,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | I cannot warn someone, who is above/equal you")
+          .setTitle(`${emoji.msg.ERROR} Error | I cannot warn someone, who is above/equal you`)
         );
 
       try {
@@ -43,7 +44,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle("❌ Error | User has no Warnings")
+            .setTitle(`${emoji.msg.ERROR} Error | User has no Warnings`)
           );
 
         client.userProfiles.set(warnmember.user.id, [], 'warnings')
@@ -60,7 +61,7 @@ module.exports = {
         message.channel.send(new MessageEmbed()
           .setColor(ee.color)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`✅ Success | Removed all ${warnIDs.length} Warnings from ${warnmember.user.tag}`)
+          .setTitle(`${emoji.msg.SUCCESS} Success | Removed all ${warnIDs.length} Warnings from ${warnmember.user.tag}`)
         );
 
       } catch (e) {
@@ -68,7 +69,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
   						.setFooter(ee.footertext, ee.footericon)
-              .setTitle(`❌ ERROR | An error occurred`)
+              .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
               .setDescription(`\`\`\`${e.message}\`\`\``)
           );
       }
@@ -77,7 +78,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
             .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }

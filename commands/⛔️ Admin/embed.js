@@ -1,21 +1,22 @@
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const ee = require("../../botconfig/embed.json");
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
-      name: "embed",
-      category: "⛔️ Admin",
-      aliases: [""],
-      description: "Resends the message as an embed",
-      useage: "embed <Title> + <Description>",
-      memberpermissions: ["MANAGE_GUILD"],
+      name: `embed`,
+      category: `⛔️ Admin`,
+      aliases: [``],
+      description: `Resends the message as an embed`,
+      useage: `embed <Title> + <Description>`,
+      memberpermissions: [`MANAGE_GUILD`],
       run: async (client, message, args, cmduser, text, prefix) => {
       try{
-        const argsneu = message.content.slice(5 + prefix.length).split("+");
+        const argsneu = message.content.slice(5 + prefix.length).split(`+`);
         if (!argsneu)
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle("❌ Error | Wrong Command Usage, please add arguments!")
+            .setTitle(`${emoji.msg.ERROR} Error | Wrong Command Usage, please add arguments!`)
             .setDescription(`Useage: \`${prefix}embed <Title> + <Description>\``)
           );
 
@@ -24,16 +25,16 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle("❌ Error | Title is only allowed to be `256` Letters Long!")
+            .setTitle(`${emoji.msg.ERROR} Error | Title is only allowed to be \`256\` Letters Long!`)
             .setDescription(`Useage: \`${prefix}embed <Title> + <Description>\``)
           );
 
-        const Description = argsneu.slice(1).join(" ");
+        const Description = argsneu.slice(1).join(` `);
         if (Description.length > 2048)
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle("❌ Error | Description is only allowed to be `2048` Letters Long!")
+            .setTitle(`${emoji.msg.ERROR} Error | Description is only allowed to be \`2048\` Letters Long!`)
             .setDescription(`Useage: \`${prefix}embed <Title> + <Description>\``)
           );
 
@@ -51,7 +52,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
 			        .setFooter(ee.footertext, ee.footericon)
-              .setTitle(`❌ ERROR | An error occurred`)
+              .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
               .setDescription(`\`\`\`${e.message}\`\`\``)
           );
       }

@@ -1,21 +1,22 @@
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const ee = require("../../botconfig/embed.json");
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
-    name: "ban",
-    category: "⛔️ Admin",
-    aliases: ["banhammer"],
-    description: "Bans a Member from a Guild",
-    usage: "ban @User [0-7 Days, 0 == Infinite] [Reason]",
-    memberpermissions: ["BAN_MEMBERS"],
+    name: `ban`,
+    category: `⛔️ Admin`,
+    aliases: [`banhammer`],
+    description: `Bans a Member from a Guild`,
+    usage: `ban @User [0-7 Days, 0 == Infinite] [Reason]`,
+    memberpermissions: [`BAN_MEMBERS`],
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
-      let kickmember = message.mentions.members.first() || message.guild.members.cache.get(args[0] ? args[0] : "");
+      let kickmember = message.mentions.members.first() || message.guild.members.cache.get(args[0] ? args[0] : ``);
       if (!kickmember)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | Please add a Member you want to kick!")
+          .setTitle(`${emoji.msg.ERROR} Error | Please add a Member you want to kick!`)
           .setDescription(`Useage: \`${prefix}ban @User [Reason]\``)
         );
 
@@ -23,9 +24,9 @@ module.exports = {
       if(Number(days) >= 7) days = 7;
       if(Number(days) <= 0) days = 0;
 
-      let reason = args.slice(2).join(" ");
+      let reason = args.slice(2).join(` `);
       if (!reason) {
-          reason = "NO REASON";
+          reason = `NO REASON`;
       }
 
       const memberPosition = kickmember.roles.highest.rawPosition;
@@ -35,14 +36,14 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | I cannot ban someone, who is above/equal you")
+          .setTitle(`${emoji.msg.ERROR} Error | I cannot ban someone, who is above/equal you`)
         );
 
       if (!kickmember.bannable)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | The Member is not bannable, sorry!")
+          .setTitle(`${emoji.msg.ERROR} Error | The Member is not bannable, sorry!`)
         );
 
       try {
@@ -50,7 +51,7 @@ module.exports = {
             return message.channel.send(new MessageEmbed()
               .setColor(ee.color)
               .setFooter(ee.footertext, ee.footericon)
-              .setTitle(`✅ Success | Banned ${kickmember.user.tag} for ${days === 0 ? `Infinite Days` : `${days} Days`}`)
+              .setTitle(`${emoji.msg.SUCCESS} Success | Banned ${kickmember.user.tag} for ${days === 0 ? `Infinite Days` : `${days} Days`}`)
               .setDescription(`Reason:\n> ${reason}`)
             );
           });
@@ -59,7 +60,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
   						.setFooter(ee.footertext, ee.footericon)
-              .setTitle(`❌ ERROR | An error occurred`)
+              .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
               .setDescription(`\`\`\`${e.message}\`\`\``)
           );
       }
@@ -68,7 +69,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
             .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }

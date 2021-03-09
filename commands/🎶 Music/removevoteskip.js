@@ -1,12 +1,13 @@
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const ee = require("../../botconfig/embed.json");
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
-    name: "removevoteskip",
-    category: "🎶 Music",
-    aliases: ["rvs", "removeskip", "removevs", "votestop", "stopvote"],
-    description: "Removes your Vote of the VoteSkip!",
-    usage: "removevoteskip",
+    name: `removevoteskip`,
+    category: `🎶 Music`,
+    aliases: [`rvs`, `removeskip`, `removevs`, `votestop`, `stopvote`],
+    description: `Removes your Vote of the VoteSkip!`,
+    usage: `removevoteskip`,
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
       //get the channel instance from the Member
@@ -15,7 +16,7 @@ module.exports = {
       if (!channel)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
-          .setTitle("❌ Error | You need to join a voice channel.")
+          .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
         );
       //get the player instance
       const player = client.manager.players.get(message.guild.id);
@@ -23,18 +24,18 @@ module.exports = {
       if (!player)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
-          .setTitle("❌ Error | There is nothing playing")
+          .setTitle(`${emoji.msg.ERROR} Error | There is nothing playing`)
         );
       //if not in the same channel as the player, return Error
       if (channel.id !== player.voiceChannel)
         return message.channel.send(new MessageEmbed()
           .setFooter(ee.footertext, ee.footericon)
           .setColor(ee.wrongcolor)
-          .setTitle("❌ Error | You need to be in my voice channel to use this command!")
+          .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
           .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
         );
       //Check if there is a Dj Setup
-      if(client.settings.get(message.guild.id, `djroles`).toString()!==""){
+      if(client.settings.get(message.guild.id, `djroles`).toString()!==``){
         let channelmembersize = channel.members.size;
         let voteamount = 0;
         if(channelmembersize <= 3) voteamount = 1;
@@ -43,20 +44,20 @@ module.exports = {
 
           if(player.get(`vote-${message.author.id}`)) {
             player.set(`vote-${message.author.id}`, false)
-            player.set("votes", String(Number(player.get("votes")) - 1));
+            player.set(`votes`, String(Number(player.get(`votes`)) - 1));
               return message.channel.send(new MessageEmbed()
                 .setColor(ee.color)
                 .setFooter(ee.footertext, ee.footericon)
-                .setTitle(`✅ Success | Removed your Vote!`)
-                .setDescription(`There are now: \`${player.get("votes")}\` of \`${voteamount}\` needed Votes`)
+                .setTitle(`${emoji.msg.SUCCESS} Success | Removed your Vote!`)
+                .setDescription(`There are now: \`${player.get(`votes`)}\` of \`${voteamount}\` needed Votes`)
               );
           }
           else {
               return message.channel.send(new MessageEmbed()
                 .setColor(ee.wrongcolor)
                 .setFooter(ee.footertext, ee.footericon)
-                .setTitle(`❌ ERROR | You havn't voted yet!!`)
-                .setDescription(`There are: \`${player.get("votes")}\` of \`${voteamount}\` needed Votes`)
+                .setTitle(`${emoji.msg.ERROR} ERROR | You havn't voted yet!!`)
+                .setDescription(`There are: \`${player.get(`votes`)}\` of \`${voteamount}\` needed Votes`)
               );
             }
         }
@@ -64,7 +65,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | Cannot remove your Vote!`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | Cannot remove your Vote!`)
             .setDescription(`Because ther is no DJ-Role Setup created yet, create it by typing \`${prefix}adddj @DJ-Setup\``)
           );
       } catch (e) {
@@ -72,7 +73,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
   						.setFooter(ee.footertext, ee.footericon)
-              .setTitle(`❌ ERROR | An error occurred`)
+              .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
               .setDescription(`\`\`\`${e.message}\`\`\``)
           );
       }

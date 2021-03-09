@@ -1,34 +1,36 @@
-const config = require("../../botconfig/config.json");
-const {MessageEmbed} =require("discord.js")
+const config = require(`../../botconfig/config.json`);
+const emoji = require(`../../botconfig/emojis.json`);
+const ee = require(`../../botconfig/embed.json`)
+const {MessageEmbed} =require(`discord.js`)
 module.exports = {
-    name: "react",
-    category: "⛔️ Administration",
-    aliases: ["delete"],
-    description: "Closes the ticket",
-    useage: "react <msgid> <Emoji>",
-    memberpermissions: ["MANAGE_GUILD"],
+    name: `react`,
+    category: `⛔️ Administration`,
+    aliases: [`delete`],
+    description: `Closes the ticket`,
+    useage: `react <msgid> <Emoji>`,
+    memberpermissions: [`MANAGE_GUILD`],
     run: async (client, message, args, cmduser, text, prefix) => {
     try {
       if(!args[0])
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | Please Include a MessageID`)
-            .setDescription(`Usage: \`${prefix}react <msgid> <Emoji>\`\nExample: \`${prefix}react 442355791412854784 ✅\``)
+            .setTitle(`${emoji.msg.ERROR} ERROR | Please Include a MessageID`)
+            .setDescription(`Usage: \`${prefix}react <msgid> <Emoji>\`\nExample: \`${prefix}react 442355791412854784 ${emoji.msg.SUCCESS}\``)
         );
       if(args[0].length != 18)
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | Please Include a Valid MessageID`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | Please Include a Valid MessageID`)
         );
 
       if(!args[1])
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | Please Include a Emoji`)
-            .setDescription(`Usage: \`${prefix}react <msgid> <Emoji>\`\nExample: \`${prefix}react 442355791412854784 ✅\``)
+            .setTitle(`${emoji.msg.ERROR} ERROR | Please Include a Emoji`)
+            .setDescription(`Usage: \`${prefix}react <msgid> <Emoji>\`\nExample: \`${prefix}react 442355791412854784 ${emoji.msg.SUCCESS}\``)
         );
 
       let emoji = args[1];
@@ -37,8 +39,8 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | Please Include a valid Emoji`)
-            .setDescription(`Usage: \`${prefix}react <msgid> <Emoji>\`\nExample: \`${prefix}react 442355791412854784 ✅\``)
+            .setTitle(`${emoji.msg.ERROR} ERROR | Please Include a valid Emoji`)
+            .setDescription(`Usage: \`${prefix}react <msgid> <Emoji>\`\nExample: \`${prefix}react 442355791412854784 ${emoji.msg.SUCCESS}\``)
         );
 
       message.channel.messages.fetch(args[0])
@@ -49,7 +51,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
             .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }

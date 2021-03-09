@@ -1,21 +1,22 @@
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const ee = require("../../botconfig/embed.json");
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
-    name: "unwarn",
-    category: "⛔️ Admin",
-    aliases: ["removewarn", "warnremove"],
-    description: "Removes a Warn from a Member with the ID",
-    usage: "removewarn @User <WARN_ID>",
-    memberpermissions: ["KICK_MEMBERS"],
+    name: `unwarn`,
+    category: `⛔️ Admin`,
+    aliases: [`removewarn`, `warnremove`],
+    description: `Removes a Warn from a Member with the ID`,
+    usage: `removewarn @User <WARN_ID>`,
+    memberpermissions: [`KICK_MEMBERS`],
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
-      let warnmember = message.mentions.members.first() || message.guild.members.cache.get(args[0] ? args[0] : "");
+      let warnmember = message.mentions.members.first() || message.guild.members.cache.get(args[0] ? args[0] : ``);
       if (!warnmember)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | Please add a Member you want to unwarn!")
+          .setTitle(`${emoji.msg.ERROR} Error | Please add a Member you want to unwarn!`)
           .setDescription(`Useage: \`${prefix}unwarn @User <WARN_ID>\``)
         );
 
@@ -23,7 +24,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | Please add the Warning you want to remove from him")
+          .setTitle(`${emoji.msg.ERROR} Error | Please add the Warning you want to remove from him`)
           .setDescription(`See his warns: \`${prefix}unwarn @User <WARN_ID>\``)
         );
 
@@ -34,7 +35,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | I cannot warn someone, who is above/equal you")
+          .setTitle(`${emoji.msg.ERROR} Error | I cannot warn someone, who is above/equal you`)
         );
 
       try {
@@ -51,13 +52,13 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle("❌ Error | User has no Warnings")
+            .setTitle(`${emoji.msg.ERROR} Error | User has no Warnings`)
           );
         if(Number(args[1]) >= warnIDs.length || Number(args[1]) < 0 )
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle("❌ Error | Value out of range")
+            .setTitle(`${emoji.msg.ERROR} Error | Value out of range`)
             .setDescription(`Usage: \`${prefix}unwarn @User <WARN_ID>\` Highest ID: ${warnIDs.length - 1}`)
           );
 
@@ -71,21 +72,21 @@ module.exports = {
           .setColor(ee.color)
           .setFooter(ee.footertext, ee.footericon)
           .setTitle(`${message.author.tag} removed a warn from you!`)
-          .addField("Warned by:", `\`${warned_by}\``, true)
-          .addField("Warned at:", `\`${warned_at}\``, true)
-          .addField("Warned in:", `\`${warned_in}\``, true)
-          .addField("Warn Reason:", `\`${warning.reason.length > 900 ? warning.reason.substr(0, 900) + " ..." : warning.reason}\``, true)
+          .addField(`Warned by:`, `\`${warned_by}\``, true)
+          .addField(`Warned at:`, `\`${warned_at}\``, true)
+          .addField(`Warned in:`, `\`${warned_in}\``, true)
+          .addField(`Warn Reason:`, `\`${warning.reason.length > 900 ? warning.reason.substr(0, 900) + ` ...` : warning.reason}\``, true)
 
         ).catch(e=>console.log(e.message))
 
         message.channel.send(new MessageEmbed()
           .setColor(ee.color)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`✅ Success | Removed the Warn from ${warnmember.user.tag}`)
-          .addField("Warned by:", `\`${warned_by}\``, true)
-          .addField("Warned at:", `\`${warned_at}\``, true)
-          .addField("Warned in:", `\`${warned_in}\``, true)
-          .addField("Warn Reason:", `\`${warning.reason.length > 900 ? warning.reason.substr(0, 900) + " ..." : warning.reason}\``, true)
+          .setTitle(`${emoji.msg.SUCCESS} Success | Removed the Warn from ${warnmember.user.tag}`)
+          .addField(`Warned by:`, `\`${warned_by}\``, true)
+          .addField(`Warned at:`, `\`${warned_at}\``, true)
+          .addField(`Warned in:`, `\`${warned_in}\``, true)
+          .addField(`Warn Reason:`, `\`${warning.reason.length > 900 ? warning.reason.substr(0, 900) + ` ...` : warning.reason}\``, true)
         );
         client.userProfiles.remove(warnmember.user.id, warnIDs[parseInt(args[1])], 'warnings')
       } catch (e) {
@@ -93,7 +94,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
   						.setFooter(ee.footertext, ee.footericon)
-              .setTitle(`❌ ERROR | An error occurred`)
+              .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
               .setDescription(`\`\`\`${e.message}\`\`\``)
           );
       }
@@ -102,7 +103,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
             .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }

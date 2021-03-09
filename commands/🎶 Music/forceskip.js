@@ -2,12 +2,13 @@ const { MessageEmbed } = require(`discord.js`);
 const config = require(`../../botconfig/config.json`);
 const ee = require(`../../botconfig/embed.json`);
 const emoji = require(`../../botconfig/emojis.json`);
+const { autoplay } = require(`../../handlers/functions`);
 module.exports = {
-    name: `removedupes`,
+    name: `forceskip`,
     category: `🎶 Music`,
-    aliases: [`removedupe`, `removedupetrack`, `rdt`, `removeduplicated`, `removeduplicateds`],
-    description: `Removes all duplicated tracks in the Queue`,
-    usage: `removedupes`,
+    aliases: [`fs`],
+    description: `Forces to skip the current song`,
+    usage: `forceskip`,
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
       //get the channel instance from the Member
@@ -16,7 +17,7 @@ module.exports = {
       if (!channel)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
-          .setFooter(client.user.username, ee.footericon)
+          .setFooter(ee.footertext, ee.footericon)
           .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
         );
       //get the player instance
@@ -25,7 +26,7 @@ module.exports = {
       if (!player)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
-          .setFooter(client.user.username, ee.footericon)
+          .setFooter(ee.footertext, ee.footericon)
           .setTitle(`${emoji.msg.ERROR} Error | There is nothing playing`)
         );
       //if not in the same channel as the player, return Error
@@ -36,29 +37,24 @@ module.exports = {
           .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
           .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
         );
-      //make a new array of each single song which is not a dupe
-      let tracks = player.queue;
-      const newtracks = [];
-      for (let i = 0; i < tracks.length; i++) {
-        let exists = false;
-        for (j = 0; j < newtracks.length; j++) {
-          if (tracks[i].uri === newtracks[j].uri) {
-            exists = true;
-            break;
-          }
-        }
-        if (!exists) {
-          newtracks.push(tracks[i]);
-        }
+      //if ther is nothing more to skip then stop music and leave the Channel
+      if (player.queue.size == 0) {
+        //if its on autoplay mode, then do autoplay before leaving...
+        if(player.get(`autoplay`)) return autoplay(client, player, `skip`);
+        //stop playing
+        player.destroy();
+        //send success message
+        return message.channel.send(new MessageEmbed()
+          .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
+          .setColor(ee.color)
+          .setFooter(ee.footertext, ee.footericon)
+        );
       }
-      //clear the Queue
-      player.queue.clear();
-      //now add every not dupe song again
-      for(const track of newtracks)
-        player.queue.add(track);
-      //Send Success Message
+      //skip the track
+      player.stop();
+      //send success message
       return message.channel.send(new MessageEmbed()
-        .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.cleared} I removed the track at position: \`${Number(args[0])}\``)
+        .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.skip_track} Skipped to the next Song`)
         .setColor(ee.color)
         .setFooter(ee.footertext, ee.footericon)
       );

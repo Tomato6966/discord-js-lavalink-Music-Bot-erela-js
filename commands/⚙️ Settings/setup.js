@@ -1,6 +1,8 @@
 const { MessageEmbed } = require("discord.js");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
+const emoji = require("../../botconfig/emojis.json");
+
 module.exports = {
     name: "setup",
     category: "⚙️ Settings",
@@ -92,9 +94,9 @@ module.exports = {
                       .setTitle("Lava Music | Request | Guide")
                       .setDescription(`Enter the song name or URL to play a song\n\nYou can also type \`${prefix}command <Parameters>\``)
                       .addField(`Commands`, musiccmds.join(", "))
-                      .addField(`Reactions`, `⏪ Rewind 20 seconds\n⏩ Forward 20 seconds\n⏯ Pause/Resume\n⏹ Stop Track\n⏮ Play previous\n`,true)
-                      .addField(`\u200b`, `⏭ Skip / Next\n🔃 Replay Track\n🔉 Volume -10 %\n🔊 Volume +10 %\n🔇 Toggle Volume Mute`,true)
-                      .addField(`\u200b`, `🔁 Change repeat mode\n♾ Toggle Autoplay\n🔀 Shuffle the queue\n📑 Show the Queue\n🩸 Shows Current Track`,true)
+                      .addField(`Reactions`, `${emoji.msg.rewind} Rewind 20 seconds\n${emoji.msg.forward} Forward 20 seconds\n${emoji.msg.pause_resume} Pause/Resume\n${emoji.msg.stop} Stop Track\n${emoji.msg.previous_track} Play previous\n`,true)
+                      .addField(`\u200b`, `${emoji.msg.skip_track} Skip / Next\n${emoji.msg.replay_track} Replay Track\n${emoji.msg.reduce_volume} Volume -10 %\n${emoji.msg.raise_volume} Volume +10 %\n${emoji.msg.toggle_mute} Toggle Volume Mute`,true)
+                      .addField(`\u200b`, `${emoji.msg.repeat_mode} Change repeat mode\n${emoji.msg.autoplay_mode} Toggle Autoplay\n${emoji.msg.shuffle} Shuffle the queue\n${emoji.msg.show_queue} Show the Queue\n${emoji.msg.show_current_track} Shows Current Track`,true)
                     let embed2 = new MessageEmbed()
                       .setColor(ee.color)
                       .setFooter(ee.footertext, ee.footericon)
@@ -120,35 +122,31 @@ module.exports = {
                             client.setups.set(message.guild.id, msg.id,"message_queue_info");
                             //send an message again
                             channel3.send(new MessageEmbed().setColor(ee.color)).then(msg => {
-                                //edit the message
-                                msg.edit(embed3)
-                                //react with all reactions
-                                msg.react("⏪") //rewind 20 seconds
-                                msg.react("⏩") //forward 20 seconds
-                                msg.react("⏯") //pause / resume
-
-                                msg.react("⏹") //stop playing music
-                                msg.react("⏮") //skip back  track / (play previous)
-                                msg.react("⏭") //skip track / stop playing
-
-                                msg.react("🔃") //replay track
-                                msg.react("🔉")  //reduce volume by 10%
-                                msg.react("🔊")  //raise volume by 10%
-
-                                msg.react("🔇")  //toggle mute
-                                msg.react("🔁") //change repeat mode --> track --> Queue --> none
-                                msg.react("♾")  //toggle autoplay mode
-
-                                msg.react("🔀") //shuffle the Queue
-                                msg.react("📑") //shows the Queue
-                                msg.react("🩸") //shows the current Track
-                                //create the collector
-                                //save all other datas in the database
-                                client.setups.set(message.guild.id, msg.id,"message_track_info");
-                                client.setups.set(message.guild.id, channel3.id,"textchannel");
-                                client.setups.set(message.guild.id, channel2.id,"voicechannel");
-                                client.setups.set(message.guild.id, channel1.id,"category");
-                                client.stats.inc("global", "setups");
+                              //edit the message
+                              msg.edit(embed3)
+                              //react with all reactions
+                              msg.react(emoji.react.rewind) //rewind 20 seconds
+                              msg.react(emoji.react.forward) //forward 20 seconds
+                              msg.react(emoji.react.pause_resume) //pause / resume
+                              msg.react(emoji.react.stop) //stop playing music
+                              msg.react(emoji.react.previous_track) //skip back  track / (play previous)
+                              msg.react(emoji.react.skip_track) //skip track / stop playing
+                              msg.react(emoji.react.replay_track) //replay track
+                              msg.react(emoji.react.reduce_volume)  //reduce volume by 10%
+                              msg.react(emoji.react.raise_volume)  //raise volume by 10%
+                              msg.react(emoji.react.toggle_mute)  //toggle mute
+                              msg.react(emoji.react.repeat_mode) //change repeat mode --> track --> Queue --> none
+                              msg.react(emoji.react.autoplay_mode)  //toggle autoplay mode
+                              msg.react(emoji.react.shuffle) //shuffle the Queue
+                              msg.react(emoji.react.show_queue) //shows the Queue
+                              msg.react(emoji.react.show_current_track) //shows the current Track
+                              //create the collector
+                              //save all other datas in the database
+                              client.setups.set(message.guild.id, msg.id,"message_track_info");
+                              client.setups.set(message.guild.id, channel3.id,"textchannel");
+                              client.setups.set(message.guild.id, channel2.id,"voicechannel");
+                              client.setups.set(message.guild.id, channel1.id,"category");
+                              client.stats.inc("global", "setups");
                             });
                         })
                     })
@@ -161,8 +159,8 @@ module.exports = {
                     return message.channel.send(new MessageEmbed()
                       .setColor(ee.wrongcolor)
                       .setFooter(ee.footertext, ee.footericon)
-                      .setTitle("❌ Error | Something went Wrong")
-                      .setDescription(String("```"+e.stack+"```").substr(0, 2048))
+                      .setTitle(`${emoji.msg.ERROR} Error | Something went Wrong`)
+                      .setDescription(String("```" + e.stack + "```").substr(0, 2048))
                     );
                 }
             })
@@ -173,7 +171,7 @@ module.exports = {
               return message.channel.send(new MessageEmbed()
                 .setColor(ee.wrongcolor)
                 .setFooter(ee.footertext, ee.footericon)
-                .setTitle("❌ Error | Something went Wrong")
+                .setTitle(`${emoji.msg.ERROR} Error | Something went Wrong`)
                 .setDescription(String("```"+e.stack+"```").substr(0, 2048))
               );
           }
@@ -183,7 +181,7 @@ module.exports = {
             return message.channel.send(new MessageEmbed()
                 .setColor(ee.wrongcolor)
     						.setFooter(ee.footertext, ee.footericon)
-                .setTitle(`❌ ERROR | An error occurred`)
+                .setTitle(`${emoji.msg.ERROR} Error | Something went Wrong`)
                 .setDescription(`\`\`\`${e.message}\`\`\``)
             );
         }

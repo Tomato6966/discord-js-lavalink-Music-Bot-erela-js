@@ -1,6 +1,7 @@
 const { MessageEmbed } = require("discord.js");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
+const emoji = require("../../botconfig/emojis.json");
 module.exports = {
     name: "toggleplaymessage",
     aliases: ["toggleplaymsg", "playmessage", "playmsg"],
@@ -10,7 +11,7 @@ module.exports = {
     memberpermissions: ["ADMINISTRATOR"],
     run: async (client, message, args) => {
       //run the code of togglepruning
-      let {run} = require("./togglepruning");
+      let { run } = require("./togglepruning");
       run(client, message, args);
   }
 };

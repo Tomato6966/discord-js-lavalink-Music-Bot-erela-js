@@ -1,13 +1,14 @@
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const ee = require("../../botconfig/embed.json");
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
-    name: "slowmode",
-    category: "⛔️ Admin",
-    aliases: ["slow"],
-    description: "Changes the slowmode of the channel",
-    usage: "slowmode <AmountInSeconds>",
-    memberpermissions: ["ADMINISTRATOR"],
+    name: `slowmode`,
+    category: `⛔️ Admin`,
+    aliases: [`slow`],
+    description: `Changes the slowmode of the channel`,
+    usage: `slowmode <AmountInSeconds>`,
+    memberpermissions: [`ADMINISTRATOR`],
     run: async (client, message, args, cmduser, text, prefix) => {
     try {
       if (!isNaN(args[0]) || parseInt(args[0]) < 0) {
@@ -15,13 +16,13 @@ module.exports = {
           message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
-              .setTitle(`✅ Success | Set Slowmode to: ${args[0]}!`)
+              .setTitle(`${emoji.msg.SUCCESS} Success | Set Slowmode to: ${args[0]}!`)
           );
       } else {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | Your Input is not a Number, please retry!`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | Your Input is not a Number, please retry!`)
             .setDescription(`Usage: \`${prefix}slowmode <AmountInSeconds>\`\n\nExample: \`${prefix}slowmode 5\``)
         );
       }
@@ -30,7 +31,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
             .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
