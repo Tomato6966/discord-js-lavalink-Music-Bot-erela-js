@@ -490,7 +490,7 @@ module.exports = {
           embed.addField(`${emoji.msg.pause_resume}  State`, `${player.playing ? `${emoji.msg.resume}  Playing Song` : `${emoji.msg.pause}  Paused Song`}`, true)
         } catch {}
         try {
-          embed.addField(`${emoji.msg.time} Progress: `, createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, `▬`, config.settings.progressbar_emoji) + `\n**` + new Date(player.position).toISOString().substr(11, 8) + ` / ` + (player.queue.current.duration == 0 ? ` ◉ LIVE` : new Date(player.queue.current.duration).toISOString().substr(11, 8)) + `**`)
+          embed.addField(`${emoji.msg.time} Progress: `, createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, `▬`, config.settings.progressbar_emoji) )
         } catch {}
         try {
           embed.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({
@@ -714,7 +714,7 @@ module.exports = {
           embed.addField(`${emoji.msg.pause_resume} State`, `${player.playing ? `${emoji.msg.resume} Playing Song` : `${emoji.msg.pause} Paused Song`}`, true)
         } catch {}
         try {
-          embed.addField(`${emoji.msg.time} Progress: `, createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji) + "\n**" + new Date(player.position).toISOString().substr(11, 8) + " / " + (player.queue.current.duration == 0 ? " ◉ LIVE" : new Date(player.queue.current.duration).toISOString().substr(11, 8)) + "**")
+          embed.addField(`${emoji.msg.time} Progress: `, createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji) )
         } catch {}
         try {
           embed.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({
