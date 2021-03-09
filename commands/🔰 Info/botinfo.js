@@ -1,10 +1,10 @@
 const Discord = require("discord.js");
-const moment = require("moment");
 let os = require("os");
 let cpuStat = require("cpu-stat");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
 const emoji = require(`../../botconfig/emojis.json`);
+const {duration} = require("../../handlers/functions")
 module.exports = {
     name: "botinfo",
     aliases: ["info"],
@@ -17,7 +17,6 @@ module.exports = {
           if (e) {
               return console.log(String(e.stack).red);
           }
-          const duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
           let connectedchannelsamount = 0;
           let guilds = client.guilds.cache.map((guild) => guild);
           for (let i = 0; i < guilds.length; i++) {
@@ -28,7 +27,7 @@ module.exports = {
               .setTitle("__**Stats:**__")
               .setColor(ee.color)
               .addField("⏳ Memory Usage", `\`${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}/ ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB\``, true)
-              .addField("⌚️ Uptime ", `\`${duration}\``, true)
+              .addField("⌚️ Uptime ", `\`${duration(client.uptime)}\``, true)
               .addField("\u200b", `\u200b`, true)
               .addField("📁 Users", `\`${client.users.cache.size}\``, true)
               .addField("📁 Servers", `\`${client.guilds.cache.size}\``, true)
