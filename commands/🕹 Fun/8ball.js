@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
 const request = require("request");
+const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
     name: "8ball",
     category: "🕹 Fun",
@@ -14,7 +15,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | Please Add a Question`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | Please Add a Question`)
         );
       request(`https://8ball.delegator.com/magic/JSON/${question}`, function (e, response, body) {
           if (e) {
@@ -42,7 +43,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
             .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }

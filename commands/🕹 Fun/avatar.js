@@ -1,6 +1,7 @@
 const Discord = require("discord.js")
 const config = require("../../botconfig/config.json")
 const ee = require("../../botconfig/embed.json")
+const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
     name: "avatar",
     category: "🕹 Fun",
@@ -13,7 +14,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | That user does not have an Avatar`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | That user does not have an Avatar`)
             .setDescription(`\`\`\`${e.message}\`\`\``)
         );
       message.channel.send(new Discord.MessageEmbed()
@@ -27,7 +28,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
             .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }

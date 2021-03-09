@@ -2,6 +2,7 @@
 const { MessageEmbed } = require("discord.js");
 const config = require("../../botconfig/config.json")
 const ee = require("../../botconfig/embed.json")
+const emoji = require(`../../botconfig/emojis.json`);
 const { databasing } = require("../../handlers/functions");
 module.exports = {
   name: "requestpremium",
@@ -37,7 +38,7 @@ module.exports = {
                         console.log(String(e.stack).red)
                       }
                     }
-                    message.channel.send("✅ Successfully applied as a Premium GUILD for: `" + guild.name + "`\nPlease wait..")
+                    message.channel.send(`${emoji.msg.SUCCESS} Successfully applied as a Premium GUILD for: \`` + guild.name + "`\nPlease wait..")
                   }catch (e){
                     console.log(String(e.stack).red)
                     return message.channel.send("sorry i cant find that guild please make sure i am in there! or DM: `Tomato#6966`");
@@ -67,7 +68,7 @@ module.exports = {
                         console.log(String(e.stack).red)
                       }
                     }
-                    message.channel.send("✅ Successfully applied as a Premium USER!\nPlease wait..")
+                    message.channel.send(`${emoji.msg.SUCCESS} Successfully applied as a Premium USER!\nPlease wait..`)
                   }catch (e){
                     console.log(String(e.stack).red)
                     return message.channel.send("sorry i cant find you make sure I am in a guild with you! or DM: `Tomato#6966`");
@@ -83,7 +84,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
-              .setTitle(`❌ ERROR | An error occurred`)
+              .setTitle(`${emoji.msg.ERROR}  ERROR | An error occurred`)
               .setDescription(`\`\`\`${e.message}\`\`\``)
           );
       }

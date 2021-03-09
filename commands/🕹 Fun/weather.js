@@ -2,6 +2,7 @@ const weather = require("weather-js");
 const { Client, Collection, MessageEmbed } = require(`discord.js`);
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
+const emoji = require(`../../botconfig/emojis.json`);
 const path = require("path");
 module.exports = {
     name: path.parse(__filename).name,
@@ -33,10 +34,15 @@ module.exports = {
                     .addField("**Humidity:**", `${result[0].current.humidity}%`, true)
                     .addField("**Wind:**", `${result[0].current.winddisplay}`, true);
                 message.channel.send(embed);
-            } catch (e) {
-                console.log(String(e.stack).red);
-                return message.channel.send("Are you sure that place exists?");
-            }
+              } catch (e) {
+                  console.log(String(e.stack).bgRed)
+                  return message.channel.send(new MessageEmbed()
+                      .setColor(ee.wrongcolor)
+                      .setFooter(ee.footertext, ee.footericon)
+                      .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+                      .setDescription(`\`\`\`${e.message}\`\`\``)
+                  );
+              }
         });
     },
 };

@@ -1,6 +1,7 @@
 const { MessageEmbed } = require("discord.js");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
+const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
     name: "ping",
     category: "🔰 Info",
@@ -13,12 +14,12 @@ module.exports = {
       message.channel.send(new MessageEmbed()
         .setColor(ee.color)
         .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`🏓 Pinging....`)
+        .setTitle(`${emoji.msg.ping} Pinging....`)
       ).then(msg=>{
         msg.edit(new MessageEmbed()
           .setColor(ee.color)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`🏓 Ping is \`${Math.round(client.ws.ping)}ms\``)
+          .setTitle(`${emoji.msg.ping} Ping is \`${Math.round(client.ws.ping)}ms\``)
         );
       })
     } catch (e) {
@@ -26,7 +27,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
             .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
