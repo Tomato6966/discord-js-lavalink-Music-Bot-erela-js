@@ -53,7 +53,8 @@ module.exports = async (client, message) => {
         //if the user is not in the channel as in the db voice channel return error
         if (channel.id !== db.voicechannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle(`You need to be in the: \`${message.guild.channels.cache.get(db.voicechannel).name}\` VoiceChannel`));
         //switch case for every single reaction emoji someone makes
-        switch(reaction.emoji.name){
+        let reactionemoji = reaction.emoji.id || reaction.emoji.name;
+        switch(reactionemoji){
           case "⏪":
             //get the rewind
             let rewind = player.position - 20 * 1000;
