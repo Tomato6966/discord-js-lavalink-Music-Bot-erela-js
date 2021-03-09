@@ -38,8 +38,6 @@ module.exports = async (client, message, args, type) => {
       search(client, message, args, type);
     else if(method[0] === "skiptrack")
       skiptrack(client, message, args, type);
-    else if(method[0] === "summon")
-      summon(client, message);
     else
       return message.channel.send(new MessageEmbed()
         .setColor(ee.wrongcolor)
@@ -47,6 +45,8 @@ module.exports = async (client, message, args, type) => {
         .setTitle("❌ Error | No valid search Term? ... Please Contact: `Tomato#6966`")
       );
 }
+
+//function for playling song
 async function similar(client, message, args, type) {
   try{
     //get a playlist out of it
@@ -260,13 +260,6 @@ async function search(client, message, args, type) {
             .setTitle(`❌ Error | The number you provided too small or too big (1-${max}).`)
           );
         track = res.tracks[index];
-        // Create the player
-        let player = client.manager.create({
-              guild: message.guild.id,
-              voiceChannel: message.member.voice.channel.id,
-              textChannel: message.channel.id,
-              selfDeafen: config.settings.selfDeaf,
-          });
         if(!res.tracks[0])
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
@@ -274,6 +267,13 @@ async function search(client, message, args, type) {
             .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256-3) + "`**")
             .setDescription(`Please retry!`)
           );
+        // Create the player
+        let player = client.manager.create({
+              guild: message.guild.id,
+              voiceChannel: message.member.voice.channel.id,
+              textChannel: message.channel.id,
+              selfDeafen: config.settings.selfDeaf,
+          });
         if (player.state !== "CONNECTED") {
             // Connect to the voice channel and add the track to the queue
             player.connect();
@@ -332,12 +332,6 @@ async function playlist(client, message, args, type) {
              .setDescription(`\`\`\`${e.message}\`\`\``)
            );
         }
-    let player = client.manager.create({
-          guild: message.guild.id,
-          voiceChannel: message.member.voice.channel.id,
-          textChannel: message.channel.id,
-          selfDeafen: config.settings.selfDeaf,
-      });
     if(!res.tracks[0])
       return message.channel.send(new MessageEmbed()
         .setColor(ee.wrongcolor)
@@ -345,6 +339,12 @@ async function playlist(client, message, args, type) {
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256-3) + "`**")
         .setDescription(`Please retry!`)
       );
+  let player = client.manager.create({
+        guild: message.guild.id,
+        voiceChannel: message.member.voice.channel.id,
+        textChannel: message.channel.id,
+        selfDeafen: config.settings.selfDeaf,
+    });
     // Connect to the voice channel and add the track to the queue
     if (player.state !== "CONNECTED") {
         player.connect();
@@ -418,13 +418,6 @@ async function song(client, message, args, type) {
           .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
-    // Create the player
-    let player = client.manager.create({
-          guild: message.guild.id,
-          voiceChannel: message.member.voice.channel.id,
-          textChannel: message.channel.id,
-          selfDeafen: config.settings.selfDeaf,
-      });
     if(!res.tracks[0])
       return message.channel.send(new MessageEmbed()
         .setColor(ee.wrongcolor)
@@ -432,6 +425,13 @@ async function song(client, message, args, type) {
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256-3) + "`**")
         .setDescription(`Please retry!`)
       );
+    // Create the player
+    let player = client.manager.create({
+          guild: message.guild.id,
+          voiceChannel: message.member.voice.channel.id,
+          textChannel: message.channel.id,
+          selfDeafen: config.settings.selfDeaf,
+      });
     // Connect to the voice channel and add the track to the queue
     if (player.state !== "CONNECTED") {
         player.connect();
@@ -496,13 +496,6 @@ async function skiptrack(client, message, args, type) {
               .setDescription(`\`\`\`${e.message}\`\`\``)
             );
       }
-      // Create the player
-      let player = client.manager.create({
-            guild: message.guild.id,
-            voiceChannel: message.member.voice.channel.id,
-            textChannel: message.channel.id,
-            selfDeafen: config.settings.selfDeaf,
-        });
       if(!res.tracks[0])
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
@@ -510,6 +503,13 @@ async function skiptrack(client, message, args, type) {
           .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256-3) + "`**")
           .setDescription(`Please retry!`)
         );
+      // Create the player
+      let player = client.manager.create({
+            guild: message.guild.id,
+            voiceChannel: message.member.voice.channel.id,
+            textChannel: message.channel.id,
+            selfDeafen: config.settings.selfDeaf,
+        });
       // Connect to the voice channel and add ?the track to the queue
       if (player.state !== "CONNECTED") {
           player.connect();
@@ -542,45 +542,6 @@ async function skiptrack(client, message, args, type) {
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256-3) + "`**")
       )
   }
-}
-//function for playling song
-async function summon(client, message) {
-  try {
-    // Create the player
-    let player = client.manager.create({
-          guild: message.guild.id,
-          voiceChannel: message.member.voice.channel.id,
-          textChannel: message.channel.id,
-          selfDeafen: config.settings.selfDeaf,
-      });
-
-    // Connect to the voice channel and add the track to the queue
-    if (player.state !== "CONNECTED") {
-        player.connect();
-        player.set("message", message);
-        player.set("playerauthor", message.author.id);
-        if(isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
-      } else {
-        //send track information
-        let summonembed = new Discord.MessageEmbed()
-          try{summonembed.setTitle(`Already Connected to: ${message.guild.me.voice.channel.name}`.substr(0, 256-3) + "`**")}catch{}
-          try{summonembed.setColor(ee.color).setFooter(ee.footertext, ee.footericon)}catch{}
-        return message.channel.send(summonembed).then(async msg => {
-          try{
-            await delay(4000)
-            msg.delete().catch();
-          }catch{ /* */ }
-        });
-    }
-} catch (e) {
-    console.log(String(e.stack).red)
-    message.channel.send(new Discord.MessageEmbed()
-      .setColor(ee.wrongcolor)
-      .setFooter(ee.footertext, ee.footericon)
-      .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256-3) + "`**")
-    )
-}
-
 }
 
 /**

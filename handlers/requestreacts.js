@@ -158,37 +158,74 @@ module.exports = async (client, message) => {
             playermanager(client, message, Array(player.queue.previous.uri), type);
           break;
           case "⏭":
-            //if there is no Queue
-            if (player.queue.size == 0) {
-              //if its on autoplay mode, then do autoplay before leaving...
-              if(player.get("autoplay")) return autoplay(client, player, "skip");
-              //stop the music and leave the channel
-              player.destroy();
-              //send informational message
-              message.channel.send(new MessageEmbed()
-                .setTitle("⏹ Stopped and left your channel")
+            //Check if there is a Dj Setup
+            if(client.settings.get(message.guild.id, `djroles`).toString()!==""){
+
+              let channelmembersize = channel.members.size;
+              let voteamount = 0;
+              if(channelmembersize <= 3) voteamount = 1;
+              voteamount = Math.ceil(channelmembersize / 3);
+
+              if(!player.get(`vote-${message.author.id}`)) {
+                player.set(`vote-${message.author.id}`, true);
+                player.set("votes", String(Number(player.get("votes")) + 1));
+                if(voteamount <= Number(player.get("votes"))){
+                  message.channel.send(new MessageEmbed()
+                    .setColor(ee.color)
+                    .setFooter(ee.footertext, ee.footericon)
+                    .setTitle(`✅ Success | Added your Vote!`)
+                    .setDescription(`There are now: \`${player.get("votes")}\` of \`${voteamount}\` needed Votes\n\n> Amount reached! Skipping ⏭`)
+                  );
+                  if (player.queue.size == 0) {
+                      player.destroy();
+                  }
+                  else{
+                    player.stop();
+                  }
+                }
+                else{
+                  return message.channel.send(new MessageEmbed()
+                    .setColor(ee.color)
+                    .setFooter(ee.footertext, ee.footericon)
+                    .setTitle(`✅ Success | Added your Vote!`)
+                    .setDescription(`There are now: \`${player.get("votes")}\` of \`${voteamount}\` needed Votes`)
+                  );
+                }
+              }
+              else {
+                player.set(`vote-${message.author.id}`, false)
+                player.set("votes", String(Number(player.get("votes")) - 1));
+                return message.channel.send(new MessageEmbed()
+                  .setColor(ee.color)
+                  .setFooter(ee.footertext, ee.footericon)
+                  .setTitle(`✅ Success | Removed your Vote!`)
+                  .setDescription(`There are now: \`${player.get("votes")}\` of \`${voteamount}\` needed Votes`)
+                );
+              }
+            }
+            else{
+              //if ther is nothing more to skip then stop music and leave the Channel
+              if (player.queue.size == 0) {
+                //if its on autoplay mode, then do autoplay before leaving...
+                if(player.get("autoplay")) return autoplay(client, player, "skip");
+                //stop playing
+                player.destroy();
+                //send success message
+                return message.channel.send(new MessageEmbed()
+                  .setTitle("✅ Success | ⏹ Stopped and left your Channel")
+                  .setColor(ee.color)
+                  .setFooter(ee.footertext, ee.footericon)
+                );
+              }
+              //skip the track
+              player.stop();
+              //send success message
+              return message.channel.send(new MessageEmbed()
+                .setTitle("✅ Success | ⏭ Skipped to the next Song")
                 .setColor(ee.color)
                 .setFooter(ee.footertext, ee.footericon)
-              ).then(async msg => {
-                try{
-                  await delay(4000)
-                  if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
-                }catch{ /* */ }
-              });
+              );
             }
-            //skip the track
-            player.stop();
-            //send an informational message
-            message.channel.send(new MessageEmbed()
-              .setTitle("⏭ Skipped to the next song")
-              .setColor(ee.color)
-              .setFooter(ee.footertext, ee.footericon)
-            ).then(async msg => {
-              try{
-                await delay(4000)
-                if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
-              }catch{ /* */ }
-            });
           break;
 
           //////////////////////////////////////

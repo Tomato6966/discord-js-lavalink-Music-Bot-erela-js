@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const {
   MessageEmbed
 } = require("discord.js");
+const emoji = require("../botconfig/emojis.json");
 const config = require("../botconfig/config.json");
 const ee = require("../botconfig/embed.json");
 const radios = require("../botconfig/radiostations.json");
@@ -49,7 +50,7 @@ module.exports = {
       const min = Math.floor((ms / (60 * 1000)) % 60).toString();
       const hrs = Math.floor((ms / (60 * 60 * 1000)) % 60).toString();
       const days = Math.floor((ms / (24 * 60 * 60 * 1000)) % 60).toString();
-      return `\`${days}Days\`,\`${hrs}Hours\`,\`${min}Minutes\`,\`${sec}Seconds\``;
+      return `${days}Days,${hrs}Hours,${min}Minutes,${sec}Seconds`;
   },
   promptMessage: async function(message, author, time, validReactions) {
     try{
@@ -92,6 +93,8 @@ module.exports = {
     }
   },
   createBar: function(player) {
+    /*  OLD CREATE BAR WAY
+
     try{
       //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji)
       if (!player.queue.current) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
@@ -105,7 +108,49 @@ module.exports = {
       return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
     }catch (e){
       console.log(String(e.stack).bgRed)
+    }*/
+
+    /* NEW WAY
+    try{
+      if (!player.queue.current) return `**${emoji.msg.progress_bar.leftindicator}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.rightindicator}**\n**00:00:00 / 00:00:00**`;
+      let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
+      let total = player.queue.current.duration;
+      let size = 15;
+      let bar = String(emoji.msg.progress_bar.leftindicator) + String(emoji.msg.progress_bar.filledframe).repeat(Math.round(size * (current / total))) + String(emoji.msg.progress_bar.emptyframe).repeat(size - Math.round(size * (current / total))) + String(emoji.msg.progress_bar.rightindicator);
+      return `**${bar}**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+    }catch (e){
+      console.log(String(e.stack).bgRed)
     }
+
+  */
+    /* CUSTOM WAY */
+    try{
+    // EMOJIS.JSON
+      // "progress_bar": {
+      //  "leftindicator": "<:progressbar_left_filled:818558865268408341>",
+      //  "rightindicator": "<:progressbar_right_filled:818558865540907038>",
+      //
+      //  "emptyframe": "<:progressbar_middle_unfilled:818558865532649503>",
+      //  "filledframe": "<:progressbar_middle_filled:818558865595564062>",
+      //
+      //  "emptybeginning": "<:progressbar_left_filled_hal:818558865628725298>",
+      //  "emptyend": "<:progressbar_right_unfilled:818558865619681300>"
+      // }
+
+      if (!player.queue.current) return `**${emoji.msg.progress_bar.emptybeginning}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.emptyend}**\n**00:00:00 / 00:00:00**`;
+      let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
+      let total = player.queue.current.duration;
+      let size = 15;
+      let rightside = size - Math.round(size * (current / total));
+      let leftside  = Math.round(size * (current / total));
+      let bar;
+      if(leftside < 1 ) bar = String(emoji.msg.progress_bar.emptybeginning) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(emoji.msg.progress_bar.emptyend);
+      else bar = String(emoji.msg.progress_bar.leftindicator) + String(emoji.msg.progress_bar.filledframe).repeat(leftside) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(size - rightside !== 1 ? emoji.msg.progress_bar.emptyend : emoji.msg.progress_bar.rightindicator);
+      return `**${bar}**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+    }catch (e){
+      console.log(String(e.stack).bgRed)
+    }
+
   },
   format: function(millis) {
     try{
@@ -319,7 +364,7 @@ module.exports = {
       if (!response || response.loadType === 'LOAD_FAILED' || response.loadType !== 'PLAYLIST_LOADED') {
         let embed = new MessageEmbed()
           .setTitle("❌ Error | Found nothing related for the latest Song!")
-          .setDescription(config.settings.LeaveOnEmpty_Queue.enabled && type != "skip" ? `I'll leave the Channel: \`${client.channels.cache.get(player.voiceChannel).name}\` in: \`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\`, If the Queue stays Empty! ` : `I left the Channel: \`${client.channels.cache.get(player.voiceChannel).name}\` because the Queue was empty for: \`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\``)
+          .setDescription(config.settings.LeaveOnEmpty_Queue.enabled && type != "skip" ? `I'll leave the Channel: ${client.channels.cache.get(player.voiceChannel).name} in: ${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}, If the Queue stays Empty! ` : `I left the Channel: ${client.channels.cache.get(player.voiceChannel).name} because the Queue was empty for: ${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}`)
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon);
         client.channels.cache.get(player.textChannel).send(embed);
@@ -333,7 +378,7 @@ module.exports = {
                   embed.setTitle("❌ Queue has ended.")
                 } catch {}
                 try {
-                  embed.setDescription(`I left the Channel: \`${client.channels.cache.get(player.voiceChannel).name}\` because the Queue was empty for: \`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\``)
+                  embed.setDescription(`I left the Channel: ${client.channels.cache.get(player.voiceChannel).name} because the Queue was empty for: ${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}`)
                 } catch {}
                 try {
                   embed.setColor(ee.wrongcolor)
@@ -427,25 +472,25 @@ module.exports = {
           embed.setThumbnail(track.displayThumbnail(1))
         } catch {}
         try {
-          embed.addField("⌛️ Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
+          embed.addField("⌛️ Duration: ", `${track.isStream ? "LIVE STREAM" : format(track.duration)}`, true)
         } catch {}
         try {
-          embed.addField("💯 Song By: ", `\`${track.author}\``, true)
+          embed.addField("💯 Song By: ", `${track.author}`, true)
         } catch {}
         try {
-          embed.addField("🎚 Equalizer: ", `\`🎵 Music\``, true)
+          embed.addField("🎚 Equalizer: ", `🎵 Music`, true)
         } catch {}
         try {
-          embed.addField("🔊 Volume", `\`${player.volume}%\``, true)
+          embed.addField("🔊 Volume", `${player.volume}%`, true)
         } catch {}
         try {
-          embed.addField(`${player.queueRepeat ? "🔂 Queue Loop: " : "🔁 Song Loop: "}`, `\`${player.queueRepeat ? `\`✔️ Enabled\`` : player.trackRepeat ? `\`✔️ Enabled\`` : `\`❌ Disabled\``}\``, true)
+          embed.addField(`${player.queueRepeat ? `${emoji.msg.repeat_mode} Queue Loop: ` : `${emoji.msg.repeat_mode} Song Loop: `}`, `${player.queueRepeat ? `${emoji.msg.enabled} Enabled` : player.trackRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}`, true)
         } catch {}
         try {
-          embed.addField("⏯ State", `\`${player.playing ? "▶️ Playing Song" : "⏸ Paused Song"}\``, true)
+          embed.addField(`${emoji.msg.pause_resume}  State`, `${player.playing ? `${emoji.msg.resume}  Playing Song` : `${emoji.msg.pause}  Paused Song`}`, true)
         } catch {}
         try {
-          embed.addField("⏳ Progress: ", createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji) + "\n**" + new Date(player.position).toISOString().substr(11, 8) + " / " + (player.queue.current.duration == 0 ? " ◉ LIVE" : new Date(player.queue.current.duration).toISOString().substr(11, 8)) + "**")
+          embed.addField(`${emoji.msg.time} Progress: `, createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, `▬`, config.settings.progressbar_emoji) + `\n**` + new Date(player.position).toISOString().substr(11, 8) + ` / ` + (player.queue.current.duration == 0 ? ` ◉ LIVE` : new Date(player.queue.current.duration).toISOString().substr(11, 8)) + `**`)
         } catch {}
         try {
           embed.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({
@@ -463,9 +508,9 @@ module.exports = {
         const end = page * multiple;
         const start = end - multiple;
         const tracks = queue.slice(start, end);
-        if (queue.current) embed.addField("**0) CURRENT TRACK**", `[${queue.current.title.substr(0, 35)}](${queue.current.uri}) - \`${track.isStream ? "LIVE STREAM" : format(track.duration)}\` - request by: **${queue.current.requester.tag}**`);
+        if (queue.current) embed.addField("**0) CURRENT TRACK**", `[${queue.current.title.substr(0, 35)}](${queue.current.uri}) - ${track.isStream ? "LIVE STREAM" : format(track.duration)}\n*request by: ${queue.current.requester.tag}*`);
         if (!tracks.length) embed.setDescription(`No tracks in ${page > 1 ? `page ${page}` : "the queue"}.`);
-        else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** [${track.title.substr(0, 35)}](${track.uri}) - \`${track.isStream ? "LIVE STREAM" : format(track.duration)}\` - request by: **${track.requester.tag}**`).join("\n"));
+        else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** [${track.title.substr(0, 35)}](${track.uri}) - ${track.isStream ? "LIVE STREAM" : format(track.duration)}\n*request by: ${track.requester.tag}*`).join("\n"));
         embed.setColor(ee.color);
         embed.setFooter(ee.footertext, ee.footericon);
         return embed;
@@ -507,15 +552,21 @@ module.exports = {
       let track_info_msg = await message.channel.messages.fetch(db.message_track_info);
       //IF NO TRACK INFO MSG --> DELETE
       if (!track_info_msg) return message.channel.send(new MessageEmbed()).then(msg => {
-        msg.react("⏪"); //rewind 20 seconds
-        msg.react("⏯"); //pause / resume
-        msg.react("⏹"); //stop playing music
-        msg.react("⏩"); //forward 20 seconds
-        msg.react("⏭"); //skip track / stop playing
-        msg.react("🔉"); //reduce volume by 10%
-        msg.react("🔊"); //raise volume by 10%
-        msg.react("🔁"); //change repeat mode --> track --> Queue --> none
-        msg.react("🔀"); //shuffle the Queue
+        msg.react(emoji.react.rewind) //rewind 20 seconds
+        msg.react(emoji.react.forward) //forward 20 seconds
+        msg.react(emoji.react.pause_resume) //pause / resume
+        msg.react(emoji.react.stop) //stop playing music
+        msg.react(emoji.react.previous_track) //skip back  track / (play previous)
+        msg.react(emoji.react.skip_track) //skip track / stop playing
+        msg.react(emoji.react.replay_track) //replay track
+        msg.react(emoji.react.reduce_volume)  //reduce volume by 10%
+        msg.react(emoji.react.raise_volume)  //raise volume by 10%
+        msg.react(emoji.react.toggle_mute)  //toggle mute
+        msg.react(emoji.react.repeat_mode) //change repeat mode --> track --> Queue --> none
+        msg.react(emoji.react.autoplay_mode)  //toggle autoplay mode
+        msg.react(emoji.react.shuffle) //shuffle the Queue
+        msg.react(emoji.react.show_queue) //shows the Queue
+        msg.react(emoji.react.show_current_track) //shows the current Track
         msg.edit(SongEmbed(player.queue.current));
         client.setups.set(message.guild.id, msg.id, "message_track_info");
       })
@@ -564,9 +615,9 @@ module.exports = {
       const end = page * multiple;
       const start = end - multiple;
       const tracks = queue.slice(start, end);
-      if (queue.current) embed.addField("**0) CURRENT TRACK**", `[${queue.current.title.substr(0, 35)}](${queue.current.uri}) - \`${queue.current.isStream ? "LIVE STREAM" : format(queue.current.duration)}\` - request by: **${queue.current.requester.tag}**`);
+      if (queue.current) embed.addField("**0) CURRENT TRACK**", `[${queue.current.title.substr(0, 35)}](${queue.current.uri}) - ${queue.current.isStream ? "LIVE STREAM" : format(queue.current.duration)}\n*request by: ${queue.current.requester.tag}*`);
       if (!tracks.length) embed.setDescription(`No tracks in ${page > 1 ? `page ${page}` : "the queue"}.`);
-      else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** [${track.title.substr(0, 35)}](${track.uri}) - \`${track.isStream ? "LIVE STREAM" : format(track.duration)}\` - request by: **${track.requester.tag}**`).join("\n"));
+      else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** [${track.title.substr(0, 35)}](${track.uri}) - ${track.isStream ? "LIVE STREAM" : format(track.duration)}\n*request by: ${track.requester.tag}*`).join("\n"));
       embed.setColor(ee.color);
       embed.setFooter(ee.footertext, ee.footericon);
       embed;
@@ -576,7 +627,7 @@ module.exports = {
       function SongEmbed(track) {
         let embed = new MessageEmbed()
         try {
-          embed.setTitle("Playing :notes: **`" + track.title + "`**")
+          embed.setTitle(`Playing ${emoji.msg.playing} **\`` + track.title + "`**")
         } catch {}
         try {
           embed.setURL(track.uri)
@@ -588,25 +639,25 @@ module.exports = {
           embed.setThumbnail(track.displayThumbnail(1))
         } catch {}
         try {
-          embed.addField("⌛️ Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
+          embed.addField(`${emoji.msg.time} Duration: `, `${track.isStream ? "LIVE STREAM" : format(track.duration)}`, true)
         } catch {}
         try {
-          embed.addField("💯 Song By: ", `\`${track.author}\``, true)
+          embed.addField(`${emoji.msg.song_by} Song By: `, `${track.author}`, true)
         } catch {}
         try {
-          embed.addField("🎚 Equalizer: ", `\`🎵 Music\``, true)
+          embed.addField(`${emoji.msg.equalizer} Equalizer: `, `🎵 Music`, true)
         } catch {}
         try {
-          embed.addField("🔊 Volume", `\`${player.volume}%\``, true)
+          embed.addField(`${emoji.msg.raise_volume} Volume`, `${player.volume}%`, true)
         } catch {}
         try {
-          embed.addField(`${player.queueRepeat ? "🔂 Queue Loop: " : "🔁 Song Loop: "}`, `\`${player.queueRepeat ? `\`✔️ Enabled\`` : player.trackRepeat ? `\`✔️ Enabled\`` : `\`❌ Disabled\``}\``, true)
+          embed.addField(`${player.queueRepeat ? `${emoji.msg.repeat_mode} Queue Loop: ` : `${emoji.msg.repeat_mode} Song Loop: `}`, `${player.queueRepeat ? `${emoji.msg.enabled} Enabled` : player.trackRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}`, true)
         } catch {}
         try {
-          embed.addField("⏯ State", `\`${player.playing ? "▶️ Playing Song" : "⏸ Paused Song"}\``, true)
+          embed.addField(`${emoji.msg.pause_resume} State`, `${player.playing ? `${emoji.msg.resume} Playing Song` : `${emoji.msg.pause} Paused Song`}`, true)
         } catch {}
         try {
-          embed.addField("⏳ Progress: ", createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji) + "\n**" + new Date(player.position).toISOString().substr(11, 8) + " / " + (player.queue.current.duration == 0 ? " ◉ LIVE" : new Date(player.queue.current.duration).toISOString().substr(11, 8)) + "**")
+          embed.addField(`${emoji.msg.time} Progress: `, createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji) + "\n**" + new Date(player.position).toISOString().substr(11, 8) + " / " + (player.queue.current.duration == 0 ? " ◉ LIVE" : new Date(player.queue.current.duration).toISOString().substr(11, 8)) + "**")
         } catch {}
         try {
           embed.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({
