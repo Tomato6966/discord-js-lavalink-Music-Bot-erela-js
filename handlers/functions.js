@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const {
   MessageEmbed
 } = require("discord.js");
+const emoji = require("../botconfig/emojis.json");
 const config = require("../botconfig/config.json");
 const ee = require("../botconfig/embed.json");
 const radios = require("../botconfig/radiostations.json");
@@ -19,6 +20,20 @@ module.exports = {
       }
       if (!target) target = message.member;
       return target;
+    }catch (e){
+      console.log(String(e.stack).bgRed)
+    }
+  },
+  shuffle: function(a) {
+    try{
+      var j, x, i;
+      for (i = a.length - 1; i > 0; i--) {
+          j = Math.floor(Math.random() * (i + 1));
+          x = a[i];
+          a[i] = a[j];
+          a[j] = x;
+      }
+      return a;
     }catch (e){
       console.log(String(e.stack).bgRed)
     }
@@ -78,6 +93,8 @@ module.exports = {
     }
   },
   createBar: function(player) {
+    /*  OLD CREATE BAR WAY
+
     try{
       //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji)
       if (!player.queue.current) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
@@ -91,7 +108,49 @@ module.exports = {
       return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
     }catch (e){
       console.log(String(e.stack).bgRed)
+    }*/
+
+    /* NEW WAY */
+    try{
+      if (!player.queue.current) return `**${emoji.msg.progress_bar.leftindicator}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.rightindicator}**\n**00:00:00 / 00:00:00**`;
+      let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
+      let total = player.queue.current.duration;
+      let size = 15;
+      let bar = String(emoji.msg.progress_bar.leftindicator) + String(emoji.msg.progress_bar.filledframe).repeat(Math.round(size * (current / total))) + String(emoji.msg.progress_bar.emptyframe).repeat(size - Math.round(size * (current / total))) + String(emoji.msg.progress_bar.rightindicator);
+      return `**${bar}**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+    }catch (e){
+      console.log(String(e.stack).bgRed)
     }
+
+
+    /* CUSTOM WAY
+    try{
+    // EMOJIS.JSON
+      // "progress_bar": {
+      //  "leftindicator": "<:progressbar_left_filled:818558865268408341>",
+      //  "rightindicator": "<:progressbar_right_filled:818558865540907038>",
+      //
+      //  "emptyframe": "<:progressbar_middle_unfilled:818558865532649503>",
+      //  "filledframe": "<:progressbar_middle_filled:818558865595564062>",
+      //
+      //  "emptybeginning": "<:progressbar_left_filled_hal:818558865628725298>",
+      //  "emptyend": "<:progressbar_right_unfilled:818558865619681300>"
+      // }
+
+      if (!player.queue.current) return `**${emoji.msg.progress_bar.emptybeginning}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.emptyend}**\n**00:00:00 / 00:00:00**`;
+      let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
+      let total = player.queue.current.duration;
+      let size = 15;
+      let rightside = size - Math.round(size * (current / total));
+      let leftside  = Math.round(size * (current / total));
+      let bar;
+      if(leftside < 1 ) bar = String(emoji.msg.progress_bar.emptybeginning) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(emoji.msg.progress_bar.emptyend);
+      else bar = String(emoji.msg.progress_bar.leftindicator) + String(emoji.msg.progress_bar.filledframe).repeat(leftside) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(size - rightside === 1 ? emoji.msg.progress_bar.emptyend : emoji.msg.progress_bar.rightindicator);
+      return `**${bar}**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+    }catch (e){
+      console.log(String(e.stack).bgRed)
+    }
+    */
   },
   format: function(millis) {
     try{
@@ -268,6 +327,9 @@ module.exports = {
         client.premium.ensure(userid, {
           enabled: false,
         })
+        client.queuesaves.ensure(userid, {
+          "TEMPLATEQUEUEINFORMATION" : ["queue", "sadasd"]
+        });
       }
       if(userid && guildid){
         client.userProfiles.ensure(userid, {
@@ -446,9 +508,9 @@ module.exports = {
         const end = page * multiple;
         const start = end - multiple;
         const tracks = queue.slice(start, end);
-        if (queue.current) embed.addField("**0) CURRENT TRACK**", `[${queue.current.title.substr(0, 35)}](${queue.current.uri}) - \`${track.isStream ? "LIVE STREAM" : format(track.duration)}\` - request by: **${queue.current.requester.tag}**`);
+        if (queue.current) embed.addField("**0) CURRENT TRACK**", `[${queue.current.title.substr(0, 35)}](${queue.current.uri}) - \`${track.isStream ? "LIVE STREAM" : format(track.duration)}\`\n*request by: ${queue.current.requester.tag}*`);
         if (!tracks.length) embed.setDescription(`No tracks in ${page > 1 ? `page ${page}` : "the queue"}.`);
-        else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** [${track.title.substr(0, 35)}](${track.uri}) - \`${track.isStream ? "LIVE STREAM" : format(track.duration)}\` - request by: **${track.requester.tag}**`).join("\n"));
+        else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** [${track.title.substr(0, 35)}](${track.uri}) - \`${track.isStream ? "LIVE STREAM" : format(track.duration)}\`\n*request by: ${track.requester.tag}*`).join("\n"));
         embed.setColor(ee.color);
         embed.setFooter(ee.footertext, ee.footericon);
         return embed;
@@ -508,7 +570,7 @@ module.exports = {
         await new Promise((resolve) => {
           setTimeout(() => {
             resolve(2);
-          }, 7.5 * 1000);
+          }, 20 * 1000);
         });
         if (i >= 5) i = 0;
         const curplayer = client.manager.players.get(player.guild);
@@ -547,9 +609,9 @@ module.exports = {
       const end = page * multiple;
       const start = end - multiple;
       const tracks = queue.slice(start, end);
-      if (queue.current) embed.addField("**0) CURRENT TRACK**", `[${queue.current.title.substr(0, 35)}](${queue.current.uri}) - \`${queue.current.isStream ? "LIVE STREAM" : format(queue.current.duration)}\` - request by: **${queue.current.requester.tag}**`);
+      if (queue.current) embed.addField("**0) CURRENT TRACK**", `[${queue.current.title.substr(0, 35)}](${queue.current.uri}) - \`${queue.current.isStream ? "LIVE STREAM" : format(queue.current.duration)}\`\n*request by: ${queue.current.requester.tag}*`);
       if (!tracks.length) embed.setDescription(`No tracks in ${page > 1 ? `page ${page}` : "the queue"}.`);
-      else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** [${track.title.substr(0, 35)}](${track.uri}) - \`${track.isStream ? "LIVE STREAM" : format(track.duration)}\` - request by: **${track.requester.tag}**`).join("\n"));
+      else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** [${track.title.substr(0, 35)}](${track.uri}) - \`${track.isStream ? "LIVE STREAM" : format(track.duration)}\`\n*request by: ${track.requester.tag}*`).join("\n"));
       embed.setColor(ee.color);
       embed.setFooter(ee.footertext, ee.footericon);
       embed;
@@ -638,6 +700,133 @@ module.exports = {
     }catch (e){
       console.log(String(e.stack).bgRed)
     }
+  },
+  swap_pages: async function(client, message, description, TITLE){
+      let currentPage = 0;
+      //GET ALL EMBEDS
+      let embeds = [];
+      //if input is an array
+      if(Array.isArray(description)){
+        try {
+            let k = 15;
+            for (let i = 0; i < description.length; i += 15) {
+                const current = description.slice(i, k);
+                k += 15;
+                const embed = new Discord.MessageEmbed()
+                .setDescription(current)
+                .setTitle(TITLE)
+                .setColor(ee.color)
+                .setFooter(ee.footertext, ee.footericon)
+                embeds.push(embed);
+            }
+            embeds;
+        } catch { }
+      }
+      else{
+        try {
+            let k = 1000;
+            for (let i = 0; i < description.length; i += 1000) {
+                const current = description.slice(i, k);
+                k += 1000;
+                const embed = new Discord.MessageEmbed()
+                .setDescription(current)
+                .setTitle(TITLE)
+                .setColor(ee.color)
+                .setFooter(ee.footertext, ee.footericon)
+                embeds.push(embed);
+            }
+            embeds;
+        } catch { }
+      }
+      if(embeds.length === 1) return message.channel.send(embeds[0])
+      const queueEmbed = await message.channel.send(
+          `**Current Page - ${currentPage + 1}/${embeds.length}**`,
+          embeds[currentPage]
+      );
+      let reactionemojis = ["⬅️", "⏹", "➡️"];
+      try {
+          for(const emoji of reactionemojis)
+          await queueEmbed.react(emoji);
+      } catch { }
+
+      const filter = (reaction, user) =>
+          (reactionemojis.includes(reaction.emoji.name) || reactionemojis.includes(reaction.emoji.name)) && message.author.id === user.id;
+      const collector = queueEmbed.createReactionCollector(filter, { time: 45000 });
+
+      collector.on("collect", async (reaction, user) => {
+          try {
+              if (reaction.emoji.name === reactionemojis[2] || reaction.emoji.id === reactionemojis[2]) {
+                  if (currentPage < embeds.length - 1) {
+                      currentPage++;
+                      queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
+                  }
+                  else {
+                    currentPage = 0
+                    queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
+                  }
+              } else if (reaction.emoji.name === reactionemojis[0] || reaction.emoji.id === reactionemojis[0]) {
+                  if (currentPage !== 0) {
+                      --currentPage;
+                      queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
+                  }
+                  else {
+                    currentPage = embeds.length - 1
+                    queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
+                  }
+              } else {
+                  collector.stop();
+                  reaction.message.reactions.removeAll();
+              }
+              await reaction.users.remove(message.author.id);
+          } catch { }
+      });
+
+  },
+  swap_pages2: async function(client, message, embeds){
+      let currentPage = 0;
+      if(embeds.length === 1) return message.channel.send(embeds[0])
+      queueEmbed = await message.channel.send(
+          `**Current Page - ${currentPage + 1}/${embeds.length}**`,
+          embeds[currentPage]
+      );
+      let reactionemojis = ["⬅️", "⏹", "➡️"];
+      try {
+          for(const emoji of reactionemojis)
+          await queueEmbed.react(emoji);
+      } catch { }
+
+      const filter = (reaction, user) =>
+          (reactionemojis.includes(reaction.emoji.name) || reactionemojis.includes(reaction.emoji.name)) && message.author.id === user.id;
+      const collector = queueEmbed.createReactionCollector(filter, { time: 45000 });
+
+      collector.on("collect", async (reaction, user) => {
+          try {
+              if (reaction.emoji.name === reactionemojis[2] || reaction.emoji.id === reactionemojis[2]) {
+                  if (currentPage < embeds.length - 1) {
+                      currentPage++;
+                      queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
+                  }
+                  else {
+                    currentPage = 0
+                    queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
+                  }
+              } else if (reaction.emoji.name === reactionemojis[0] || reaction.emoji.id === reactionemojis[0]) {
+                  if (currentPage !== 0) {
+                      --currentPage;
+                      queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
+                  }
+                  else {
+                    currentPage = embeds.length - 1
+                    queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
+                  }
+              } else {
+                  collector.stop();
+                  reaction.message.reactions.removeAll();
+              }
+              await reaction.users.remove(message.author.id);
+          } catch { }
+      });
+
   }
 }
 /**

@@ -9,12 +9,13 @@ module.exports = async (client, message) => {
     if(message.author.id === client.user.id) {
       try{
         await delay(4000);
-        if(message && message.channel.messages.cache.get(message.id)) message.delete();
+        if(message) message.delete().catch();
       }catch{ /* */}
     }
     else {
       try{
-        if(message && message.channel.messages.cache.get(message.id)) message.delete();
+        await delay(1000);
+        if(message) message.delete().catch();
       }catch{ /* */}
     }
 
@@ -91,7 +92,7 @@ module.exports = async (client, message) => {
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
           .setTitle("❌ Something went wrong while, running the: `" + command.name + "` command")
-          .setDescription(`\`\`\`${e.stack}\`\`\``)
+          .setDescription(`\`\`\`${e.message}\`\`\``)
         )
       }
     }
