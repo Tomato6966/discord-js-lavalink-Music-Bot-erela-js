@@ -3,55 +3,37 @@ const { MessageEmbed } = require(`discord.js`);
 const config = require(`../../botconfig/config.json`);
 const ee = require(`../../botconfig/embed.json`);
 const emoji = require(`../../botconfig/emojis.json`);
+const songoftheday = require(`../../botconfig/songoftheday.json`);
+const playermanager = require(`../../handlers/playermanager`);
 module.exports = {
-    name: `stop`,
+    name: `playsongoftheday`,
     category: `🎶 Music`,
-    aliases: [`leave`],
-    description: `Stops current track and leaves the channel`,
-    usage: `stop`,
+    aliases: [`psongoftheday`],
+    description: `Plays the Song of the Day`,
+    usage: `playsongoftheday`,
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
-      //get the channel instance from the Member
+      //get the channel instance
       const { channel } = message.member.voice;
-      //if the member is not in a channel, return
+      //if not in a voice Channel return error
       if (!channel)
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
-        );
+          return message.channel.send(new MessageEmbed()
+              .setColor(ee.wrongcolor)
+              .setFooter(ee.footertext, ee.footericon)
+              .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
+          );
       //get the player instance
       const player = client.manager.players.get(message.guild.id);
-      //if no player available return error | aka not playing anything
-      if (!player)
+      //f not in the same channel --> return
+      if(player && channel.id !== player.voiceChannel)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | There is nothing playing`)
-        );
-      //if not in the same channel as the player, return Error
-      if (channel.id !== player.voiceChannel)
-        return message.channel.send(new MessageEmbed()
-          .setFooter(ee.footertext, ee.footericon)
-          .setColor(ee.wrongcolor)
           .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
           .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
         );
-      //if there is no current track error
-      if (!player.queue.current)
-        return message.channel.send(new MessageEmbed()
-          .setFooter(ee.footertext, ee.footericon)
-          .setColor(ee.wrongcolor)
-          .setTitle(`${emoji.msg.ERROR} Error | No song is currently playing in this guild.`)
-        );
-      //stop playing
-      player.destroy();
-      //send success message
-      return message.channel.send(new MessageEmbed()
-        .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
-        .setColor(ee.color)
-        .setFooter(ee.footertext, ee.footericon)
-      );
+      //play the SONG from YOUTUBE
+      playermanager(client, message, Array(songoftheday.track.url), `song:youtube`);
     } catch (e) {
         console.log(String(e.stack).bgRed)
         return message.channel.send(new MessageEmbed()

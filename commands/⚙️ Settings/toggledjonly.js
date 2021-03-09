@@ -1,6 +1,7 @@
 const { MessageEmbed } = require("discord.js");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
+const emoji = require("../../botconfig/emojis.json");
 module.exports = {
     name: "toggledjonly",
     aliases: ["adddjonly", "djonly", "setdjonly", ""],
@@ -17,7 +18,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | Please add a cmd!")
+          .setTitle("${emoji.msg.ERROR} Error | Please add a cmd!")
           .setDescription("Example: `toggledjonly skip`")
         );
 
@@ -38,7 +39,7 @@ module.exports = {
               return message.channel.send(new MessageEmbed()
                 .setColor(ee.color)
                 .setFooter(ee.footertext, ee.footericon)
-                .setTitle(`✅ Success | Set Cmd \`${args[0]}\` to NOT DJ ONLY`)
+                .setTitle(`${emoji.msg.SUCCESS} Success | Set Cmd \`${args[0]}\` to NOT DJ ONLY`)
                 .setDescription(`All Dj-ONLY-CMDS:\n> \`${client.settings.get(message.guild.id, `djonlycmds`).sort(function(a, b){if(a < b) { return -1; }if(a > b) { return 1; }  return 0;}).join("`, `")}\``)
               );
             }catch (e){
@@ -46,7 +47,7 @@ module.exports = {
               return message.channel.send(new MessageEmbed()
                 .setColor(ee.wrongcolor)
                 .setFooter(ee.footertext, ee.footericon)
-                .setTitle("❌ Error | Something went wrong!")
+                .setTitle("${emoji.msg.ERROR} Error | Something went wrong!")
                 .setDescription("```" + e.stack + "```")
               );
             }
@@ -57,7 +58,7 @@ module.exports = {
               return message.channel.send(new MessageEmbed()
                 .setColor(ee.color)
                 .setFooter(ee.footertext, ee.footericon)
-                .setTitle(`✅ Success | Set Cmd \`${args[0]}\` to DJ ONLY`)
+                .setTitle(`${emoji.msg.SUCCESS} Success | Set Cmd \`${args[0]}\` to DJ ONLY`)
                 .setDescription(`All Dj-ONLY-CMDS:\n> \`${client.settings.get(message.guild.id, `djonlycmds`).sort(function(a, b){if(a < b) { return -1; }if(a > b) { return 1; }  return 0;}).join("`, `")}\``)
               );
             }catch (e){
@@ -65,7 +66,7 @@ module.exports = {
               return message.channel.send(new MessageEmbed()
                 .setColor(ee.wrongcolor)
                 .setFooter(ee.footertext, ee.footericon)
-                .setTitle("❌ Error | Something went wrong!")
+                .setTitle("${emoji.msg.ERROR} Error | Something went wrong!")
                 .setDescription("```" + e.stack + "```")
               );
             }
@@ -74,7 +75,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`❌ Error | Could not find Music Command \`${args[0]}\``)
+          .setTitle(`${emoji.msg.ERROR} Error | Could not find Music Command \`${args[0]}\``)
         );
       }
     } catch (e) {
@@ -82,8 +83,8 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
   }

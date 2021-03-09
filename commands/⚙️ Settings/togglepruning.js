@@ -1,6 +1,7 @@
 const { MessageEmbed } = require("discord.js");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
+const emoji = require("../../botconfig/emojis.json");
 module.exports = {
     name: "togglepruning",
     aliases: ["toggleprunning", "pruning", "prunning"],
@@ -16,7 +17,7 @@ module.exports = {
       return message.channel.send(new MessageEmbed()
         .setColor(ee.color)
         .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`✅ Success | ${client.settings.get(message.guild.id, `pruning`) ? `\`✔️ Enabled\`` : `\`❌ Disabled\``} Pruning`)
+        .setTitle(`${emoji.msg.SUCCESS} Success | ${client.settings.get(message.guild.id, `pruning`) ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.ERROR} Disabled`} Pruning`)
         .setDescription(`I will now ${client.settings.get(message.guild.id, `pruning`) ? `` : `not`} send a message with Track Information, if I am on "AFK"`)
       );
     } catch (e) {
@@ -24,8 +25,8 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+            .setDescription(`${e.message}`)
         );
     }
   }

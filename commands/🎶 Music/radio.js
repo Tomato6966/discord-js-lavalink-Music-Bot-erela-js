@@ -1,15 +1,16 @@
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const ee = require("../../botconfig/embed.json");
-const radios = require("../../botconfig/radiostations.json");
-const playermanager = require("../../handlers/playermanager");
-const { stations } = require("../../handlers/functions");
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
+const radios = require(`../../botconfig/radiostations.json`);
+const playermanager = require(`../../handlers/playermanager`);
+const { stations } = require(`../../handlers/functions`);
 module.exports = {
-    name: "radio",
-    category: "🎶 Music",
-    aliases: ["stream"],
-    description: "Plays a defined radiostream",
-    usage: "radio <1-183>",
+    name: `radio`,
+    category: `🎶 Music`,
+    aliases: [`stream`],
+    description: `Plays a defined radiostream`,
+    usage: `radio <1-183>`,
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
       //get the channel instance from the Member
@@ -18,7 +19,7 @@ module.exports = {
       if (!channel)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
-          .setTitle("❌ Error | You need to join a voice channel.")
+          .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
         );
       //get the player instance
       const player = client.manager.players.get(message.guild.id);
@@ -27,7 +28,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setFooter(ee.footertext, ee.footericon)
           .setColor(ee.wrongcolor)
-          .setTitle("❌ Error | You need to be in my voice channel to use this command!")
+          .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
           .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
         );
       //if no args send all stations
@@ -37,7 +38,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(client.user.username, ee.footericon)
-            .setTitle(`❌ Error | Not a valid radio station`)
+            .setTitle(`${emoji.msg.ERROR} Error | Not a valid radio station`)
             .setDescription(`Please use a Number between \`1\` and \`183\``)
           );
       }
@@ -46,7 +47,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(client.user.username, ee.footericon)
-          .setTitle(`❌ Error | Volume Number out of Range`)
+          .setTitle(`${emoji.msg.ERROR} Error | Volume Number out of Range`)
           .setDescription(`Please use a Number between \`1\` and \`150\``)
         );
       //define the volume
@@ -83,28 +84,28 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(client.user.username, ee.footericon)
-          .setTitle(`❌ Error | Radio Station not found`)
+          .setTitle(`${emoji.msg.ERROR} Error | Radio Station not found`)
           .setDescription(`Please use a Station between \`1\` and \`183\``)
         );
       //get song information of it
-      const song = { title: args2[0].replace("-", " "), url: args2[1] };
+      const song = { title: args2[0].replace(`-`, ` `), url: args2[1] };
       //define an embed
       let embed = new MessageEmbed()
         .setColor(ee.color)
         .setFooter(ee.footertext, ee.footericon)
-        .setTitle("Searching: 🔎" + song.title)
+        .setTitle(`Searching: ${emoji.msg.search}` + song.title)
         try{embed.setURL(song.url)}catch{}
       //send the message of the searching
       message.channel.send(embed)
-      //play the radio but make the URL to an array ;) like that: [ "urlhere" ]
-      playermanager(client, message, Array(song.url), "song:radio");
+      //play the radio but make the URL to an array ;) like that: [ `urlhere` ]
+      playermanager(client, message, Array(song.url), `song:radio`);
     } catch (e) {
         console.log(String(e.stack).bgRed)
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
   }

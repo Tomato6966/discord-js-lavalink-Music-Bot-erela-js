@@ -1,12 +1,13 @@
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const ee = require("../../botconfig/embed.json");
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
-    name: "unshuffle",
-    category: "🎶 Music",
-    aliases: ["unmix","oldshuffle","undoshuffle","oldqueue","us"],
-    description: "Unshuffles the Queue - Restores the old Queue",
-    usage: "unshuffle",
+    name: `unshuffle`,
+    category: `🎶 Music`,
+    aliases: [`unmix`,`oldshuffle`,`undoshuffle`,`oldqueue`,`us`],
+    description: `Unshuffles the Queue - Restores the old Queue`,
+    usage: `unshuffle`,
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
       //get the channel instance from the Member
@@ -16,7 +17,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | You need to join a voice channel.")
+          .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
         );
       //get the player instance
       const player = client.manager.players.get(message.guild.id);
@@ -25,32 +26,32 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | There is nothing playing")
+          .setTitle(`${emoji.msg.ERROR} Error | There is nothing playing`)
         );
       //if not in the same channel as the player, return Error
       if (channel.id !== player.voiceChannel)
         return message.channel.send(new MessageEmbed()
           .setFooter(ee.footertext, ee.footericon)
           .setColor(ee.wrongcolor)
-          .setTitle("❌ Error | You need to be in my voice channel to use this command!")
+          .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
           .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
         );
       //if no shuffle happened, return error
-      if(!player.get("beforeshuffle"))
+      if(!player.get(`beforeshuffle`))
         return message.channel.send(new MessageEmbed()
           .setFooter(ee.footertext, ee.footericon)
           .setColor(ee.wrongcolor)
-          .setTitle("❌ Error | You haven't shuffled this Queue yet!")
+          .setTitle(`${emoji.msg.ERROR} Error | You haven't shuffled this Queue yet!`)
           .setDescription(`To shuffle it type: \`${prefix}shuffle\``)
         );
         //clear teh Queue
         player.queue.clear();
         //now add every old song again
-        for(const track of player.get("beforeshuffle"))
+        for(const track of player.get(`beforeshuffle`))
           player.queue.add(track);
       //return success message
       return message.channel.send(new MessageEmbed()
-        .setTitle("✅ Success | 🔀 **Re**shuffled the Queue")
+        .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.shuffle} **Re**shuffled the Queue`)
         .setColor(ee.color)
         .setFooter(ee.footertext, ee.footericon)
       );
@@ -59,8 +60,8 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
   }

@@ -1,6 +1,7 @@
 const { MessageEmbed } = require("discord.js");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
+const emoji = require("../../botconfig/emojis.json");
 module.exports = {
     name: "settings",
     category: "⚙️ Settings",
@@ -38,7 +39,7 @@ module.exports = {
         for(let i = 0; i<config.ownerIDS.length; i++){
           try{
           let user = await client.users.fetch(config.ownerIDS[i]);
-          ownerstringarray += `\`${user.tag}\` /`
+          ownerstringarray += `${user.tag} /`
         }catch{}
         }
 
@@ -50,19 +51,19 @@ module.exports = {
           .setColor(ee.color)
           .setFooter(ee.footertext,ee.footericon)
           .setThumbnail(message.guild.iconURL({dynamic:true}))
-          .addField("🤖 Bot Channels", leftb.substr(0, leftb.length - 3).substr(0, 1024), true)
-          .addField("🎧 DJ Roles", leftd.substr(0, leftb.length - 3).substr(0, 1024), true)
-          .addField("💰 Guild Premium", `${gpremium ? (gpremium.enabled ? `\`✔️ Enabled\`` : `\`❌ Disabled\`\nDm to enable:\n> ${ownerstringarray.substr(0, ownerstringarray.length - 1)}`.substr(0, 1020)) : `\`❌ Disabled\``}`, true)
-          .addField("⚙️ Setup", `VoiceChannel: \`${db.voicechannel != 0 ? message.guild.channels.cache.get(db.voicechannel).name  : "❌ Disabled"}\`\nTextChannel: \`${db.textchannel != 0 ? message.guild.channels.cache.get(db.textchannel).name  : "❌ Disabled"}\``, true)
-          .addField("🎧 DJ-Only-Commands", leftdj.substr(0, leftdj.length - 3).substr(0, 1024), true)
+          .addField(`${emoji.msg.bot} Bot Channels`, leftb.substr(0, leftb.length - 3).substr(0, 1024), true)
+          .addField(`${emoji.msg.dj} DJ Roles`, leftd.substr(0, leftb.length - 3).substr(0, 1024), true)
+          .addField(`${emoji.msg.premium} Guild Premium`, `${gpremium ? (gpremium.enabled ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled\nDm to enable:\n> ${ownerstringarray.substr(0, ownerstringarray.length)}`.substr(0, 1020)) : `${emoji.msg.disabled} Disabled`}`, true)
+          .addField(`${emoji.msg.setup} Setup`, `VoiceChannel: ${db.voicechannel != 0 ? message.guild.channels.cache.get(db.voicechannel).name  : `${emoji.msg.ERROR} Disabled`}\nTextChannel: ${db.textchannel != 0 ? message.guild.channels.cache.get(db.textchannel).name  : `${emoji.msg.disabled} Disabled`}`, true)
+          .addField(`${emoji.msg.dj} DJ-Only-Commands`, leftdj.substr(0, leftdj.length - 3).substr(0, 1024), true)
         )
       } catch (e) {
           console.log(String(e.stack).bgRed)
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
   						.setFooter(ee.footertext, ee.footericon)
-              .setTitle(`❌ ERROR | An error occurred`)
-              .setDescription(`\`\`\`${e.stack}\`\`\``)
+              .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+              .setDescription(`${e.message}`)
           );
       }
     },

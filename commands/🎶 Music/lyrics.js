@@ -1,14 +1,16 @@
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const { KSoftClient } = require("@ksoft/api");
-const ee = require("../../botconfig/embed.json");
-const lyricsFinder = require("lyrics-finder");
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const { KSoftClient } = require(`@ksoft/api`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
+const lyricsFinder = require(`lyrics-finder`);
+const { format, delay, swap_pages } = require(`../../handlers/functions`);
 module.exports = {
-    name: "lyrics",
-    category: "🎶 Music",
-    aliases: ["songlyrics", "ly", "tracklyrics"],
-    description: "Shows The Lyrics of the current track",
-    usage: "lyrics [Songtitle]",
+    name: `lyrics`,
+    category: `🎶 Music`,
+    aliases: [`songlyrics`, `ly`, `tracklyrics`],
+    description: `Shows The Lyrics of the current track`,
+    usage: `lyrics [Songtitle]`,
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
       //get the channel of the member
@@ -18,7 +20,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext,ee.footericon)
-              .setTitle("❌ Error | You need to join a voice channel.")
+              .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
           );
       //get the player
       const player = client.manager.players.get(message.guild.id);
@@ -27,14 +29,14 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
-              .setTitle("❌ Error | There is nothing playing")
+              .setTitle(`${emoji.msg.ERROR} Error | There is nothing playing`)
           );
       //if not in the same channel return error
       if (channel.id !== player.voiceChannel)
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
-              .setTitle(`❌ Error | You need to be in \`${message.guild.channels.cache.get(player.voiceChannel).name}\`!`)
+              .setTitle(`${emoji.msg.ERROR} Error | You need to be in \`${message.guild.channels.cache.get(player.voiceChannel).name}\`!`)
           );
       //get the Song Title
       let title = player.queue.current.title;
@@ -43,12 +45,12 @@ module.exports = {
       //if there are search terms, search for the lyrics
       if (args[0]) {
           //get the new title
-          title = args.join(" ");
+          title = args.join(` `);
           //sending the Embed and deleting it afterwards
           message.channel.send(new MessageEmbed()
               .setColor(ee.color)
               .setFooter(ee.footertext, ee.footericon)
-              .setTitle(`Searching lyrics for: 🔎 \`${title}\``.substr(0, 256))
+              .setTitle(`Searching lyrics for: ${emoji.msg.search} \`${title}\``.substr(0, 256))
           )
       }
       //set the lyrics temp. to null
@@ -66,7 +68,7 @@ module.exports = {
                       return message.channel.send(new MessageEmbed()
                           .setColor(ee.wrongcolor)
                           .setFooter(ee.footertext, ee.footericon)
-                          .setTitle("❌ Error | No Lyrics found for:")
+                          .setTitle(`${emoji.msg.ERROR} Error | No Lyrics found for:`)
                       );
                   //safe the lyrics on the temp. variable
                   lyrics = track.lyrics;
@@ -75,13 +77,13 @@ module.exports = {
           } else {
               try {
                   //get the lyrics
-                  lyrics = await lyricsFinder(title, author ? author : "");
+                  lyrics = await lyricsFinder(title, author ? author : ``);
                   //if no lyrics send and error
                   if (!lyrics)
                   return message.channel.send(new MessageEmbed()
                       .setColor(ee.wrongcolor)
                       .setFooter(ee.footertext, ee.footericon)
-                      .setTitle("❌ Error | No Lyrics found for:")
+                      .setTitle(`${emoji.msg.ERROR} Error | No Lyrics found for:`)
                   );
                   //catch any errors
               } catch (e) {
@@ -90,14 +92,17 @@ module.exports = {
                   return message.channel.send(new MessageEmbed()
                       .setColor(ee.wrongcolor)
                       .setFooter(ee.footertext, ee.footericon)
-                      .setTitle("❌ Error | No Lyrics found for:")
+                      .setTitle(`${emoji.msg.ERROR} Error | No Lyrics found for:`)
                   );
               }
           }
       }
+      //return susccess message
+      return swap_pages(client, message, lyrics, `Lyrics for: ${emoji.msg.lyrics} \`${title}\``.substr(0, 256))
+    /*
       //create the lyrics Embed
       let lyricsEmbed = new MessageEmbed()
-          .setTitle(`Lyrics for: 📃 \`${title}\``.substr(0, 256))
+          .setTitle(`Lyrics for: ${emoji.msg.lyrics} \`${title}\``.substr(0, 256))
           .setDescription(lyrics)
           .setColor(ee.color)
           .setFooter(ee.footertext, ee.footericon);
@@ -106,14 +111,15 @@ module.exports = {
       //loop for the length
       for (let i = 0; i < k.length; i += 2048)
         //send an embed for each embed which is too big
-        message.channel.send(i >= 2048 ? lyricsEmbed.setDescription(k.substr(i,  i + 2048)).setTitle("\u200b"): lyricsEmbed.setDescription(k.substr(i,  i + 2048)))
+        message.channel.send(i >= 2048 ? lyricsEmbed.setDescription(k.substr(i,  i + 2048)).setTitle(`\u200b`): lyricsEmbed.setDescription(k.substr(i,  i + 2048)))
+    */
     } catch (e) {
         console.log(String(e.stack).bgRed)
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
   }

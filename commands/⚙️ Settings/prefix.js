@@ -1,13 +1,14 @@
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const ee = require("../../botconfig/embed.json");
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
-    name: "prefix",
-    aliases: ["prefix"],
-    category: "⚙️ Settings",
-    description: "Let's you change the Prefix of the BOT",
-    usage: "prefix <NEW PREFIX>",
-    memberpermissions: ["ADMINISTRATOR"],
+    name: `prefix`,
+    aliases: [`prefix`],
+    category: `⚙️ Settings`,
+    description: `Let's you change the Prefix of the BOT`,
+    usage: `prefix <NEW PREFIX>`,
+    memberpermissions: [`ADMINISTRATOR`],
     run: async (client, message, args) => {
     try{
     //get the current prefix from the database
@@ -19,7 +20,7 @@ module.exports = {
       return message.channel.send(new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setFooter(ee.footertext, ee.footericon)
-        .setTitle("❌ Error | Please provide a new prefix!")
+        .setTitle(`${emoji.msg.ERROR} Error | Please provide a new prefix!`)
         .setDescription(`Current prefix: \`${prefix}\``)
       );
     //if there are multiple arguments
@@ -27,14 +28,14 @@ module.exports = {
       return message.channel.send(new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setFooter(ee.footertext, ee.footericon)
-        .setTitle("❌ Error | The prefix can\'t have two spaces")
+        .setTitle(`${emoji.msg.ERROR} Error | The prefix can\'t have two spaces`)
       );
     //if the prefix is too long
     if (args[0].length > 5)
       return message.channel.send(new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setFooter(ee.footertext, ee.footericon)
-        .setTitle("❌ Error | The prefix can\'t be Longer then `5`")
+        .setTitle(`${emoji.msg.ERROR} Error | The prefix can\'t be Longer then \`5\``)
       );
     //set the new prefix
     client.settings.set(message.guild.id, args[0], `prefix`);
@@ -42,15 +43,15 @@ module.exports = {
     return message.channel.send(new MessageEmbed()
       .setColor(ee.color)
       .setFooter(ee.footertext, ee.footericon)
-      .setTitle(`✅ Success | Set new prefix to **\`${args[0]}\`**`)
+      .setTitle(`${emoji.msg.SUCCESS} Success | Set new prefix to **\`${args[0]}\`**`)
     );
   } catch (e) {
       console.log(String(e.stack).bgRed)
       return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
 					.setFooter(ee.footertext, ee.footericon)
-          .setTitle(`❌ ERROR | An error occurred`)
-          .setDescription(`\`\`\`${e.stack}\`\`\``)
+          .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+          .setDescription(`\`\`\`${e.message}\`\`\``)
       );
   }
   }

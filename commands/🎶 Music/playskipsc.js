@@ -1,14 +1,15 @@
-const Discord = require("discord.js");
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const ee = require("../../botconfig/embed.json");
-const playermanager = require("../../handlers/playermanager");
+const Discord = require(`discord.js`);
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
+const playermanager = require(`../../handlers/playermanager`);
 module.exports = {
-    name: "playskipsc",
-    category: "🎶 Music",
-    aliases: ["pssc", "playskipsoundcloud"],
-    description: "Plays a song instantly from soundcloud, which means skips current track and plays next song",
-    usage: "playskipsc <Song / URL>",
+    name: `playskipsc`,
+    category: `🎶 Music`,
+    aliases: [`pssc`, `playskipsoundcloud`],
+    description: `Plays a song instantly from soundcloud, which means skips current track and plays next song`,
+    usage: `playskipsc <Song / URL>`,
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
       //get the channel instance
@@ -18,14 +19,14 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
-              .setTitle("❌ Error | You need to join a voice channel.")
+              .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
           );
       //if no args return error
       if (!args[0])
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
-              .setTitle("❌ Error | You need to give me a URL or a Search term.")
+              .setTitle(`${emoji.msg.ERROR} Error | You need to give me a URL or a Search term.`)
           );
       //get the player instance
       const player = client.manager.players.get(message.guild.id);
@@ -34,18 +35,18 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | You need to be in my voice channel to use this command!")
+          .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
           .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
         );
       //play the SONG from YOUTUBE
-      playermanager(client, message, args, "skiptrack:soundcloud");
+      playermanager(client, message, args, `skiptrack:soundcloud`);
     } catch (e) {
         console.log(String(e.stack).bgRed)
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
   }

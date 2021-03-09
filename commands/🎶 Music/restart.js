@@ -1,13 +1,14 @@
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const ee = require("../../botconfig/embed.json");
-const { createBar, format } = require("../../handlers/functions");
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
+const { createBar, format } = require(`../../handlers/functions`);
 module.exports = {
-    name: "restart",
-    category: "🎶 Music",
-    aliases: ["replay"],
-    description: "Restarts the current song",
-    usage: "restart",
+    name: `restart`,
+    category: `🎶 Music`,
+    aliases: [`replay`],
+    description: `Restarts the current song`,
+    usage: `restart`,
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
       //get the channel instance from the Member
@@ -17,7 +18,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | You need to join a voice channel.")
+          .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
         );
       //get the player instance
       const player = client.manager.players.get(message.guild.id);
@@ -26,22 +27,22 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | There is nothing playing")
+          .setTitle(`${emoji.msg.ERROR} Error | There is nothing playing`)
         );
       //if not in the same channel as the player, return Error
       if (channel.id !== player.voiceChannel)
         return message.channel.send(new MessageEmbed()
           .setFooter(ee.footertext, ee.footericon)
           .setColor(ee.wrongcolor)
-          .setTitle("❌ Error | You need to be in my voice channel to use this command!")
+          .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
           .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
         );
       //seek to 0
       player.seek(0);
       //send informational message
       return message.channel.send(new MessageEmbed()
-          .setTitle(`✅ Success | Restarted the current Song!`)
-          .addField("⏳ Progress: ", createBar(player))
+          .setTitle(`${emoji.msg.SUCCESS} Success | Restarted the current Song!`)
+          .addField(`${emoji.msg.time} Progress: `, createBar(player))
           .setColor(ee.color)
           .setFooter(ee.footertext, ee.footericon)
         );
@@ -50,8 +51,8 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
 			        .setFooter(ee.footertext, ee.footericon)
-              .setTitle(`❌ ERROR | An error occurred`)
-              .setDescription(`\`\`\`${e.stack}\`\`\``)
+              .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+              .setDescription(`\`\`\`${e.message}\`\`\``)
           );
       }
     }

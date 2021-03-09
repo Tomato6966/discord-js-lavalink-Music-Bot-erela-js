@@ -1,13 +1,14 @@
-const { MessageEmbed } = require("discord.js");
-const config = require("../../botconfig/config.json");
-const ee = require("../../botconfig/embed.json");
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`../../botconfig/config.json`);
+const ee = require(`../../botconfig/embed.json`);
+const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
-    name: "adddj",
-    aliases: ["adddjrole"],
-    category: "⚙️ Settings",
-    description: "Let's you define a DJ ROLE (as an array, aka you can have multiple)",
-    usage: "adddj @role",
-    memberpermissions: ["ADMINISTRATOR"],
+    name: `adddj`,
+    aliases: [`adddjrole`],
+    category: `⚙️ Settings`,
+    description: `Let's you define a DJ ROLE (as an array, aka you can have multiple)`,
+    usage: `adddj @role`,
+    memberpermissions: [`ADMINISTRATOR`],
     run: async (client, message, args) => {
     try{
       //get the role of the mention
@@ -17,7 +18,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | Please add a Role via ping, @role!")
+          .setTitle(`${emoji.msg.ERROR} Error | Please add a Role via ping, @role!`)
         );
       //try to find the role in the guild just incase he pings a role of a different server
       try {
@@ -26,7 +27,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | It seems that the Role does not exist in this Server!")
+          .setTitle(`${emoji.msg.ERROR} Error | It seems that the Role does not exist in this Server!`)
         );
       }
       //if ther role is already in the Database, return error
@@ -34,22 +35,22 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | This Role is alerady in the List!")
+          .setTitle(`${emoji.msg.ERROR} Error | This Role is alerady in the List!`)
         );
       //push it into the database
       client.settings.push(message.guild.id, role.id, `djroles`);
       //these lines creates a string with all djroles
-      let leftb = "";
-      if(client.settings.get(message.guild.id, `djroles`).join("") === "") leftb = "no Dj Roles, aka All Users are Djs"
+      let leftb = ``;
+      if(client.settings.get(message.guild.id, `djroles`).join(``) === ``) leftb = `no Dj Roles, aka All Users are Djs`
       else
       for(let i = 0; i < client.settings.get(message.guild.id, `djroles`).length; i++){
-        leftb += "<@&" + client.settings.get(message.guild.id, `djroles`)[i] + "> | "
+        leftb += `<@&` + client.settings.get(message.guild.id, `djroles`)[i] + `> | `
       }
 
       return message.channel.send(new MessageEmbed()
         .setColor(ee.color)
         .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`✅ Success | Added the DJ ROLE \`${role.name}\``)
+        .setTitle(`${emoji.msg.SUCCESS} Success | Added the DJ ROLE \`${role.name}\``)
         .setDescription(`All Dj Roles:\n> ${leftb.substr(0, leftb.length - 3)}`)
       );
     } catch (e) {
@@ -57,8 +58,8 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
 						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.stack}\`\`\``)
+            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
   }
