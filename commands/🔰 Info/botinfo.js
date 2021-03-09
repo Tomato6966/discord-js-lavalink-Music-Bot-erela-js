@@ -27,7 +27,7 @@ module.exports = {
               .setTitle("__**Stats:**__")
               .setColor(ee.color)
               .addField("⏳ Memory Usage", `\`${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}/ ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB\``, true)
-              .addField("⌚️ Uptime ", `\`${duration(client.uptime)}\``, true)
+              .addField("⌚️ Uptime ", `${duration(client.uptime)}` true)
               .addField("\u200b", `\u200b`, true)
               .addField("📁 Users", `\`${client.users.cache.size}\``, true)
               .addField("📁 Servers", `\`${client.guilds.cache.size}\``, true)
