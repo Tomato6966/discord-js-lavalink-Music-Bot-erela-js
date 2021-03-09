@@ -28,6 +28,22 @@ module.exports = async (client, message, args, type) => {
       console.log("\n")
     }catch (e){console.log(e) /* */ }
 
+    let { channel } = message.member.voice;
+    const permissions = channel.permissionsFor(client.user);
+
+    if (!permissions.has("CONNECT"))
+      return message.channel.send(new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle("❌ Error | I need permissions to join your channel")
+      );
+    if (!permissions.has("SPEAK"))
+      return message.channel.send(new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle("❌ Error | I need permissions to speak in your channel")
+      );
+
     if(method[0] === "song")
       song(client, message, args, type);
     else if(method[0] === "playlist")
