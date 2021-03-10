@@ -2,26 +2,24 @@
   "msg": {
     "COMMENT": "IF YOU DECIDE TO USE CUSTOM EMOJIS, USE THE NAME AND THE ID IN MSG, EXAMPLE: ⬜ --> <:progressbar_left_filled:818558865268408341>",
 
-    "ERROR" : "<:no:818555970736226354>",
-    "SUCCESS" : "<:yes:818555970653257778>",
+    "ERROR" : "❌",
+    "SUCCESS" : "✅",
 
-    "disabled" : "<:no:818555970736226354>",
-    "enabled" : "<:yes:818555970653257778>",
+    "disabled" : "❌",
+    "enabled" : "✅",
 
     "progress_bar": {
-      "leftindicator": "<:progressbar_left_filled:818558865268408341>",
-      "rightindicator": "<:progressbar_right_filled:818558865540907038>",
+      "leftindicator": "[",
+      "rightindicator": "]",
 
-      "emptyframe": "<:progressbar_middle_unfilled:818558865532649503>",
-      "filledframe": "<:progressbar_middle_filled:818558865595564062>",
-
-      "emptybeginning": "<:progressbar_left_filled_hal:818558865628725298>",
-      "emptyend": "<:progressbar_right_unfilled:818558865619681300>"
+      "emptyframe": "⬜",
+      "filledframe": "🟧"
     },
 
-    "playing": "<:playing:818555972058349568>",
+    "playing": "🎶",
     "pruning": "💬",
     "equalizer": "🎚",
+    "cleared": "🗑",
     "leave_on_empty": "🗣️",
     "time": "⌛",
     "premium": "💰",
@@ -36,44 +34,45 @@
     "disk": "📀",
     "ping": "🏓",
 
-    "rewind": "<:rewind_20_sec:818555972187717632>",
-    "forward": "<:forward_20_sec:818555972061757501>",
-    "pause_resume": "<:pause_resume:818555971902242928>",
-    "stop": "<:stop:818555972317741106>",
-    "previous_track": "<:previous_track:818555972016144385>",
-    "skip_track": "<:skip_track:818555972146561115>",
-    "replay_track": "<:replay_track:818555971818750054>",
-    "reduce_volume": "<:volume_down:818555972183916684>",
-    "raise_volume": "<:volume_up:818555972233592842>",
-    "toggle_mute": "<:mute_unmute_volume:818555972321542194>",
-    "repeat_mode": "<:repeat_mode:818555972171071508>",
-    "autoplay_mode": "<:autoplay:818555972225335356>",
-    "shuffle": "<:shuffle_queue:818555972095311903>",
-    "show_queue": "<:queue_info:818555972040654919>",
-    "show_current_track": "<:nowplaying:818555972209082408>"
+    "rewind": "⏪",
+    "forward": "⏩",
+    "pause_resume": "⏯️",
+    "stop": "⏹️",
+    "previous_track": "⏮️",
+    "skip_track": "⏭️",
+    "replay_track": "🔃",
+    "reduce_volume": "🔉",
+    "raise_volume": "🔊",
+    "toggle_mute": "🔇",
+    "repeat_mode": "🔄",
+    "autoplay_mode": "♾",
+    "shuffle": "🔀",
+    "show_queue": "📑",
+    "show_current_track": "🩸"
   },
   "react": {
 
     "COMMENT": "IF YOU DECIDE TO USE CUSTOM EMOJIS, USE JUST THE ID IN REACT, EXAMPLE: ⏪ --> 818558865268408341",
 
-    "ERROR" : "818555970736226354",
-    "SUCCESS" : "818555970653257778",
+    "ERROR" : "❌",
+    "SUCCESS" : "✅",
 
-    "rewind": "818555972187717632",
-    "forward": "818555972061757501",
-    "pause_resume": "818555971902242928",
-    "stop": "818555972317741106",
-    "previous_track": "818555972016144385",
-    "skip_track": "818555972146561115",
-    "replay_track": "818555971818750054",
-    "reduce_volume": "818555972183916684",
-    "raise_volume": "818555972233592842",
-    "toggle_mute": "818555972321542194",
-    "repeat_mode": "818555972171071508",
-    "autoplay_mode": "818555972225335356",
-    "shuffle": "818555972095311903",
-    "show_queue": "818555972040654919",
-    "show_current_track": "818555972209082408"
+
+    "rewind": "⏪",
+    "forward": "⏩",
+    "pause_resume": "⏯️",
+    "stop": "⏹️",
+    "previous_track": "⏮️",
+    "skip_track": "⏭️",
+    "replay_track": "🔃",
+    "reduce_volume": "🔉",
+    "raise_volume": "🔊",
+    "toggle_mute": "🔇",
+    "repeat_mode": "🔄",
+    "autoplay_mode": "♾",
+    "shuffle": "🔀",
+    "show_queue": "📑",
+    "show_current_track": "🩸"
   }
 
 }
