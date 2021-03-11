@@ -40,8 +40,8 @@ module.exports = {
       return message.channel.send(new MessageEmbed()
         .setColor(ee.color)
         .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${emoji.msg.SUCCESS} Success | Resetted the Equalizer*`)
-        .addField(`${emoji.msg.equalizer} Equalizer: `, `\`${emoji.msg.ERROR} Nothing\``)
+        .setTitle(`${emoji.msg.SUCCESS} Success | Resetted the Equalizer`)
+        .addField(`${emoji.msg.equalizer} Equalizer: `, `${emoji.msg.ERROR} Nothing`)
         .setDescription(`Note: *It might take up to 5 seconds until you hear the new Equalizer*`)
       );
     } catch (e) {

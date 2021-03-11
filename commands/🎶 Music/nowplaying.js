@@ -47,7 +47,7 @@ module.exports = {
       //Send Now playing Message
       return message.channel.send(new MessageEmbed()
           .setAuthor(`Current song playing:`, message.author.displayAvatarURL({ dynamic: true }))
-          .setThumbnail(player.queue.current.displayThumbnail(1))
+          .setThumbnail(`https://img.youtube.com/vi/${player.queue.current.identifier}/hqdefault.jpg`)
           .setURL(player.queue.current.uri)
           .setColor(ee.color)
           .setFooter(ee.footertext, ee.footericon)

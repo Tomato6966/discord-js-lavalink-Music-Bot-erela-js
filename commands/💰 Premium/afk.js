@@ -40,6 +40,7 @@ module.exports = {
           .setTitle(`${emoji.msg.ERROR}  Error | You need to be in my voice channel to use this command!`)
           .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
         );
+
       //get the database information for the GUILD
       let gpremium = client.premium.get(message.guild.id);
       //get the database information for the USER
@@ -89,7 +90,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.color)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`💰 Successfully ${player.get(`afk-${message.guild.id}`) ? `✅ Enabled` : `${emoji.msg.ERROR}  Disabled`} 24/7`)
+          .setTitle(`${emoji.msg.premium} Successfully ${player.get(`afk-${message.guild.id}`) ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled}  Disabled`} 24/7`)
           .setDescription(`For the Guild: \`${message.guild.name}\``)
         );
       }
@@ -117,7 +118,7 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.color)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`💰 Successfully ${player.get(`afk-${player.get(`playerauthor`)}`) ? `✅ Enabled` : `${emoji.msg.ERROR}  Disabled`} 24/7`)
+          .setTitle(`${emoji.msg.premium} Successfully ${player.get(`afk-${player.get(`playerauthor`)}`) ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled}  Disabled`} 24/7`)
           .setDescription(`For the Player: \`${message.author.tag}\``)
         );
       }

@@ -68,7 +68,8 @@ module.exports = {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.color)
           .setFooter(ee.footertext, ee.footericon)
-          .setAuthor(`${emoji.msg.SUCCESS} Success | Warned ${warnmember.user.tag}`, warnmember.user.displayAvatarURL({dynamic:true}))
+          .setTitle(`${emoji.msg.SUCCESS} Success | Warned ${warnmember.user.tag}`)
+          .setThumbnail(warnmember.user.displayAvatarURL({dynamic:true}))
           .setDescription(`**He now has: ${warnIDs.length} Warnings**\n\nReason:\n> ${reason}`.substr(0, 2048))
         );
       } catch (e) {

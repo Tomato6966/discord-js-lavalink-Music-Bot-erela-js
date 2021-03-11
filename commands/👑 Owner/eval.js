@@ -45,7 +45,7 @@ module.exports = {
         //For every description send a new embed
         splitDescription.forEach(async (m) => {
           //(over)write embed description
-          evalEmbed.setDescription(````` + m + `````);
+          evalEmbed.setDescription(`\`\`\`` + m + `\`\`\``);
           //send embed
           message.channel.send(evalEmbed);
         });

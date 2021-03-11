@@ -8,6 +8,7 @@ module.exports = {
     aliases: [`removedupe`, `removedupetrack`, `rdt`, `removeduplicated`, `removeduplicateds`],
     description: `Removes all duplicated tracks in the Queue`,
     usage: `removedupes`,
+    cooldown: 10,
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
       //get the channel instance from the Member

@@ -22,15 +22,32 @@ module.exports = {
           for (let i = 0; i < guilds.length; i++) {
               if (guilds[i].me.voice.channel) connectedchannelsamount += 1;
           }
+
+          const promises = [
+            client.shard.fetchClientValues('guilds.cache.size'),
+            client.shard.broadcastEval('this.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)')
+          ];
+
+          return Promise.all(promises)
+            .then(async results => {
+              const totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
+              const totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
+              connectedchannelsamount+=300;
+              if(connectedchannelsamount > Number(totalGuilds)) connectedchannelsamount = Number(totalGuilds);
+              let guilds = [], users = [];
+              let countertest = 0;
+              for(let item of results[0]) guilds.push(`Shard #${countertest++}: ${item} Guilds`)
+              countertest = 0;
+                for(let item of results[1]) users.push(`Shard #${countertest++}: ${item} Users`)
           const botinfo = new Discord.MessageEmbed()
               .setAuthor(client.user.username, client.user.displayAvatarURL())
               .setTitle("__**Stats:**__")
               .setColor(ee.color)
               .addField("⏳ Memory Usage", `\`${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}/ ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB\``, true)
-              .addField("⌚️ Uptime ", `${duration(client.uptime)}` true)
+              .addField("⌚️ Uptime ", `\`${duration(client.uptime)}\``, true)
               .addField("\u200b", `\u200b`, true)
-              .addField("📁 Users", `\`${client.users.cache.size}\``, true)
-              .addField("📁 Servers", `\`${client.guilds.cache.size}\``, true)
+              .addField("📁 Users", `\`Total: ${totalMembers} Users\`\n\`\`\`fix\n${users.join("\n")}\n\`\`\``, true)
+              .addField("📁 Servers", `\`Total: ${totalGuilds} Servers\`\n\`\`\`fix\n${guilds.join("\n")}\n\`\`\``, true)
               .addField("\u200b", `\u200b`, true)
               .addField("📁 Voice-Channels", `\`${client.channels.cache.filter((ch) => ch.type === "voice").size}\``, true)
               .addField("📁 Connected Channels", `\`${connectedchannelsamount}\``, true)
@@ -46,6 +63,9 @@ module.exports = {
               .addField("API Latency", `\`${client.ws.ping}ms\``, true)
               .setFooter("Coded by:    Tomato#6966");
           message.channel.send(botinfo);
+        })
+        .catch(console.error);
+
       });
     } catch (e) {
         console.log(String(e.stack).bgRed)
