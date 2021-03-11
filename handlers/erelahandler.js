@@ -5,7 +5,6 @@ const { Manager } = require("erela.js"),
 
   Spotify = require("erela.js-spotify"),
   Deezer  = require("erela.js-deezer"),
-  Facebook = require("erela.js-facebook"),
 
   config = require("../botconfig/config.json"),
   emoji = require("../botconfig/emojis.json"),
@@ -25,7 +24,6 @@ module.exports = (client) => {
         client.manager = new Manager({
             nodes: config.clientsettings.nodes,
             plugins: [
-            new Facebook(),
             new Deezer({
               playlistLimit: 50,
               albumLimit: 50
@@ -47,7 +45,6 @@ module.exports = (client) => {
                 playlistLimit: 50,
                 albumLimit: 50
             }),
-            new Facebook(),
             new Deezer({
               playlistLimit: 50,
               albumLimit: 50
