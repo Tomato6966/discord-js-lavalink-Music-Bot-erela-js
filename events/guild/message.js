@@ -32,6 +32,8 @@ module.exports = async (client, message) => {
     if (!prefixRegex.test(message.content)) return;
     //now define the right prefix either ping or not ping
     const [, matchedPrefix] = message.content.match(prefixRegex);
+
+    let not_allowed = false;
     //CHECK IF IN A BOT CHANNEL OR NOT
     if(client.settings.get(message.guild.id, `botchannel`).toString() !== ""){
         //if its not in a BotChannel, and user not an ADMINISTRATOR
@@ -42,16 +44,16 @@ module.exports = async (client, message) => {
                 leftb  +="<#" +client.settings.get(message.guild.id, `botchannel`)[i] + "> / "
             }
             //send informational message
-            try{ message.react("❌"); }catch{}
+            try{ message.react("❌").catch(e => console.log("couldn't react this is a catch to prevent a crash".grey)); }catch{}
+            not_allowed = true;
             return message.channel.send(new Discord.MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
               .setTitle(`❌ Error | Not in the Bot Chat!`)
               .setDescription(`There is a Bot chat setup in this GUILD! try using the Bot Commands here:\n> ${leftb.substr(0, leftb.length - 3)}`)
-            ).then(async msg => {
+            ).then(msg => {
               try{
-                await delay(5000)
-                if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+               msg.delete({timeout: 5000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
               }catch{ /* */ }
             });
         }
@@ -62,6 +64,7 @@ module.exports = async (client, message) => {
     const cmd = args.shift().toLowerCase();
     //if no cmd added return error
     if (cmd.length === 0){
+      not_allowed = true;
       if(matchedPrefix.includes(client.user.id))
         return message.channel.send(new Discord.MessageEmbed()
           .setColor(ee.color)
@@ -82,12 +85,13 @@ module.exports = async (client, message) => {
         }
         const now = Date.now(); //get the current time
         const timestamps = client.cooldowns.get(command.name); //get the timestamp of the last used commands
-        const cooldownAmount = (command.cooldown || 1) * 1000; //get the cooldownamount of the command, if there is no cooldown there will be automatically 1 sec cooldown, so you cannot spam it^^
+        const cooldownAmount = (command.cooldown || 3) * 1000; //get the cooldownamount of the command, if there is no cooldown there will be automatically 1 sec cooldown, so you cannot spam it^^
         if (timestamps.has(message.author.id)) { //if the user is on cooldown
           const expirationTime = timestamps.get(message.author.id) + cooldownAmount; //get the amount of time he needs to wait until he can run the cmd again
           if (now < expirationTime) { //if he is still on cooldonw
             const timeLeft = (expirationTime - now) / 1000; //get the lefttime
-            try{ message.react("❌"); }catch{}
+            try{ message.react("❌").catch(e => console.log("couldn't react this is a catch to prevent a crash".grey)); }catch{}
+            not_allowed = true;
             return message.channel.send(new Discord.MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext,ee.footericon)
@@ -104,16 +108,16 @@ module.exports = async (client, message) => {
         //if Command has specific permission return error
         if(command.memberpermissions) {
           if (!message.member.hasPermission(command.memberpermissions)) {
-            try{ message.react("❌"); }catch{}
+            try{ message.react("❌").catch(e => console.log("couldn't react this is a catch to prevent a crash".grey)); }catch{}
+            not_allowed = true;
             message.channel.send(new Discord.MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
               .setTitle("❌ Error | You are not allowed to run this command!")
               .setDescription(`You need these Permissions: \`${command.memberpermissions.join("`, ``")}\``)
-            ).then(async msg => {
+            ).then(msg => {
               try{
-                await delay(5000)
-                if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                 msg.delete({timeout: 5000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
               }catch{ /* */ }
             });
             }
@@ -139,16 +143,16 @@ module.exports = async (client, message) => {
 
               if(!isdj && !message.member.hasPermission("ADMINISTRATOR")) {
                 if(player && player.queue.current.requester.id !== message.author.id) {
-                  try{ message.react("❌"); }catch{}
+                  try{ message.react("❌").catch(e => console.log("couldn't react this is a catch to prevent a crash".grey)); }catch{}
+                  not_allowed = true;
                    return message.channel.send(new Discord.MessageEmbed()
                     .setColor(ee.wrongcolor)
                     .setFooter(ee.footertext, ee.footericon)
                     .setTitle("❌ Error | You are not allowed to run this command!")
                     .setDescription(`You need to have one of those Roles:\n${leftb.substr(0, leftb.length-3)}\n\nOr be the Requester (${player.queue.current.requester}) of the current Track!`)
-                  ).then(async msg => {
+                  ).then(msg => {
                     try{
-                      await delay(5000)
-                      if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+                       msg.delete({timeout: 5000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
                     }catch{ /* */ }
                   });
                 }
@@ -160,7 +164,8 @@ module.exports = async (client, message) => {
           (command.category.toLowerCase().includes("music") || command.category.toLowerCase().includes("filter")) &&
            client.setups.get(message.guild.id, "textchannel") !== message.channel.id &&
            client.settings.get(message.guild.id, `requestonly`)){
-             try{ message.react("❌"); }catch{}
+             try{ message.react("❌").catch(e => console.log("couldn't react this is a catch to prevent a crash".grey)); }catch{}
+             not_allowed = true;
               return message.channel.send(new Discord.MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
@@ -175,7 +180,8 @@ module.exports = async (client, message) => {
           let required_perms = ["KICK_MEMBERS","BAN_MEMBERS","MANAGE_CHANNELS","ADD_REACTIONS","VIEW_CHANNEL","SEND_MESSAGES","MANAGE_MESSAGES"
           ,"EMBED_LINKS", "ATTACH_FILES","CONNECT","SPEAK", "MANAGE_ROLES"]
           if(!message.guild.me.hasPermission(required_perms)){
-            try{ message.react("❌"); }catch{}
+            try{ message.react("❌").catch(e => console.log("couldn't react this is a catch to prevent a crash".grey)); }catch{}
+            not_allowed = true;
             return message.channel.send(new Discord.MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
@@ -185,12 +191,13 @@ module.exports = async (client, message) => {
           }
         }
         //try to delete the message of the user who ran the cmd
-          //try{  message.delete(); }catch{}
+          //try{  message.delete().catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey)); }catch{}
 
         //react with an random emoji, ... "random"
           //let emojis = ["👌", "👌", "👌", "👍", "👍", "✅", "✅", "✅", "✌", "🎧", "❤", "✨"]
           //try{ message.react(emojis[getRandomInt(emojis.length)]); }catch{}
         //run the command with the parameters:  client, message, args, user, text, prefix,
+        if(not_allowed) return;
         command.run(client, message, args, message.member, args.join(" "), prefix);
       }catch (e) {
         console.log(String(e.stack).red)
@@ -199,10 +206,9 @@ module.exports = async (client, message) => {
           .setFooter(ee.footertext, ee.footericon)
           .setTitle("❌ Something went wrong while, running the: `" + command.name + "` command")
           .setDescription(`\`\`\`${e.message}\`\`\``)
-        ).then(async msg => {
+        ).then(msg => {
           try{
-            await delay(5000)
-            if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+             msg.delete({timeout: 5000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey))
           }catch{ /* */ }
         });
       }
@@ -213,10 +219,9 @@ module.exports = async (client, message) => {
       .setFooter(ee.footertext, ee.footericon)
       .setTitle(`❌ Unkown command, try: **\`${prefix}help\`**`)
       .setDescription(`The prefix for this Guild is: \`${prefix}\`\nYou can also ping me, instead of using a Prefix!\n\nTo play Music simply type \`${prefix}play <Title / Url>\`\n\nTo create a unique Requesting Setup type \`${prefix}setup\``)
-    ).then(async msg => {
+    ).then(msg => {
       try{
-        await delay(5000)
-        if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
+       msg.delete({timeout: 5000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
       }catch{ /* */ }
     });
   }catch (e){

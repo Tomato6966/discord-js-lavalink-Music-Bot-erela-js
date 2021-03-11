@@ -110,7 +110,7 @@ module.exports = {
       console.log(String(e.stack).bgRed)
     }*/
 
-    /* NEW WAY
+    /* NEW WAY*/
     try{
       if (!player.queue.current) return `**${emoji.msg.progress_bar.leftindicator}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.rightindicator}**\n**00:00:00 / 00:00:00**`;
       let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
@@ -122,8 +122,8 @@ module.exports = {
       console.log(String(e.stack).bgRed)
     }
 
-  */
-    /* CUSTOM WAY */
+
+    /* CUSTOM WAY
     try{
     // EMOJIS.JSON
       // "progress_bar": {
@@ -150,6 +150,7 @@ module.exports = {
     }catch (e){
       console.log(String(e.stack).bgRed)
     }
+    */
 
   },
   format: function(millis) {
@@ -392,12 +393,11 @@ module.exports = {
                 try {
                   client.channels.cache
                     .get(player.textChannel)
-                    .messages.fetch(player.get("playermessage")).then(async msg => {
-                      try{
-                        await delay(7500)
-                        if(msg && message.channel.messages.cache.get(msg.id)) msg.delete();
-                      }catch{ /* */ }
-                    });
+                    .messages.fetch(player.get("playermessage")).then(msg => {
+                    try{
+                     msg.delete({timeout: 7500}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
+                    }catch{ /* */ }
+                  });
                 } catch (e) {
                   console.log(String(e.stack).yellow);
                 }
@@ -469,7 +469,7 @@ module.exports = {
           embed.setColor(ee.color)
         } catch {}
         try {
-          embed.setThumbnail(track.displayThumbnail(1))
+          embed.setThumbnail(`https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`)
         } catch {}
         try {
           embed.addField("⌛️ Duration: ", `${track.isStream ? "LIVE STREAM" : format(track.duration)}`, true)
@@ -508,9 +508,9 @@ module.exports = {
         const end = page * multiple;
         const start = end - multiple;
         const tracks = queue.slice(start, end);
-        if (queue.current) embed.addField("**0) CURRENT TRACK**", `[${queue.current.title.substr(0, 35)}](${queue.current.uri}) - ${track.isStream ? "LIVE STREAM" : format(track.duration)}\n*request by: ${queue.current.requester.tag}*`);
+        if (queue.current) embed.addField("**0) CURRENT TRACK**", `**${queue.current.title.substr(0, 60)}** - ${track.isStream ? "LIVE STREAM" : format(track.duration)}\n*request by: ${queue.current.requester.tag}*`);
         if (!tracks.length) embed.setDescription(`No tracks in ${page > 1 ? `page ${page}` : "the queue"}.`);
-        else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** [${track.title.substr(0, 35)}](${track.uri}) - ${track.isStream ? "LIVE STREAM" : format(track.duration)}\n*request by: ${track.requester.tag}*`).join("\n"));
+        else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** **${track.title.substr(0, 60)}** - ${track.isStream ? "LIVE STREAM" : format(track.duration)}\n*request by: ${track.requester.tag}*`).join("\n"));
         embed.setColor(ee.color);
         embed.setFooter(ee.footertext, ee.footericon);
         return embed;
@@ -672,9 +672,9 @@ module.exports = {
       const end = page * multiple;
       const start = end - multiple;
       const tracks = queue.slice(start, end);
-      if (queue.current) embed.addField("**0) CURRENT TRACK**", `[${queue.current.title.substr(0, 35)}](${queue.current.uri}) - ${queue.current.isStream ? "LIVE STREAM" : format(queue.current.duration)}\n*request by: ${queue.current.requester.tag}*`);
+      if (queue.current) embed.addField("**0) CURRENT TRACK**", `**${queue.current.title.substr(0, 60)}** - ${queue.current.isStream ? "LIVE STREAM" : format(queue.current.duration)}\n*request by: ${queue.current.requester.tag}*`);
       if (!tracks.length) embed.setDescription(`No tracks in ${page > 1 ? `page ${page}` : "the queue"}.`);
-      else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** [${track.title.substr(0, 35)}](${track.uri}) - ${track.isStream ? "LIVE STREAM" : format(track.duration)}\n*request by: ${track.requester.tag}*`).join("\n"));
+      else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** **${track.title.substr(0, 60)}** - ${track.isStream ? "LIVE STREAM" : format(track.duration)}\n*request by: ${track.requester.tag}*`).join("\n"));
       embed.setColor(ee.color);
       embed.setFooter(ee.footertext, ee.footericon);
       embed;
@@ -693,7 +693,7 @@ module.exports = {
           embed.setColor(ee.color)
         } catch {}
         try {
-          embed.setThumbnail(track.displayThumbnail(1))
+          embed.setThumbnail(`https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`)
         } catch {}
         try {
           embed.addField(`${emoji.msg.time} Duration: `, `${track.isStream ? "LIVE STREAM" : format(track.duration)}`, true)

@@ -2,15 +2,16 @@ const { MessageEmbed } = require(`discord.js`);
 const config = require(`../../botconfig/config.json`);
 const ee = require(`../../botconfig/embed.json`);
 const emoji = require(`../../botconfig/emojis.json`);
+const { TrackUtils } = require("erela.js");
 const { format, delay, swap_pages, swap_pages2, shuffle } = require(`../../handlers/functions`);
 module.exports = {
     name: `savedqueue`,
     category: `⚜️ Custom Queue(s)`,
     aliases: [`savequeue`, `customqueue`, `savedqueue`],
     description: `Saves the Current Queue onto a Name`,
-    usage: `savedqueue <Type> <Name> [Options]\`
-**Types**: \`create\`, \`addcurrenttrack\`, \`addcurrentqueue\`, \`removetrack\`, \`removedupes\`, \`showall\`, \`showdetails\`, \`createsave\`, \`delete\`, \`play\`, \`shuffle\`
-**Name**: \`Can be anything with maximum of 10 Letters\`
+    usage: `savedqueue <Type> <Name> [Options]\`\n
+**Types**: \`create\`, \`addcurrenttrack\`, \`addcurrentqueue\`, \`removetrack\`, \`removedupes\`, \`showall\`, \`showdetails\`, \`createsave\`, \`delete\`, \`play\`, \`shuffle\`\n
+**Name**: \`Can be anything with maximum of 10 Letters\`\n
 **Options**: \`pick the track which you want to remove`,
 
     run: async (client, message, args, cmduser, text, prefix) => {
@@ -504,8 +505,20 @@ module.exports = {
           .setDescription(`It might take around about \`${Math.ceil(client.queuesaves.get(message.author.id, `${Name}`).length / 2)} Seconds\``))
           for(const track of client.queuesaves.get(message.author.id, `${Name}`))
           {
-            let res;
-            try {
+            try{
+              // Advanced way using the title, author, and duration for a precise search.
+              const unresolvedTrack = TrackUtils.buildUnresolved({
+                title: track.title,
+                url: track.url,
+              }, message.author);
+              player.queue.add(unresolvedTrack);
+            } catch (e) {
+                console.log(String(e.stack).red)
+                continue;
+            }
+              let res;
+            /* old way, --> slow way!
+             try {
                 // Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
                 if(track.url.toLowerCase().includes(`youtu`))
                 res = await client.manager.search({query: track.url, source: `youtube`}, message.author);
@@ -517,24 +530,23 @@ module.exports = {
                 // Check the load type as this command is not that advanced for basics
                 if (res.loadType === `LOAD_FAILED`) continue;
                 else if (res.loadType === `PLAYLIST_LOADED`) continue;
+                if(!res.tracks[0]) continue;
+
+                player.queue.add(res.tracks[0]);
             } catch (e) {
                 console.log(String(e.stack).red)
                 continue;
             }
-            if(!res.tracks[0]) continue;
 
-            player.queue.add(res.tracks[0]);
+            */
           }
-
-          //return susccess message
-          message.channel.send(new MessageEmbed()
+          //return susccess message - by editing the old temp msg
+          tempmsg.edit(new MessageEmbed()
             .setTitle(`${emoji.msg.SUCCESS} Success | Loaded ${client.queuesaves.get(message.author.id, `${Name}`).length} Tracks onto the current Queue`)
             .setColor(ee.color)
             .setFooter(ee.footertext, ee.footericon)
           )
-          tempmsg.delete();
           if(playercreate) player.play();
-
         }
         break;
         case `showdetails`: case `showdetail`: case `details`:{

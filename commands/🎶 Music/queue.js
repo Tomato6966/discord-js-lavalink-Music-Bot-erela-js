@@ -44,7 +44,7 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
           .setAuthor(`Queue for ${message.guild.name}  -  [ ${player.queue.length} Tracks ]`, message.guild.iconURL({dynamic:true}))
           .setFooter(ee.footertext, ee.footericon)
-          .setColor(ee.color).addField(`**0) CURRENT TRACK**`, `[${player.queue.current.title.substr(0, 35)}](${player.queue.current.uri}) - \`${player.queue.current.isStream ? `LIVE STREAM` : format(player.queue.current.duration).split(` | `)[0]}\`\n*request by: ${player.queue.current.requester.tag}*`)
+          .setColor(ee.color).addField(`**0) CURRENT TRACK**`, `**${player.queue.current.title.substr(0, 60)}** - \`${player.queue.current.isStream ? `LIVE STREAM` : format(player.queue.current.duration).split(` | `)[0]}\`\n*request by: ${player.queue.current.requester.tag}*`)
           .setDescription(`${emoji.msg.ERROR} No tracks in the queue`)
         ).then(async msg => {
             try{
@@ -57,8 +57,8 @@ module.exports = {
           return message.channel.send(new MessageEmbed()
             .setAuthor(`Queue for ${message.guild.name}  -  [ ${player.queue.length} Tracks ]`, message.guild.iconURL({dynamic:true}))
             .setFooter(ee.footertext, ee.footericon)
-            .addField(`**0) CURRENT TRACK**`, `[${player.queue.current.title.substr(0, 35)}](${player.queue.current.uri}) - \`${player.queue.current.isStream ? `LIVE STREAM` : format(player.queue.current.duration).split(` | `)[0]}\`\n*request by: ${player.queue.current.requester.tag}*`)
-            .setColor(ee.color).setDescription(tracks.map((track, i) => `**${++i})** [${track.title.substr(0, 35)}](${track.uri}) - \`${track.isStream ? `LIVE STREAM` : format(track.duration).split(` | `)[0]}\`\n**requested by: ${track.requester.tag}**`).join(`\n`))
+            .addField(`**0) CURRENT TRACK**`, `**${player.queue.current.title.substr(0, 60)}** - \`${player.queue.current.isStream ? `LIVE STREAM` : format(player.queue.current.duration).split(` | `)[0]}\`\n*request by: ${player.queue.current.requester.tag}*`)
+            .setColor(ee.color).setDescription(tracks.map((track, i) => `**${++i})** **${track.title.substr(0, 60)}** - \`${track.isStream ? `LIVE STREAM` : format(track.duration).split(` | `)[0]}\`\n**requested by: ${track.requester.tag}**`).join(`\n`))
           ).then(async msg => {
             try{
               await delay(5000)
@@ -79,7 +79,7 @@ module.exports = {
           .setAuthor(`Queue for ${message.guild.name}  -  [ ${player.queue.length} Tracks ]`, message.guild.iconURL({dynamic:true}))
           .setFooter(ee.footertext, ee.footericon)
           .setColor(ee.color)
-          .addField(`**0) CURRENT TRACK**`, `[${player.queue.current.title.substr(0, 35)}](${player.queue.current.uri}) - \`${player.queue.current.isStream ? `LIVE STREAM` : format(player.queue.current.duration).split(` | `)[0]}\`\n*request by: ${player.queue.current.requester.tag}*`)
+          .addField(`**0) CURRENT TRACK**`, `**${player.queue.current.title.substr(0, 60)}** - \`${player.queue.current.isStream ? `LIVE STREAM` : format(player.queue.current.duration).split(` | `)[0]}\`\n*request by: ${player.queue.current.requester.tag}*`)
           .setDescription(desc))
           ;
         }

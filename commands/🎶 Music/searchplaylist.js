@@ -13,6 +13,7 @@ module.exports = {
     aliases: [`searchpl`],
     description: `Searches a playlist from youtube`,
     usage: `searchplaylist <Name / URL>`,
+    cooldown: 10,
     run: async (client, message, args, cmduser, text, prefix) => {
       try{
         /*const {

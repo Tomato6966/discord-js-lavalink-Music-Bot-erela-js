@@ -8,6 +8,7 @@ module.exports = {
     aliases: [`clearqu`],
     description: `Cleares the Queue`,
     usage: `clearqueue`,
+    cooldown: 10,
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
       //get the channel instance from the Member

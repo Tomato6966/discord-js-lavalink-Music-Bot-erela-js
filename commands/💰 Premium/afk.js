@@ -25,13 +25,6 @@ module.exports = {
           );
       //get the player instance
       const player = client.manager.players.get(message.guild.id);
-        //if no player available return error | aka not playing anything
-      if (!player)
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(client.user.username, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | There is nothing playing`)
-        );
       //if not in the same channel --> return
       if(player && channel.id !== player.voiceChannel)
         return message.channel.send(new MessageEmbed()
