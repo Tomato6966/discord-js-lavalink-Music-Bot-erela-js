@@ -70,12 +70,11 @@ module.exports = async (client, message) => {
             .setTitle(`${emoji.msg.rewind} Rewinded the song for: 20 Seconds, to: ${format(Number(player.position))}`)
             .setColor(ee.color)
             .setFooter(ee.footertext, ee.footericon)
-          ).then(async msg => {
-            try{
-              await delay(4000)
-              msg.delete().catch();
-            }catch{ /* */ }
-          });
+          ).then(msg => {
+          try{
+           msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
+          }catch{ /* */ }
+        });
         break;
         case String(emoji.react.forward):
           //gets the forward time
@@ -89,12 +88,11 @@ module.exports = async (client, message) => {
             .setTitle(`${emoji.msg.forward} Forwarded the Song for: 20 Seconds, to: ${format(Number(player.position))}`)
             .setColor(ee.color)
             .setFooter(ee.footertext, ee.footericon)
-          ).then(async msg => {
-            try{
-              await delay(4000)
-              msg.delete().catch();
-            }catch{ /* */ }
-          });
+          ).then(msg => {
+          try{
+           msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
+          }catch{ /* */ }
+        });
         break;
         case String(emoji.react.pause_resume):
           //pause the player / resume it
@@ -104,12 +102,11 @@ module.exports = async (client, message) => {
               .setTitle(`${player.playing ? `${emoji.msg.resume} Resumed` : `${emoji.msg.pause} Paused`} the Player.`)
               .setColor(ee.color)
               .setFooter(ee.footertext, ee.footericon)
-            ).then(async msg => {
-              try{
-                await delay(4000)
-                msg.delete().catch();
-              }catch{ /* */ }
-            });
+            ).then(msg => {
+            try{
+             msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
+            }catch{ /* */ }
+          });
         break;
 
         //////////////////////////////////////
@@ -122,10 +119,9 @@ module.exports = async (client, message) => {
             .setTitle(`${emoji.msg.stop} Stopped and left your channel`)
             .setColor(ee.color)
             .setFooter(ee.footertext, ee.footericon)
-          ).then(async msg => {
+          ).then(msg => {
             try{
-              await delay(4000)
-              msg.delete().catch();
+             msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
             }catch{ /* */ }
           });
         break;
@@ -136,22 +132,20 @@ module.exports = async (client, message) => {
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
               .setTitle(`${emoji.msg.ERROR} Error | There is no previous song yet!`)
-            ).then(async msg => {
+            ).then(msg => {
               try{
-                await delay(4000)
-                msg.delete().catch();
+               msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
               }catch{ /* */ }
             });
           message.channel.send(new MessageEmbed()
             .setTitle(`${emoji.msg.previous_track} Playing Previous Track`)
             .setColor(ee.color)
             .setFooter(ee.footertext, ee.footericon)
-          ).then(async msg => {
+          ).then(msg => {
             try{
-              await delay(4000)
-              msg.delete().catch();
+             msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
             }catch{ /* */ }
-          })
+          });
           //define the type
           let type = "skiptrack:youtube";
           //if the previous was from soundcloud, then use type soundcloud
@@ -168,8 +162,8 @@ module.exports = async (client, message) => {
             if(channelmembersize <= 3) voteamount = 1;
             voteamount = Math.ceil(channelmembersize / 3);
 
-            if(!player.get(`vote-${message.author.id}`)) {
-              player.set(`vote-${message.author.id}`, true);
+            if(!player.get(`vote-${user.id}`)) {
+              player.set(`vote-${user.id}`, true);
               player.set("votes", String(Number(player.get("votes")) + 1));
               if(voteamount <= Number(player.get("votes"))){
                 message.channel.send(new MessageEmbed()
@@ -195,7 +189,7 @@ module.exports = async (client, message) => {
               }
             }
             else {
-              player.set(`vote-${message.author.id}`, false)
+              player.set(`vote-${user.id}`, false)
               player.set("votes", String(Number(player.get("votes")) - 1));
               return message.channel.send(new MessageEmbed()
                 .setColor(ee.color)
@@ -240,10 +234,9 @@ module.exports = async (client, message) => {
             .setTitle(`${emoji.msg.replay_track} Replaying Current Track`)
             .setColor(ee.color)
             .setFooter(ee.footertext, ee.footericon)
-          ).then(async msg => {
+          ).then(msg => {
             try{
-              await delay(4000)
-              msg.delete().catch();
+             msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
             }catch{ /* */ }
           });
         break;
@@ -259,10 +252,9 @@ module.exports = async (client, message) => {
             .setTitle(`${emoji.msg.reduce_volume} Volume set to: **${player.volume} %**`)
             .setColor(ee.color)
             .setFooter(ee.footertext, ee.footericon)
-          ).then(async msg => {
+          ).then(msg => {
             try{
-              await delay(4000)
-              msg.delete().catch();
+             msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
             }catch{ /* */ }
           });
         break;
@@ -278,10 +270,9 @@ module.exports = async (client, message) => {
             .setTitle(`${emoji.msg.raise_volume} Volume set to: **${player.volume} %**`)
             .setColor(ee.color)
             .setFooter(ee.footertext, ee.footericon)
-          ).then(async msg => {
+          ).then(msg => {
             try{
-              await delay(4000)
-              msg.delete().catch();
+             msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
             }catch{ /* */ }
           });
         break;
@@ -298,10 +289,9 @@ module.exports = async (client, message) => {
             .setTitle(`${player.volume === 0 ? `${emoji.msg.toggle_mute} Muted the Player` : `${emoji.msg.reduce_volume} Unmuted the Player`}`)
             .setColor(ee.color)
             .setFooter(ee.footertext, ee.footericon)
-          ).then(async msg => {
+          ).then(msg => {
             try{
-              await delay(4000)
-              msg.delete().catch();
+             msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
             }catch{ /* */ }
           });
         break;
@@ -319,10 +309,9 @@ module.exports = async (client, message) => {
                 .setDescription(`And Queue Loop is now ${player.queueRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}.`)
                 .setColor(ee.color)
                 .setFooter(ee.footertext, ee.footericon)
-              ).then(async msg => {
+              ).then(msg => {
                 try{
-                  await delay(4000)
-                  msg.delete().catch();
+                 msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
                 }catch{ /* */ }
               });
           }
@@ -339,10 +328,9 @@ module.exports = async (client, message) => {
               .setDescription(`And Track Loop is now ${player.trackRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}.`)
               .setColor(ee.color)
               .setFooter(ee.footertext, ee.footericon)
-            ).then(async msg => {
+            ).then(msg => {
               try{
-                await delay(4000)
-                msg.delete().catch();
+               msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
               }catch{ /* */ }
             });
           }
@@ -359,10 +347,9 @@ module.exports = async (client, message) => {
               .setDescription(`And Track Loop is now ${player.trackRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}.`)
               .setColor(ee.color)
               .setFooter(ee.footertext, ee.footericon)
-            ).then(async msg => {
+            ).then(msg => {
               try{
-                await delay(4000)
-                msg.delete().catch();
+               msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
               }catch{ /* */ }
             });
           }
@@ -375,10 +362,9 @@ module.exports = async (client, message) => {
             .setTitle(`${emoji.msg.SUCCESS} Success | ${player.get("autoplay") ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`} Autoplay`)
             .setColor(ee.color)
             .setFooter(ee.footertext, ee.footericon)
-          ).then(async msg => {
+          ).then(msg => {
             try{
-              await delay(4000)
-              msg.delete().catch();
+             msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
             }catch{ /* */ }
           });
         break;
@@ -393,10 +379,9 @@ module.exports = async (client, message) => {
             .setTitle(`${emoji.msg.shuffle} The queue is now shuffled.`)
             .setColor(ee.color)
             .setFooter(ee.footertext, ee.footericon)
-          ).then(async msg => {
+          ).then(msg => {
             try{
-              await delay(4000)
-              msg.delete().catch();
+             msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
             }catch{ /* */ }
           });
         break;
@@ -411,20 +396,18 @@ module.exports = async (client, message) => {
           const tracks = player.queue;
           //if there are no other tracks, information
           if (!tracks.length)
-            return message.channel.send(embed.setDescription(`${emoji.msg.ERROR} No tracks in the queue`)).then(async msg => {
-              try{
-                await delay(5000)
-                msg.delete().catch();
-              }catch{ /* */ }
-            })
+            return message.channel.send(embed.setDescription(`${emoji.msg.ERROR} No tracks in the queue`)).then(msg => {
+            try{
+             msg.delete({timeout: 5000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
+            }catch{ /* */ }
+          })
           //if not too big send queue in channel
           if(tracks.length < 15)
-            return message.channel.send(embed.setDescription(tracks.map((track, i) => `**${++i})** [${track.title.substr(0, 35)}](${track.uri}) - ${track.isStream ? "LIVE STREAM" : format(track.duration).split(" | ")[0]} - **requested by: ${track.requester.tag}**`).join("\n"))).then(async msg => {
-              try{
-                await delay(5000)
-                msg.delete().catch();
-              }catch{ /* */ }
-            })
+            return message.channel.send(embed.setDescription(tracks.map((track, i) => `**${++i})** [${track.title.substr(0, 35)}](${track.uri}) - ${track.isStream ? "LIVE STREAM" : format(track.duration).split(" | ")[0]} - **requested by: ${track.requester.tag}**`).join("\n"))).then(msg => {
+            try{
+             msg.delete({timeout: 5000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
+            }catch{ /* */ }
+          });
           //get an array of quelist where 15 tracks is one index in the array
           let quelist = [];
           for(let i = 0; i < tracks.length; i+=15){
@@ -444,18 +427,17 @@ module.exports = async (client, message) => {
             .setTitle(`${emoji.msg.SUCCESS} Check your direct messages to see the Queue`)
             .setColor(ee.color)
             .setFooter(ee.footertext, ee.footericon)
-          ).then(async msg => {
-            try{
-              await delay(4000)
-              msg.delete().catch();
-            }catch{ /* */ }
-          })
+          ).then(msg => {
+          try{
+           msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
+          }catch{ /* */ }
+        });
 
         break;
         case String(emoji.react.show_current_track):
         //Send Now playing Message
         return message.channel.send(new MessageEmbed()
-            .setAuthor("Current song playing:", message.author.displayAvatarURL({ dynamic: true }))
+            .setAuthor("Current song playing:", user.displayAvatarURL({ dynamic: true }))
             .setThumbnail(player.queue.current.displayThumbnail(1))
             .setURL(player.queue.current.uri)
             .setColor(ee.color)
@@ -466,12 +448,11 @@ module.exports = async (client, message) => {
             .addField(`${emoji.msg.repeat_mode} Queue length: `, `${player.queue.length} Songs`, true)
             .addField(`${emoji.msg.time} Progress: `, createBar(player))
             .setFooter(`Requested by: ${player.queue.current.requester.tag}`, player.queue.current.requester.displayAvatarURL({ dynamic: true }))
-          ).then(async msg => {
-            try{
-              await delay(5000)
-              msg.delete().catch();
-            }catch{ /* */ }
-          })
+          ).then(msg => {
+          try{
+           msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
+          }catch{ /* */ }
+        });
         break;
       }
       }catch (e){console.log(String(e.stack).yellow) /* */ }
