@@ -43,9 +43,9 @@ module.exports = {
         let embed = new MessageEmbed()
         try{embed.setTitle(`Connected to:  \`🔈${client.channels.cache.get(player.voiceChannel).name}\``)}catch{}
         try{embed.setDescription(`And bound to: \`#${client.channels.cache.get(player.textChannel).name}\`   **▬**   Queue length: \`${player.queue.length} Songs\``)}catch{}
-        try{embed.addField(`🔊 Volume`, `\`${player.volume}%\``, true)}catch{}
-        try{embed.addField(`🎚 Equalizer: `, `\`🎵 Music\``, true)}catch{}
-        try{embed.addField(`${player.queueRepeat ? `${emoji.msg.autoplay_mode} Queue Loop: ` : `${emoji.msg.autoplay_mode} Song Loop: `}`, `\`${player.queueRepeat ? `${emoji.msg.SUCCESS} Enabled` : player.trackRepeat ? `${emoji.msg.SUCCESS} Enabled` : `${emoji.msg.ERROR} Disabled`}\``, true)}catch{}
+        try{embed.addField(`${emoji.msg.raise_volume} Volume`, `${player.volume}%`, true)}catch{}
+        try{embed.addField(`${emoji.msg.equalizer} Equalizer: `, `${emoji.msg.playing} Music`, true)}catch{}
+        try{embed.addField(`${player.queueRepeat ? `${emoji.msg.autoplay_mode} Queue Loop: ` : `${emoji.msg.autoplay_mode} Song Loop: `}`, `${player.queueRepeat ? `${emoji.msg.SUCCESS} Enabled` : player.trackRepeat ? `${emoji.msg.SUCCESS} Enabled` : `${emoji.msg.ERROR} Disabled`}`, true)}catch{}
         try{embed.addField(`${emoji.msg.leave_on_empty} Leave on Empty Channel: `, `${config.settings.leaveOnEmpty_Channel.enabled ? `${emoji.msg.SUCCESS} Enabled` : `${emoji.msg.ERROR} Disabled`}`, true)}catch{}
         try{embed.addField(`${emoji.msg.repeat_mode} Leave on Empty Queue: `, `${config.settings.LeaveOnEmpty_Queue.enabled ? `${emoji.msg.SUCCESS} Enabled` : `${emoji.msg.ERROR} Disabled`}`, true)}catch{}
         try{embed.addField(`${emoji.msg.autoplay_mode} Autoplay`, `${player.get(`autoplay`) ? `${emoji.msg.SUCCESS} Enabled` : `${emoji.msg.ERROR} Disabled`}`, true)}catch{}

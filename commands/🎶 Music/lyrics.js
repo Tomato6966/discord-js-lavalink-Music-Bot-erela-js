@@ -11,6 +11,7 @@ module.exports = {
     aliases: [`songlyrics`, `ly`, `tracklyrics`],
     description: `Shows The Lyrics of the current track`,
     usage: `lyrics [Songtitle]`,
+    cooldown: 15,
     run: async (client, message, args, cmduser, text, prefix) => {
     try{
       //get the channel of the member
