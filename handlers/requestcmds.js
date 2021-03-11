@@ -9,13 +9,13 @@ module.exports = async (client, message) => {
     if(message.author.id === client.user.id) {
       try{
         await delay(4000);
-        if(message) message.delete().catch();
+        if(message) message.delete().catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
       }catch{ /* */}
     }
     else {
       try{
         await delay(1000);
-        if(message) message.delete().catch();
+        if(message) message.delete().catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
       }catch{ /* */}
     }
 

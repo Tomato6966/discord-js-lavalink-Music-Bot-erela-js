@@ -97,12 +97,11 @@ async function similar(client, message, args, type) {
           try{embed2.addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)}catch{}
           try{embed2.setFooter(`Requested by: ${res.tracks[randomtracknum].requester.tag}`, res.tracks[randomtracknum].requester.displayAvatarURL({  dynamic: true  }))}catch{}
 
-      return message.channel.send(embed2).then(async msg => {
-        try{
-          await delay(4000)
-          msg.delete().catch();
-        }catch{ /* */ }
-      });
+      return message.channel.send(embed2).then(msg => {
+      try{
+       msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
+      }catch{ /* */ }
+    });
     }
     //if its seach similar
     if(type.split(":")[1]==="search") {
@@ -182,12 +181,11 @@ async function similar(client, message, args, type) {
               try{embed.addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)}catch{}
               try{embed.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({dynamic: true}))}catch{}
           if(isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
-          return message.channel.send(embed).then(async msg => {
-            try{
-              await delay(4000)
-              msg.delete().catch();
-            }catch{ /* */ }
-          });
+          return message.channel.send(embed).then(msg => {
+          try{
+           msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
+          }catch{ /* */ }
+        });
       }
     }
   } catch (e) {
@@ -309,12 +307,11 @@ async function search(client, message, args, type) {
               try{embed3.addField("💯 Song By: ", `\`${track.author}\``, true)}catch{}
               try{embed3.addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)}catch{}
               try{embed3.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({dynamic: true}))}catch{}
-            return message.channel.send(embed3).then(async msg => {
-              try{
-                await delay(4000)
-                msg.delete().catch();
-              }catch{ /* */ }
-            });
+            return message.channel.send(embed3).then(msg => {
+            try{
+             msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
+            }catch{ /* */ }
+          });
         }
 
     } catch (e) {
@@ -374,12 +371,11 @@ async function playlist(client, message, args, type) {
         try{playlistembed.addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)}catch{}
         try{playlistembed.addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)}catch{}
         try{playlistembed.setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({  dynamic: true}))}catch{}
-        message.channel.send(playlistembed).then(async msg => {
-          try{
-            await delay(4000)
-            msg.delete().catch();
-          }catch{ /* */ }
-        });
+        message.channel.send(playlistembed).then(msg => {
+        try{
+         msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
+        }catch{ /* */ }
+      });
         player.play();
         if(isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
     } else {
@@ -392,12 +388,11 @@ async function playlist(client, message, args, type) {
         try{playlistembed2.addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)}catch{}
         try{playlistembed2.addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)}catch{}
         try{playlistembed2.setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({dynamic: true}))}catch{}
-        return message.channel.send(playlistembed2).then(async msg => {
-          try{
-            await delay(4000)
-            msg.delete().catch();
-          }catch{ /* */ }
-        });
+        return message.channel.send(playlistembed2).then(msg => {
+        try{
+         msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
+        }catch{ /* */ }
+      });
     }
 
 } catch (e) {
@@ -470,12 +465,11 @@ async function song(client, message, args, type) {
           try{playembed.addField("💯 Song By: ", `\`${res.tracks[0].author}\``, true)}catch{}
           try{playembed.addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)}catch{}
           try{playembed.setFooter(`Requested by: ${res.tracks[0].requester.tag}`, res.tracks[0].requester.displayAvatarURL({dynamic: true}))}catch{}
-        return message.channel.send(playembed).then(async msg => {
-          try{
-            await delay(4000)
-            msg.delete().catch();
-          }catch{ /* */ }
-        });
+        return message.channel.send(playembed).then(msg => {
+        try{
+         msg.delete({timeout: 4000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
+        }catch{ /* */ }
+      });
     }
 } catch (e) {
     console.log(String(e.stack).red)
