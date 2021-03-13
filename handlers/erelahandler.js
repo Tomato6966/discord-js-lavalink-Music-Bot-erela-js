@@ -24,10 +24,7 @@ module.exports = (client) => {
         client.manager = new Manager({
             nodes: config.clientsettings.nodes,
             plugins: [
-            new Deezer({
-              playlistLimit: 50,
-              albumLimit: 50
-            })
+              new Deezer()
             ],
             send(id, payload) {
                 const guild = client.guilds.cache.get(id);
@@ -39,16 +36,11 @@ module.exports = (client) => {
         client.manager = new Manager({
             nodes: config.clientsettings.nodes,
             plugins: [
-            new Spotify({
-                clientID, //get a clientid from there: https://developer.spotify.com/dashboard
-                clientSecret,
-                playlistLimit: 50,
-                albumLimit: 50
-            }),
-            new Deezer({
-              playlistLimit: 50,
-              albumLimit: 50
-            })
+              new Spotify({
+                  clientID, //get a clientid from there: https://developer.spotify.com/dashboard
+                  clientSecret
+              }),
+              new Deezer()
             ],
             send(id, payload) {
                 const guild = client.guilds.cache.get(id);
