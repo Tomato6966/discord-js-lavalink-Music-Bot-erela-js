@@ -8,6 +8,14 @@ const ee = require("../botconfig/embed.json");
 const radios = require("../botconfig/radiostations.json");
 const ms = require("ms")
 module.exports = {
+  findEmoji: function(id) {
+    const temp = this.emojis.cache.get(id);
+    if (!temp) return null;
+    const emoji = Object.assign({}, temp);
+    if (emoji.guild) emoji.guild = emoji.guild.id;
+    emoji.require_colons = emoji.requiresColons;
+    return emoji;
+  },
   getMember: function(message, toFind = "") {
     try{
       toFind = toFind.toLowerCase();
