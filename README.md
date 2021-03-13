@@ -4,6 +4,8 @@
 
 ## [**DISCORD SUPPORT SERVER INVITE**](https://support.milrato.eu)
 
+**IF YOU WANNA USE CUSTOM EMOJIS, AND SHARD THEN CHECK OUT THE CUSTOM-EMOJIS TAB(branch)!**
+
 ## Installation | How to use the Bot
 
  **1.** Install [node.js v12+](https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode) or higher
