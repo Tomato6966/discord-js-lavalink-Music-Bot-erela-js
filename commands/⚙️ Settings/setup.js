@@ -2,7 +2,8 @@ const { MessageEmbed } = require("discord.js");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
 const emoji = require("../../botconfig/emojis.json");
-
+const {findEmoji} = require("../../handlers/functions")
+const Discord = require("discord.js");
 module.exports = {
     name: "setup",
     category: "⚙️ Settings",
@@ -125,21 +126,46 @@ module.exports = {
                               //edit the message
                               msg.edit(embed3)
                               //react with all reactions
-                              msg.react(emoji.react.rewind) //rewind 20 seconds
-                              msg.react(emoji.react.forward) //forward 20 seconds
-                              msg.react(emoji.react.pause_resume) //pause / resume
-                              msg.react(emoji.react.stop) //stop playing music
-                              msg.react(emoji.react.previous_track) //skip back  track / (play previous)
-                              msg.react(emoji.react.skip_track) //skip track / stop playing
-                              msg.react(emoji.react.replay_track) //replay track
-                              msg.react(emoji.react.reduce_volume)  //reduce volume by 10%
-                              msg.react(emoji.react.raise_volume)  //raise volume by 10%
-                              msg.react(emoji.react.toggle_mute)  //toggle mute
-                              msg.react(emoji.react.repeat_mode) //change repeat mode --> track --> Queue --> none
-                              msg.react(emoji.react.autoplay_mode)  //toggle autoplay mode
-                              msg.react(emoji.react.shuffle) //shuffle the Queue
-                              msg.react(emoji.react.show_queue) //shows the Queue
-                              msg.react(emoji.react.show_current_track) //shows the current Track
+                              try{
+                                const emojisarray = [
+                                  String(emoji.react.rewind),
+                                  String(emoji.react.forward),
+                                  String(emoji.react.pause_resume),
+                                  String(emoji.react.stop),
+                                  String(emoji.react.previous_track),
+                                  String(emoji.react.skip_track),
+                                  String(emoji.react.replay_track),
+                                  String(emoji.react.reduce_volume),
+                                  String(emoji.react.raise_volume),
+                                  String(emoji.react.toggle_mute),
+                                  String(emoji.react.repeat_mode),
+                                  String(emoji.react.autoplay_mode),
+                                  String(emoji.react.shuffle),
+                                  String(emoji.react.show_queue),
+                                  String(emoji.react.show_current_track),
+                                ]
+                                for(const theemoji of emojisarray)
+                                client.shard.broadcastEval(`(${findEmoji}).call(this, '${theemoji}')`)
+                          			.then(emojiArray => {
+                          				const foundEmoji = emojiArray.find(emoji => emoji);
+                          				if (!foundEmoji) return console.log('I could not find such an emoji.');
+
+                          				return client.api.guilds(foundEmoji.guild).get()
+                          					.then(raw => {
+                          						const guild = new Discord.Guild(client, raw);
+                          						const theemoji = new Discord.GuildEmoji(client, foundEmoji, guild);
+                                      msg.react(theemoji).catch(e => failed = true);
+                         					});
+                          			});
+
+                            	}catch (e){
+                                console.log(e.stack)
+                               	msg.channel.send(new MessageEmbed()
+                                 .setColor(ee.wrongcolor)
+                                 .setTitle(` ERROR | An Error Occurred`)
+                                 .setDescription(`\`\`\`${e.message}\`\`\`\n Make sure that i have permissions to add (custom) REACTIONS`)
+                                 )
+                               }
                               //create the collector
                               //save all other datas in the database
                               client.setups.set(message.guild.id, msg.id,"message_track_info");
