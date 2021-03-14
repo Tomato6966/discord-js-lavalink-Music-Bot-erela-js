@@ -18,6 +18,7 @@ const client = new Discord.Client({
   fetchAllMembers: false,
 //  messageCacheMaxSize: 10,
   restTimeOffset: 0,
+  shards: "auto",
   restWsBridgetimeout: 100,
   disableEveryone: true,
   partials: ['MESSAGE', 'CHANNEL', 'REACTION']
