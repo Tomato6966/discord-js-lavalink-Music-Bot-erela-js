@@ -2,7 +2,7 @@
   "name": "lava_music",
   "version": "5.8.2",
   "description": "A Discord Bot made by: Tomato#6966",
-  "main": "shard.js",
+  "main": "index.js",
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
     "@ksoft/api": "^3.1.9",
