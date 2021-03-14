@@ -22,6 +22,7 @@ module.exports = {
           for (let i = 0; i < guilds.length; i++) {
               if (guilds[i].me.voice.channel) connectedchannelsamount += 1;
           }
+          if(connectedchannelsamount > client.guilds.cache.size) connectedchannelsamount = client.guilds.cache.size;
           const botinfo = new Discord.MessageEmbed()
               .setAuthor(client.user.username, client.user.displayAvatarURL())
               .setTitle("__**Stats:**__")
@@ -29,8 +30,8 @@ module.exports = {
               .addField("⏳ Memory Usage", `\`${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}/ ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB\``, true)
               .addField("⌚️ Uptime ", `\`${duration(client.uptime)}\``, true)
               .addField("\u200b", `\u200b`, true)
-              .addField("📁 Users", `\`${client.users.cache.size}\``, true)
-              .addField("📁 Servers", `\`${client.guilds.cache.size}\``, true)
+              .addField("📁 Users", `\`Total: ${client.users.cache.size} Users\``, true)
+              .addField("📁 Servers", `\`Total: ${client.guilds.cache.size} Servers\``, true)
               .addField("\u200b", `\u200b`, true)
               .addField("📁 Voice-Channels", `\`${client.channels.cache.filter((ch) => ch.type === "voice").size}\``, true)
               .addField("📁 Connected Channels", `\`${connectedchannelsamount}\``, true)
@@ -46,7 +47,7 @@ module.exports = {
               .addField("API Latency", `\`${client.ws.ping}ms\``, true)
               .setFooter("Coded by:    Tomato#6966");
           message.channel.send(botinfo);
-      });
+        }).catch(console.error);
     } catch (e) {
         console.log(String(e.stack).bgRed)
         return message.channel.send(new MessageEmbed()
