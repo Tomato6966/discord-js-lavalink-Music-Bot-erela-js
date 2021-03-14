@@ -2,7 +2,7 @@
 const { Manager } = require("erela.js"),
   { MessageEmbed } = require("discord.js"),
   ms = require("ms"),
-  Discord = require("discord.js")
+
   Spotify = require("erela.js-spotify"),
   Deezer  = require("erela.js-deezer"),
 
@@ -10,7 +10,7 @@ const { Manager } = require("erela.js"),
   emoji = require("../botconfig/emojis.json"),
   ee = require("../botconfig/embed.json"),
 
-  { createBar, delay, format, databasing, playANewTrack, isrequestchannel, edit_request_message_track_info, getRandomInt, autoplay, findEmoji } = require("../handlers/functions"),
+  { createBar, delay, format, databasing, playANewTrack, isrequestchannel, edit_request_message_track_info, getRandomInt, autoplay } = require("../handlers/functions"),
   playermanager = require("../handlers/playermanager"),
 
   clientID = config.spotify.clientID,
@@ -213,41 +213,25 @@ module.exports = (client) => {
                   //react with all emojis
                   let failed = false;
                   try{
-                    const emojisarray = [
-                      String(emoji.react.rewind),
-                      String(emoji.react.forward),
-                      String(emoji.react.pause_resume),
-                      String(emoji.react.stop),
-                      String(emoji.react.previous_track),
-                      String(emoji.react.skip_track),
-                      String(emoji.react.replay_track),
-                      String(emoji.react.reduce_volume),
-                      String(emoji.react.raise_volume),
-                      String(emoji.react.toggle_mute),
-                      String(emoji.react.repeat_mode),
-                      String(emoji.react.autoplay_mode),
-                      String(emoji.react.shuffle),
-                      String(emoji.react.show_queue),
-                      String(emoji.react.show_current_track),
-                    ]
-                    for(const newemoji of emojisarray)
-                    client.shard.broadcastEval(`(${findEmoji}).call(this, '${newemoji}')`)
-              			.then(emojiArray => {
-              				const foundEmoji = emojiArray.find(emoji => emoji);
-              				if (!foundEmoji) return console.log('I could not find such an emoji.');
-
-              				return client.api.guilds(foundEmoji.guild).get()
-              					.then(raw => {
-              						const guild = new Discord.Guild(client, raw);
-              						const theemoji = new Discord.GuildEmoji(client, foundEmoji, guild);
-                          msg.react(theemoji).catch(e => failed = true);
-             					});
-              			});
-
+                   msg.react(emoji.react.rewind).catch(e => failed = true); //rewind 20 seconds
+                   msg.react(emoji.react.forward).catch(e => failed = true); //forward 20 seconds
+                   msg.react(emoji.react.pause_resume).catch(e => failed = true); //pause / resume
+                   msg.react(emoji.react.stop).catch(e => failed = true); //stop playing music
+                   msg.react(emoji.react.previous_track).catch(e => failed = true); //skip back  track / (play previous)
+                   msg.react(emoji.react.skip_track).catch(e => failed = true); //skip track / stop playing
+                   msg.react(emoji.react.replay_track).catch(e => failed = true); //replay track
+                   msg.react(emoji.react.reduce_volume).catch(e => failed = true); //reduce volume by 10%
+                   msg.react(emoji.react.raise_volume).catch(e => failed = true); //raise volume by 10%
+                   msg.react(emoji.react.toggle_mute).catch(e => failed = true); //toggle mute
+                   msg.react(emoji.react.repeat_mode).catch(e => failed = true); //change repeat mode --> track --> Queue --> none
+                   msg.react(emoji.react.autoplay_mode).catch(e => failed = true); //toggle autoplay mode
+                   msg.react(emoji.react.shuffle).catch(e => failed = true); //shuffle the Queue
+                   msg.react(emoji.react.show_queue).catch(e => failed = true); //shows the Queue
+                   msg.react(emoji.react.show_current_track).catch(e => failed = true); //shows the current Track
                 	}catch (e){
                  	msg.channel.send(new MessageEmbed()
                    .setColor(ee.wrongcolor)
-                   .setTitle(` ERROR | An Error Occurred`)
+                   .setTitle(`${emojis.msg.ERROR} ERROR | An Error Occurred`)
                    .setDescription(`\`\`\`${e.message}\`\`\`\n Make sure that i have permissions to add (custom) REACTIONS`)
                    )
                  }
@@ -255,7 +239,7 @@ module.exports = (client) => {
                    msg.channel.send(new MessageEmbed()
                     .setColor(ee.wrongcolor)
                     .setFooter(ee.footertext, ee.footericon)
-                    .setTitle(`${emoji.msg.ERROR} ERROR | Couldn't add Reaction`)
+                    .setTitle(`${emojis.msg.ERROR} ERROR | Couldn't add Reaction`)
                     .setDescription(`Make sure that I have permissions to add (custom) REACTIONS`)
                     )
                   //create the collector
