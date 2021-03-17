@@ -1,18 +1,24 @@
-const { MessageEmbed } = require(`discord.js`);
+const {
+  MessageEmbed
+} = require(`discord.js`);
 const config = require(`../../botconfig/config.json`);
 const ee = require(`../../botconfig/embed.json`);
 const emoji = require(`../../botconfig/emojis.json`);
-const { autoplay } = require(`../../handlers/functions`);
+const {
+  autoplay
+} = require(`../../handlers/functions`);
 module.exports = {
-    name: `voteskip`,
-    category: `🎶 Music`,
-    aliases: [`skip`, `vs`, `s`],
-    description: `Skips the track, but if there is a DJ Setup u will have to vote first!`,
-    usage: `voteskip`,
-    run: async (client, message, args, cmduser, text, prefix) => {
-    try{
+  name: `voteskip`,
+  category: `🎶 Music`,
+  aliases: [`skip`, `vs`, `s`],
+  description: `Skips the track, but if there is a DJ Setup u will have to vote first!`,
+  usage: `voteskip`,
+  run: async (client, message, args, cmduser, text, prefix) => {
+    try {
       //get the channel instance from the Member
-      const { channel } = message.member.voice;
+      const {
+        channel
+      } = message.member.voice;
       //if the member is not in a channel, return
       if (!channel)
         return message.channel.send(new MessageEmbed()
@@ -38,17 +44,17 @@ module.exports = {
           .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
         );
       //Check if there is a Dj Setup
-      if(client.settings.get(message.guild.id, `djroles`).toString()!==``){
+      if (client.settings.get(message.guild.id, `djroles`).toString() !== ``) {
 
         let channelmembersize = channel.members.size;
         let voteamount = 0;
-        if(channelmembersize <= 3) voteamount = 1;
+        if (channelmembersize <= 3) voteamount = 1;
         voteamount = Math.ceil(channelmembersize / 3);
 
-        if(!player.get(`vote-${message.author.id}`)) {
+        if (!player.get(`vote-${message.author.id}`)) {
           player.set(`vote-${message.author.id}`, true);
           player.set(`votes`, String(Number(player.get(`votes`)) + 1));
-          if(voteamount <= Number(player.get(`votes`))){
+          if (voteamount <= Number(player.get(`votes`))) {
             message.channel.send(new MessageEmbed()
               .setColor(ee.color)
               .setFooter(ee.footertext, ee.footericon)
@@ -56,13 +62,11 @@ module.exports = {
               .setDescription(`There are now: \`${player.get(`votes`)}\` of \`${voteamount}\` needed Votes\n\n> Amount reached! Skipping ⏭`)
             );
             if (player.queue.size == 0) {
-                player.destroy();
-            }
-            else{
+              player.destroy();
+            } else {
               player.stop();
             }
-          }
-          else{
+          } else {
             return message.channel.send(new MessageEmbed()
               .setColor(ee.color)
               .setFooter(ee.footertext, ee.footericon)
@@ -70,8 +74,7 @@ module.exports = {
               .setDescription(`There are now: \`${player.get(`votes`)}\` of \`${voteamount}\` needed Votes`)
             );
           }
-        }
-        else {
+        } else {
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
@@ -79,12 +82,11 @@ module.exports = {
             .setDescription(`There are: \`${player.get(`votes`)}\` of \`${voteamount}\` needed Votes`)
           );
         }
-      }
-      else{
+      } else {
         //if ther is nothing more to skip then stop music and leave the Channel
         if (player.queue.size == 0) {
           //if its on autoplay mode, then do autoplay before leaving...
-          if(player.get(`autoplay`)) return autoplay(client, player, `skip`);
+          if (player.get(`autoplay`)) return autoplay(client, player, `skip`);
           //stop playing
           player.destroy();
           //send success message
@@ -104,22 +106,22 @@ module.exports = {
         );
       }
     } catch (e) {
-        console.log(String(e.stack).bgRed)
-        return message.channel.send(new MessageEmbed()
-            .setColor(ee.wrongcolor)
-						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.message}\`\`\``)
-        );
+      console.log(String(e.stack).bgRed)
+      return message.channel.send(new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+        .setDescription(`\`\`\`${e.message}\`\`\``)
+      );
     }
   }
 };
 /**
-  * @INFO
-  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
-  * @INFO
-  * Work for Milrato Development | https://milrato.eu
-  * @INFO
-  * Please mention Him / Milrato Development, when using this Code!
-  * @INFO
-*/
+ * @INFO
+ * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+ * @INFO
+ * Work for Milrato Development | https://milrato.eu
+ * @INFO
+ * Please mention Him / Milrato Development, when using this Code!
+ * @INFO
+ */

@@ -1,23 +1,30 @@
-const { MessageEmbed } = require(`discord.js`);
+const {
+  MessageEmbed
+} = require(`discord.js`);
 const config = require(`../../botconfig/config.json`);
 const ee = require(`../../botconfig/embed.json`);
 const emoji = require(`../../botconfig/emojis.json`);
-const { createBar, format } = require(`../../handlers/functions`);
+const {
+  createBar,
+  format
+} = require(`../../handlers/functions`);
 module.exports = {
-    name: `pause`,
-    category: `🎶 Music`,
-    aliases: [`break`],
-    description: `Pauses the Current Song`,
-    usage: `pause`,
-    run: async (client, message, args, cmduser, text, prefix) => {
-    try{
+  name: `pause`,
+  category: `🎶 Music`,
+  aliases: [`break`],
+  description: `Pauses the Current Song`,
+  usage: `pause`,
+  run: async (client, message, args, cmduser, text, prefix) => {
+    try {
       //get the channel instance from the Member
-      const { channel } = message.member.voice;
+      const {
+        channel
+      } = message.member.voice;
       //if the member is not in a channel, return
       if (!channel)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
-          .setFooter(client.user.username, ee.footericon)
+          .setFooter(ee.footertext, ee.footericon)
           .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
         );
       //get the player instance
@@ -26,7 +33,7 @@ module.exports = {
       if (!player)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
-          .setFooter(client.user.username, ee.footericon)
+          .setFooter(ee.footertext, ee.footericon)
           .setTitle(`${emoji.msg.ERROR} Error | There is nothing playing`)
         );
       //if not in the same channel as the player, return Error
@@ -48,28 +55,28 @@ module.exports = {
       player.pause(true);
       //return success message
       return message.channel.send(new MessageEmbed()
-          .setTitle(`${emoji.msg.SUCCESS} Success | ${player.playing ? `${emoji.msg.resume} Resumed` : `${emoji.msg.pause} Paused`} the Player.`)
-          .setColor(ee.color)
-          .setFooter(ee.footertext, ee.footericon)
-          .addField(`${emoji.msg.time} Progress: `, createBar(player))
-        );
+        .setTitle(`${emoji.msg.SUCCESS} Success | ${player.playing ? `${emoji.msg.resume} Resumed` : `${emoji.msg.pause} Paused`} the Player.`)
+        .setColor(ee.color)
+        .setFooter(ee.footertext, ee.footericon)
+        .addField(`${emoji.msg.time} Progress: `, createBar(player))
+      );
     } catch (e) {
-        console.log(String(e.stack).bgRed)
-        return message.channel.send(new MessageEmbed()
-            .setColor(ee.wrongcolor)
-						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.message}\`\`\``)
-        );
+      console.log(String(e.stack).bgRed)
+      return message.channel.send(new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+        .setDescription(`\`\`\`${e.message}\`\`\``)
+      );
     }
   }
 };
 /**
-  * @INFO
-  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
-  * @INFO
-  * Work for Milrato Development | https://milrato.eu
-  * @INFO
-  * Please mention Him / Milrato Development, when using this Code!
-  * @INFO
-*/
+ * @INFO
+ * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+ * @INFO
+ * Work for Milrato Development | https://milrato.eu
+ * @INFO
+ * Please mention Him / Milrato Development, when using this Code!
+ * @INFO
+ */

@@ -1,17 +1,21 @@
-const { MessageEmbed } = require(`discord.js`);
+const {
+  MessageEmbed
+} = require(`discord.js`);
 const config = require(`../../botconfig/config.json`);
 const ee = require(`../../botconfig/embed.json`);
 const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
-    name: `shuffle`,
-    category: `🎶 Music`,
-    aliases: [`mix`],
-    description: `Shuffles the Queue`,
-    usage: `shuffle`,
-    run: async (client, message, args, cmduser, text, prefix) => {
-    try{
+  name: `shuffle`,
+  category: `🎶 Music`,
+  aliases: [`mix`],
+  description: `Shuffles the Queue`,
+  usage: `shuffle`,
+  run: async (client, message, args, cmduser, text, prefix) => {
+    try {
       //get the channel instance from the Member
-      const { channel } = message.member.voice;
+      const {
+        channel
+      } = message.member.voice;
       //if the member is not in a channel, return
       if (!channel)
         return message.channel.send(new MessageEmbed()
@@ -47,22 +51,22 @@ module.exports = {
         .setFooter(ee.footertext, ee.footericon)
       );
     } catch (e) {
-        console.log(String(e.stack).bgRed)
-        return message.channel.send(new MessageEmbed()
-            .setColor(ee.wrongcolor)
-						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.message}\`\`\``)
-        );
+      console.log(String(e.stack).bgRed)
+      return message.channel.send(new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+        .setDescription(`\`\`\`${e.message}\`\`\``)
+      );
     }
   }
 };
 /**
-  * @INFO
-  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
-  * @INFO
-  * Work for Milrato Development | https://milrato.eu
-  * @INFO
-  * Please mention Him / Milrato Development, when using this Code!
-  * @INFO
-*/
+ * @INFO
+ * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+ * @INFO
+ * Work for Milrato Development | https://milrato.eu
+ * @INFO
+ * Please mention Him / Milrato Development, when using this Code!
+ * @INFO
+ */
