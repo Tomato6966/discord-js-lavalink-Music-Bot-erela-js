@@ -3,13 +3,13 @@ const config = require("../../botconfig/config.json")
 const ee = require("../../botconfig/embed.json")
 const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
-    name: "serverinfo",
-    aliases: ["sinfo"],
-    category: "🔰 Info",
-    description: "Shows info about a server",
-    usage: "serverinfo",
-    run: async (client, message, args, cmduser, text, prefix) => {
-    try{
+  name: "serverinfo",
+  aliases: ["sinfo"],
+  category: "🔰 Info",
+  description: "Shows info about a server",
+  usage: "serverinfo",
+  run: async (client, message, args, cmduser, text, prefix) => {
+    try {
       message.channel.send(new Discord.MessageEmbed()
         .setTitle("Server Information")
         .setColor(ee.color)
@@ -20,26 +20,30 @@ module.exports = {
         .addField("Created On", "\`" + message.guild.createdAt + "\`")
         .addField("You Joined", "\`" + message.member.joinedAt + "\`")
         .addField("Total Members", "\`" + message.guild.memberCount + "\`")
-        .setThumbnail(message.guild.iconURL({dynamic: true }))
+        .setThumbnail(message.guild.iconURL({
+          dynamic: true
+        }))
         .setTimestamp()
-        .setFooter(message.guild.name, message.guild.iconURL({dynamic: true})));
+        .setFooter(message.guild.name, message.guild.iconURL({
+          dynamic: true
+        })));
     } catch (e) {
-        console.log(String(e.stack).bgRed)
-        return message.channel.send(new MessageEmbed()
-            .setColor(ee.wrongcolor)
-            .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.message}\`\`\``)
-        );
+      console.log(String(e.stack).bgRed)
+      return message.channel.send(new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+        .setDescription(`\`\`\`${e.message}\`\`\``)
+      );
     }
   }
 }
 /**
-  * @INFO
-  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
-  * @INFO
-  * Work for Milrato Development | https://milrato.eu
-  * @INFO
-  * Please mention Him / Milrato Development, when using this Code!
-  * @INFO
-*/
+ * @INFO
+ * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+ * @INFO
+ * Work for Milrato Development | https://milrato.eu
+ * @INFO
+ * Please mention Him / Milrato Development, when using this Code!
+ * @INFO
+ */

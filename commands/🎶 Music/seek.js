@@ -1,18 +1,25 @@
-const { MessageEmbed } = require(`discord.js`);
+const {
+  MessageEmbed
+} = require(`discord.js`);
 const config = require(`../../botconfig/config.json`);
 const ee = require(`../../botconfig/embed.json`);
 const emoji = require(`../../botconfig/emojis.json`);
-const { createBar, format } = require(`../../handlers/functions`);
+const {
+  createBar,
+  format
+} = require(`../../handlers/functions`);
 module.exports = {
-    name: `seek`,
-    category: `🎶 Music`,
-    aliases: [`vol`],
-    description: `Changes the position(seek) of the Song`,
-    usage: `seek <Duration in Seconds>`,
-    run: async (client, message, args, cmduser, text, prefix) => {
-    try{
+  name: `seek`,
+  category: `🎶 Music`,
+  aliases: [`vol`],
+  description: `Changes the position(seek) of the Song`,
+  usage: `seek <Duration in Seconds>`,
+  run: async (client, message, args, cmduser, text, prefix) => {
+    try {
       //get the channel instance from the Member
-      const { channel } = message.member.voice;
+      const {
+        channel
+      } = message.member.voice;
       //if the member is not in a channel, return
       if (!channel)
         return message.channel.send(new MessageEmbed()
@@ -48,28 +55,28 @@ module.exports = {
       player.seek(Number(args[0]) * 1000);
       //send success message
       return message.channel.send(new MessageEmbed()
-          .setTitle(`${emoji.msg.SUCCESS} Success | Seeked song to: ${format(Number(args[0]) * 1000)}`)
-          .addField(`${emoji.msg.time} Progress: `, createBar(player))
-          .setColor(ee.color)
-          .setFooter(ee.footertext, ee.footericon)
-        );
+        .setTitle(`${emoji.msg.SUCCESS} Success | Seeked song to: ${format(Number(args[0]) * 1000)}`)
+        .addField(`${emoji.msg.time} Progress: `, createBar(player))
+        .setColor(ee.color)
+        .setFooter(ee.footertext, ee.footericon)
+      );
     } catch (e) {
-        console.log(String(e.stack).bgRed)
-        return message.channel.send(new MessageEmbed()
-            .setColor(ee.wrongcolor)
-						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.message}\`\`\``)
-        );
+      console.log(String(e.stack).bgRed)
+      return message.channel.send(new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+        .setDescription(`\`\`\`${e.message}\`\`\``)
+      );
     }
   }
 };
 /**
-  * @INFO
-  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
-  * @INFO
-  * Work for Milrato Development | https://milrato.eu
-  * @INFO
-  * Please mention Him / Milrato Development, when using this Code!
-  * @INFO
-*/
+ * @INFO
+ * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+ * @INFO
+ * Work for Milrato Development | https://milrato.eu
+ * @INFO
+ * Please mention Him / Milrato Development, when using this Code!
+ * @INFO
+ */

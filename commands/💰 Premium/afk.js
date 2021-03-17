@@ -1,28 +1,33 @@
-
-const { MessageEmbed } = require(`discord.js`);
+const {
+  MessageEmbed
+} = require(`discord.js`);
 const config = require(`../../botconfig/config.json`)
 const ee = require(`../../botconfig/embed.json`)
 const emoji = require(`../../botconfig/emojis.json`);
-const { databasing } = require(`../../handlers/functions`);
+const {
+  databasing
+} = require(`../../handlers/functions`);
 module.exports = {
-    name: `afk`,
-  	aliases: [`twentyfourseven`, `noleave`, `unlimitedtime`, `24/7`],
-    category: `💰 Premium`,
-    description: `Disables leaving channel for The Server / Player | Toggle`,
-    usage: `afk [guild/user]`,
-    run: async (client, message, args, cmduser, text, prefix) => {
-    try{
+  name: `afk`,
+  aliases: [`twentyfourseven`, `noleave`, `unlimitedtime`, `24/7`],
+  category: `💰 Premium`,
+  description: `Disables leaving channel for The Server / Player | Toggle`,
+  usage: `afk [guild/user]`,
+  run: async (client, message, args, cmduser, text, prefix) => {
+    try {
       //call databasing just to be sure!
       databasing(client, message.guild.id, message.author.id)
       //get the channel instance
-      const { channel } = message.member.voice;
+      const {
+        channel
+      } = message.member.voice;
       //if not in a voice Channel return error
       if (!channel)
-          return message.channel.send(new MessageEmbed()
-              .setColor(ee.wrongcolor)
-              .setFooter(ee.footertext, ee.footericon)
-              .setTitle(`${emoji.msg.ERROR}  Error | You need to join a voice channel.`)
-          );
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setFooter(ee.footertext, ee.footericon)
+          .setTitle(`${emoji.msg.ERROR}  Error | You need to join a voice channel.`)
+        );
       //get the player instance
       const player = client.manager.players.get(message.guild.id);
       //if no player available return error | aka not playing anything
@@ -33,7 +38,7 @@ module.exports = {
           .setTitle(`${emoji.msg.ERROR} Error | There is nothing playing`)
         );
       //if not in the same channel --> return
-      if(player && channel.id !== player.voiceChannel)
+      if (player && channel.id !== player.voiceChannel)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
@@ -47,16 +52,16 @@ module.exports = {
       let ppremium = client.premium.get(message.author.id);
       //these few lines create the Stringarray of each OWNER USER of the config.json
       let ownerstringarray = ``;
-      for(let i = 0; i<config.ownerIDS.length; i++){
-        try{
+      for (let i = 0; i < config.ownerIDS.length; i++) {
+        try {
           let user = await client.users.fetch(config.ownerIDS[i]);
           ownerstringarray += `\`${user.tag}\` /`
-        }catch{ }
+        } catch {}
       }
       //save the string
-      ownerstringarray = ownerstringarray.substr(0, ownerstringarray.length-2);
+      ownerstringarray = ownerstringarray.substr(0, ownerstringarray.length - 2);
       //if no enabled premiums, return
-      if(!gpremium.enabled && !ppremium.enabled)
+      if (!gpremium.enabled && !ppremium.enabled)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
@@ -64,7 +69,7 @@ module.exports = {
           .setDescription(`Dm to get premium:\n ${ownerstringarray}`.substr(0, 2040))
         )
       //if no args --> return with information
-      if(!args[0]){
+      if (!args[0]) {
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
@@ -75,9 +80,9 @@ module.exports = {
         )
       }
       //if args 0 is guild
-      if(args[0].toLowerCase() === `guild`) {
+      if (args[0].toLowerCase() === `guild`) {
         //if guild premium is not enabled return error
-        if(!gpremium.enabled)
+        if (!gpremium.enabled)
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
@@ -95,9 +100,9 @@ module.exports = {
         );
       }
       //if the args 0 is user
-      else if(args[0].toLowerCase() === `user`) {
+      else if (args[0].toLowerCase() === `user`) {
         //if user premium is not enbaled return error
-        if(!ppremium.enabled)
+        if (!ppremium.enabled)
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
@@ -105,7 +110,7 @@ module.exports = {
             .setDescription(`Dm to get premium:\n ${ownerstringarray}`.substr(0, 2040))
           );
         //the creater of the player, did not have premium! return error
-        if(message.author.id !== player.get(`playerauthor`))
+        if (message.author.id !== player.get(`playerauthor`))
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
@@ -130,23 +135,23 @@ module.exports = {
           .setTitle(`${emoji.msg.ERROR}  Error | Invalid Input method`)
           .setDescription(`Usage: \`${prefix}afk [guild/user]\``)
         )
-      } catch (e) {
-          console.log(String(e.stack).bgRed)
-          return message.channel.send(new MessageEmbed()
-              .setColor(ee.wrongcolor)
-              .setFooter(ee.footertext, ee.footericon)
-              .setTitle(`${emoji.msg.ERROR}  ERROR | An error occurred`)
-              .setDescription(`\`\`\`${e.message}\`\`\``)
-          );
-      }
+    } catch (e) {
+      console.log(String(e.stack).bgRed)
+      return message.channel.send(new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle(`${emoji.msg.ERROR}  ERROR | An error occurred`)
+        .setDescription(`\`\`\`${e.message}\`\`\``)
+      );
     }
+  }
 };
 /**
-  * @INFO
-  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
-  * @INFO
-  * Work for Milrato Development | https://milrato.eu
-  * @INFO
-  * Please mention Him / Milrato Development, when using this Code!
-  * @INFO
-*/
+ * @INFO
+ * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+ * @INFO
+ * Work for Milrato Development | https://milrato.eu
+ * @INFO
+ * Please mention Him / Milrato Development, when using this Code!
+ * @INFO
+ */

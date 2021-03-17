@@ -1,4 +1,6 @@
-const { MessageEmbed } = require("discord.js");
+const {
+  MessageEmbed
+} = require("discord.js");
 const config = require("../../botconfig/config.json")
 const ee = require("../../botconfig/embed.json")
 const emoji = require(`../../botconfig/emojis.json`);
@@ -14,27 +16,31 @@ module.exports = {
     try {
       const urltosearch = `https://djsdocs.sorta.moe/v2/embed?src=stable&q=${args.join(" ")}`;
       axios.get(urltosearch).then(embed => {
-          const { data } = embed;
-          data.color = ee.color
-          message.channel.send({embed: data});
+        const {
+          data
+        } = embed;
+        data.color = ee.color
+        message.channel.send({
+          embed: data
+        });
       });
     } catch (e) {
-        console.log(String(e.stack).bgRed)
-        return message.channel.send(new MessageEmbed()
-            .setColor(ee.color)
-            .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`${emoji.msg.ERROR}  ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.message}\`\`\``)
-        );
+      console.log(String(e.stack).bgRed)
+      return message.channel.send(new MessageEmbed()
+        .setColor(ee.color)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle(`${emoji.msg.ERROR}  ERROR | An error occurred`)
+        .setDescription(`\`\`\`${e.message}\`\`\``)
+      );
     }
   }
 };
 /**
-  * @INFO
-  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
-  * @INFO
-  * Work for Milrato Development | https://milrato.eu
-  * @INFO
-  * Please mention Him / Milrato Development, when using this Code!
-  * @INFO
-*/
+ * @INFO
+ * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+ * @INFO
+ * Work for Milrato Development | https://milrato.eu
+ * @INFO
+ * Please mention Him / Milrato Development, when using this Code!
+ * @INFO
+ */
