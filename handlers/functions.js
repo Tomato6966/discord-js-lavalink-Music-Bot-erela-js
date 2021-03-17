@@ -110,7 +110,7 @@ module.exports = {
       console.log(String(e.stack).bgRed)
     }*/
 
-    /* NEW WAY
+    /* NEW WAY*/
     try{
       if (!player.queue.current) return `**${emoji.msg.progress_bar.leftindicator}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.rightindicator}**\n**00:00:00 / 00:00:00**`;
       let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
@@ -122,8 +122,8 @@ module.exports = {
       console.log(String(e.stack).bgRed)
     }
 
-  */
-    /* CUSTOM WAY */
+
+    /* CUSTOM WAY
     try{
     // EMOJIS.JSON
       // "progress_bar": {
@@ -150,6 +150,7 @@ module.exports = {
     }catch (e){
       console.log(String(e.stack).bgRed)
     }
+    */
 
   },
   format: function(millis) {
