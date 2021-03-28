@@ -14,15 +14,15 @@ const Enmap = require("enmap"); //this package is our Database! We will use it t
 const fs = require("fs"); //this package is for reading files and getting their inputs
 //Creating the Discord.js Client for This Bot with some default settings ;) and with partials, so you can fetch OLD messages
 const client = new Discord.Client({
+//  messageCacheLifetime: 60,
   fetchAllMembers: false,
+//  messageCacheMaxSize: 10,
   restTimeOffset: 0,
   shards: "auto",
   restWsBridgetimeout: 100,
   disableEveryone: true,
   partials: ['MESSAGE', 'CHANNEL', 'REACTION']
 });
-require('events').EventEmitter.defaultMaxListeners = 100;
-process.setMaxListeners(100);
 //Loading files, with the client variable like Command Handler, Event Handler, ...
 ["clientvariables", "command", "events", "erelahandler", "requestreacts"].forEach(handler => {
     require(`./handlers/${handler}`)(client);

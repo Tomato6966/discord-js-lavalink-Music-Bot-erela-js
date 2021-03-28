@@ -1,62 +1,53 @@
 const Discord = require(`discord.js`);
-const { MessageEmbed } = require(`discord.js`);
+const {
+  MessageEmbed
+} = require(`discord.js`);
 const config = require(`../../botconfig/config.json`);
 const ee = require(`../../botconfig/embed.json`);
 const emoji = require(`../../botconfig/emojis.json`);
 const playermanager = require(`../../handlers/playermanager`);
 module.exports = {
-    name: `playskip`,
-    category: `🎶 Music`,
-    aliases: [`ps`],
-    description: `Plays a song instantly from youtube, which means skips current track and plays next song`,
-    usage: `playskip <Song / URL>`,
-    run: async (client, message, args, cmduser, text, prefix) => {
+  name: `playskip`,
+  category: `🎶 Music`,
+  aliases: [`ps`],
+  description: `Plays a song instantly from youtube, which means skips current track and plays next song`,
+  usage: `playskip <Song / URL>`,
+  parameters: {"type":"music", "activeplayer": false, "previoussong": false},
+  run: async (client, message, args, cmduser, text, prefix, player) => {
     try{
-      //get the channel instance
-      const { channel } = message.member.voice;
-      //if not in a voice Channel return error
-      if (!channel)
-          return message.channel.send(new MessageEmbed()
-              .setColor(ee.wrongcolor)
-              .setFooter(ee.footertext, ee.footericon)
-              .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
-          );
       //if no args return error
       if (!args[0])
-          return message.channel.send(new MessageEmbed()
-              .setColor(ee.wrongcolor)
-              .setFooter(ee.footertext, ee.footericon)
-              .setTitle(`${emoji.msg.ERROR} Error | You need to give me a URL or a Search term.`)
-          );
-      //get the player instance
-      const player = client.manager.players.get(message.guild.id);
-      //f not in the same channel --> return
-      if(player && channel.id !== player.voiceChannel)
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
-          .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
+          .setTitle(`${emoji.msg.ERROR} Error | You need to give me a URL or a Search term.`)
         );
+        message.channel.send(new MessageEmbed()
+          .setColor(ee.color)
+          .setTitle(`**Searching** 🔎 & **Skipping** ${emoji.msg.skip_track}`)
+          .setDescription(`\`\`\`${text}\`\`\``)
+          ).then(msg=>{
+            msg.delete({timeout: 5000}).catch(e=>console.log("Could not delete, this prevents a bug"))
+          })
       //play the SONG from YOUTUBE
       playermanager(client, message, args, `skiptrack:youtube`);
     } catch (e) {
-        console.log(String(e.stack).bgRed)
-        return message.channel.send(new MessageEmbed()
-            .setColor(ee.wrongcolor)
-						.setFooter(ee.footertext, ee.footericon)
-            .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
-            .setDescription(`\`\`\`${e.message}\`\`\``)
-        );
+      console.log(String(e.stack).bgRed)
+      return message.channel.send(new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setFooter(ee.footertext, ee.footericon)
+        .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+        .setDescription(`\`\`\`${e.message}\`\`\``)
+      );
     }
   }
 };
 /**
-  * @INFO
-  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
-  * @INFO
-  * Work for Milrato Development | https://milrato.eu
-  * @INFO
-  * Please mention Him / Milrato Development, when using this Code!
-  * @INFO
-*/
+ * @INFO
+ * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+ * @INFO
+ * Work for Milrato Development | https://milrato.eu
+ * @INFO
+ * Please mention Him / Milrato Development, when using this Code!
+ * @INFO
+ */
