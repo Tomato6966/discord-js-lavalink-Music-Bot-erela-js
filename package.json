@@ -22,6 +22,7 @@
     "got": "^11.8.1",
     "lyrics-finder": "^21.7.0",
     "nekos.life": "^2.0.7",
+    "radio-browser": "^2.1.6",
     "utf-8-validate": "^5.0.4",
     "weather-js": "^2.0.0"
   },
