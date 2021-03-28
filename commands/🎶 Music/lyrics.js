@@ -20,35 +20,13 @@ module.exports = {
     description: `Shows The Lyrics of the current track`,
     usage: `lyrics [Songtitle]`,
     cooldown: 15,
-    run: async (client, message, args, cmduser, text, prefix) => {
+    parameters: {
+        "type": "music",
+        "activeplayer": true,
+        "previoussong": false
+    },
+    run: async (client, message, args, cmduser, text, prefix, player) => {
         try {
-            //get the channel of the member
-            const {
-                channel
-            } = message.member.voice;
-            //if not in a channel return error
-            if (!channel)
-                return message.channel.send(new MessageEmbed()
-                    .setColor(ee.wrongcolor)
-                    .setFooter(ee.footertext, ee.footericon)
-                    .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
-                );
-            //get the player
-            const player = client.manager.players.get(message.guild.id);
-            //if no player return error
-            if (!player)
-                return message.channel.send(new MessageEmbed()
-                    .setColor(ee.wrongcolor)
-                    .setFooter(ee.footertext, ee.footericon)
-                    .setTitle(`${emoji.msg.ERROR} Error | There is nothing playing`)
-                );
-            //if not in the same channel return error
-            if (channel.id !== player.voiceChannel)
-                return message.channel.send(new MessageEmbed()
-                    .setColor(ee.wrongcolor)
-                    .setFooter(ee.footertext, ee.footericon)
-                    .setTitle(`${emoji.msg.ERROR} Error | You need to be in \`${message.guild.channels.cache.get(player.voiceChannel).name}\`!`)
-                );
             //get the Song Title
             let title = player.queue.current.title;
             //get the song Creator Author

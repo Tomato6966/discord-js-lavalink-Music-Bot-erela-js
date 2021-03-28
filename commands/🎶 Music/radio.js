@@ -15,28 +15,9 @@ module.exports = {
   aliases: [`stream`],
   description: `Plays a defined radiostream`,
   usage: `radio <1-183>`,
-  run: async (client, message, args, cmduser, text, prefix) => {
-    try {
-      //get the channel instance from the Member
-      const {
-        channel
-      } = message.member.voice;
-      //if the member is not in a channel, return
-      if (!channel)
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
-        );
-      //get the player instance
-      const player = client.manager.players.get(message.guild.id);
-      //if there is a player and they are not in the same channel, return Error
-      if (player && channel.id !== player.voiceChannel)
-        return message.channel.send(new MessageEmbed()
-          .setFooter(ee.footertext, ee.footericon)
-          .setColor(ee.wrongcolor)
-          .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
-          .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
-        );
+  parameters: {"type":"music", "activeplayer": false, "previoussong": false},
+  run: async (client, message, args, cmduser, text, prefix, player) => {
+    try{
       //if no args send all stations
       if (!args[0]) return stations(client, config.prefix, message);
       //if not a number error
