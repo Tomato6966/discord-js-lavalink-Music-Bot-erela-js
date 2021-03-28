@@ -96,7 +96,7 @@ module.exports = {
             .setDescription(`Create it with: \`${prefix}savedqueue create ${Name}\``)
           );
         //get the player instance
-        const player = client.manager.players.get(message.guild.id);
+        var player = client.manager.players.get(message.guild.id);
         //if no player available return error | aka not playing anything
         if (!player)
           return message.channel.send(new MessageEmbed()
@@ -154,7 +154,7 @@ module.exports = {
             .setDescription(`Create it with: \`${prefix}savedqueue create ${Name}\``)
           );
         //get the player instance
-        const player = client.manager.players.get(message.guild.id);
+        var player = client.manager.players.get(message.guild.id);
         //if no player available return error | aka not playing anything
         if (!player)
           return message.channel.send(new MessageEmbed()
@@ -404,7 +404,7 @@ module.exports = {
             .setDescription(`Delete it: \`${prefix}savedqueue delete ${Name}\`\nShow its content: \`${prefix}savedqueue showdetails ${Name}`)
           );
         //get the player instance
-        const player = client.manager.players.get(message.guild.id);
+        var player = client.manager.players.get(message.guild.id);
         //if no player available return error | aka not playing anything
         if (!player)
           return message.channel.send(new MessageEmbed()
@@ -515,8 +515,9 @@ module.exports = {
             .setFooter(client.user.username, ee.footericon)
             .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
           );
+        const mechannel = message.guild.me.voice.channel;
         //get the player instance
-        let player = client.manager.players.get(message.guild.id);
+        var player = client.manager.players.get(message.guild.id);
         let playercreate = false;
         if (!player) {
           player = client.manager.create({
@@ -538,6 +539,18 @@ module.exports = {
             .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
             .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
           );
+        //If there is no player, then kick the bot out of the channel, if connected to
+        if(!player && mechannel) {
+          message.guild.me.voice.kick().catch(e=>console.log("This prevents a Bug"));
+        }
+        //if not in the same channel --> return
+        if (mechannel && channel.id !== mechannel.id)
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setFooter(ee.footertext, ee.footericon)
+          .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
+          .setDescription(`Channelname: \`🔈 ${mechannel.name}\``)
+        );
         //if the queue does not exist yet, error
         if (!client.queuesaves.get(message.author.id, `${Name}`))
           return message.channel.send(new MessageEmbed()
