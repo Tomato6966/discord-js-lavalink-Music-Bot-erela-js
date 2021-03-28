@@ -12,7 +12,7 @@ module.exports = {
   usage: "help [Command]",
   description: "Returns all Commmands, or one specific command",
   run: async (client, message, args, user, text, prefix) => {
-    let emojis = ["💪", "💰", "🔰", "🕹️", "🎶", "👀", "⚜️"]
+    let emojis = ["💰", "🔰",  "🎶", "👀", "⚜️"]
     try {
       if (args[0]) {
         const embed = new MessageEmbed();
@@ -47,13 +47,9 @@ module.exports = {
           .setFooter("react with the right emoji!", ee.footericon)
           .setTitle("Pick the right Category")
           .setDescription(`
-💪  **==>** To see the **Source Help** Commands
-
 💰  **==>** To see the **Premium** Commands
 
 🔰  **==>** To see the **Information** Commands
-
-🕹️  **==>** To see the **Fun** Commands
 
 🎶  **==>** To see the **Music** Commands
 
@@ -61,9 +57,7 @@ module.exports = {
 
 ⚜️  **==>** To see the **Saved (custom) Queue** Commands
 ${owner == true ? `\n👑 **==>** To see the **Owner** Commands` : ""}
-${userperms == true ? `\n⚙️ **==>** To see the **Setting** Commands
-
-🚫  **==>** To see the **Administration** Commands` : ""}
+${userperms == true ? `\n⚙️ **==>** To see the **Setting** Commands` : ""}
 `)
           .setImage("https://cdn.discordapp.com/attachments/752548978259787806/820014471556759601/ezgif-1-2d764d377842.gif")
 
