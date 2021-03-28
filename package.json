@@ -1,6 +1,6 @@
 {
   "name": "lava_music",
-  "version": "5.8.2",
+  "version": "7.3.4",
   "description": "A Discord Bot made by: Tomato#6966",
   "main": "index.js",
   "dependencies": {
@@ -11,6 +11,7 @@
     "canvacord": "^5.0.8",
     "canvas": "^2.6.1",
     "colors": "^1.4.0",
+    "radio-browser": "^2.1.6",
     "common-tags": "^1.8.0",
     "cpu-stat": "^2.0.1",
     "discord.js": "^12.5.1",
@@ -22,10 +23,10 @@
     "got": "^11.8.1",
     "lyrics-finder": "^21.7.0",
     "nekos.life": "^2.0.7",
+    "radio-browser": "^2.1.6",
     "utf-8-validate": "^5.0.4",
     "weather-js": "^2.0.0"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
