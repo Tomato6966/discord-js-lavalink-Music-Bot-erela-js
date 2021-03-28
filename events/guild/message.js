@@ -4,9 +4,13 @@
 */
 const config = require("../../botconfig/config.json"); //loading config file with token and prefix, and settings
 const ee = require("../../botconfig/embed.json"); //Loading all embed settings like color footertext and icon ...
+const emoji = require(`../../botconfig/emojis.json`);
 const Discord = require("discord.js"); //this is the official discord.js wrapper for the Discord Api, which we use!
 const { createBar, format, databasing, escapeRegex, isrequestchannel, getRandomInt, delay} = require("../../handlers/functions"); //Loading all needed functions
 const requestcmd = require("../../handlers/requestcmds");
+const {
+  MessageEmbed
+} = require(`discord.js`);
 //here the event starts
 module.exports = async (client, message) => {
   try {
@@ -190,15 +194,79 @@ module.exports = async (client, message) => {
             )
           }
         }
-        //try to delete the message of the user who ran the cmd
-          //try{  message.delete().catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey)); }catch{}
 
-        //react with an random emoji, ... "random"
-          //let emojis = ["👌", "👌", "👌", "👍", "👍", "✅", "✅", "✅", "✌", "🎧", "❤", "✨"]
-          //try{ message.react(emojis[getRandomInt(emojis.length)]); }catch{}
+        const player = client.manager.players.get(message.guild.id);
+        
+        if(command.parameters) {
+          if(command.parameters.type == "music"){
+             //get the channel instance
+            const { channel } = message.member.voice;
+            const mechannel = message.guild.me.voice.channel;
+            //if not in a voice Channel return error
+            if (!channel) {
+              not_allowed = true;
+              return message.channel.send(new MessageEmbed()
+                .setColor(ee.wrongcolor)
+                .setFooter(ee.footertext, ee.footericon)
+                .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
+              );
+            }
+            //If there is no player, then kick the bot out of the channel, if connected to
+            if(!player && mechannel) {
+              message.guild.me.voice.kick().catch(e=>console.log("This prevents a Bug"));
+            }
+            //if no player available return error | aka not playing anything
+            if(command.parameters.activeplayer){
+              if (!player){
+                not_allowed = true;
+                return message.channel.send(new MessageEmbed()
+                  .setColor(ee.wrongcolor)
+                  .setFooter(ee.footertext, ee.footericon)
+                  .setTitle(`${emoji.msg.ERROR} Error | There is nothing playing`)
+                );
+              }
+              if (!mechannel){
+                if(player) try{ player.destroy() }catch{ }
+                not_allowed = true;
+                return message.channel.send(new MessageEmbed()
+                  .setColor(ee.wrongcolor)
+                  .setFooter(ee.footertext, ee.footericon)
+                  .setTitle(`${emoji.msg.ERROR} Error | I am not connected to a Channel`)
+                );
+              }
+            }
+            //if no previoussong
+            if(command.parameters.previoussong){
+              if (!player.queue.previous || player.queue.previous === null){
+                not_allowed = true;
+                return message.channel.send(new MessageEmbed()
+                  .setColor(ee.wrongcolor)
+                  .setFooter(ee.footertext, ee.footericon)
+                  .setTitle(`${emoji.msg.ERROR} Error | There is no previous song yet!`)
+                );
+              }
+            }
+            //if not in the same channel --> return
+            if (player && channel.id !== player.voiceChannel)
+              return message.channel.send(new MessageEmbed()
+                .setColor(ee.wrongcolor)
+                .setFooter(ee.footertext, ee.footericon)
+                .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
+                .setDescription(`Channelname: \`🔈 ${message.guild.channels.cache.get(player.voiceChannel).name}\``)
+              );
+            //if not in the same channel --> return
+            if (mechannel && channel.id !== mechannel.id)
+            return message.channel.send(new MessageEmbed()
+              .setColor(ee.wrongcolor)
+              .setFooter(ee.footertext, ee.footericon)
+              .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
+              .setDescription(`Channelname: \`🔈 ${mechannel.name}\``)
+            );
+          }
+        }
         //run the command with the parameters:  client, message, args, user, text, prefix,
         if(not_allowed) return;
-        command.run(client, message, args, message.member, args.join(" "), prefix);
+        command.run(client, message, args, message.member, args.join(" "), prefix, player);
       }catch (e) {
         console.log(String(e.stack).red)
         return message.channel.send(new Discord.MessageEmbed()
