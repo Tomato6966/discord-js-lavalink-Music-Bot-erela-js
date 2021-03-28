@@ -74,7 +74,6 @@ ${userperms == true ? `\n⚙️ **==>** To see the **Setting** Commands
             let msg;
             if (basemsg) msg = await basemsg.edit(baseembed)
             else msg = await message.channel.send(baseembed);
-
             
             if (owner) emojis.push("👑")
             if (userperms) {
