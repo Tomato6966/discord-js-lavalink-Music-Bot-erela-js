@@ -12,19 +12,9 @@ module.exports = {
   aliases: [`p`],
   description: `Plays a song from youtube`,
   usage: `play <Song / URL>`,
-  run: async (client, message, args, cmduser, text, prefix) => {
-    try {
-      //get the channel instance
-      const {
-        channel
-      } = message.member.voice;
-      //if not in a voice Channel return error
-      if (!channel)
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
-        );
+  parameters: {"type":"music", "activeplayer": false, "previoussong": false},
+  run: async (client, message, args, cmduser, text, prefix, player) => {
+    try{
       //if no args return error
       if (!args[0])
         return message.channel.send(new MessageEmbed()
@@ -32,16 +22,14 @@ module.exports = {
           .setFooter(ee.footertext, ee.footericon)
           .setTitle(`${emoji.msg.ERROR} Error | You need to give me a URL or a Search term.`)
         );
-      //get the player instance
-      const player = client.manager.players.get(message.guild.id);
-      //f not in the same channel --> return
-      if (player && channel.id !== player.voiceChannel)
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
-          .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
-        );
+          message.channel.send(new MessageEmbed()
+          .setColor(ee.color)
+          .setTitle(`**Searching** 🔎`)
+          .setDescription(`\`\`\`${text}\`\`\``)
+        ).then(msg=>{
+          msg.delete({timeout: 5000}).catch(e=>console.log("Could not delete, this prevents a bug"))
+        })
+
       //play the SONG from YOUTUBE
       playermanager(client, message, args, `song:youtube`);
     } catch (e) {

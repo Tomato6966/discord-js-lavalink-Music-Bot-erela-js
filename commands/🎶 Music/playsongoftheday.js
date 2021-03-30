@@ -13,29 +13,9 @@ module.exports = {
   aliases: [`psongoftheday`],
   description: `Plays the Song of the Day`,
   usage: `playsongoftheday`,
-  run: async (client, message, args, cmduser, text, prefix) => {
-    try {
-      //get the channel instance
-      const {
-        channel
-      } = message.member.voice;
-      //if not in a voice Channel return error
-      if (!channel)
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
-        );
-      //get the player instance
-      const player = client.manager.players.get(message.guild.id);
-      //f not in the same channel --> return
-      if (player && channel.id !== player.voiceChannel)
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
-          .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
-        );
+  parameters: {"type":"music", "activeplayer": false, "previoussong": false},
+  run: async (client, message, args, cmduser, text, prefix, player) => {
+    try{
       //play the SONG from YOUTUBE
       playermanager(client, message, Array(songoftheday.track.url), `song:youtube`);
     } catch (e) {

@@ -16,36 +16,9 @@ module.exports = {
   aliases: [`qu`, `que`, `queu`, `list`],
   description: `Shows the Queue`,
   usage: `queue`,
-  run: async (client, message, args, cmduser, text, prefix) => {
-    try {
-      //get the channel instance from the Member
-      const {
-        channel
-      } = message.member.voice;
-      //if the member is not in a channel, return
-      if (!channel)
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | You need to join a voice channel.`)
-        );
-      //get the player instance
-      const player = client.manager.players.get(message.guild.id);
-      //if no player available return error | aka not playing anything
-      if (!player)
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | There is nothing playing`)
-        );
-      //if not in the same channel as the player, return Error
-      if (channel.id !== player.voiceChannel)
-        return message.channel.send(new MessageEmbed()
-          .setFooter(ee.footertext, ee.footericon)
-          .setColor(ee.wrongcolor)
-          .setTitle(`${emoji.msg.ERROR} Error | You need to be in my voice channel to use this command!`)
-          .setDescription(`Channelname: \`${message.guild.channels.cache.get(player.voiceChannel).name}\``)
-        );
+  parameters: {"type":"music", "activeplayer": true, "previoussong": false},
+  run: async (client, message, args, cmduser, text, prefix, player) => {
+    try{
       //get the right tracks of the current tracks
       const tracks = player.queue;
       //if there are no other tracks, information
@@ -73,7 +46,7 @@ module.exports = {
           }))
           .setFooter(ee.footertext, ee.footericon)
           .addField(`**0) CURRENT TRACK**`, `**${player.queue.current.title.substr(0, 60)}** - \`${player.queue.current.isStream ? `LIVE STREAM` : format(player.queue.current.duration).split(` | `)[0]}\`\n*request by: ${player.queue.current.requester.tag}*`)
-          .setColor(ee.color).setDescription(tracks.map((track, i) => `**${++i})** **${track.title.substr(0, 60)}** - \`${track.isStream ? `LIVE STREAM` : format(track.duration).split(` | `)[0]}\`\n**requested by: ${track.requester.tag}**`).join(`\n`))
+          .setColor(ee.color).setDescription(tracks.map((track, i) => `**${++i})** **${track.title.substr(0, 60)}** - \`${track.isStream ? `LIVE STREAM` : format(track.duration).split(` | `)[0]}\`\n*requested by: ${track.requester.tag}*`).join(`\n`))
         ).then(msg => {
           try {
             msg.delete({
@@ -86,7 +59,7 @@ module.exports = {
       let quelist = [];
       for (let i = 0; i < tracks.length; i += 15) {
         let songs = tracks.slice(i, i + 15);
-        quelist.push(songs.map((track, index) => `**${i + ++index})** [${track.title.split(`[`).join(`{`).split(`]`).join(`}`).substr(0, 35)}](${track.uri}) - \`${track.isStream ? `LIVE STREAM` : format(track.duration).split(` | `)[0]}\`\n*requested by: ${track.requester.tag}*`).join(`\n`))
+        quelist.push(songs.map((track, index) => `**${i + ++index})** **${track.title.substr(0, 60)}** - \`${track.isStream ? `LIVE STREAM` : format(track.duration).split(` | `)[0]}\`\n*requested by: ${track.requester.tag}*`).join(`\n`))
       }
       let limit = quelist.length <= 5 ? quelist.length : 5
       let embeds = []
