@@ -82,7 +82,7 @@ module.exports = async (client, message) => {
         client.stats.inc(message.guild.id, "commands"); //counting our Database stats for SERVER
         client.stats.inc("global", "commands"); //counting our Database Stats for GLOBAL
         //run the command with the parameters:  client, message, args, user, text, prefix,
-        command.run(client, message, args, message.member, args.join(" "), config.prefix);
+        command.run(client, message, args, message.member, args.join(" "), config.prefix, player);
       } catch (e) {
         console.log(String(e.stack).red)
         return message.channel.send(new Discord.MessageEmbed()
