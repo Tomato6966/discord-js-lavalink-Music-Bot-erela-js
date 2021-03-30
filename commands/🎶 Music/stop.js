@@ -15,6 +15,12 @@ module.exports = {
   run: async (client, message, args, cmduser, text, prefix, player) => {
     try{
       //if there is no current track error
+      if (!player)
+      return message.channel.send(new MessageEmbed()
+        .setFooter(ee.footertext, ee.footericon)
+        .setColor(ee.wrongcolor)
+        .setTitle(`${emoji.msg.ERROR} Error | No song is currently playing in this guild.`)
+      );
       if (!player.queue.current)
         return message.channel.send(new MessageEmbed()
           .setFooter(ee.footertext, ee.footericon)
