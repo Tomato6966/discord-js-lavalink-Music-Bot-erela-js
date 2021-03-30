@@ -96,15 +96,15 @@ module.exports = {
      /* OLD CREATE BAR WAY*/
 
     try{
-      //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji)
-      if (!player.queue.current) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
-      let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
-      let total = player.queue.current.duration;
       let size = 25;
       let line = "▬";
+      let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
+      let total = player.queue.current.duration;
+      //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji)
+      if (!player.queue.current) return `**[🔶${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
       let slider = config.settings.progressbar_emoji;
       let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
-      if (!String(bar).includes(config.settings.progressbar_emoji)) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
+      if (!String(bar).includes(config.settings.progressbar_emoji)) return `**[🔶${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
       return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
     }catch (e){
       console.log(String(e.stack).bgRed)
@@ -537,14 +537,14 @@ module.exports = {
 
         try{
           //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji)
-          if (!player.queue.current) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
+          if (!player.queue.current) return `**[🔶${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
           let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
           let total = player.queue.current.duration;
           let size = 25;
           let line = "▬";
           let slider = config.settings.progressbar_emoji;
           let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
-          if (!String(bar).includes(config.settings.progressbar_emoji)) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
+          if (!String(bar).includes(config.settings.progressbar_emoji)) return `**[🔶${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
           return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
         }catch (e){
           console.log(String(e.stack).bgRed)
@@ -741,14 +741,14 @@ module.exports = {
 
         try{
           //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji)
-          if (!player.queue.current) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
+          if (!player.queue.current) return `**[🔶${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
           let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
           let total = player.queue.current.duration;
           let size = 25;
           let line = "▬";
           let slider = config.settings.progressbar_emoji;
           let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
-          if (!String(bar).includes(config.settings.progressbar_emoji)) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
+          if (!String(bar).includes(config.settings.progressbar_emoji)) return `**[🔶${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
           return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
         }catch (e){
           console.log(String(e.stack).bgRed)
