@@ -448,7 +448,7 @@ module.exports = {
           embed.addField(`${emoji.msg.pause_resume}  State`, `${player.playing ? `${emoji.msg.resume}  Playing Song` : `${emoji.msg.pause}  Paused Song`}`, true)
         } catch {}
         try {
-          embed.addField(`${emoji.msg.time} Progress: `, createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, `▬`, config.settings.progressbar_emoji))
+          embed.addField(`${emoji.msg.time} Progress: `, createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, `▬`, "🔶"))
         } catch {}
         try {
           embed.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({
@@ -486,10 +486,7 @@ module.exports = {
         }
       }
 
-      function createBar(total, current, size = 25, line = "▬", slider = config.settings.progressbar_emoji) {
-        let size = 25;
-        let line = "▬";
-        let slider = "🔶";
+      function createBar(total, current, size = 25, line = "▬", slider = "🔶") {
         let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
         let total = player.queue.current.duration;
         if (!player.queue.current) return `**[${slider}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
@@ -625,7 +622,7 @@ module.exports = {
           embed.addField(`${emoji.msg.pause_resume} State`, `${player.playing ? `${emoji.msg.resume} Playing Song` : `${emoji.msg.pause} Paused Song`}`, true)
         } catch {}
         try {
-          embed.addField(`${emoji.msg.time} Progress: `, createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji))
+          embed.addField(`${emoji.msg.time} Progress: `, createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", "🔶"))
         } catch {}
         try {
           embed.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({
@@ -643,10 +640,7 @@ module.exports = {
         else return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
       }
 
-      function createBar(total, current, size = 25, line = "▬", slider = config.settings.progressbar_emoji) {
-        let size = 25;
-        let line = "▬";
-        let slider = "🔶";
+      function createBar(total, current, size = 25, line = "▬", slider = "🔶") {
         let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
         let total = player.queue.current.duration;
         if (!player.queue.current) return `**[${slider}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
