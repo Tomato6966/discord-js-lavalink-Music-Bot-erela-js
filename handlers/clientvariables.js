@@ -19,7 +19,7 @@ module.exports = (client) => {
      */
     client.defaultEQ = [{
         band: 0,
-        gain: 0.375
+        gain: 0.25
       },
       {
         band: 1,
@@ -67,7 +67,7 @@ module.exports = (client) => {
       },
       {
         band: 12,
-        gain: 0.375
+        gain: 0.25
       },
       {
         band: 13,
