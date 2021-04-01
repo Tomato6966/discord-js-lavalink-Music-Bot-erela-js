@@ -4,6 +4,7 @@
 */
 const config = require("../../botconfig/config.json"); //loading config file with token and prefix, and settings
 const ee = require("../../botconfig/embed.json"); //Loading all embed settings like color footertext and icon ...
+const emoji = require(`../../botconfig/emojis.json`);
 const Discord = require("discord.js"); //this is the official discord.js wrapper for the Discord Api, which we use!
 const { createBar, format, databasing, escapeRegex, isrequestchannel, getRandomInt, delay} = require("../../handlers/functions"); //Loading all needed functions
 const requestcmd = require("../../handlers/requestcmds");
@@ -246,7 +247,7 @@ module.exports = async (client, message) => {
               }
             }
             //if not in the same channel --> return
-            if (player && channel.id !== player.voiceChannel)
+            if (player && channel.id !== player.voiceChannel && !command.parameters.notsamechannel)
               return message.channel.send(new MessageEmbed()
                 .setColor(ee.wrongcolor)
                 .setFooter(ee.footertext, ee.footericon)
@@ -254,7 +255,7 @@ module.exports = async (client, message) => {
                 .setDescription(`Channelname: \`🔈 ${message.guild.channels.cache.get(player.voiceChannel).name}\``)
               );
             //if not in the same channel --> return
-            if (mechannel && channel.id !== mechannel.id)
+            if (mechannel && channel.id !== mechannel.id && !command.parameters.notsamechannel)
             return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
