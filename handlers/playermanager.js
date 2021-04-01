@@ -106,7 +106,7 @@ async function similar(client, message, args, type) {
         embed2.setURL(res.tracks[0].uri).setColor(ee.color).setFooter(ee.footertext, ee.footericon)
       } catch {}
       try {
-        embed2.setThumbnail(res.tracks[0].displayThumbnail(1))
+        embed2.setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
       } catch {}
       try {
         embed2.addField("⌛ Duration: ", `\`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
@@ -198,9 +198,8 @@ async function similar(client, message, args, type) {
         );
       if (player.state !== "CONNECTED") {
         // Connect to the voice channel and add the track to the queue
-        try {
-          player.connect();
-        } catch {}
+
+        player.connect();
         player.queue.add(track);
         player.play();
         if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
@@ -256,6 +255,18 @@ async function search(client, message, args, type) {
   const search = args.join(" ");
   try {
     let res;
+    let player;
+    player = client.manager.create({
+      guild: message.guild.id,
+      voiceChannel: message.member.voice.channel.id,
+      textChannel: message.channel.id,
+      selfDeafen: config.settings.selfDeaf,
+    });
+    let state = player.state;
+    if (state !== "CONNECTED") { 
+      player.connect();
+      player.stop();
+    }
     try {
       // Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
       res = await client.manager.search({
@@ -340,48 +351,40 @@ async function search(client, message, args, type) {
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
         .setDescription(`Please retry!`)
       );
-    // Create the player
-    let player = client.manager.create({
-      guild: message.guild.id,
-      voiceChannel: message.member.voice.channel.id,
-      textChannel: message.channel.id,
-      selfDeafen: config.settings.selfDeaf,
-    });
-    if (player.state !== "CONNECTED") {
-      // Connect to the voice channel and add the track to the queue
+    if (state !== "CONNECTED") {
       player.connect();
+      //add track
+      player.queue.add(track);
+      //set the variables
       player.set("message", message);
       player.set("playerauthor", message.author.id);
-      player.queue.add(track);
+      //play track
       player.play();
       if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
-    } else {
+    }
+    else if(!player.queue || !player.queue.current){
+      //add track
+      player.queue.add(track);
+      //set the variables
+      player.set("message", message);
+      player.set("playerauthor", message.author.id);
+      //play track
+      player.play();
+      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
+    }
+    else {
       player.queue.add(track);
       if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
       let embed3 = new Discord.MessageEmbed()
-      try {
-        embed3.setTitle(`Added to Queue 🩸 **\`${track.title}`.substr(0, 256 - 3) + "`**")
-      } catch {}
-      try {
-        embed3.setURL(track.uri).setColor(ee.color).setFooter(ee.footertext, ee.footericon)
-      } catch {}
-      try {
-        embed3.setThumbnail(track.displayThumbnail(1))
-      } catch {}
-      try {
-        embed3.addField("⌛ Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
-      } catch {}
-      try {
-        embed3.addField("💯 Song By: ", `\`${track.author}\``, true)
-      } catch {}
-      try {
-        embed3.addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-      } catch {}
-      try {
-        embed3.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({
+        .setTitle(`Added to Queue 🩸 **\`${track.title}`.substr(0, 256 - 3) + "`**")
+        .setURL(track.uri).setColor(ee.color).setFooter(ee.footertext, ee.footericon)
+        .setThumbnail(track.displayThumbnail(1))
+        .addField("⌛ Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
+        .addField("💯 Song By: ", `\`${track.author}\``, true)
+        .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
+        .setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({
           dynamic: true
         }))
-      } catch {}
       return message.channel.send(embed3).then(msg => {
         try {
           msg.delete({
@@ -558,6 +561,18 @@ async function playlist(client, message, args, type) {
   const search = args.join(" ");
   try {
     let res;
+    let player;
+    player = client.manager.create({
+      guild: message.guild.id,
+      voiceChannel: message.member.voice.channel.id,
+      textChannel: message.channel.id,
+      selfDeafen: config.settings.selfDeaf,
+    });
+    let state = player.state;
+    if (state !== "CONNECTED") { 
+      player.connect();
+      player.stop();
+    }
     try {
       // Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
       res = await client.manager.search(search, message.author);
@@ -582,39 +597,25 @@ async function playlist(client, message, args, type) {
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
         .setDescription(`Please retry!`)
       );
-    let player = client.manager.create({
-      guild: message.guild.id,
-      voiceChannel: message.member.voice.channel.id,
-      textChannel: message.channel.id,
-      selfDeafen: config.settings.selfDeaf,
-    });
-    // Connect to the voice channel and add the track to the queue
-    if (player.state !== "CONNECTED") {
+    //if the player is not connected, then connect and create things
+    if (state !== "CONNECTED") {
       player.connect();
+      //add track
+      player.queue.add(res.tracks);
+      //set the variables
       player.set("message", message);
       player.set("playerauthor", message.author.id);
-      player.queue.add(res.tracks);
+      //play track
+      player.play();
       let playlistembed = new Discord.MessageEmbed()
-      try {
-        playlistembed.setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256 - 3) + "`**")
-      } catch {}
-      try {
-        playlistembed.setURL(res.playlist.uri).setColor(ee.color).setFooter(ee.footertext, ee.footericon)
-      } catch {}
-      try {
-        playlistembed.setThumbnail(res.tracks[0].displayThumbnail(1))
-      } catch {}
-      try {
-        playlistembed.addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
-      } catch {}
-      try {
-        playlistembed.addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-      } catch {}
-      try {
-        playlistembed.setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
+        .setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256 - 3) + "`**")
+        .setURL(res.playlist.uri).setColor(ee.color).setFooter(ee.footertext, ee.footericon)
+        .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
+        .addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
+        .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
+        .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
           dynamic: true
         }))
-      } catch {}
       message.channel.send(playlistembed).then(msg => {
         try {
           msg.delete({
@@ -624,32 +625,48 @@ async function playlist(client, message, args, type) {
           /* */
         }
       });
-      player.play();
       if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
-    } else {
+    }
+    else if(!player.queue || !player.queue.current){
+      //add track
+      player.queue.add(res.tracks);
+      //set the variables
+      player.set("message", message);
+      player.set("playerauthor", message.author.id);
+      //play track
+      player.play();
+      let playlistembed = new Discord.MessageEmbed()
+        .setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256 - 3) + "`**")
+        .setURL(res.playlist.uri).setColor(ee.color).setFooter(ee.footertext, ee.footericon)
+        .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
+        .addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
+        .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
+        .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
+          dynamic: true
+        }))
+      message.channel.send(playlistembed).then(msg => {
+        try {
+          msg.delete({
+            timeout: 4000
+          }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
+        } catch {
+          /* */
+        }
+      });
+      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
+    }
+    else {
       player.queue.add(res.tracks);
       if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
       let playlistembed2 = new Discord.MessageEmbed()
-      try {
-        playlistembed2.setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256 - 3) + "`**")
-      } catch {}
-      try {
-        playlistembed2.setURL(res.playlist.uri).setColor(ee.color).setFooter(ee.footertext, ee.footericon)
-      } catch {}
-      try {
-        playlistembed2.setThumbnail(res.tracks[0].displayThumbnail(1))
-      } catch {}
-      try {
-        playlistembed2.addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
-      } catch {}
-      try {
-        playlistembed2.addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-      } catch {}
-      try {
-        playlistembed2.setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
+        .setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256 - 3) + "`**")
+        .setURL(res.playlist.uri).setColor(ee.color).setFooter(ee.footertext, ee.footericon)
+        .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
+        .addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
+        .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
+        .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
           dynamic: true
         }))
-      } catch {}
       return message.channel.send(playlistembed2).then(msg => {
         try {
           msg.delete({
@@ -675,6 +692,18 @@ async function song(client, message, args, type) {
   const search = args.join(" ");
   try {
     let res;
+    let player;
+    player = client.manager.create({
+      guild: message.guild.id,
+      voiceChannel: message.member.voice.channel.id,
+      textChannel: message.channel.id,
+      selfDeafen: config.settings.selfDeaf,
+    });
+    let state = player.state;
+    if (state !== "CONNECTED") { 
+      player.connect();
+      player.stop();
+    }
     try {
       // Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
       if (type.split(":")[1] === "youtube" || type.split(":")[1] === "soundcloud")
@@ -706,19 +735,25 @@ async function song(client, message, args, type) {
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
         .setDescription(`Please retry!`)
       );
-    // Create the player
-    let player = client.manager.create({
-      guild: message.guild.id,
-      voiceChannel: message.member.voice.channel.id,
-      textChannel: message.channel.id,
-      selfDeafen: config.settings.selfDeaf,
-    });
-    // Connect to the voice channel and add the track to the queue
-    if (player.state !== "CONNECTED") {
+    //if the player is not connected, then connect and create things
+    if (state !== "CONNECTED") {
       player.connect();
+      //add track
+      player.queue.add(res.tracks[0]);
+      //set the variables
       player.set("message", message);
       player.set("playerauthor", message.author.id);
+      //play track
+      player.play();
+      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
+    }
+    else if(!player.queue || !player.queue.current){
+      //add track
       player.queue.add(res.tracks[0]);
+      //set the variables
+      player.set("message", message);
+      player.set("playerauthor", message.author.id);
+      //play track
       player.play();
       if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
     } else {
@@ -735,7 +770,7 @@ async function song(client, message, args, type) {
         playembed.setURL(res.tracks[0].uri).setColor(ee.color).setFooter(ee.footertext, ee.footericon)
       } catch {}
       try {
-        playembed.setThumbnail(res.tracks[0].displayThumbnail(1))
+        playembed.setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
       } catch {}
       try {
         playembed.addField("⌛ Duration: ", `\`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
@@ -776,6 +811,18 @@ async function skiptrack(client, message, args, type) {
   const search = args.join(" ");
   try {
     let res;
+    let player;
+    player = client.manager.create({
+      guild: message.guild.id,
+      voiceChannel: message.member.voice.channel.id,
+      textChannel: message.channel.id,
+      selfDeafen: config.settings.selfDeaf,
+    });
+    let state = player.state;
+    if (state !== "CONNECTED") { 
+      player.connect();
+      player.stop();
+    }
     try {
       // Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
       if (type.split(":")[1] === "youtube" || type.split(":")[1] === "soundcloud")
@@ -807,19 +854,25 @@ async function skiptrack(client, message, args, type) {
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
         .setDescription(`Please retry!`)
       );
-    // Create the player
-    let player = client.manager.create({
-      guild: message.guild.id,
-      voiceChannel: message.member.voice.channel.id,
-      textChannel: message.channel.id,
-      selfDeafen: config.settings.selfDeaf,
-    });
-    // Connect to the voice channel and add ?the track to the queue
-    if (player.state !== "CONNECTED") {
+    //if the player is not connected, then connect and create things
+    if (state !== "CONNECTED") {
       player.connect();
+      //add track
+      player.queue.add(res.tracks[0]);
+      //set the variables
       player.set("message", message);
       player.set("playerauthor", message.author.id);
+      //play track
+      player.play();
+      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
+    }
+    else if(!player.queue || !player.queue.current){
+      //add track
       player.queue.add(res.tracks[0]);
+      //set the variables
+      player.set("message", message);
+      player.set("playerauthor", message.author.id);
+      //play track
       player.play();
       if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
     } else {
