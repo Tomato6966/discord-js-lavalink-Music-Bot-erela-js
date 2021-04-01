@@ -132,7 +132,12 @@ module.exports = (client) => {
           player.set(`afk-${player.guild}`, false)
           player.set(`afk-${player.get("playerauthor")}`, false)
           player.setEQ(client.eqs.music);
-
+          try{
+            let guild = client.guilds.cache.get(player.guild)
+            if(config.settings.serverDeaf) guild.me.voice.setDeaf(true);
+          }catch (e) {
+            console.log(e)
+          }
           databasing(client, player.guild, player.get("playerauthor"));
 
           var embed = new MessageEmbed();
@@ -929,6 +934,33 @@ module.exports = (client) => {
         /* */ }
     })
     client.on("voiceStateUpdate", (oldState, newState) => {
+      if(newState.id === client.user.id && oldState.serverDeaf === true && newState.serverDeaf === false)
+          {
+              try{
+                  const channel = newState.member.guild.channels.cache.find(
+                      channel =>
+                        channel.type === "text" &&
+                        ( channel.name.toLowerCase().includes("cmd") ||channel.name.toLowerCase().includes("command") ||  channel.toLowerCase().name.includes("bot") ) &&
+                        channel.permissionsFor(newState.member.guild.me).has("SEND_MESSAGES")
+                    );
+                    channel.send("Don't unmute me!, i muted my self again! This safes Data so it gives you a faster and smoother experience")
+                    newState.setDeaf(true);
+              }catch (error) {
+                  try{
+                      console.log("could not send info msg in a botchat")
+                      const channel = newState.member.guild.channels.cache.find(
+                          channel =>
+                            channel.type === "text" &&
+                            channel.permissionsFor(newState.member.guild.me).has("SEND_MESSAGES")
+                        );
+                        channel.send("Don't unmute me!, i muted my self again! This safes Data so it gives you a faster and smoother experience")
+                        newState.setDeaf(true);
+                  }catch (error) {
+                    console.log("could not send info msg in a random chat")
+                    newState.setDeaf(true);
+                  }
+              }
+      }
       // LEFT V12
       if (oldState.channelID && !newState.channelID) {
         //if bot left
@@ -1003,7 +1035,6 @@ module.exports = (client) => {
         }
       }
     });
-
   } catch (e) {
     console.log(String(e.stack).bgRed)
   }
