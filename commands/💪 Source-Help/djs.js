@@ -13,26 +13,15 @@ module.exports = {
   usage: "djs [QUEURY]",
   description: "DOES SEARCH FOR THE DISCORD.JS DOCS and gives u help",
   run: async (client, message, args, user, text, prefix) => {
-    try {
-      const urltosearch = `https://djsdocs.sorta.moe/v2/embed?src=stable&q=${args.join(" ")}`;
-      axios.get(urltosearch).then(embed => {
-        const {
-          data
-        } = embed;
-        data.color = ee.color
-        message.channel.send({
-          embed: data
-        });
+    axios.get(`https://djsdocs.sorta.moe/v2/embed?src=stable&q=${args.join(" ")}`).then(embed => {
+      const {
+        data
+      } = embed;
+      data.color = ee.color
+      message.channel.send({
+        embed: data
       });
-    } catch (e) {
-      console.log(String(e.stack).bgRed)
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.color)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${emoji.msg.ERROR}  ERROR | An error occurred`)
-        .setDescription(`\`\`\`${e.message}\`\`\``)
-      );
-    }
+    });
   }
 };
 /**
