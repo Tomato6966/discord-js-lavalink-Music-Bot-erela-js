@@ -247,7 +247,7 @@ module.exports = async (client, message) => {
               }
             }
             //if not in the same channel --> return
-            if (player && channel.id !== player.voiceChannel)
+            if (player && channel.id !== player.voiceChannel && !command.parameters.notsamechannel)
               return message.channel.send(new MessageEmbed()
                 .setColor(ee.wrongcolor)
                 .setFooter(ee.footertext, ee.footericon)
@@ -255,7 +255,7 @@ module.exports = async (client, message) => {
                 .setDescription(`Channelname: \`🔈 ${message.guild.channels.cache.get(player.voiceChannel).name}\``)
               );
             //if not in the same channel --> return
-            if (mechannel && channel.id !== mechannel.id)
+            if (mechannel && channel.id !== mechannel.id && !command.parameters.notsamechannel)
             return message.channel.send(new MessageEmbed()
               .setColor(ee.wrongcolor)
               .setFooter(ee.footertext, ee.footericon)
