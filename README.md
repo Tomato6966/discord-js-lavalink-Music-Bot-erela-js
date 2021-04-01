@@ -12,7 +12,7 @@
 
  **4** Fill in the parameters, RIGHT in `botconfig/config.json`!
 
- **5.** [Download Lavalink](https://ci.fredboat.com/viewLog.html?buildId=lastSuccessful&buildTypeId=Lavalink_Build&tab=artifacts&guest=1) and download Java 15 (Java 13 recommended)
+ **5.** [Download Lavalink](https://cdn.discordapp.com/attachments/798196676405755905/827174915714711572/Lavalink.jar) and download Java 15 (Java 13 recommended)
 
  **5.1** Run the Lavalink file with: **`java -jar Lavalink.jar`**
 
