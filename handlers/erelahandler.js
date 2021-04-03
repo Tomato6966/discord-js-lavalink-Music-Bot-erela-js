@@ -847,7 +847,7 @@ module.exports = (client) => {
           setTimeout(async () => {
             try {
               player = client.manager.players.get(player.guild);
-              if (player.queue.size === 0) {
+              if (!player.queue || !player.queue.current) {
                 var embed = new MessageEmbed()
                   embed.setTitle(`${emoji.msg.ERROR} Queue has ended.`)
                   embed.setDescription(`I left the Channel: ${client.channels.cache.get(player.voiceChannel) ? client.channels.cache.get(player.voiceChannel).name : "UNKNOWN"} because the Queue was empty for: ${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}`)
@@ -868,28 +868,19 @@ module.exports = (client) => {
                 
                 //send information message
                 client.channels.cache.get(player.textChannel).send(embed).then(msg => {
-                  try {
                     msg.delete({
                       timeout: 4000
                     }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                  } catch {
-                    /* */ }
                 });
 
-                try {
                   client.channels.cache
                     .get(player.textChannel)
                     .messages.fetch(player.get("playermessage")).then(msg => {
-                      try {
                         msg.delete({
                           timeout: 4000
                         }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                      } catch {
-                        /* */ }
                     });
-                } catch (e) {
-                  console.log(String(e.stack).yellow);
-                }
+      
                 player.destroy();
               }
             } catch (e) {
@@ -994,7 +985,8 @@ module.exports = (client) => {
               //if not connect return player.destroy()
               if (!oldState.guild.me.voice.channel && player) return player.destroy();
               //wait some time...
-              if (player && oldState.guild.channels.cache.get(player.voiceChannel).members.size === 1) {
+              var vc = oldState.guild.channels.cache.get(player.voiceChannel)
+              if (player && vc && vc.members.size === 1) {
                 var embed = new MessageEmbed()
                   .setTitle(`${emoji.msg.ERROR} Queue has ended | Channel Empty`)
                   .setDescription(`I left the Channel: ${client.channels.cache.get(player.voiceChannel).name} because the Channel was empty for: ${ms(config.settings.leaveOnEmpty_Channel.time_delay, { long: true })}`)

@@ -100,8 +100,8 @@ async function similar(client, message, args, type) {
       player.queue.add(res.tracks[0]);
       //if its in a request channel edit it
       var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
-      if (irc) edit_request_message_track_info(client, player, player.queue.current);
-      edit_request_message_queue_info(client, player);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
       //send information message
       let embed2 = new Discord.MessageEmbed()
       try {
@@ -209,8 +209,8 @@ async function similar(client, message, args, type) {
         player.play();
 
         var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
-        if (irc) edit_request_message_track_info(client, player, player.queue.current);
-        edit_request_message_queue_info(client, player);
+        if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+        edit_request_message_queue_info(client, player);}
       } else {
         player.queue.add(track);
         let embed = new Discord.MessageEmbed()
@@ -239,8 +239,8 @@ async function similar(client, message, args, type) {
         } catch {}
 
         var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
-        if (irc) edit_request_message_track_info(client, player, player.queue.current);
-        edit_request_message_queue_info(client, player);
+        if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+        edit_request_message_queue_info(client, player);}
         return message.channel.send(embed).then(msg => {
           try {
             msg.delete({
@@ -368,14 +368,14 @@ async function search(client, message, args, type) {
       player.play();
 
       var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
-      if (irc) edit_request_message_track_info(client, player, player.queue.current);
-      edit_request_message_queue_info(client, player);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
     } else {
       player.queue.add(track);
 
       var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
-      if (irc) edit_request_message_track_info(client, player, player.queue.current);
-      edit_request_message_queue_info(client, player);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
       let embed3 = new Discord.MessageEmbed()
         .setTitle(`Added to Queue 🩸 **\`${track.title}`.substr(0, 256 - 3) + "`**")
         .setURL(track.uri).setColor(ee.color).setFooter(ee.footertext, ee.footericon)
@@ -511,14 +511,14 @@ async function searchplaylist(client, message, args, type) {
       player.play();
 
       var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
-      if (irc) edit_request_message_track_info(client, player, player.queue.current);
-      edit_request_message_queue_info(client, player);
+      if (irc){ edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
     } else {
       player.queue.add(track);
 
       var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
-      if (irc) edit_request_message_track_info(client, player, player.queue.current);
-      edit_request_message_queue_info(client, player);
+      if (irc){ edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
       let embed3 = new Discord.MessageEmbed()
       try {
         embed3.setTitle(`Added to Queue 🩸 **\`${track.title}`.substr(0, 256 - 3) + "`**")
@@ -630,14 +630,14 @@ async function playlist(client, message, args, type) {
       });
 
       var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
-      if (irc) edit_request_message_track_info(client, player, player.queue.current);
-      edit_request_message_queue_info(client, player);
+      if (irc){ edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
     } else {
       player.queue.add(res.tracks);
 
       var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
-      if (irc) edit_request_message_track_info(client, player, player.queue.current);
-      edit_request_message_queue_info(client, player);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
       let playlistembed2 = new Discord.MessageEmbed()
         .setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256 - 3) + "`**")
         .setURL(res.playlist.uri).setColor(ee.color).setFooter(ee.footertext, ee.footericon)
@@ -723,16 +723,16 @@ async function song(client, message, args, type) {
       //RESUME
       player.pause(false);
       var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
-      if (irc) edit_request_message_track_info(client, player, player.queue.current);
-      edit_request_message_queue_info(client, player);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
     } else {
       //add the latest track
       player.queue.add(res.tracks[0]);
       //if its in a request channel edit queu info
 
       var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
-      if (irc) edit_request_message_track_info(client, player, player.queue.current);
-      edit_request_message_queue_info(client, player);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
       //send track information
       let playembed = new Discord.MessageEmbed()
       try {
@@ -910,8 +910,8 @@ async function skiptrack(client, message, args, type) {
       player.play();
 
       var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
-      if (irc) edit_request_message_track_info(client, player, player.queue.current);
-      edit_request_message_queue_info(client, player);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
     } else {
       player.queue.add(res.tracks[0]);
       //get the new Song
@@ -927,8 +927,8 @@ async function skiptrack(client, message, args, type) {
       player.stop();
 
       var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
-      if (irc) edit_request_message_track_info(client, player, player.queue.current);
-      edit_request_message_queue_info(client, player);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
       return;
     }
   } catch (e) {
