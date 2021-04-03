@@ -115,7 +115,7 @@ module.exports = {
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
             .setTitle(`${emoji.msg.ERROR}  Error | You did not created that player!`)
-            .setDescription(`*The one who requests, the first Song is the Creator of the Player: * ${message.guild.members.cache.get(player.get(`playerauthor`)).user}`)
+            .setDescription(`*The one who requests, the first Song is the Creator of the Player: * ${message.guild.members.cache.get(player.get(`playerauthor`)) ? message.guild.members.cache.get(player.get(`playerauthor`)).user : "could not get the data of the USER"}`)
           );
         //toggle the database state
         player.set(`afk-${player.get(`playerauthor`)}`, !player.get(`afk-${player.get(`playerauthor`)}`))
