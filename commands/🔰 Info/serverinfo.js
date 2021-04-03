@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+const {MessageEmbed} = require("discord.js");
 const config = require("../../botconfig/config.json")
 const ee = require("../../botconfig/embed.json")
 const emoji = require(`../../botconfig/emojis.json`);
@@ -10,11 +11,12 @@ module.exports = {
   usage: "serverinfo",
   run: async (client, message, args, cmduser, text, prefix) => {
     try {
+      
       message.channel.send(new Discord.MessageEmbed()
         .setTitle("Server Information")
         .setColor(ee.color)
         .addField("Server Name", "\`" + message.guild.name + "\`")
-        .addField("Owner", "\`" + `${message.guild.owner.user.username}#${message.guild.owner.user.discriminator}\`"`, true)
+        .addField("Owner", "\`" + `${message.guild.owner.user.username}#${message.guild.owner.user.discriminator}\``, true)
         .addField("Channels", "\`" + message.guild.channels.cache.size + "\`", true)
         .addField("Roles", "\`" + message.guild.roles.cache.size + "\`", true)
         .addField("Created On", "\`" + message.guild.createdAt + "\`")
@@ -32,7 +34,7 @@ module.exports = {
       return message.channel.send(new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
+        .setTitle(`:x: ERROR | An error occurred`)
         .setDescription(`\`\`\`${e.message}\`\`\``)
       );
     }
