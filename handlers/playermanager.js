@@ -9,6 +9,7 @@ const {
   delay,
   isrequestchannel,
   edit_request_message_queue_info,
+  edit_request_message_track_info,
   arrayMove
 } = require("../handlers/functions")
 module.exports = async (client, message, args, type) => {
@@ -58,6 +59,8 @@ module.exports = async (client, message, args, type) => {
 
   if (method[0] === "song")
     song(client, message, args, type);
+  else if (method[0] === "request")
+    request(client, message, args, type);
   else if (method[0] === "playlist")
     playlist(client, message, args, type);
   else if (method[0] === "similar")
@@ -96,7 +99,9 @@ async function similar(client, message, args, type) {
       //add the track
       player.queue.add(res.tracks[0]);
       //if its in a request channel edit it
-      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
+      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
       //send information message
       let embed2 = new Discord.MessageEmbed()
       try {
@@ -202,7 +207,10 @@ async function similar(client, message, args, type) {
         player.connect();
         player.queue.add(track);
         player.play();
-        if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
+
+        var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+        if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+        edit_request_message_queue_info(client, player);}
       } else {
         player.queue.add(track);
         let embed = new Discord.MessageEmbed()
@@ -229,7 +237,10 @@ async function similar(client, message, args, type) {
             dynamic: true
           }))
         } catch {}
-        if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
+
+        var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+        if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+        edit_request_message_queue_info(client, player);}
         return message.channel.send(embed).then(msg => {
           try {
             msg.delete({
@@ -262,11 +273,6 @@ async function search(client, message, args, type) {
       textChannel: message.channel.id,
       selfDeafen: config.settings.selfDeaf,
     });
-    let state = player.state;
-    if (state !== "CONNECTED") { 
-      player.connect();
-      player.stop();
-    }
     try {
       // Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
       res = await client.manager.search({
@@ -351,7 +357,7 @@ async function search(client, message, args, type) {
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
         .setDescription(`Please retry!`)
       );
-    if (state !== "CONNECTED") {
+    if (player.state !== "CONNECTED") {
       player.connect();
       //add track
       player.queue.add(track);
@@ -360,21 +366,16 @@ async function search(client, message, args, type) {
       player.set("playerauthor", message.author.id);
       //play track
       player.play();
-      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
-    }
-    else if(!player.queue || !player.queue.current){
-      //add track
+
+      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
+    } else {
       player.queue.add(track);
-      //set the variables
-      player.set("message", message);
-      player.set("playerauthor", message.author.id);
-      //play track
-      player.play();
-      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
-    }
-    else {
-      player.queue.add(track);
-      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
+
+      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
       let embed3 = new Discord.MessageEmbed()
         .setTitle(`Added to Queue 🩸 **\`${track.title}`.substr(0, 256 - 3) + "`**")
         .setURL(track.uri).setColor(ee.color).setFooter(ee.footertext, ee.footericon)
@@ -508,10 +509,16 @@ async function searchplaylist(client, message, args, type) {
       player.set("playerauthor", message.author.id);
       player.queue.add(track);
       player.play();
-      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
+
+      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      if (irc){ edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
     } else {
       player.queue.add(track);
-      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
+
+      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      if (irc){ edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
       let embed3 = new Discord.MessageEmbed()
       try {
         embed3.setTitle(`Added to Queue 🩸 **\`${track.title}`.substr(0, 256 - 3) + "`**")
@@ -569,10 +576,6 @@ async function playlist(client, message, args, type) {
       selfDeafen: config.settings.selfDeaf,
     });
     let state = player.state;
-    if (state !== "CONNECTED") { 
-      player.connect();
-      player.stop();
-    }
     try {
       // Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
       res = await client.manager.search(search, message.author);
@@ -598,7 +601,7 @@ async function playlist(client, message, args, type) {
         .setDescription(`Please retry!`)
       );
     //if the player is not connected, then connect and create things
-    if (state !== "CONNECTED") {
+    if (player.state !== "CONNECTED") {
       player.connect();
       //add track
       player.queue.add(res.tracks);
@@ -625,39 +628,16 @@ async function playlist(client, message, args, type) {
           /* */
         }
       });
-      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
-    }
-    else if(!player.queue || !player.queue.current){
-      //add track
+
+      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      if (irc){ edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
+    } else {
       player.queue.add(res.tracks);
-      //set the variables
-      player.set("message", message);
-      player.set("playerauthor", message.author.id);
-      //play track
-      player.play();
-      let playlistembed = new Discord.MessageEmbed()
-        .setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256 - 3) + "`**")
-        .setURL(res.playlist.uri).setColor(ee.color).setFooter(ee.footertext, ee.footericon)
-        .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
-        .addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
-        .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-        .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
-          dynamic: true
-        }))
-      message.channel.send(playlistembed).then(msg => {
-        try {
-          msg.delete({
-            timeout: 4000
-          }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-        } catch {
-          /* */
-        }
-      });
-      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
-    }
-    else {
-      player.queue.add(res.tracks);
-      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
+
+      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
       let playlistembed2 = new Discord.MessageEmbed()
         .setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256 - 3) + "`**")
         .setURL(res.playlist.uri).setColor(ee.color).setFooter(ee.footertext, ee.footericon)
@@ -699,11 +679,6 @@ async function song(client, message, args, type) {
       textChannel: message.channel.id,
       selfDeafen: config.settings.selfDeaf,
     });
-    let state = player.state;
-    if (state !== "CONNECTED") { 
-      player.connect();
-      player.stop();
-    }
     try {
       // Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
       if (type.split(":")[1] === "youtube" || type.split(":")[1] === "soundcloud")
@@ -736,7 +711,7 @@ async function song(client, message, args, type) {
         .setDescription(`Please retry!`)
       );
     //if the player is not connected, then connect and create things
-    if (state !== "CONNECTED") {
+    if (player.state !== "CONNECTED") {
       player.connect();
       //add track
       player.queue.add(res.tracks[0]);
@@ -745,22 +720,19 @@ async function song(client, message, args, type) {
       player.set("playerauthor", message.author.id);
       //play track
       player.play();
-      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
-    }
-    else if(!player.queue || !player.queue.current){
-      //add track
-      player.queue.add(res.tracks[0]);
-      //set the variables
-      player.set("message", message);
-      player.set("playerauthor", message.author.id);
-      //play track
-      player.play();
-      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
+      //RESUME
+      player.pause(false);
+      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
     } else {
       //add the latest track
       player.queue.add(res.tracks[0]);
       //if its in a request channel edit queu info
-      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
+
+      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
       //send track information
       let playembed = new Discord.MessageEmbed()
       try {
@@ -806,6 +778,82 @@ async function song(client, message, args, type) {
   }
 
 }
+//function for playling song
+async function request(client, message, args, type) {
+  const search = args.join(" ");
+  let res;
+  let player;
+  player = client.manager.create({
+    guild: message.guild.id,
+    voiceChannel: message.member.voice.channel.id,
+    textChannel: message.channel.id,
+    selfDeafen: false,
+  });
+  res = await client.manager.search({
+    query: search,
+    source: type.split(":")[1]
+  }, message.author);
+  // Check the load type as this command is not that advanced for basics
+  if (res.loadType === "LOAD_FAILED") {
+    throw res.exception;
+  } else if (res.loadType === "PLAYLIST_LOADED") {
+    playlist_()
+  } else {
+    song_()
+  }
+  //function for calling the song
+  function song_() {
+
+    //if no tracks found return info msg
+    if (!res.tracks[0]) {
+      return message.channel.send(`**:x: Found nothing for: \`${search}\`**`);
+    }
+    //create a player if not created
+
+    //if the player is not connected, then connect and create things
+    if (player.state !== "CONNECTED") {
+      player.connect();
+      //add track
+      player.queue.add(res.tracks[0]);
+      //set the variables
+      player.set("message", message);
+      player.set("playerauthor", message.author.id);
+      //play track
+      player.play();
+    } 
+    //otherwise
+    else {
+      //add track
+      player.queue.add(res.tracks[0]);
+      edit_request_message_queue_info(client, player);
+    }
+  }
+  //function for playist
+  function playlist_() {
+    if (!res.tracks[0]) {
+      return message.channel.send(`**:x: Found nothing for: \`${search}\`**`);
+    }
+
+    let player;
+    player = client.manager.create({
+      guild: message.guild.id,
+      voiceChannel: message.member.voice.channel.id,
+      textChannel: message.channel.id,
+      selfDeafen: false,
+    });
+    //if the player is not connected, then connect and create things
+    if (player.state !== "CONNECTED") {
+      player.connect();
+      //add track
+      player.queue.add(res.tracks);
+      //play track
+      player.play();
+    } else {
+      player.queue.add(res.tracks);
+      edit_request_message_queue_info(client, player);
+    }
+  }
+}
 //function for playling song + skipping
 async function skiptrack(client, message, args, type) {
   const search = args.join(" ");
@@ -819,10 +867,6 @@ async function skiptrack(client, message, args, type) {
       selfDeafen: config.settings.selfDeaf,
     });
     let state = player.state;
-    if (state !== "CONNECTED") { 
-      player.connect();
-      player.stop();
-    }
     try {
       // Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
       if (type.split(":")[1] === "youtube" || type.split(":")[1] === "soundcloud")
@@ -864,17 +908,10 @@ async function skiptrack(client, message, args, type) {
       player.set("playerauthor", message.author.id);
       //play track
       player.play();
-      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
-    }
-    else if(!player.queue || !player.queue.current){
-      //add track
-      player.queue.add(res.tracks[0]);
-      //set the variables
-      player.set("message", message);
-      player.set("playerauthor", message.author.id);
-      //play track
-      player.play();
-      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
+
+      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
     } else {
       player.queue.add(res.tracks[0]);
       //get the new Song
@@ -888,7 +925,10 @@ async function skiptrack(client, message, args, type) {
         player.queue.add(track);
       //skip the track
       player.stop();
-      if (isrequestchannel(client, message)) edit_request_message_queue_info(client, player);
+
+      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      if (irc) {edit_request_message_track_info(client, player, player.queue.current);
+      edit_request_message_queue_info(client, player);}
       return;
     }
   } catch (e) {
