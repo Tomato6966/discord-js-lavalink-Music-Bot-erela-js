@@ -13,9 +13,8 @@ const {
 } = require(`discord.js`);
 //here the event starts
 module.exports = async (client, message) => {
-  try {
     //if the message is not in a guild (aka in dms), return aka ignore the inputs
-    if (!message.guild) return;
+    if (!message.guild || !message.channel) return;
     //if the channel is on partial fetch it
     if (message.channel.partial) await message.channel.fetch();
     //if the message is on partial fetch it
@@ -23,7 +22,8 @@ module.exports = async (client, message) => {
     //ensure all databases for this server/user from the databasing function
     databasing(client, message.guild.id, message.author.id)
     //get the setup channel from the database and if its in there sent then do this
-    if(isrequestchannel(client, message)) return requestcmd(client, message); //requestcommands
+    var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+    if(irc) return requestcmd(client, message); //requestcommands
     // if the message  author is a bot, return aka ignore the inputs
     if (message.author.bot) return;
     //get the current prefix from the database
@@ -292,13 +292,6 @@ module.exports = async (client, message) => {
        msg.delete({timeout: 5000}).catch(e=>console.log("couldn't delete message this is a catch to prevent a crash".grey));
       }catch{ /* */ }
     });
-  }catch (e){
-    return message.channel.send(new MessageEmbed()
-      .setColor("RED")
-      .setTitle(`❌ ERROR | An error occurred`)
-      .setDescription(`\`\`\`${e.message}\`\`\``)
-    );
-  }
 }
 /**
   * @INFO

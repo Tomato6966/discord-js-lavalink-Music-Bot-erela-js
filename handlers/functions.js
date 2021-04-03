@@ -354,7 +354,7 @@ module.exports = {
   },
   autoplay: async function (client, player, type) {
     try {
-      if (player.queue.length > 0) return;
+      if (player.queue.size > 0) return;
       const previoustrack = player.get("previoustrack");
       if (!previoustrack) return;
 
@@ -433,93 +433,157 @@ module.exports = {
       console.log(String(e.stack).bgRed)
     }
   },
-  isrequestchannel: function (client, message) {
-    try {
-      if(!message) return;
-      if(!message.guild) return;
+  isrequestchannel: async function (client, channelid, guildid) {
       //get the setup channel from the database
-      if (client.setups.get(message.guild.id, "textchannel") !== "0") {
+      if (client.setups.get(guildid, "textchannel") !== "0") {
         //get the channel from the database channelid data
-        let channel = message.guild.channels.cache.get(client.setups.get(message.guild.id, "textchannel"));
+        let channel = await client.channels.fetch(client.setups.get(guildid, "textchannel"));
         //if the channel is undefined aka not existing reset the database
         if (!channel) {
           return false;
         }
         //if its in the request channel do this
-        if (channel.id === message.channel.id) {
+        if (channel.id === channelid) {
           return true;
         } else {
           return false;
         }
       }
-    } catch (e) {
-      console.log(String(e.stack).bgRed)
-    }
+      else {
+        return false;
+      }
   },
   edit_request_message_track_info: async function (client, player, track) {
+   
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(2);
+      }, 50);
+    });
+
     try {
+      const Player = client.manager.players.get(player.guild)
+
       let message = player.get("message");
       let db = client.setups.get(message.guild.id);
 
-      function SongEmbed(track) {
-        let embed = new MessageEmbed()
-        try {
-          embed.setTitle("Playing :notes: **`" + track.title + "`**")
-        } catch {}
-        try {
-          embed.setURL(track.uri)
-        } catch {}
-        try {
-          embed.setColor(ee.color)
-        } catch {}
-        try {
-          embed.setThumbnail(`https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`)
-        } catch {}
-        try {
-          embed.addField("⌛️ Duration: ", `${track.isStream ? "LIVE STREAM" : format(track.duration)}`, true)
-        } catch {}
-        try {
-          embed.addField("💯 Song By: ", `${track.author}`, true)
-        } catch {}
-        try {
-          embed.addField("🎚 Equalizer: ", `🎵 Music`, true)
-        } catch {}
-        try {
-          embed.addField("🔊 Volume", `${player.volume}%`, true)
-        } catch {}
-        try {
-          embed.addField(`${player.queueRepeat ? `${emoji.msg.repeat_mode} Queue Loop: ` : `${emoji.msg.repeat_mode} Song Loop: `}`, `${player.queueRepeat ? `${emoji.msg.enabled} Enabled` : player.trackRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}`, true)
-        } catch {}
-        try {
-          embed.addField(`${emoji.msg.pause_resume}  State`, `${player.playing ? `${emoji.msg.resume}  Playing Song` : `${emoji.msg.pause}  Paused Song`}`, true)
-        } catch {}
-        try {
-          embed.addField(`${emoji.msg.time} Progress: `, createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, `▬`, config.settings.progressbar_emoji))
-        } catch {}
-        try {
-          embed.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({
-            dynamic: true
-          }));
-        } catch {}
-        return embed;
+      //GET QUEUE INFO MSG
+      let queue_info_msg = await message.channel.messages.fetch(db.message_queue_info);
+              //IF NO QUEUE INFO MSG AVAILABLE --> resend it --> try find TRACK INFO MSG --> delete it!
+              if (!queue_info_msg) return message.channel.send(new MessageEmbed()).then(async msg => {
+                message.edit(QueueEmbed(client, player)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
+                client.setups.set(message.guild.id, msg.id, "message_queue_info");
+                let track_info_msg = await message.channel.messages.fetch(db.message_track_info);
+                if (track_info_msg) track_info_msg.delete().catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
+                return message.channel.send(new MessageEmbed()).then(msg => {
+                  msg.edit(SongEmbed(player.queue.current)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
+                  client.setups.set(message.guild.id, msg.id, "message_track_info");
+                })
+              })
+      //GET TRACK INFO MSG
+      let track_info_msg = await message.channel.messages.fetch(db.message_track_info);
+              //IF NO TRACK INFO MSG --> DELETE
+              if (!track_info_msg) return message.channel.send(new MessageEmbed()).then(msg => {
+                msg.react(emoji.react.rewind) //rewind 20 seconds
+                msg.react(emoji.react.forward) //forward 20 seconds
+                msg.react(emoji.react.pause_resume) //pause / resume
+                msg.react(emoji.react.stop) //stop playing music
+                msg.react(emoji.react.previous_track) //skip back  track / (play previous)
+                msg.react(emoji.react.skip_track) //skip track / stop playing
+                msg.react(emoji.react.replay_track) //replay track
+                msg.react(emoji.react.reduce_volume) //reduce volume by 10%
+                msg.react(emoji.react.raise_volume) //raise volume by 10%
+                msg.react(emoji.react.toggle_mute) //toggle mute
+                msg.react(emoji.react.repeat_mode) //change repeat mode --> track --> Queue --> none
+                msg.react(emoji.react.autoplay_mode) //toggle autoplay mode
+                msg.react(emoji.react.shuffle) //shuffle the Queue
+                msg.react(emoji.react.show_queue) //shows the Queue
+                msg.react(emoji.react.show_current_track) //shows the current Track
+                msg.edit(SongEmbed(player.queue.current));
+                client.setups.set(message.guild.id, msg.id, "message_track_info");
+              })
+
+      if (!Player) {
+        reset(track_info_msg, queue_info_msg);
+        return;
+      }
+      
+      await track_info_msg.edit(SongEmbed(player.queue.current)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
+      await queue_info_msg.edit(QueueEmbed(client, player)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
+      
+      
+
+
+      if (!Player || !Player.queue || !Player.queue.current || Player.queue.totalSize === 0) {
+        reset(track_info_msg, queue_info_msg);
+        return;
       }
 
+      
+
+      function reset(track_info_msg, queue_info_msg) {
+        let embed2 = new MessageEmbed()
+          .setColor(ee.color)
+          .setFooter(`Prefix for this Server is:   ${client.settings.get(track_info_msg.guild.id, "prefix")}`, ee.footericon)
+          .setTitle("Lava Music | Music Queue")
+          .setDescription(`Empty\nJoin a voice channel and queue songs by name or url in here.`)
+        let embed3 = new MessageEmbed()
+          .setColor(ee.color)
+          .setFooter(ee.footertext, ee.footericon)
+          .setTitle("Lava Music | Currently no song is playing!")
+          .setDescription(`> Join a voice channel and enter a song name or url to play.\n\n[Invite Lava Music](https://lava.milrato.eu) • [Support Server](https://discord.com/invite/wvCp7q88G3) • [Website](https://milrato.eu)`)
+          .setImage("https://cdn.discordapp.com/attachments/754700756170440774/812443980293603329/lavamusic.gif")
+        track_info_msg.edit(embed3).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
+        queue_info_msg.edit(embed2).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
+      }
+
+      function createBarlul(player) {
+          if (!player.queue.current) return `**${emoji.msg.progress_bar.emptybeginning}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.emptyend}**\n**00:00:00 / 00:00:00**`;
+          let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
+          let total = player.queue.current.duration;
+          let size = 19;
+          let rightside = size - Math.round(size * (current / total));
+          let leftside = Math.round(size * (current / total));
+          let bar;
+          if (leftside < 1) bar = String(emoji.msg.progress_bar.emptybeginning) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(emoji.msg.progress_bar.emptyend);
+          else bar = String(emoji.msg.progress_bar.leftindicator) + String(emoji.msg.progress_bar.filledframe).repeat(leftside) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(size - rightside !== 1 ? emoji.msg.progress_bar.emptyend : emoji.msg.progress_bar.rightindicator);
+          return `**${bar}**\n\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+      }
+
+      function SongEmbed(track) {
+        if(!track) return reset(track_info_msg, queue_info_msg);
+        let embed = new MessageEmbed()
+          embed.setAuthor(`${format(track.duration).split(" | ")[0]} ${track.title}`, client.user.displayAvatarURL(), track.uri)
+          embed.setColor(ee.color)
+          embed.setTitle(`⌛️ Progress:`)
+          embed.setDescription(`${createBarlul(player)}`)
+          embed.addField("💯 **Song By:**", `\`${track.author}\``, true)
+          embed.addField(`⏯ **State**`, `\`${player.playing ? `${emoji.msg.resume}  Playing` : `${emoji.msg.pause}  Paused`}\``, true)
+          embed.addField(`🩸 **Requested by:**`, `${track.requester}`, true)
+          embed.setThumbnail(`https://img.youtube.com/vi/${track.identifier}/mqdefault.jpg`)
+          embed.setFooter(`Queue: ${Player.queue.size}  •  Volume: ${Player.volume}%  •  Autoplay: ${Player.get(`autoplay`) ? `✔️` : `❌`}  •  Loop: ${Player.queueRepeat ? `✔️` : Player.trackRepeat ? `✔️` : `❌`}`, Player.queue.current.requester.displayAvatarURL({
+            dynamic: true
+          }))
+        return embed;
+      }
       function QueueEmbed(client, player) {
+        if(!player) return reset(track_info_msg, queue_info_msg);
         const queue = player.queue;
+        if(!queue) return reset(track_info_msg, queue_info_msg);
         const embed = new MessageEmbed().setAuthor(`Lava Music | Music Queue`);
         const multiple = 15;
         const page = 1;
         const end = page * multiple;
         const start = end - multiple;
         const tracks = queue.slice(start, end);
-        if (queue.current) embed.addField("**0) CURRENT TRACK**", `**${queue.current.title.substr(0, 60)}** - ${track.isStream ? "LIVE STREAM" : format(track.duration)}\n*request by: ${queue.current.requester.tag}*`);
+        if (queue.current) embed.addField("**0) CURRENT TRACK**", `${queue.current.title.split("[").join("\[").split("]").join("\]").substr(0, 60)} [${track.isStream ? "LIVE STREAM" : format(track.duration).split(" | ")[0]}]\nby: ${queue.current.requester}`);
         if (!tracks.length) embed.setDescription(`No tracks in ${page > 1 ? `page ${page}` : "the queue"}.`);
-        else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** **${track.title.substr(0, 60)}** - ${track.isStream ? "LIVE STREAM" : format(track.duration)}\n*request by: ${track.requester.tag}*`).join("\n"));
-        embed.setColor(ee.color);
+        else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** ${track.title.split("[").join("\[").split("]").join("\]").substr(0, 60)} [${track.isStream ? "LIVE STREAM" : format(track.duration).split(" | ")[0]}]\nby: ${track.requester}`).join("\n"));
+     embed.setColor(ee.color);
+        embed.setImage("https://cdn.discordapp.com/attachments/752548978259787806/820014471556759601/ezgif-1-2d764d377842.gif");
         embed.setFooter(ee.footertext, ee.footericon);
         return embed;
       }
-
       function format(millis) {
         try {
           var h = Math.floor(millis / 3600000),
@@ -530,138 +594,6 @@ module.exports = {
         } catch (e) {
           console.log(String(e.stack).bgRed)
         }
-      }
-
-      function createBar(total, current, size = 25, line = "▬", slider = config.settings.progressbar_emoji) {
-        /*  OLD CREATE BAR WAY
-
-        try{
-          //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji)
-          if (!player.queue.current) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
-          let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
-          let total = player.queue.current.duration;
-          let size = 25;
-          let line = "▬";
-          let slider = config.settings.progressbar_emoji;
-          let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
-          if (!String(bar).includes(config.settings.progressbar_emoji)) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
-          return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
-        }catch (e){
-          console.log(String(e.stack).bgRed)
-        }*/
-
-        /* NEW WAY
-        try{
-          if (!player.queue.current) return `**${emoji.msg.progress_bar.leftindicator}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.rightindicator}**\n**00:00:00 / 00:00:00**`;
-          let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
-          let total = player.queue.current.duration;
-          let size = 15;
-          let bar = String(emoji.msg.progress_bar.leftindicator) + String(emoji.msg.progress_bar.filledframe).repeat(Math.round(size * (current / total))) + String(emoji.msg.progress_bar.emptyframe).repeat(size - Math.round(size * (current / total))) + String(emoji.msg.progress_bar.rightindicator);
-          return `**${bar}**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
-        }catch (e){
-          console.log(String(e.stack).bgRed)
-        }
-
-      */
-        /* CUSTOM WAY */
-        try {
-          // EMOJIS.JSON
-          // "progress_bar": {
-          //  "leftindicator": "<:progressbar_left_filled:818558865268408341>",
-          //  "rightindicator": "<:progressbar_right_filled:818558865540907038>",
-          //
-          //  "emptyframe": "<:progressbar_middle_unfilled:818558865532649503>",
-          //  "filledframe": "<:progressbar_middle_filled:818558865595564062>",
-          //
-          //  "emptybeginning": "<:progressbar_left_filled_hal:818558865628725298>",
-          //  "emptyend": "<:progressbar_right_unfilled:818558865619681300>"
-          // }
-
-          if (!player.queue.current) return `**${emoji.msg.progress_bar.emptybeginning}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.emptyend}**\n**00:00:00 / 00:00:00**`;
-          let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
-          let total = player.queue.current.duration;
-          let size = 15;
-          let rightside = size - Math.round(size * (current / total));
-          let leftside = Math.round(size * (current / total));
-          let bar;
-          if (leftside < 1) bar = String(emoji.msg.progress_bar.emptybeginning) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(emoji.msg.progress_bar.emptyend);
-          else bar = String(emoji.msg.progress_bar.leftindicator) + String(emoji.msg.progress_bar.filledframe).repeat(leftside) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(size - rightside !== 1 ? emoji.msg.progress_bar.emptyend : emoji.msg.progress_bar.rightindicator);
-          return `**${bar}**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
-        } catch (e) {
-          console.log(String(e.stack).bgRed)
-        }
-      }
-
-      function edit_10_s_np(track_info_msg, track, queue_info_msg, client, player) {
-        track_info_msg.edit(SongEmbed(player.queue.current)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-        queue_info_msg.edit(QueueEmbed(client, player)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-      }
-      //GET QUEUE INFO MSG
-      let queue_info_msg = await message.channel.messages.fetch(db.message_queue_info);
-      //IF NO QUEUE INFO MSG AVAILABLE --> resend it --> try find TRACK INFO MSG --> delete it!
-      if (!queue_info_msg) return message.channel.send(new MessageEmbed()).then(async msg => {
-        message.edit(QueueEmbed(client, player)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-        client.setups.set(message.guild.id, msg.id, "message_queue_info");
-        let track_info_msg = await message.channel.messages.fetch(db.message_track_info);
-        if (track_info_msg) track_info_msg.delete().catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-        return message.channel.send(new MessageEmbed()).then(msg => {
-          msg.edit(SongEmbed(player.queue.current)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-          client.setups.set(message.guild.id, msg.id, "message_track_info");
-        })
-      })
-      //GET TRACK INFO MSG
-      let track_info_msg = await message.channel.messages.fetch(db.message_track_info);
-      //IF NO TRACK INFO MSG --> DELETE
-      if (!track_info_msg) return message.channel.send(new MessageEmbed()).then(msg => {
-        msg.react(emoji.react.rewind) //rewind 20 seconds
-        msg.react(emoji.react.forward) //forward 20 seconds
-        msg.react(emoji.react.pause_resume) //pause / resume
-        msg.react(emoji.react.stop) //stop playing music
-        msg.react(emoji.react.previous_track) //skip back  track / (play previous)
-        msg.react(emoji.react.skip_track) //skip track / stop playing
-        msg.react(emoji.react.replay_track) //replay track
-        msg.react(emoji.react.reduce_volume) //reduce volume by 10%
-        msg.react(emoji.react.raise_volume) //raise volume by 10%
-        msg.react(emoji.react.toggle_mute) //toggle mute
-        msg.react(emoji.react.repeat_mode) //change repeat mode --> track --> Queue --> none
-        msg.react(emoji.react.autoplay_mode) //toggle autoplay mode
-        msg.react(emoji.react.shuffle) //shuffle the Queue
-        msg.react(emoji.react.show_queue) //shows the Queue
-        msg.react(emoji.react.show_current_track) //shows the current Track
-        msg.edit(SongEmbed(player.queue.current));
-        client.setups.set(message.guild.id, msg.id, "message_track_info");
-      })
-      track_info_msg.edit(SongEmbed(player.queue.current)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-      queue_info_msg.edit(QueueEmbed(client, player)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-      for (let i = 0; i < 10; i++) {
-        await new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(2);
-          }, 20 * 1000);
-        });
-        if (i >= 5) i = 0;
-        const curplayer = client.manager.players.get(player.guild);
-        if (!curplayer) {
-          reset(track_info_msg, queue_info_msg);
-          break;
-        }
-        edit_10_s_np(track_info_msg, track, queue_info_msg, client, curplayer)
-      }
-
-      function reset(track_info_msg, queue_info_msg) {
-        let embed2 = new MessageEmbed()
-          .setColor(ee.color)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle("Lava Music | Music Queue")
-          .setDescription(`Empty\nJoin a voice channel and queue songs by name or url in here.`)
-        let embed3 = new MessageEmbed()
-          .setColor(ee.color)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle("Lava Music | Currently no song is playing!")
-          .setDescription(`Join a voice channel and enter a song name or url to play.\n[Invite Lava Music](https://lava.milrato.eu) • [Support Server](https://discord.com/invite/wvCp7q88G3)`)
-          .setImage("https://cdn.discordapp.com/attachments/754700756170440774/812443980293603329/lavamusic.gif")
-        track_info_msg.edit(embed3).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-        queue_info_msg.edit(embed2).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
       }
     } catch (e) {
       console.log(String(e.stack).bgRed)
@@ -676,146 +608,47 @@ module.exports = {
       const end = page * multiple;
       const start = end - multiple;
       const tracks = queue.slice(start, end);
-      if (queue.current) embed.addField("**0) CURRENT TRACK**", `**${queue.current.title.substr(0, 60)}** - ${queue.current.isStream ? "LIVE STREAM" : format(queue.current.duration)}\n*request by: ${queue.current.requester.tag}*`);
+      if (queue.current) embed.addField("**0) CURRENT TRACK**", `${queue.current.title.split("[").join("\[").split("]").join("\]").substr(0, 60)} [${queue.current.isStream ? "LIVE STREAM" : format(queue.current.duration).split(" | ")[0]}]\nby: ${queue.current.requester}`);
       if (!tracks.length) embed.setDescription(`No tracks in ${page > 1 ? `page ${page}` : "the queue"}.`);
-      else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** **${track.title.substr(0, 60)}** - ${track.isStream ? "LIVE STREAM" : format(track.duration)}\n*request by: ${track.requester.tag}*`).join("\n"));
+      else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** ${track.title.split("[").join("\[").split("]").join("\]").substr(0, 60)} [${track.isStream ? "LIVE STREAM" : format(track.duration).split(" | ")[0]}]\nby: ${track.requester}`).join("\n"));
       embed.setColor(ee.color);
+      embed.setImage("https://cdn.discordapp.com/attachments/752548978259787806/820014471556759601/ezgif-1-2d764d377842.gif");
       embed.setFooter(ee.footertext, ee.footericon);
       embed;
       let message = player.get("message");
       let db = client.setups.get(message.guild.id)
 
-      function SongEmbed(track) {
-        let embed = new MessageEmbed()
-        try {
-          embed.setTitle(`Playing ${emoji.msg.playing} **\`` + track.title + "`**")
-        } catch {}
-        try {
-          embed.setURL(track.uri)
-        } catch {}
-        try {
-          embed.setColor(ee.color)
-        } catch {}
-        try {
-          embed.setThumbnail(`https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`)
-        } catch {}
-        try {
-          embed.addField(`${emoji.msg.time} Duration: `, `${track.isStream ? "LIVE STREAM" : format(track.duration)}`, true)
-        } catch {}
-        try {
-          embed.addField(`${emoji.msg.song_by} Song By: `, `${track.author}`, true)
-        } catch {}
-        try {
-          embed.addField(`${emoji.msg.equalizer} Equalizer: `, `🎵 Music`, true)
-        } catch {}
-        try {
-          embed.addField(`${emoji.msg.raise_volume} Volume`, `${player.volume}%`, true)
-        } catch {}
-        try {
-          embed.addField(`${player.queueRepeat ? `${emoji.msg.repeat_mode} Queue Loop: ` : `${emoji.msg.repeat_mode} Song Loop: `}`, `${player.queueRepeat ? `${emoji.msg.enabled} Enabled` : player.trackRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}`, true)
-        } catch {}
-        try {
-          embed.addField(`${emoji.msg.pause_resume} State`, `${player.playing ? `${emoji.msg.resume} Playing Song` : `${emoji.msg.pause} Paused Song`}`, true)
-        } catch {}
-        try {
-          embed.addField(`${emoji.msg.time} Progress: `, createBar(player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji))
-        } catch {}
-        try {
-          embed.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({
-            dynamic: true
-          }));
-        } catch {}
-        return embed;
-      }
-
       function format(millis) {
-        var h = Math.floor(millis / 3600000),
-          m = Math.floor(millis / 60000),
-          s = ((millis % 60000) / 1000).toFixed(0);
-        if (h < 1) return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
-        else return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
-      }
-
-      function createBar(total, current, size = 25, line = "▬", slider = config.settings.progressbar_emoji) {
-        /*  OLD CREATE BAR WAY
-
-        try{
-          //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji)
-          if (!player.queue.current) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
-          let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
-          let total = player.queue.current.duration;
-          let size = 25;
-          let line = "▬";
-          let slider = config.settings.progressbar_emoji;
-          let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
-          if (!String(bar).includes(config.settings.progressbar_emoji)) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
-          return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
-        }catch (e){
-          console.log(String(e.stack).bgRed)
-        }*/
-
-        /* NEW WAY
-        try{
-          if (!player.queue.current) return `**${emoji.msg.progress_bar.leftindicator}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.rightindicator}**\n**00:00:00 / 00:00:00**`;
-          let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
-          let total = player.queue.current.duration;
-          let size = 15;
-          let bar = String(emoji.msg.progress_bar.leftindicator) + String(emoji.msg.progress_bar.filledframe).repeat(Math.round(size * (current / total))) + String(emoji.msg.progress_bar.emptyframe).repeat(size - Math.round(size * (current / total))) + String(emoji.msg.progress_bar.rightindicator);
-          return `**${bar}**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
-        }catch (e){
-          console.log(String(e.stack).bgRed)
-        }
-
-      */
-        /* CUSTOM WAY */
         try {
-          // EMOJIS.JSON
-          // "progress_bar": {
-          //  "leftindicator": "<:progressbar_left_filled:818558865268408341>",
-          //  "rightindicator": "<:progressbar_right_filled:818558865540907038>",
-          //
-          //  "emptyframe": "<:progressbar_middle_unfilled:818558865532649503>",
-          //  "filledframe": "<:progressbar_middle_filled:818558865595564062>",
-          //
-          //  "emptybeginning": "<:progressbar_left_filled_hal:818558865628725298>",
-          //  "emptyend": "<:progressbar_right_unfilled:818558865619681300>"
-          // }
-
-          if (!player.queue.current) return `**${emoji.msg.progress_bar.emptybeginning}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.emptyend}**\n**00:00:00 / 00:00:00**`;
-          let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
-          let total = player.queue.current.duration;
-          let size = 15;
-          let rightside = size - Math.round(size * (current / total));
-          let leftside = Math.round(size * (current / total));
-          let bar;
-          if (leftside < 1) bar = String(emoji.msg.progress_bar.emptybeginning) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(emoji.msg.progress_bar.emptyend);
-          else bar = String(emoji.msg.progress_bar.leftindicator) + String(emoji.msg.progress_bar.filledframe).repeat(leftside) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(size - rightside !== 1 ? emoji.msg.progress_bar.emptyend : emoji.msg.progress_bar.rightindicator);
-          return `**${bar}**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+          var h = Math.floor(millis / 3600000),
+            m = Math.floor(millis / 60000),
+            s = ((millis % 60000) / 1000).toFixed(0);
+          if (h < 1) return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
+          else return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
         } catch (e) {
           console.log(String(e.stack).bgRed)
         }
       }
       //GET QUEUE INFO MSG
       let queue_info_msg = await message.channel.messages.fetch(db.message_queue_info);
-      //IF NO QUEUE INFO MSG AVAILABLE --> resend it --> try find TRACK INFO MSG --> delete it!
-      if (!queue_info_msg) return message.channel.send(new MessageEmbed()).then(async msg => {
-        message.edit(embed).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-        client.setups.set(message.guild.id, msg.id, "message_queue_info");
-        let track_info_msg = await message.channel.messages.fetch(db.message_track_info);
-        if (track_info_msg) track_info_msg.delete().catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-        return message.channel.send(new MessageEmbed()).then(msg => {
-          msg.edit(SongEmbed(player.queue.current)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-          client.setups.set(message.guild.id, msg.id, "message_track_info");
-        })
-      })
-      queue_info_msg.edit(embed)
+      let track_info_msg = await message.channel.messages.fetch(db.message_track_info);
+     
+      let oldembed = track_info_msg.embeds[0]
+      track_info_msg.edit(oldembed.setFooter(`Queue: ${player.queue.size}  •  Volume: ${player.volume}%  •  Autoplay: ${player.get(`autoplay`) ? `✔️` : `❌`}  •  Loop: ${player.queueRepeat ? `✔️ Queue` : player.trackRepeat ? `✔️ Song` : `❌`}`, player.queue.current.requester.displayAvatarURL({
+        dynamic: true
+      }))).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
+      queue_info_msg.edit(embed).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
 
       function format(millis) {
-        var h = Math.floor(millis / 3600000),
-          m = Math.floor(millis / 60000),
-          s = ((millis % 60000) / 1000).toFixed(0);
-        if (h < 1) return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
-        else return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+        try {
+          var h = Math.floor(millis / 3600000),
+            m = Math.floor(millis / 60000),
+            s = ((millis % 60000) / 1000).toFixed(0);
+          if (h < 1) return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
+          else return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
+        } catch (e) {
+          console.log(String(e.stack).bgRed)
+        }
       }
     } catch (e) {
       console.log(String(e.stack).bgRed)
