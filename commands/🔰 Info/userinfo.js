@@ -23,7 +23,7 @@ module.exports = {
         .addField("ID", `\`${user.id}\``)
         .addField("Playing", `\`[ ${user.presence.activities} ]\``, true)
         .addField("Status", `\`${user.presence.status}\``, true)
-        .addField("Joined Discord At", `\`${user.createdAt}\``)
+        .addField("Joined Discord At", `\`${b}\``)
         .setColor(ee.color)
         .setFooter(ee.footertext, ee.footericon)
         .setThumbnail(user.displayAvatarURL({
