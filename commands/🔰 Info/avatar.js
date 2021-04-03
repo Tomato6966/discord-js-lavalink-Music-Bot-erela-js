@@ -38,7 +38,7 @@ module.exports = {
       return message.channel.send(new MessageEmbed()          
       .setColor(ee.wrongcolor)
       .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`:x: ERROR | An error occurred`)
+        .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
         .setDescription(`\`\`\`${e.message}\`\`\``)
       );
     }
