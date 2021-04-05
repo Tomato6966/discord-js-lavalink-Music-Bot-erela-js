@@ -93,19 +93,65 @@ module.exports = {
     }
   },
   createBar: function (player) {
-    /* OLD CREATE BAR WAY*/
+    /*  OLD CREATE BAR WAY*/
 
-     let size = 25;
-     let line = "▬";
-     let slider = "🔶";
-     let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
-     let total = player.queue.current.duration;
-     if (!player.queue.current) return `**[${slider}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
-     let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
-     if (!String(bar).includes(slider)) return `**[${slider}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
-     return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+    try{
+      //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji)
+      if (!player.queue.current) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
+      let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
+      let total = player.queue.current.duration;
+      let size = 25;
+      let line = "▬";
+      let slider = config.settings.progressbar_emoji;
+      let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
+      if (!String(bar[0]).includes(config.settings.progressbar_emoji)) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
+      return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+    }catch (e){
+      console.log(String(e.stack).bgRed)
+    }
 
- },
+    /* NEW WAY
+    try{
+      if (!player.queue.current) return `**${emoji.msg.progress_bar.leftindicator}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.rightindicator}**\n**00:00:00 / 00:00:00**`;
+      let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
+      let total = player.queue.current.duration;
+      let size = 15;
+      let bar = String(emoji.msg.progress_bar.leftindicator) + String(emoji.msg.progress_bar.filledframe).repeat(Math.round(size * (current / total))) + String(emoji.msg.progress_bar.emptyframe).repeat(size - Math.round(size * (current / total))) + String(emoji.msg.progress_bar.rightindicator);
+      return `**${bar}**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+    }catch (e){
+      console.log(String(e.stack).bgRed)
+    }
+
+  */
+    /* CUSTOM WAY 
+    try {
+      // EMOJIS.JSON
+      // "progress_bar": {
+      //  "leftindicator": "<:progressbar_left_filled:818558865268408341>",
+      //  "rightindicator": "<:progressbar_right_filled:818558865540907038>",
+      //
+      //  "emptyframe": "<:progressbar_middle_unfilled:818558865532649503>",
+      //  "filledframe": "<:progressbar_middle_filled:818558865595564062>",
+      //
+      //  "emptybeginning": "<:progressbar_left_filled_hal:818558865628725298>",
+      //  "emptyend": "<:progressbar_right_unfilled:818558865619681300>"
+      // }
+
+      if (!player.queue.current) return `**${emoji.msg.progress_bar.emptybeginning}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.emptyend}**\n**00:00:00 / 00:00:00**`;
+      let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
+      let total = player.queue.current.duration;
+      let size = 15;
+      let rightside = size - Math.round(size * (current / total));
+      let leftside = Math.round(size * (current / total));
+      let bar;
+      if (leftside < 1) bar = String(emoji.msg.progress_bar.emptybeginning) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(emoji.msg.progress_bar.emptyend);
+      else bar = String(emoji.msg.progress_bar.leftindicator) + String(emoji.msg.progress_bar.filledframe).repeat(leftside) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(size - rightside !== 1 ? emoji.msg.progress_bar.emptyend : emoji.msg.progress_bar.rightindicator);
+      return `**${bar}**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+    } catch (e) {
+      console.log(String(e.stack).bgRed)
+    }*/
+
+  },
   format: function (millis) {
     try {
       var h = Math.floor(millis / 3600000),
@@ -492,15 +538,16 @@ module.exports = {
       }
 
       function createBarlul(player) {
-        let size = 25;
-        let line = "▬";
-        let slider = "🔶";
-        let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
-        let total = player.queue.current.duration;
-        if (!player.queue.current) return `**[${slider}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
-        let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
-        if (!String(bar).includes(slider)) return `**[${slider}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
-        return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+          if (!player.queue.current) return `**${emoji.msg.progress_bar.emptybeginning}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.emptyend}**\n**00:00:00 / 00:00:00**`;
+          let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
+          let total = player.queue.current.duration;
+          let size = 19;
+          let rightside = size - Math.round(size * (current / total));
+          let leftside = Math.round(size * (current / total));
+          let bar;
+          if (leftside < 1) bar = String(emoji.msg.progress_bar.emptybeginning) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(emoji.msg.progress_bar.emptyend);
+          else bar = String(emoji.msg.progress_bar.leftindicator) + String(emoji.msg.progress_bar.filledframe).repeat(leftside) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(size - rightside !== 1 ? emoji.msg.progress_bar.emptyend : emoji.msg.progress_bar.rightindicator);
+          return `**${bar}**\n\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
       }
 
       function SongEmbed(track) {
