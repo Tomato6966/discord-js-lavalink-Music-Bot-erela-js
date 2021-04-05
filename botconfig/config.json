@@ -1,6 +1,6 @@
 {
-  "token": "TOKEN",
-  "prefix": "!",
+  "token": "ODAzOTczMzA3ODkxMzE4ODA0.YBFkfQ.QQA8LP3Cm70JjLIQ1TQ0aKGdLro",
+  "prefix": "<<",
 
   "clientsettings": {
     "nodes": [
@@ -13,8 +13,8 @@
   },
 
   "spotify": {
-    "clientSecret": "",
-    "clientID": ""
+    "clientSecret": "77e34eac97024316a318f75292284ef7",
+    "clientID": "462792cc854d4cd5b7fcffa3c0d42ca1"
   },
 
   "settings": {
@@ -41,13 +41,12 @@
   },
 
 
-  "ownerIDS": ["442355791412854784"],
+  "ownerIDS": ["772342884325916694"],
 
 
   "status": {
-    "text": "!help | powered by milrato.eu",
-    "type": "STREAMING", "COMMENT:": "TYPES ARE: PLAYING, STREAMING, WATCHING, LISTENING",
-    "url": "https://twitch.tv/milratodiscordbot"
+    "text": "<<help",
+    "type": "LISTENING"
   }
 
 }
