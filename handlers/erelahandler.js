@@ -133,12 +133,6 @@ module.exports = (client) => {
           player.set(`afk-${player.guild}`, false)
           player.set(`afk-${player.get("playerauthor")}`, false)
           player.setEQ(client.eqs.music);
-          try{
-            let guild = client.guilds.cache.get(player.guild)
-            if(config.settings.serverDeaf) guild.me.voice.setDeaf(true);
-          }catch (e) {
-            console.log(e)
-          }
           databasing(client, player.guild, player.get("playerauthor"));
 
           var embed = new MessageEmbed();
@@ -146,8 +140,19 @@ module.exports = (client) => {
             embed.setDescription(`**Commands bound to: ** <#${client.channels.cache.get(player.textChannel).id}>`)
           
             var irc = await isrequestchannel(client, player.textChannel, player.guild);
-            if(irc) return;
-          client.channels.cache.get(player.textChannel).send(embed.setColor(ee.color)).catch(e=>console.log("this prevents a crash"));
+            if(!irc) client.channels.cache.get(player.textChannel).send(embed.setColor(ee.color)).catch(e=>console.log("this prevents a crash"));
+            if(config.settings.serverDeaf)
+            for(let i = 0; i<= 5; i++){
+              await new Promise((res)=>{
+                setTimeout(()=>{
+                  res(2)
+                  let guild = client.guilds.cache.get(player.guild)
+                  guild.me.voice.setDeaf(true).catch(e=>console.log("ignore that log".gray));
+                  i = 10;
+                }, 1000)
+              })
+            }
+            
       })
       .on("playerMove", async (player, oldChannel, newChannel) => {
         if (!newChannel) {
@@ -167,7 +172,7 @@ module.exports = (client) => {
             console.log(String(e.stack).yellow);
           }
           var irc2 = await isrequestchannel(client, player.textChannel, player.guild);
-          if(irc2) edit_request_message_track_info(client, player, player.queue.current);
+          if(irc2) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
           player.destroy();
         } else {
           player.voiceChannel = newChannel;
@@ -376,6 +381,8 @@ module.exports = (client) => {
                       //////////////////////////////////////
 
                     case String(emoji.react.stop):
+                      var irc = await isrequestchannel(client, player.textChannel, player.guild);
+                      if(irc) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
                       //leave and stop the music
                       player.destroy();
                       //send information message
@@ -446,6 +453,8 @@ module.exports = (client) => {
                               .setDescription(`There are now: ${player.get("votes")} of ${voteamount} needed Votes\n\n> Amount reached! Skipping ${emoji.msg.skip_track}`)
                             );
                             if (player.queue.size == 0) {
+                              var irc3 = await isrequestchannel(client, player.textChannel, player.guild);
+                              if(irc3) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
                               player.destroy();
                             } else {
                               player.stop();
@@ -473,6 +482,8 @@ module.exports = (client) => {
                         if (player.queue.size == 0) {
                           //if its on autoplay mode, then do autoplay before leaving...
                           if (player.get("autoplay")) return autoplay(client, player, "skip");
+                          var irc4 = await isrequestchannel(client, player.textChannel, player.guild);
+                          if(irc4) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
                           //stop playing
                           player.destroy();
                           //send success message
@@ -876,11 +887,12 @@ module.exports = (client) => {
                   client.channels.cache
                     .get(player.textChannel)
                     .messages.fetch(player.get("playermessage")).then(msg => {
-                        msg.delete({
+                      if(msg) msg.delete({
                           timeout: 4000
                         }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
                     });
-      
+                var irc5 = await isrequestchannel(client, player.textChannel, player.guild);
+                if(irc5) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
                 player.destroy();
               }
             } catch (e) {
@@ -906,7 +918,7 @@ module.exports = (client) => {
             if (!player) return;
             if (channel.id === player.voiceChannel) {
               var irc = await isrequestchannel(client, player.textChannel, player.guild);
-              if(irc) edit_request_message_track_info(client, player); edit_request_message_track_info(client, player, player.queue.current);
+              if(irc) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
               //destroy
               player.destroy();
             }
@@ -921,7 +933,7 @@ module.exports = (client) => {
         if (!player) return;
         if (guild.id == player.guild) {
           var irc = await isrequestchannel(client, player.textChannel, player.guild);
-          if(irc) edit_request_message_track_info(client, player); edit_request_message_track_info(client, player, player.queue.current);
+          if(irc) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
           //destroy
           player.destroy();
         }
@@ -964,7 +976,7 @@ module.exports = (client) => {
             var player = client.manager.players.get(oldState.guild.id);
             if (!player) return;
             var irc = await isrequestchannel(client, player.textChannel, player.guild);
-            if(irc) edit_request_message_track_info(client, player); edit_request_message_track_info(client, player, player.queue.current);
+            if(irc) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
             //destroy
             player.destroy();
           }
@@ -976,14 +988,22 @@ module.exports = (client) => {
       if (config.settings.leaveOnEmpty_Channel.enabled && oldState && oldState.channel) {
         player = client.manager.players.get(oldState.guild.id);
         //if not connect return player.destroy()
-        if (!oldState.guild.me.voice.channel) return player.destroy();
+        if (!oldState.guild.me.voice.channel){
+          var irc = await isrequestchannel(client, player.textChannel, player.guild);
+          if(irc) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
+          return player.destroy();
+        }
         //wait some time...
         if (player && oldState.guild.channels.cache.get(player.voiceChannel).members.size === 1) {
-          setTimeout(() => {
+          setTimeout(async () => {
             try {
               player = client.manager.players.get(oldState.guild.id);
               //if not connect return player.destroy()
-              if (!oldState.guild.me.voice.channel && player) return player.destroy();
+              if (!oldState.guild.me.voice.channel && player) {
+                var irc = await isrequestchannel(client, player.textChannel, player.guild);
+                if(irc) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
+                return player.destroy();
+              }
               //wait some time...
               var vc = oldState.guild.channels.cache.get(player.voiceChannel)
               if (player && vc && vc.members.size === 1) {
@@ -1024,6 +1044,8 @@ module.exports = (client) => {
                 } catch (e) {
                   console.log(String(e.stack).yellow);
                 }
+                var irc = await isrequestchannel(client, player.textChannel, player.guild);
+                if(irc) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
                 player.destroy();
               }
             } catch (e) {

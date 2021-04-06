@@ -10,6 +10,8 @@ const {
   databasing,
   escapeRegex,
   autoplay,
+  edit_request_message_track_info,
+  isrequestchannel,
   createBar
 } = require("../handlers/functions")
 const playermanager = require("../handlers/playermanager");
@@ -83,8 +85,10 @@ module.exports = async (client, message) => {
             //////////////////////////////////////
 
           case String(emoji.react.stop):
+            
             //leave and stop the music
-            player.destroy();
+            var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+            if(irc) edit_request_message_track_info(client, player, player.queue.current, "destroy");
             break;
           case String(emoji.react.previous_track):
             //if there is no previous track
@@ -116,7 +120,8 @@ module.exports = async (client, message) => {
                     .setDescription(`There are now: ${player.get("votes")} of ${voteamount} needed Votes\n\n> Amount reached! Skipping ${emoji.msg.skip_track}`)
                   );
                   if (player.queue.size == 0) {
-                    player.destroy();
+                    var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+                    if(irc) edit_request_message_track_info(client, player, player.queue.current, "destroy");
                   } else {
                     player.stop();
                   }
@@ -144,13 +149,10 @@ module.exports = async (client, message) => {
                 //if its on autoplay mode, then do autoplay before leaving...
                 if (player.get("autoplay")) return autoplay(client, player, "skip");
                 //stop playing
-                player.destroy();
+                var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+                if(irc) edit_request_message_track_info(client, player, player.queue.current, "destroy");
                 //send success message
-                return message.channel.send(new MessageEmbed()
-                  .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
-                  .setColor(ee.color)
-                  .setFooter(ee.footertext, ee.footericon)
-                );
+                return;
               }
               //skip the track
               player.stop();

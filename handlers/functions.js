@@ -453,7 +453,7 @@ module.exports = {
         return false;
       }
   },
-  edit_request_message_track_info: async function (client, player, track) {
+  edit_request_message_track_info: async function (client, player, track, type) {
    
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -463,7 +463,7 @@ module.exports = {
 
     try {
       const Player = client.manager.players.get(player.guild)
-
+      
       let message = player.get("message");
       let db = client.setups.get(message.guild.id);
 
@@ -502,7 +502,11 @@ module.exports = {
                 msg.edit(SongEmbed(player.queue.current));
                 client.setups.set(message.guild.id, msg.id, "message_track_info");
               })
-
+      if(type && type == "destroy"){
+        reset(track_info_msg, queue_info_msg);
+        player.destroy();
+        return;
+      }
       if (!Player) {
         reset(track_info_msg, queue_info_msg);
         return;
@@ -513,19 +517,19 @@ module.exports = {
       
       
 
-
-      if (!Player || !Player.queue || !Player.queue.current || Player.queue.totalSize === 0) {
-        reset(track_info_msg, queue_info_msg);
-        return;
-      }
-
-      
+      setTimeout(()=>{
+        if (!Player || !Player.queue || !Player.queue.current) {
+          reset(track_info_msg, queue_info_msg);
+          return;
+        }
+      }, 5000)
 
       function reset(track_info_msg, queue_info_msg) {
         let embed2 = new MessageEmbed()
           .setColor(ee.color)
           .setFooter(`Prefix for this Server is:   ${client.settings.get(track_info_msg.guild.id, "prefix")}`, ee.footericon)
           .setTitle("Lava Music | Music Queue")
+          .setImage("https://cdn.discordapp.com/attachments/752548978259787806/820014471556759601/ezgif-1-2d764d377842.gif")
           .setDescription(`Empty\nJoin a voice channel and queue songs by name or url in here.`)
         let embed3 = new MessageEmbed()
           .setColor(ee.color)
