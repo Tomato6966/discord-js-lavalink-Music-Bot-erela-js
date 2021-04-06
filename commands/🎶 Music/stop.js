@@ -34,8 +34,10 @@ module.exports = {
           .setTitle(`${emoji.msg.ERROR} Error | No song is currently playing in this guild.`)
         );
         
-      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
-      if(irc) edit_request_message_track_info(client, player, player.queue.current);
+      var irc = await isrequestchannel(client, player.textChannel, player.guild);
+      if(irc) {
+        return edit_request_message_track_info(client, player, player.queue.current, "destroy");
+      }
       //stop playing
       player.destroy();
       //send success message

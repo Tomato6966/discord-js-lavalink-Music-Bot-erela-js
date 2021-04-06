@@ -17,6 +17,7 @@ module.exports = {
   parameters: {"type":"music", "activeplayer": true, "previoussong": false, "notsamechannel": true},
   run: async (client, message, args, cmduser, text, prefix, player) => {
     try{
+      let channel = message.member.voice.channel;
       let botchannel = message.guild.me.voice.channel;
       if(!botchannel) 
         return message.channel.send(new MessageEmbed()
@@ -24,11 +25,23 @@ module.exports = {
           .setFooter(ee.footertext, ee.footericon)
           .setTitle(`${emoji.msg.ERROR} ERROR | I am connected nowhere`)
         );
+      if(!channel) 
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setFooter(ee.footertext, ee.footericon)
+          .setTitle(`${emoji.msg.ERROR} ERROR | Please Connect first`)
+        );
       if(botchannel.userLimit >= botchannel.members.length) 
         return message.channel.send(new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setFooter(ee.footertext, ee.footericon)
           .setTitle(`${emoji.msg.ERROR} ERROR | The Channel is full, I cant move you`)
+        );
+        if(botchannel.id == channel.id) 
+        return message.channel.send(new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setFooter(ee.footertext, ee.footericon)
+          .setTitle(`${emoji.msg.ERROR} ERROR | You are already in my channel `)
         );
       message.member.voice.setChannel(botchannel);
       return message.channel.send(new MessageEmbed()

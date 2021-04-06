@@ -1,7 +1,7 @@
 const { MessageEmbed } = require("discord.js");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
-const { autoplay } = require("../../handlers/functions");
+const { autoplay, isrequestchannel, edit_request_message_track_info } = require("../../handlers/functions");
 module.exports = {
     name: "forceskip",
     category: "🎶 Music",
@@ -40,6 +40,10 @@ module.exports = {
       if (player.queue.size == 0) {
         //if its on autoplay mode, then do autoplay before leaving...
         if(player.get("autoplay")) return autoplay(client, player, "skip");
+        var irc = await isrequestchannel(client, player.textChannel, player.guild);
+        if(irc) {
+          return edit_request_message_track_info(client, player, player.queue.current, "destroy");
+        }
         //stop playing
         player.destroy();
         //send success message
