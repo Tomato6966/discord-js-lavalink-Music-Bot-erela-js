@@ -17,7 +17,7 @@ module.exports = {
     description: `Searches a playlist from youtube`,
     usage: `searchplaylist <Name / URL>`,
     cooldown: 10,
-    parameters: {"type":"music", "activeplayer": true, "previoussong": false},
+    parameters: {"type":"music", "activeplayer": false, "previoussong": false},
     run: async (client, message, args, cmduser, text, prefix, player) => {
       try{
             //search the song for YOUTUBE

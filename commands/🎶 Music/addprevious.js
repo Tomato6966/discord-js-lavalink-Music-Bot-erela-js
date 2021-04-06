@@ -2,9 +2,9 @@ const Discord = require(`discord.js`);
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`../../botconfig/config.json`);
-const ee = require(`../../botconfig/embed.json`);
+const config = require("../../botconfig/config.json");
 const emoji = require(`../../botconfig/emojis.json`);
+const ee = require("../../botconfig/embed.json");
 const playermanager = require(`../../handlers/playermanager`);
 module.exports = {
   name: `addprevious`,

@@ -5,7 +5,7 @@ const config = require(`../../botconfig/config.json`);
 const ee = require(`../../botconfig/embed.json`);
 const emoji = require(`../../botconfig/emojis.json`);
 const {
-  autoplay
+  autoplay, isrequestchannel, edit_request_message_track_info
 } = require(`../../handlers/functions`);
 module.exports = {
   name: `voteskip`,
@@ -35,6 +35,10 @@ module.exports = {
               .setDescription(`There are now: \`${player.get(`votes`)}\` of \`${voteamount}\` needed Votes\n\n> Amount reached! Skipping ⏭`)
             );
             if (player.queue.size == 0) {
+              var irc = await isrequestchannel(client, player.textChannel, player.guild);
+              if(irc) {
+                return edit_request_message_track_info(client, player, player.queue.current, "destroy");
+              }
               player.destroy();
             } else {
               player.stop();
@@ -60,6 +64,11 @@ module.exports = {
         if (player.queue.size == 0) {
           //if its on autoplay mode, then do autoplay before leaving...
           if (player.get(`autoplay`)) return autoplay(client, player, `skip`);
+          var irc = await isrequestchannel(client, player.textChannel, player.guild);
+          console.log(irc)
+          if(irc) {
+            return edit_request_message_track_info(client, player, player.queue.current, "destroy");
+          }
           //stop playing
           player.destroy();
           //send success message

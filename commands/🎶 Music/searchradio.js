@@ -13,7 +13,7 @@ module.exports = {
   aliases: [`searchr`],
   description: `Searches for a Radio station`,
   usage: `searchradio `,
-  parameters: {"type":"music", "activeplayer": true, "previoussong": false},
+  parameters: {"type":"music", "activeplayer": false, "previoussong": false},
   run: async (client, message, args, cmduser, text, prefix, player) => {
     try{
       //if no args send all stations

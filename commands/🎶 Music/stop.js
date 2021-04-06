@@ -4,11 +4,17 @@ const {
 } = require(`discord.js`);
 const config = require(`../../botconfig/config.json`);
 const ee = require(`../../botconfig/embed.json`);
-const emoji = require(`../../botconfig/emojis.json`);
+const emoji = require(`../../botconfig/emojis.json`);const {
+  format,
+  delay,
+  isrequestchannel,
+  edit_request_message_track_info,
+  arrayMove
+} = require("../../handlers/functions")
 module.exports = {
   name: `stop`,
   category: `🎶 Music`,
-  aliases: [`leave`],
+  aliases: [`leave`, "dis", "disconnect"],
   description: `Stops current track and leaves the channel`,
   usage: `stop`,
   parameters: {"type":"music", "activeplayer": true, "previoussong": false},
@@ -21,12 +27,17 @@ module.exports = {
         .setColor(ee.wrongcolor)
         .setTitle(`${emoji.msg.ERROR} Error | No song is currently playing in this guild.`)
       );
-      if (!player.queue.current)
+      if (player.queue && !player.queue.current)
         return message.channel.send(new MessageEmbed()
           .setFooter(ee.footertext, ee.footericon)
           .setColor(ee.wrongcolor)
           .setTitle(`${emoji.msg.ERROR} Error | No song is currently playing in this guild.`)
         );
+        
+      var irc = await isrequestchannel(client, player.textChannel, player.guild);
+      if(irc) {
+        return edit_request_message_track_info(client, player, player.queue.current, "destroy");
+      }
       //stop playing
       player.destroy();
       //send success message

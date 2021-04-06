@@ -13,7 +13,7 @@ module.exports = {
   description: `Searches a song from soundcloud`,
   usage: `search <Song / URL>`,
   cooldown: 5,
-  parameters: {"type":"music", "activeplayer": true, "previoussong": false},
+  parameters: {"type":"music", "activeplayer": false, "previoussong": false},
   run: async (client, message, args, cmduser, text, prefix, player) => {
     try{
       //if no args return error
