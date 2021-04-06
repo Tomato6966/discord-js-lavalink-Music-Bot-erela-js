@@ -453,7 +453,7 @@ module.exports = {
         return false;
       }
   },
-  edit_request_message_track_info: async function (client, player, track) {
+  edit_request_message_track_info: async function (client, player, track, type) {
    
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -463,7 +463,7 @@ module.exports = {
 
     try {
       const Player = client.manager.players.get(player.guild)
-
+      
       let message = player.get("message");
       let db = client.setups.get(message.guild.id);
 
@@ -502,7 +502,11 @@ module.exports = {
                 msg.edit(SongEmbed(player.queue.current));
                 client.setups.set(message.guild.id, msg.id, "message_track_info");
               })
-
+      if(type && type == "destroy"){
+        reset(track_info_msg, queue_info_msg);
+        player.destroy();
+        return;
+      }
       if (!Player) {
         reset(track_info_msg, queue_info_msg);
         return;
@@ -513,19 +517,19 @@ module.exports = {
       
       
 
-
-      if (!Player || !Player.queue || !Player.queue.current || Player.queue.totalSize === 0) {
-        reset(track_info_msg, queue_info_msg);
-        return;
-      }
-
-      
+      setTimeout(()=>{
+        if (!Player || !Player.queue || !Player.queue.current) {
+          reset(track_info_msg, queue_info_msg);
+          return;
+        }
+      }, 5000)
 
       function reset(track_info_msg, queue_info_msg) {
         let embed2 = new MessageEmbed()
           .setColor(ee.color)
           .setFooter(`Prefix for this Server is:   ${client.settings.get(track_info_msg.guild.id, "prefix")}`, ee.footericon)
           .setTitle("Lava Music | Music Queue")
+          .setImage("https://cdn.discordapp.com/attachments/752548978259787806/820014471556759601/ezgif-1-2d764d377842.gif")
           .setDescription(`Empty\nJoin a voice channel and queue songs by name or url in here.`)
         let embed3 = new MessageEmbed()
           .setColor(ee.color)
@@ -538,16 +542,20 @@ module.exports = {
       }
 
       function createBarlul(player) {
-          if (!player.queue.current) return `**${emoji.msg.progress_bar.emptybeginning}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.emptyend}**\n**00:00:00 / 00:00:00**`;
+        try{
+          //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji)
+          if (!player.queue.current) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
           let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
           let total = player.queue.current.duration;
-          let size = 19;
-          let rightside = size - Math.round(size * (current / total));
-          let leftside = Math.round(size * (current / total));
-          let bar;
-          if (leftside < 1) bar = String(emoji.msg.progress_bar.emptybeginning) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(emoji.msg.progress_bar.emptyend);
-          else bar = String(emoji.msg.progress_bar.leftindicator) + String(emoji.msg.progress_bar.filledframe).repeat(leftside) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(size - rightside !== 1 ? emoji.msg.progress_bar.emptyend : emoji.msg.progress_bar.rightindicator);
-          return `**${bar}**\n\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+          let size = 25;
+          let line = "▬";
+          let slider = config.settings.progressbar_emoji;
+          let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
+          if (!String(bar[0]).includes(config.settings.progressbar_emoji)) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
+          return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+        }catch (e){
+          console.log(String(e.stack).bgRed)
+        }
       }
 
       function SongEmbed(track) {

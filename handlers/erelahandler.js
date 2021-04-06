@@ -228,16 +228,20 @@ module.exports = (client) => {
                   msg.edit(msg.embeds[0].setDescription(`${createBarlul(player)}`)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
                 })
                 function createBarlul(player) {
-                  if (!player.queue.current) return `**${emoji.msg.progress_bar.emptybeginning}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.emptyend}**\n**00:00:00 / 00:00:00**`;
-                  let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
-                  let total = player.queue.current.duration;
-                  let size = 19;
-                  let rightside = size - Math.round(size * (current / total));
-                  let leftside = Math.round(size * (current / total));
-                  let bar;
-                  if (leftside < 1) bar = String(emoji.msg.progress_bar.emptybeginning) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(emoji.msg.progress_bar.emptyend);
-                  else bar = String(emoji.msg.progress_bar.leftindicator) + String(emoji.msg.progress_bar.filledframe).repeat(leftside) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(size - rightside !== 1 ? emoji.msg.progress_bar.emptyend : emoji.msg.progress_bar.rightindicator);
-                  return `**${bar}**\n\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+                  try{
+                    //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji)
+                    if (!player.queue.current) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
+                    let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
+                    let total = player.queue.current.duration;
+                    let size = 25;
+                    let line = "▬";
+                    let slider = config.settings.progressbar_emoji;
+                    let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
+                    if (!String(bar[0]).includes(config.settings.progressbar_emoji)) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
+                    return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+                  }catch (e){
+                    console.log(String(e.stack).bgRed)
+                  }
                 }
               } 
             }, 10000)
