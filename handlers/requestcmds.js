@@ -12,18 +12,11 @@ const {
 } = require("../handlers/functions")
 const playermanager = require("../handlers/playermanager");
 module.exports = async (client, message) => {
-  try {
-    if (message.author.id === client.user.id) {
-      try {
-        if (message) message.delete({timeout: 4000}).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-      } catch {
-        /* */ }
-    } else {
-      try {
-        if (message) message.delete({timeout: 4000}).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-      } catch {
-        /* */ }
-    }
+    if (message.author.id === client.user.id) 
+      message.delete({timeout: 4000}).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
+    else 
+      message.delete().catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
+    
     if (message.author.bot) return; // if the message  author is a bot, return aka ignore the inputs
     //getting the Database Data
     let db = client.setups.get(message.guild.id)
@@ -32,29 +25,31 @@ module.exports = async (client, message) => {
       channel
     } = message.member.voice;
     //if not in a Voice Channel return!
-    if (!channel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("You need to join a voice channel."));
+    if (!channel) return;
     //get the lavalink erela.js player information
     const player = client.manager.players.get(message.guild.id);
     //if there is a player and the user is not in the same channel as the Bot return information message
-    if (player && channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle("❌ ERROR | I am already playing somewhere else!").setDescription(`You can listen to me in: \`${message.guild.channels.cache.get(player.VoiceChannel).name}\``));
+    if (player && channel.id !== player.voiceChannel) return;
     //if the user is not in the channel as in the db voice channel return error
-    if (channel.id !== db.voicechannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setTitle(`You need to be in the: \`${message.guild.channels.cache.get(db.voicechannel).name}\` VoiceChannel`));
-    //get the prefix regex system
+    if (channel.id !== db.voicechannel) return;
+        //get the prefix regex system
+
     const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(config.prefix)})\\s*`); //the prefix can be a Mention of the Bot / The defined Prefix of the Bot
-    //if there is no prefix attached to that message, then search a song on youtueb
-    if (!prefixRegex.test(message.content)) {
-      return playermanager(client, message, message.content.trim().split(/ +/), "song:youtube");
+
+    var args;
+    var cmd;
+    if (prefixRegex.test(message.content)) {
+      //if there is a attached prefix try executing a cmd!
+      const [, matchedPrefix] = message.content.match(prefixRegex); //now define the right prefix either ping or not ping
+      args = message.content.slice(matchedPrefix.length).trim().split(/ +/); //create the arguments with sliceing of of the rightprefix length
+      cmd = args.shift().toLowerCase(); //creating the cmd argument by shifting the args by 1
+    }else {
+      args = message.content.trim().split(/ +/); //create the arguments with sliceing of of the rightprefix length
+      cmd = args.shift().toLowerCase(); //creating the cmd argument by shifting the args by 1
     }
-    //if there is a attached prefix try executing a cmd!
-    const [, matchedPrefix] = message.content.match(prefixRegex); //now define the right prefix either ping or not ping
-    const args = message.content.slice(matchedPrefix.length).trim().split(/ +/); //create the arguments with sliceing of of the rightprefix length
-    const cmd = args.shift().toLowerCase(); //creating the cmd argument by shifting the args by 1
-    if (cmd.length === 0) return message.channel.send(new Discord.MessageEmbed()
-      .setColor(ee.wrongcolor)
-      .setFooter(ee.footertext, ee.footericon)
-      .setTitle(`❌ Unkown command, try: **\`${config.prefix}help\`**`)
-      .setDescription(`To play Music simply type \`${config.prefix}play <Title / Url>\`\n\nYou can also just type the song name / url into the channel and I'll search for it!`)
-    );
+
+    if (cmd.length === 0) return;
+    
     let command = client.commands.get(cmd); //get the command from the collection
     if (!command) command = client.commands.get(client.aliases.get(cmd)); //if the command does not exist, try to get it by his alias
     if (command) //if the command is now valid
@@ -82,6 +77,7 @@ module.exports = async (client, message) => {
         client.stats.inc(message.guild.id, "commands"); //counting our Database stats for SERVER
         client.stats.inc("global", "commands"); //counting our Database Stats for GLOBAL
         //run the command with the parameters:  client, message, args, user, text, prefix,
+        if(["search", "searchsc", "searchradio"].includes(command.name)) return;
         command.run(client, message, args, message.member, args.join(" "), config.prefix, player);
       } catch (e) {
         console.log(String(e.stack).red)
@@ -93,9 +89,9 @@ module.exports = async (client, message) => {
         )
       }
     }
-  } catch (e) {
-    console.log(String(e.stack).bgRed)
-  }
+    else{
+      return playermanager(client, message, message.content.trim().split(/ +/), "request:youtube");
+    }
 }
 /**
  * @INFO

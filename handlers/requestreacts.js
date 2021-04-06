@@ -10,14 +10,16 @@ const {
   databasing,
   escapeRegex,
   autoplay,
+  edit_request_message_track_info,
+  isrequestchannel,
   createBar
 } = require("../handlers/functions")
 const playermanager = require("../handlers/playermanager");
 let hasmap = new Map();
 module.exports = async (client, message) => {
-  try {
+
     client.on("messageReactionAdd", async (reaction, user) => {
-      try {
+
         if (reaction.message.channel.partial) await reaction.message.channel.fetch();
         if (reaction.message.partial) await reaction.message.fetch();
         if (reaction.partial) await reaction.fetch();
@@ -32,10 +34,7 @@ module.exports = async (client, message) => {
         //if its not in the setup channel return
         if (message.channel != db.textchannel) return;
         //removing the reaction of the User
-        try {
-          reaction.users.remove(user.id).catch(e => console.log(String(e.stack).yellow));
-        } catch {
-          /* */ }
+        reaction.users.remove(user.id).catch(e => console.log(String(e.stack).yellow));
         //get the member who makes the reaction
         const member = message.guild.members.cache.get(user.id);
         //getting the Voice Channel Data of the Message Member
@@ -44,30 +43,17 @@ module.exports = async (client, message) => {
         } = member.voice;
         //if not in a Voice Channel return!
         if (!channel)
-          return message.channel.send(new MessageEmbed()
-            .setColor(ee.wrongcolor)
-            .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`${emoji.msg.ERROR} ERROR | You need to join a voice channel.`)
-          );
+          return;
         //get the lavalink erela.js player information
         const player = client.manager.players.get(message.guild.id);
         //if no player available return error | aka not playing anything
         if (!player)
-          return message.channel.send(new MessageEmbed()
-            .setColor(ee.wrongcolor)
-            .setFooter(client.user.username, ee.footericon)
-            .setTitle(`${emoji.msg.ERROR} Error | There is nothing playing`)
-          );
+          return;
         //if there is a player and the user is not in the same channel as the Bot return information message
         if (player && channel.id !== player.voiceChannel)
-          return message.channel.send(new MessageEmbed()
-            .setColor(ee.wrongcolor)
-            .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`${emoji.msg.ERROR} ERROR | I am already playing somewhere else!`)
-            .setDescription(`You can listen to me in: \`${message.guild.channels.cache.get(player.VoiceChannel).name}\``)
-          );
+          return;
         //if the user is not in the channel as in the db voice channel return error
-        if (channel.id !== db.voicechannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle(`${emoji.msg.ERROR} ERROR | You need to be in the: \`${message.guild.channels.cache.get(db.voicechannel).name}\` VoiceChannel`));
+        if (channel.id !== db.voicechannel) return;
         //switch case for every single reaction emoji someone makes
         let reactionemoji = reaction.emoji.id || reaction.emoji.name;
         switch (reactionemoji) {
@@ -80,19 +66,6 @@ module.exports = async (client, message) => {
             }
             //seek to the position after the rewind
             player.seek(Number(rewind));
-            //send an information message
-            message.channel.send(new MessageEmbed()
-              .setTitle(`${emoji.msg.rewind} Rewinded the song for: 20 Seconds, to: ${format(Number(player.position))}`)
-              .setColor(ee.color)
-              .setFooter(ee.footertext, ee.footericon)
-            ).then(msg => {
-              try {
-                msg.delete({
-                  timeout: 4000
-                }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-              } catch {
-                /* */ }
-            });
             break;
           case String(emoji.react.forward):
             //gets the forward time
@@ -103,84 +76,23 @@ module.exports = async (client, message) => {
             }
             //seek to the amount of time after the forwards
             player.seek(Number(forward));
-            //send an information message
-            message.channel.send(new MessageEmbed()
-              .setTitle(`${emoji.msg.forward} Forwarded the Song for: 20 Seconds, to: ${format(Number(player.position))}`)
-              .setColor(ee.color)
-              .setFooter(ee.footertext, ee.footericon)
-            ).then(msg => {
-              try {
-                msg.delete({
-                  timeout: 4000
-                }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-              } catch {
-                /* */ }
-            });
             break;
           case String(emoji.react.pause_resume):
             //pause the player / resume it
             player.pause(player.playing);
-            //send information message
-            message.channel.send(new MessageEmbed()
-              .setTitle(`${player.playing ? `${emoji.msg.resume} Resumed` : `${emoji.msg.pause} Paused`} the Player.`)
-              .setColor(ee.color)
-              .setFooter(ee.footertext, ee.footericon)
-            ).then(msg => {
-              try {
-                msg.delete({
-                  timeout: 4000
-                }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-              } catch {
-                /* */ }
-            });
             break;
 
             //////////////////////////////////////
 
           case String(emoji.react.stop):
+            
             //leave and stop the music
-            player.destroy();
-            //send information message
-            message.channel.send(new MessageEmbed()
-              .setTitle(`${emoji.msg.stop} Stopped and left your channel`)
-              .setColor(ee.color)
-              .setFooter(ee.footertext, ee.footericon)
-            ).then(msg => {
-              try {
-                msg.delete({
-                  timeout: 4000
-                }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-              } catch {
-                /* */ }
-            });
+            var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+            if(irc) edit_request_message_track_info(client, player, player.queue.current, "destroy");
             break;
           case String(emoji.react.previous_track):
             //if there is no previous track
-            if (!player.queue.previous || player.queue.previous === null)
-              return message.channel.send(new MessageEmbed()
-                .setColor(ee.wrongcolor)
-                .setFooter(ee.footertext, ee.footericon)
-                .setTitle(`${emoji.msg.ERROR} Error | There is no previous song yet!`)
-              ).then(msg => {
-                try {
-                  msg.delete({
-                    timeout: 4000
-                  }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                } catch {
-                  /* */ }
-              });
-            message.channel.send(new MessageEmbed()
-              .setTitle(`${emoji.msg.previous_track} Playing Previous Track`)
-              .setColor(ee.color)
-              .setFooter(ee.footertext, ee.footericon)
-            ).then(msg => {
-              try {
-                msg.delete({
-                  timeout: 4000
-                }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-              } catch {
-                /* */ }
-            });
+            if (!player.queue.previous || player.queue.previous === null) return;
             //define the type
             let type = "skiptrack:youtube";
             //if the previous was from soundcloud, then use type soundcloud
@@ -208,7 +120,8 @@ module.exports = async (client, message) => {
                     .setDescription(`There are now: ${player.get("votes")} of ${voteamount} needed Votes\n\n> Amount reached! Skipping ${emoji.msg.skip_track}`)
                   );
                   if (player.queue.size == 0) {
-                    player.destroy();
+                    var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+                    if(irc) edit_request_message_track_info(client, player, player.queue.current, "destroy");
                   } else {
                     player.stop();
                   }
@@ -236,13 +149,10 @@ module.exports = async (client, message) => {
                 //if its on autoplay mode, then do autoplay before leaving...
                 if (player.get("autoplay")) return autoplay(client, player, "skip");
                 //stop playing
-                player.destroy();
+                var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+                if(irc) edit_request_message_track_info(client, player, player.queue.current, "destroy");
                 //send success message
-                return message.channel.send(new MessageEmbed()
-                  .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
-                  .setColor(ee.color)
-                  .setFooter(ee.footertext, ee.footericon)
-                );
+                return;
               }
               //skip the track
               player.stop();
@@ -260,19 +170,6 @@ module.exports = async (client, message) => {
           case String(emoji.react.replay_track):
             //seek to 0
             player.seek(0);
-            //send an information message
-            message.channel.send(new MessageEmbed()
-              .setTitle(`${emoji.msg.replay_track} Replaying Current Track`)
-              .setColor(ee.color)
-              .setFooter(ee.footertext, ee.footericon)
-            ).then(msg => {
-              try {
-                msg.delete({
-                  timeout: 4000
-                }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-              } catch {
-                /* */ }
-            });
             break;
           case String(emoji.react.reduce_volume):
             //get the volume
@@ -281,19 +178,15 @@ module.exports = async (client, message) => {
             if (volumedown < 0) volumedown = 0;
             //set the palyer volume to the volume
             player.setVolume(volumedown);
-            //send an informational message
-            message.channel.send(new MessageEmbed()
-              .setTitle(`${emoji.msg.reduce_volume} Volume set to: **${player.volume} %**`)
-              .setColor(ee.color)
-              .setFooter(ee.footertext, ee.footericon)
-            ).then(msg => {
-              try {
-                msg.delete({
-                  timeout: 4000
-                }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-              } catch {
-                /* */ }
-            });
+            
+            if(!player.queue) return;
+            if(!player.queue.current) return;
+            if(player.get("message").guild) 
+            player.get("message").channel.messages.fetch(client.setups.get(player.get("message").guild.id).message_track_info).then(msg=>{
+                msg.edit(msg.embeds[0].setFooter(`Queue: ${player.queue.size}  •  Volume: ${player.volume}%  •  Autoplay: ${player.get(`autoplay`) ? `✔️` : `❌`}  •  Loop: ${player.queueRepeat ? `✔️ Queue` : player.trackRepeat ? `✔️ Song` : `❌`}`, player.queue.current.requester.displayAvatarURL({
+                  dynamic: true
+                }))).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
+              })
             break;
           case String(emoji.react.raise_volume):
             //get the volume
@@ -302,19 +195,15 @@ module.exports = async (client, message) => {
             if (volumeup > 150) volumeup = 0;
             //set the palyer volume to the volume
             player.setVolume(volumeup);
-            //send an informational message
-            message.channel.send(new MessageEmbed()
-              .setTitle(`${emoji.msg.raise_volume} Volume set to: **${player.volume} %**`)
-              .setColor(ee.color)
-              .setFooter(ee.footertext, ee.footericon)
-            ).then(msg => {
-              try {
-                msg.delete({
-                  timeout: 4000
-                }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-              } catch {
-                /* */ }
-            });
+            
+            if(!player.queue) return;
+            if(!player.queue.current) return;
+            if(player.get("message").guild) 
+            player.get("message").channel.messages.fetch(client.setups.get(player.get("message").guild.id).message_track_info).then(msg=>{
+                msg.edit(msg.embeds[0].setFooter(`Queue: ${player.queue.size}  •  Volume: ${player.volume}%  •  Autoplay: ${player.get(`autoplay`) ? `✔️` : `❌`}  •  Loop: ${player.queueRepeat ? `✔️ Queue` : player.trackRepeat ? `✔️ Song` : `❌`}`, player.queue.current.requester.displayAvatarURL({
+                  dynamic: true
+                }))).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
+              })
             break;
 
             //////////////////////////////////////
@@ -324,19 +213,6 @@ module.exports = async (client, message) => {
             let volumemute = player.volume === 0 ? 50 : 0;
             //set the palyer volume to the volume
             player.setVolume(volumemute);
-            //send an informational message
-            message.channel.send(new MessageEmbed()
-              .setTitle(`${player.volume === 0 ? `${emoji.msg.toggle_mute} Muted the Player` : `${emoji.msg.reduce_volume} Unmuted the Player`}`)
-              .setColor(ee.color)
-              .setFooter(ee.footertext, ee.footericon)
-            ).then(msg => {
-              try {
-                msg.delete({
-                  timeout: 4000
-                }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-              } catch {
-                /* */ }
-            });
             break;
           case String(emoji.react.repeat_mode):
             //if both repeat modes are off
@@ -346,20 +222,6 @@ module.exports = async (client, message) => {
               player.setQueueRepeat(!player.queueRepeat);
               //set track repeat mode to on
               player.setTrackRepeat(!player.trackRepeat);
-              //Send an informational message
-              message.channel.send(new MessageEmbed()
-                .setTitle(`${emoji.msg.repeat_mode} Track Loop is now ${player.trackRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}.`)
-                .setDescription(`And Queue Loop is now ${player.queueRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}.`)
-                .setColor(ee.color)
-                .setFooter(ee.footertext, ee.footericon)
-              ).then(msg => {
-                try {
-                  msg.delete({
-                    timeout: 4000
-                  }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                } catch {
-                  /* */ }
-              });
             }
             //if track repeat mode is on and queue repeat mode off
             else if (player.trackRepeat && hasmap.get(message.guild.id) === 1) {
@@ -368,20 +230,6 @@ module.exports = async (client, message) => {
               player.setTrackRepeat(!player.trackRepeat);
               //set queue repeat mode on
               player.setQueueRepeat(!player.queueRepeat);
-              //send informational message
-              message.channel.send(new MessageEmbed()
-                .setTitle(`${emoji.msg.repeat_mode} Queue Loop is now ${player.queueRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}.`)
-                .setDescription(`And Track Loop is now ${player.trackRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}.`)
-                .setColor(ee.color)
-                .setFooter(ee.footertext, ee.footericon)
-              ).then(msg => {
-                try {
-                  msg.delete({
-                    timeout: 4000
-                  }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                } catch {
-                  /* */ }
-              });
             }
             //otherwise like queue on and track should be off...
             else {
@@ -390,38 +238,28 @@ module.exports = async (client, message) => {
               player.setTrackRepeat(false);
               //set queue repeat mode off
               player.setQueueRepeat(false);
-              //send informational message
-              message.channel.send(new MessageEmbed()
-                .setTitle(`${emoji.msg.repeat_mode} Queue Loop is now ${player.queueRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}.`)
-                .setDescription(`And Track Loop is now ${player.trackRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}.`)
-                .setColor(ee.color)
-                .setFooter(ee.footertext, ee.footericon)
-              ).then(msg => {
-                try {
-                  msg.delete({
-                    timeout: 4000
-                  }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                } catch {
-                  /* */ }
-              });
             }
+            if(!player.queue) return;
+            if(!player.queue.current) return;
+            if(player.get("message").guild) 
+            player.get("message").channel.messages.fetch(client.setups.get(player.get("message").guild.id).message_track_info).then(msg=>{
+                msg.edit(msg.embeds[0].setFooter(`Queue: ${player.queue.size}  •  Volume: ${player.volume}%  •  Autoplay: ${player.get(`autoplay`) ? `✔️` : `❌`}  •  Loop: ${player.queueRepeat ? `✔️ Queue` : player.trackRepeat ? `✔️ Song` : `❌`}`, player.queue.current.requester.displayAvatarURL({
+                  dynamic: true
+                }))).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
+              })
             break;
           case String(emoji.react.autoplay_mode):
             //toggle autoplay
             player.set("autoplay", !player.get("autoplay"))
-            //Send Success Message
-            message.channel.send(new MessageEmbed()
-              .setTitle(`${emoji.msg.SUCCESS} Success | ${player.get("autoplay") ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`} Autoplay`)
-              .setColor(ee.color)
-              .setFooter(ee.footertext, ee.footericon)
-            ).then(msg => {
-              try {
-                msg.delete({
-                  timeout: 4000
-                }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-              } catch {
-                /* */ }
-            });
+
+            if(!player.queue) return;
+            if(!player.queue.current) return;
+            if(player.get("message").guild) 
+            player.get("message").channel.messages.fetch(client.setups.get(player.get("message").guild.id).message_track_info).then(msg=>{
+                msg.edit(msg.embeds[0].setFooter(`Queue: ${player.queue.size}  •  Volume: ${player.volume}%  •  Autoplay: ${player.get(`autoplay`) ? `✔️` : `❌`}  •  Loop: ${player.queueRepeat ? `✔️ Queue` : player.trackRepeat ? `✔️ Song` : `❌`}`, player.queue.current.requester.displayAvatarURL({
+                  dynamic: true
+                }))).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
+              })
             break;
 
             //////////////////////////////////////
@@ -429,19 +267,7 @@ module.exports = async (client, message) => {
           case String(emoji.react.shuffle):
             //shuffle the Queue
             player.queue.shuffle();
-            //send informational message
-            message.channel.send(new MessageEmbed()
-              .setTitle(`${emoji.msg.shuffle} The queue is now shuffled.`)
-              .setColor(ee.color)
-              .setFooter(ee.footertext, ee.footericon)
-            ).then(msg => {
-              try {
-                msg.delete({
-                  timeout: 4000
-                }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-              } catch {
-                /* */ }
-            });
+
             break;
           case String(emoji.react.show_queue):
             //define the Embed
@@ -455,25 +281,25 @@ module.exports = async (client, message) => {
             //get the right tracks of the current tracks
             const tracks = player.queue;
             //if there are no other tracks, information
-            if (!tracks.length)
-              return message.channel.send(embed.setDescription(`${emoji.msg.ERROR} No tracks in the queue`)).then(msg => {
-                try {
-                  msg.delete({
-                    timeout: 5000
-                  }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                } catch {
-                  /* */ }
-              })
+            if (!tracks.length){
+              user.send(embed.setDescription(`${emoji.msg.ERROR} No tracks in the queue`))
+              message.channel.send(new MessageEmbed()
+                .setTitle(`${emoji.msg.SUCCESS} Check your direct messages to see the Queue`)
+                .setColor(ee.color)
+                .setFooter(ee.footertext, ee.footericon)
+              );
+              return;
+            }
             //if not too big send queue in channel
-            if (tracks.length < 15)
-              return message.channel.send(embed.setDescription(tracks.map((track, i) => `**${++i})** [${track.title.substr(0, 35)}](${track.uri}) - ${track.isStream ? "LIVE STREAM" : format(track.duration).split(" | ")[0]} - **requested by: ${track.requester.tag}**`).join("\n"))).then(msg => {
-                try {
-                  msg.delete({
-                    timeout: 5000
-                  }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                } catch {
-                  /* */ }
-              });
+            if (tracks.length < 15){
+              user.send(embed.setDescription(tracks.map((track, i) => `**${++i})** [${track.title.substr(0, 35)}](${track.uri}) - ${track.isStream ? "LIVE STREAM" : format(track.duration).split(" | ")[0]} - **requested by: ${track.requester.tag}**`).join("\n")))
+              message.channel.send(new MessageEmbed()
+                .setTitle(`${emoji.msg.SUCCESS} Check your direct messages to see the Queue`)
+                .setColor(ee.color)
+                .setFooter(ee.footertext, ee.footericon)
+              );
+              return;
+            }
             //get an array of quelist where 15 tracks is one index in the array
             let quelist = [];
             for (let i = 0; i < tracks.length; i += 15) {
@@ -493,19 +319,12 @@ module.exports = async (client, message) => {
               .setTitle(`${emoji.msg.SUCCESS} Check your direct messages to see the Queue`)
               .setColor(ee.color)
               .setFooter(ee.footertext, ee.footericon)
-            ).then(msg => {
-              try {
-                msg.delete({
-                  timeout: 4000
-                }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-              } catch {
-                /* */ }
-            });
+            );
 
             break;
           case String(emoji.react.show_current_track):
             //Send Now playing Message
-            return message.channel.send(new MessageEmbed()
+            user.send(new MessageEmbed()
               .setAuthor("Current song playing:", user.displayAvatarURL({
                 dynamic: true
               }))
@@ -521,23 +340,16 @@ module.exports = async (client, message) => {
               .setFooter(`Requested by: ${player.queue.current.requester.tag}`, player.queue.current.requester.displayAvatarURL({
                 dynamic: true
               }))
-            ).then(msg => {
-              try {
-                msg.delete({
-                  timeout: 4000
-                }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-              } catch {
-                /* */ }
-            });
+            )
+            message.channel.send(new MessageEmbed()
+              .setTitle(`${emoji.msg.SUCCESS} Check your direct messages to see the Current Track`)
+              .setColor(ee.color)
+              .setFooter(ee.footertext, ee.footericon)
+            );
             break;
         }
-      } catch (e) {
-        console.log(String(e.stack).yellow) /* */
-      }
     })
-  } catch (e) {
-    console.log(String(e.stack).bgRed)
-  }
+
 }
 /**
  * @INFO

@@ -27,8 +27,9 @@ const {
 
   clientID = config.spotify.clientID,
   clientSecret = config.spotify.clientSecret,
-
+  
   hasmap = new Map();
+  var mi;
 module.exports = (client) => {
 
   try {
@@ -132,48 +133,46 @@ module.exports = (client) => {
           player.set(`afk-${player.guild}`, false)
           player.set(`afk-${player.get("playerauthor")}`, false)
           player.setEQ(client.eqs.music);
-          try{
-            let guild = client.guilds.cache.get(player.guild)
-            if(config.settings.serverDeaf) guild.me.voice.setDeaf(true);
-          }catch (e) {
-            console.log(e)
-          }
           databasing(client, player.guild, player.get("playerauthor"));
 
           var embed = new MessageEmbed();
-          try {
             embed.setTitle(`:thumbsup: **Joined** \`${client.channels.cache.get(player.voiceChannel).name}\``)
-          } catch {}
-          try {
             embed.setDescription(`**Commands bound to: ** <#${client.channels.cache.get(player.textChannel).id}>`)
-          } catch {}
-          if (isrequestchannel(client, player.get("message"))) return;
-          client.channels.cache.get(player.textChannel).send(embed.setColor(ee.color)).catch(e=>console.log("this prevents a crash"));
+          
+            var irc = await isrequestchannel(client, player.textChannel, player.guild);
+            if(!irc) client.channels.cache.get(player.textChannel).send(embed.setColor(ee.color)).catch(e=>console.log("this prevents a crash"));
+            if(config.settings.serverDeaf)
+            for(let i = 0; i<= 5; i++){
+              await new Promise((res)=>{
+                setTimeout(()=>{
+                  res(2)
+                  let guild = client.guilds.cache.get(player.guild)
+                  guild.me.voice.setDeaf(true).catch(e=>console.log("ignore that log".gray));
+                  i = 10;
+                }, 1000)
+              })
+            }
+            
       })
-      .on("playerMove", (player, oldChannel, newChannel) => {
+      .on("playerMove", async (player, oldChannel, newChannel) => {
         if (!newChannel) {
-          try {
             var embed = new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon);
-          } catch {}
-          try {
             embed.setTitle(`${emoji.msg.ERROR} Queue has ended.`)
-          } catch {}
-          try {
             embed.setDescription(`I left the Channel: \`🔈 ${client.channels.cache.get(player.voiceChannel).name}\``)
-          } catch {}
+            var irc = await isrequestchannel(client, player.textChannel, player.guild);
+            if(irc) edit_request_message_track_info(client, player);
           client.channels.cache.get(player.textChannel).send(embed);
           try {
             client.channels.cache.get(player.textChannel).messages.fetch(player.get("playermessage")).then(msg => {
-              try {
                 msg.delete({
                   timeout: 1500
                 }).catch(e => console.log("Couldn't delete message this is a catch to prevent a crash".grey));
-              } catch {
-                /* */ }
             });
           } catch (e) {
             console.log(String(e.stack).yellow);
           }
+          var irc2 = await isrequestchannel(client, player.textChannel, player.guild);
+          if(irc2) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
           player.destroy();
         } else {
           player.voiceChannel = newChannel;
@@ -204,29 +203,51 @@ module.exports = (client) => {
           });
           // playANewTrack(client,player,track);
           var embed = new MessageEmbed().setColor(ee.color)
-          try {
             embed.setTitle(`**${emoji.msg.playing} | ${track.title}**`)
-          } catch {}
-          try {
             embed.setURL(track.uri)
-          } catch {}
-          try { //
             embed.setThumbnail(`https://img.youtube.com/vi/${track.identifier}/mqdefault.jpg`)
-          } catch {}
-          try {
             embed.addField(`**${emoji.msg.time} Duration: **`, `\`❯ ${track.isStream ? `LIVE STREAM` : format(track.duration)}\``, true)
-          } catch {}
-          try {
             embed.addField(`**${emoji.msg.song_by} Song By:**`, `\`❯ ${track.author}\``, true)
-          } catch {}
-          try {
             embed.addField(`**${emoji.msg.repeat_mode} Queue length:**`, `\`❯ ${player.queue.length} Songs\``, true)
-          } catch {}
-          try {
             embed.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({dynamic: true}));
-          } catch {}
+          var irc = await isrequestchannel(client, player.textChannel, player.guild);
+          if(irc) {
+            //try to clear the interval
+            try{
+              clearInterval(mi);
+            }catch{ }
+            //LOOP EDIT THE MSG
+            mi = setInterval(()=>{
+              if (!client.manager.players.get(player.guild)) 
+                return clearInterval(mi);
+              if(!player.queue) return clearInterval(mi);
+              if(!player.queue.current) return clearInterval(mi);
+              let message = player.get("message");
+              if(message.guild) {
+                message.channel.messages.fetch(client.setups.get(message.guild.id).message_track_info).then(msg=>{
+                  msg.edit(msg.embeds[0].setDescription(`${createBarlul(player)}`)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
+                })
+                function createBarlul(player) {
+                  try{
+                    //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji)
+                    if (!player.queue.current) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
+                    let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
+                    let total = player.queue.current.duration;
+                    let size = 25;
+                    let line = "▬";
+                    let slider = config.settings.progressbar_emoji;
+                    let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
+                    if (!String(bar[0]).includes(config.settings.progressbar_emoji)) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
+                    return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+                  }catch (e){
+                    console.log(String(e.stack).bgRed)
+                  }
+                }
+              } 
+            }, 10000)
 
-          if (isrequestchannel(client, player.get(`message`))) return edit_request_message_track_info(client, player, track);
+            return edit_request_message_track_info(client, player, player.queue.current);
+          }
           //if pruning is enabled --> send the msg
           if (client.settings.get(player.guild, `pruning`))
             client.channels.cache.get(player.textChannel).send(embed).then(msg => {
@@ -240,7 +261,6 @@ module.exports = (client) => {
               player.set(`playingsongmsg`, msg)
               //react with all emojis
               var failed = false;
-              try {
                 msg.react(emoji.react.rewind).catch(e => failed = true); //rewind 20 seconds
                 msg.react(emoji.react.forward).catch(e => failed = true); //forward 20 seconds
                 msg.react(emoji.react.pause_resume).catch(e => failed = true); //pause / resume
@@ -256,13 +276,7 @@ module.exports = (client) => {
                 msg.react(emoji.react.shuffle).catch(e => failed = true); //shuffle the Queue
                 msg.react(emoji.react.show_queue).catch(e => failed = true); //shows the Queue
                 msg.react(emoji.react.show_current_track).catch(e => failed = true); //shows the current Track
-              } catch (e) {
-                msg.channel.send(new MessageEmbed()
-                  .setColor(ee.wrongcolor)
-                  .setTitle(`${emojis.msg.ERROR} ERROR | An Error Occurred`)
-                  .setDescription(`\`\`\`${e.message}\`\`\`\n Make sure that i have permissions to add (custom) REACTIONS`)
-                )
-              }
+             
               if (failed)
                 msg.channel.send(new MessageEmbed()
                   .setColor(ee.wrongcolor)
@@ -371,6 +385,8 @@ module.exports = (client) => {
                       //////////////////////////////////////
 
                     case String(emoji.react.stop):
+                      var irc = await isrequestchannel(client, player.textChannel, player.guild);
+                      if(irc) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
                       //leave and stop the music
                       player.destroy();
                       //send information message
@@ -441,6 +457,8 @@ module.exports = (client) => {
                               .setDescription(`There are now: ${player.get("votes")} of ${voteamount} needed Votes\n\n> Amount reached! Skipping ${emoji.msg.skip_track}`)
                             );
                             if (player.queue.size == 0) {
+                              var irc3 = await isrequestchannel(client, player.textChannel, player.guild);
+                              if(irc3) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
                               player.destroy();
                             } else {
                               player.stop();
@@ -468,6 +486,8 @@ module.exports = (client) => {
                         if (player.queue.size == 0) {
                           //if its on autoplay mode, then do autoplay before leaving...
                           if (player.get("autoplay")) return autoplay(client, player, "skip");
+                          var irc4 = await isrequestchannel(client, player.textChannel, player.guild);
+                          if(irc4) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
                           //stop playing
                           player.destroy();
                           //send success message
@@ -839,23 +859,17 @@ module.exports = (client) => {
         if (player.get("autoplay")) return autoplay(client, player);
         //DEvar TIME OUT
         if (config.settings.LeaveOnEmpty_Queue.enabled) {
-          setTimeout(() => {
+          setTimeout(async () => {
             try {
               player = client.manager.players.get(player.guild);
-              if (player.queue.size === 0) {
+              if (!player.queue || !player.queue.current) {
                 var embed = new MessageEmbed()
-                try {
                   embed.setTitle(`${emoji.msg.ERROR} Queue has ended.`)
-                } catch {}
-                try {
-                  embed.setDescription(`I left the Channel: ${client.channels.cache.get(player.voiceChannel).name} because the Queue was empty for: ${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}`)
-                } catch {}
-                try {
+                  embed.setDescription(`I left the Channel: ${client.channels.cache.get(player.voiceChannel) ? client.channels.cache.get(player.voiceChannel).name : "UNKNOWN"} because the Queue was empty for: ${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}`)
                   embed.setColor(ee.wrongcolor)
-                } catch {}
-                try {
                   embed.setFooter(ee.footertext, ee.footericon);
-                } catch {}
+                var irc = await isrequestchannel(client, player.textChannel, player.guild);
+                if(irc) edit_request_message_track_info(client, player);
                 //if        player afk                              or      guild afk     is enbaled return and not destroy the PLAYER
                 if (player.get(`afk-${player.get("playerauthor")}`) || player.get(`afk-${player.guild}`))
                   return client.channels.cache.get(player.textChannel).send(embed.setDescription(`I will not Leave the Channel, cause afk is ✔️ Enabled`)).then(msg => {
@@ -866,30 +880,23 @@ module.exports = (client) => {
                     } catch {
                       /* */ }
                   });
+                
                 //send information message
                 client.channels.cache.get(player.textChannel).send(embed).then(msg => {
-                  try {
                     msg.delete({
                       timeout: 4000
                     }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                  } catch {
-                    /* */ }
                 });
 
-                try {
                   client.channels.cache
                     .get(player.textChannel)
                     .messages.fetch(player.get("playermessage")).then(msg => {
-                      try {
-                        msg.delete({
+                      if(msg) msg.delete({
                           timeout: 4000
                         }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                      } catch {
-                        /* */ }
                     });
-                } catch (e) {
-                  console.log(String(e.stack).yellow);
-                }
+                var irc5 = await isrequestchannel(client, player.textChannel, player.guild);
+                if(irc5) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
                 player.destroy();
               }
             } catch (e) {
@@ -907,13 +914,15 @@ module.exports = (client) => {
      * With premium
      */
     //Log if a Channel gets deleted, and the Bot was in, then delete the player if the player exists!
-    client.on("channelDelete", channel => {
+    client.on("channelDelete", async channel => {
       try {
         if (channel.type === "voice") {
           if (channel.members.has(client.user.id)) {
             var player = client.manager.players.get(channel.guild.id);
             if (!player) return;
             if (channel.id === player.voiceChannel) {
+              var irc = await isrequestchannel(client, player.textChannel, player.guild);
+              if(irc) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
               //destroy
               player.destroy();
             }
@@ -922,18 +931,20 @@ module.exports = (client) => {
       } catch {}
     })
     //If the Bot gets Remove from the Guild and there is still a player, remove it ;)
-    client.on("guildRemove", guild => {
+    client.on("guildRemove", async guild => {
       try {
         var player = client.manager.players.get(guild.id);
         if (!player) return;
         if (guild.id == player.guild) {
+          var irc = await isrequestchannel(client, player.textChannel, player.guild);
+          if(irc) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
           //destroy
           player.destroy();
         }
       } catch {
         /* */ }
     })
-    client.on("voiceStateUpdate", (oldState, newState) => {
+    client.on("voiceStateUpdate", async (oldState, newState) => {
       if(newState.id === client.user.id && oldState.serverDeaf === true && newState.serverDeaf === false)
           {
               try{
@@ -968,6 +979,8 @@ module.exports = (client) => {
           if (oldState.member.user.id === client.user.id) {
             var player = client.manager.players.get(oldState.guild.id);
             if (!player) return;
+            var irc = await isrequestchannel(client, player.textChannel, player.guild);
+            if(irc) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
             //destroy
             player.destroy();
           }
@@ -979,16 +992,25 @@ module.exports = (client) => {
       if (config.settings.leaveOnEmpty_Channel.enabled && oldState && oldState.channel) {
         player = client.manager.players.get(oldState.guild.id);
         //if not connect return player.destroy()
-        if (!oldState.guild.me.voice.channel) return player.destroy();
+        if (!oldState.guild.me.voice.channel){
+          var irc = await isrequestchannel(client, player.textChannel, player.guild);
+          if(irc) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
+          return player.destroy();
+        }
         //wait some time...
         if (player && oldState.guild.channels.cache.get(player.voiceChannel).members.size === 1) {
-          setTimeout(() => {
+          setTimeout(async () => {
             try {
               player = client.manager.players.get(oldState.guild.id);
               //if not connect return player.destroy()
-              if (!oldState.guild.me.voice.channel && player) return player.destroy();
+              if (!oldState.guild.me.voice.channel && player) {
+                var irc = await isrequestchannel(client, player.textChannel, player.guild);
+                if(irc) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
+                return player.destroy();
+              }
               //wait some time...
-              if (player && oldState.guild.channels.cache.get(player.voiceChannel).members.size === 1) {
+              var vc = oldState.guild.channels.cache.get(player.voiceChannel)
+              if (player && vc && vc.members.size === 1) {
                 var embed = new MessageEmbed()
                   .setTitle(`${emoji.msg.ERROR} Queue has ended | Channel Empty`)
                   .setDescription(`I left the Channel: ${client.channels.cache.get(player.voiceChannel).name} because the Channel was empty for: ${ms(config.settings.leaveOnEmpty_Channel.time_delay, { long: true })}`)
@@ -1026,6 +1048,8 @@ module.exports = (client) => {
                 } catch (e) {
                   console.log(String(e.stack).yellow);
                 }
+                var irc = await isrequestchannel(client, player.textChannel, player.guild);
+                if(irc) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
                 player.destroy();
               }
             } catch (e) {
