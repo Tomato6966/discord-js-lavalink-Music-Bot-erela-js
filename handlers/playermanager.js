@@ -99,7 +99,7 @@ async function similar(client, message, args, type) {
       //add the track
       player.queue.add(res.tracks[0]);
       //if its in a request channel edit it
-      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      var irc = await isrequestchannel(client, player.textChannel, player.guild);
       if (irc) {edit_request_message_track_info(client, player, player.queue.current);
       edit_request_message_queue_info(client, player);}
       //send information message
@@ -208,7 +208,7 @@ async function similar(client, message, args, type) {
         player.queue.add(track);
         player.play();
 
-        var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+        var irc = await isrequestchannel(client, player.textChannel, player.guild);
         if (irc) {edit_request_message_track_info(client, player, player.queue.current);
         edit_request_message_queue_info(client, player);}
       } else {
@@ -238,7 +238,7 @@ async function similar(client, message, args, type) {
           }))
         } catch {}
 
-        var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+        var irc = await isrequestchannel(client, player.textChannel, player.guild);
         if (irc) {edit_request_message_track_info(client, player, player.queue.current);
         edit_request_message_queue_info(client, player);}
         return message.channel.send(embed).then(msg => {
@@ -367,13 +367,13 @@ async function search(client, message, args, type) {
       //play track
       player.play();
 
-      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      var irc = await isrequestchannel(client, player.textChannel, player.guild);
       if (irc) {edit_request_message_track_info(client, player, player.queue.current);
       edit_request_message_queue_info(client, player);}
     } else {
       player.queue.add(track);
 
-      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      var irc = await isrequestchannel(client, player.textChannel, player.guild);
       if (irc) {edit_request_message_track_info(client, player, player.queue.current);
       edit_request_message_queue_info(client, player);}
       let embed3 = new Discord.MessageEmbed()
@@ -510,13 +510,13 @@ async function searchplaylist(client, message, args, type) {
       player.queue.add(track);
       player.play();
 
-      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      var irc = await isrequestchannel(client, player.textChannel, player.guild);
       if (irc){ edit_request_message_track_info(client, player, player.queue.current);
       edit_request_message_queue_info(client, player);}
     } else {
       player.queue.add(track);
 
-      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      var irc = await isrequestchannel(client, player.textChannel, player.guild);
       if (irc){ edit_request_message_track_info(client, player, player.queue.current);
       edit_request_message_queue_info(client, player);}
       let embed3 = new Discord.MessageEmbed()
@@ -629,13 +629,13 @@ async function playlist(client, message, args, type) {
         }
       });
 
-      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      var irc = await isrequestchannel(client, player.textChannel, player.guild);
       if (irc){ edit_request_message_track_info(client, player, player.queue.current);
       edit_request_message_queue_info(client, player);}
     } else {
       player.queue.add(res.tracks);
 
-      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      var irc = await isrequestchannel(client, player.textChannel, player.guild);
       if (irc) {edit_request_message_track_info(client, player, player.queue.current);
       edit_request_message_queue_info(client, player);}
       let playlistembed2 = new Discord.MessageEmbed()
@@ -722,7 +722,7 @@ async function song(client, message, args, type) {
       player.play();
       //RESUME
       player.pause(false);
-      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      var irc = await isrequestchannel(client, player.textChannel, player.guild);
       if (irc) {edit_request_message_track_info(client, player, player.queue.current);
       edit_request_message_queue_info(client, player);}
     } else {
@@ -730,7 +730,7 @@ async function song(client, message, args, type) {
       player.queue.add(res.tracks[0]);
       //if its in a request channel edit queu info
 
-      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      var irc = await isrequestchannel(client, player.textChannel, player.guild);
       if (irc) {edit_request_message_track_info(client, player, player.queue.current);
       edit_request_message_queue_info(client, player);}
       //send track information
@@ -909,7 +909,7 @@ async function skiptrack(client, message, args, type) {
       //play track
       player.play();
 
-      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      var irc = await isrequestchannel(client, player.textChannel, player.guild);
       if (irc) {edit_request_message_track_info(client, player, player.queue.current);
       edit_request_message_queue_info(client, player);}
     } else {
@@ -926,7 +926,7 @@ async function skiptrack(client, message, args, type) {
       //skip the track
       player.stop();
 
-      var irc = await isrequestchannel(client, message.channel.id, message.guild.id);
+      var irc = await isrequestchannel(client, player.textChannel, player.guild);
       if (irc) {edit_request_message_track_info(client, player, player.queue.current);
       edit_request_message_queue_info(client, player);}
       return;
