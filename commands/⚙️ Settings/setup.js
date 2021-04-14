@@ -85,6 +85,7 @@ module.exports = {
                       ],
                     })
                     .then(async (channel3) => {
+                      message.reply(`Setting up in <#${channel3.id}>`)
                       let embed1 = new MessageEmbed()
                         .setColor(ee.color)
                         .setFooter(ee.footertext, ee.footericon)
@@ -106,37 +107,37 @@ module.exports = {
                         .setDescription(`Join a voice channel and enter a song name or url to play.\n[Invite Lava Music](https://lava.milrato.eu) • [Support Server](https://discord.com/invite/wvCp7q88G3)`)
                         .setImage("https://cdn.discordapp.com/attachments/754700756170440774/812443980293603329/lavamusic.gif")
                       //send a temp message
-                      channel3.send(new MessageEmbed().setColor(ee.color)).then(msg => {
+                      channel3.send(new MessageEmbed().setColor(ee.color).setDescription("Setting Up..")).then(msg => {
                         //react with embed 1
                         msg.edit(embed1)
                         //save it in the database
                         client.setups.set(message.guild.id, msg.id, "message_cmd_info");
                         //send another message
-                        channel3.send(new MessageEmbed().setColor(ee.color)).then(msg => {
+                        channel3.send(new MessageEmbed().setColor(ee.color).setDescription("Setting Up..")).then(msg => {
                           //edit the message again
                           msg.edit(embed2)
                           //save it in the database
                           client.setups.set(message.guild.id, msg.id, "message_queue_info");
                           //send an message again
-                          channel3.send(new MessageEmbed().setColor(ee.color)).then(msg => {
+                          channel3.send(new MessageEmbed().setColor(ee.color).setDescription("Setting Up..")).then(async msg => {
                             //edit the message
                             msg.edit(embed3)
                             //react with all reactions
-                            msg.react(emoji.react.rewind) //rewind 20 seconds
-                            msg.react(emoji.react.forward) //forward 20 seconds
-                            msg.react(emoji.react.pause_resume) //pause / resume
-                            msg.react(emoji.react.stop) //stop playing music
-                            msg.react(emoji.react.previous_track) //skip back  track / (play previous)
-                            msg.react(emoji.react.skip_track) //skip track / stop playing
-                            msg.react(emoji.react.replay_track) //replay track
-                            msg.react(emoji.react.reduce_volume) //reduce volume by 10%
-                            msg.react(emoji.react.raise_volume) //raise volume by 10%
-                            msg.react(emoji.react.toggle_mute) //toggle mute
-                            msg.react(emoji.react.repeat_mode) //change repeat mode --> track --> Queue --> none
-                            msg.react(emoji.react.autoplay_mode) //toggle autoplay mode
-                            msg.react(emoji.react.shuffle) //shuffle the Queue
-                            msg.react(emoji.react.show_queue) //shows the Queue
-                            msg.react(emoji.react.show_current_track) //shows the current Track
+                            await msg.react(emoji.react.rewind) //rewind 20 seconds
+                            await msg.react(emoji.react.forward) //forward 20 seconds
+                            await msg.react(emoji.react.pause_resume) //pause / resume
+                            await msg.react(emoji.react.stop) //stop playing music
+                            await msg.react(emoji.react.previous_track) //skip back  track / (play previous)
+                            await msg.react(emoji.react.skip_track) //skip track / stop playing
+                            await msg.react(emoji.react.replay_track) //replay track
+                            await msg.react(emoji.react.reduce_volume) //reduce volume by 10%
+                            await msg.react(emoji.react.raise_volume) //raise volume by 10%
+                            await msg.react(emoji.react.toggle_mute) //toggle mute
+                            await msg.react(emoji.react.repeat_mode) //change repeat mode --> track --> Queue --> none
+                            await msg.react(emoji.react.autoplay_mode) //toggle autoplay mode
+                            await msg.react(emoji.react.shuffle) //shuffle the Queue
+                            await msg.react(emoji.react.show_queue) //shows the Queue
+                            await msg.react(emoji.react.show_current_track) //shows the current Track
                             //create the collector
                             //save all other datas in the database
                             client.setups.set(message.guild.id, msg.id, "message_track_info");
