@@ -1,4 +1,4 @@
-/**
+﻿/**
   * @INFO
   * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
   * @INFO
@@ -51,7 +51,7 @@ client.login(require("./botconfig/config.json").token);
   * Please mention Him / Milrato Development, when using this Code!
   * @INFO
 */
-
+/*
 process.on('unhandledRejection', (reason, p) => {
   console.log('ignore that log'.gray);
 });
@@ -69,8 +69,8 @@ process.on('exit', (code) => {
 });
 process.on('multipleResolves', (type, promise, reason) => {
   console.log('ignore that log'.gray);
-});
-/*
+});*/
+
 process.on('unhandledRejection', (reason, p) => {
   console.log('=== unhandled Rejection ==='.toUpperCase());
   console.log('Promise: ', p , 'Reason: ', reason.stack ? reason.stack : reason);
@@ -100,4 +100,4 @@ process.on('multipleResolves', (type, promise, reason) => {
   console.log('=== multiple Resolves ==='.toUpperCase());
   console.log(type, promise, reason);
   console.log('=== multiple Resolves ==='.toUpperCase());
-});*/
+});

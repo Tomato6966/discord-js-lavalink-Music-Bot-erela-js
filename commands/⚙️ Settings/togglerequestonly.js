@@ -20,7 +20,7 @@ module.exports = {
         .setColor(ee.color)
         .setFooter(ee.footertext, ee.footericon)
         .setTitle(`${emoji.msg.SUCCESS} Success | ${client.settings.get(message.guild.id, `requestonly`) ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`} Request Only`)
-        .setDescription(`You are now ${client.settings.get(message.guild.id, `requestonly`) ? `` : `not`} allowed to use Commands in different Channels`)
+        .setDescription(`You are now ${client.settings.get(message.guild.id, `requestonly`) ? `__**not**__` : ``} allowed to use Commands in different Channels`)
       );
     } catch (e) {
       console.log(String(e.stack).bgRed)

@@ -39,7 +39,24 @@ module.exports = {
               if(irc) {
                 return edit_request_message_track_info(client, player, player.queue.current, "destroy");
               }
-              player.destroy();
+               //stop playing
+              if(message.guild.me.voice.channel) {
+                message.guild.me.voice.channel.leave()
+                player.destroy()
+                return message.channel.send(new MessageEmbed()
+                  .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
+                  .setColor(ee.color)
+                  .setFooter(ee.footertext, ee.footericon)
+                );
+              }
+              else {
+                player.destroy()
+                return message.channel.send(new MessageEmbed()
+                  .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
+                  .setColor(ee.color)
+                  .setFooter(ee.footertext, ee.footericon)
+                );
+              }
             } else {
               player.stop();
             }
@@ -65,18 +82,28 @@ module.exports = {
           //if its on autoplay mode, then do autoplay before leaving...
           if (player.get(`autoplay`)) return autoplay(client, player, `skip`);
           var irc = await isrequestchannel(client, player.textChannel, player.guild);
-          console.log(irc)
           if(irc) {
             return edit_request_message_track_info(client, player, player.queue.current, "destroy");
           }
           //stop playing
-          player.destroy();
-          //send success message
-          return message.channel.send(new MessageEmbed()
-            .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
-            .setColor(ee.color)
-            .setFooter(ee.footertext, ee.footericon)
-          );
+          if(message.guild.me.voice.channel) {
+            message.guild.me.voice.channel.leave()
+            player.destroy()
+            return message.channel.send(new MessageEmbed()
+              .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
+              .setColor(ee.color)
+              .setFooter(ee.footertext, ee.footericon)
+            );
+          }
+          else {
+            player.destroy()
+            return message.channel.send(new MessageEmbed()
+              .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
+              .setColor(ee.color)
+              .setFooter(ee.footertext, ee.footericon)
+            );
+          }
+          return
         }
         //skip the track
         player.stop();
