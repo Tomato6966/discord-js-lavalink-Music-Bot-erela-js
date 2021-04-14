@@ -89,7 +89,7 @@ module.exports = async (client, message) => {
         }
         const now = Date.now(); //get the current time
         const timestamps = client.cooldowns.get(command.name); //get the timestamp of the last used commands
-        const cooldownAmount = (command.cooldown || 3) * 1000; //get the cooldownamount of the command, if there is no cooldown there will be automatically 1 sec cooldown, so you cannot spam it^^
+        const cooldownAmount = (command.cooldown || 2.5) * 1000; //get the cooldownamount of the command, if there is no cooldown there will be automatically 1 sec cooldown, so you cannot spam it^^
         if (timestamps.has(message.author.id)) { //if the user is on cooldown
           const expirationTime = timestamps.get(message.author.id) + cooldownAmount; //get the amount of time he needs to wait until he can run the cmd again
           if (now < expirationTime) { //if he is still on cooldonw
