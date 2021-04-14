@@ -22,12 +22,26 @@ module.exports = {
       //get the player instance
       const player = client.manager.players.get(message.guild.id);
       //if no player available return error | aka not playing anything
-      if (!player)
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle("❌ Error | There is nothing playing")
-        );
+      if (!player){
+        if(message.guild.me.voice.channel) {
+          message.guild.me.voice.channel.leave().catch(e => console.log(e))
+            return message.channel.send(new MessageEmbed()
+              .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
+              .setColor(ee.color)
+              .setFooter(ee.footertext, ee.footericon)
+            );
+        }
+        else {
+          return message.channel.send(new MessageEmbed()
+            .setFooter(ee.footertext, ee.footericon)
+            .setColor(ee.wrongcolor)
+            .setTitle(`${emoji.msg.ERROR} Error | No song is currently playing in this guild.`)
+          );
+        }
+        return
+      }
+      
+     
       //if not in the same channel as the player, return Error
       if (channel.id !== player.voiceChannel)
         return message.channel.send(new MessageEmbed()
@@ -44,14 +58,24 @@ module.exports = {
         if(irc) {
           return edit_request_message_track_info(client, player, player.queue.current, "destroy");
         }
-        //stop playing
-        player.destroy();
-        //send success message
-        return message.channel.send(new MessageEmbed()
-          .setTitle("✅ Success | ⏹ Stopped and left your Channel")
-          .setColor(ee.color)
-          .setFooter(ee.footertext, ee.footericon)
-        );
+        if(message.guild.me.voice.channel) {
+          message.guild.me.voice.channel.leave().catch(e => console.log(e))
+          player.destroy().catch(e => console.log(e))
+            return message.channel.send(new MessageEmbed()
+              .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
+              .setColor(ee.color)
+              .setFooter(ee.footertext, ee.footericon)
+            );
+        }
+        else {
+          player.destroy().catch(e => console.log(e))
+          return message.channel.send(new MessageEmbed()
+            .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
+            .setColor(ee.color)
+            .setFooter(ee.footertext, ee.footericon)
+          );
+        }
+        return
       }
       //skip the track
       player.stop();
