@@ -21,7 +21,7 @@ module.exports = {
         msg.edit(new MessageEmbed()
           .setColor(ee.color)
           .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ping} Ping is \`${Math.round(client.ws.ping)}ms\``)
+          .setTitle(`${emoji.msg.ping} Ping: \`${Math.round(Date.now() - message.createdTimestamp)}ms\`\n\n${emoji.msg.ping} Api Latency: \`${Math.round(client.ws.ping)}ms\``)
         );
       })
     } catch (e) {
