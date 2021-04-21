@@ -60,7 +60,15 @@ module.exports = {
         return
       }
         
-        
+      setTimeout(()=>{
+        try{
+          message.guild.me.voice.channel.leave().catch(e=>console.log("PREVENTED BUG"))
+        }catch{ }
+        try{
+          player.destroy()
+        }catch{ }
+      }, 4000)
+
       var irc = await isrequestchannel(client, player.textChannel, player.guild);
       if(irc) {
         edit_request_message_track_info(client, player, player.queue.current, "destroy");
