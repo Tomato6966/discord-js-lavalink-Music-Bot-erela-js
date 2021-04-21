@@ -17,26 +17,71 @@ module.exports = {
       if (args[0]) {
         const embed = new MessageEmbed();
         const cmd = client.commands.get(args[0].toLowerCase()) || client.commands.get(client.aliases.get(args[0].toLowerCase()));
+        var cat = false;
         if (!cmd) {
+          cat = client.categories.find(cat => cat.toLowerCase().includes(args[0].toLowerCase()))
+        }
+        if (!cmd && (!cat || cat == null)) {
           return message.channel.send(embed.setColor(ee.wrongcolor).setDescription(`No Information found for command **${args[0].toLowerCase()}**`));
+        } else if (!cmd && cat) {
+          var category = cat;
+          const items = client.commands.filter((cmd) => cmd.category === category).map((cmd) => `\`${cmd.name}\``);
+          const n = 3;
+          const result = [
+            [],
+            [],
+            []
+          ];
+          const wordsPerLine = Math.ceil(items.length / 3);
+          for (let line = 0; line < n; line++) {
+            for (let i = 0; i < wordsPerLine; i++) {
+              const value = items[i + line * wordsPerLine];
+              if (!value) continue;
+              result[line].push(value);
+            }
+          }
+
+          const embed = new MessageEmbed()
+            .setColor(ee.color)
+            .setThumbnail(client.user.displayAvatarURL())
+            .setTitle(`MENU 🔰 **${category.toUpperCase()} [${items.length}]**`)
+            .setFooter(`To see command Descriptions and Inforamtion, type: ${config.prefix}help [CMD NAME]`, client.user.displayAvatarURL());
+
+          if (category.toLowerCase().includes("custom")) {
+            const cmd = client.commands.get(items[0].split("`").join("").toLowerCase()) || client.commands.get(client.aliases.get(items[0].split("`").join("").toLowerCase()));
+            try {
+              embed.addField(`**${category.toUpperCase()} [${items.length}]**`, `> \`${items[0]}\`\n\n**Usage:**\n> \`${cmd.usage}\``);
+            } catch {}
+          } else {
+            try {
+              embed.addField(`\u200b`, `> ${result[0].join("\n> ")}`, true);
+            } catch {}
+            try {
+              embed.addField(`\u200b`, `${result[1].join("\n") ? result[1].join("\n") : "\u200b"}`, true);
+            } catch {}
+            try {
+              embed.addField(`\u200b`, `${result[2].join("\n") ? result[2].join("\n") : "\u200b"}`, true);
+            } catch {}
+          }
+          return message.channel.send(embed)
         }
         if (cmd.name) embed.addField("**Command name**", `\`${cmd.name}\``);
         if (cmd.name) embed.setTitle(`Detailed Information about:\`${cmd.name}\``);
-        if (cmd.description) embed.addField("**Description**", `\`${cmd.description}\``);
+        if (cmd.description) embed.addField("**Description**", `\`\`\`${cmd.description}\`\`\``);
         if (cmd.aliases) try {
           embed.addField("**Aliases**", `\`${cmd.aliases.map((a) => `${a}`).join("`, `")}\``);
         } catch {}
-        if (cmd.cooldown) embed.addField("**Cooldown**", `\`${cmd.cooldown} Seconds\``);
-        else embed.addField("**Cooldown**", `\`3 Seconds\``);
+        if (cmd.cooldown) embed.addField("**Cooldown**", `\`\`\`${cmd.cooldown} Seconds\`\`\``);
+        else embed.addField("**Cooldown**", `\`\`\`3 Seconds\`\`\``);
         if (cmd.usage) {
-          embed.addField("**Usage**", `\`${config.prefix}${cmd.usage}\``);
-          embed.setFooter("Syntax: <> = required, [] = optional");
+          embed.addField("**Usage**", `\`\`\`${config.prefix}${cmd.usage}\`\`\``);
+          embed.setFooter("Syntax: <> = required, [] = optional", ee.footericon);
         }
         if (cmd.useage) {
-          embed.addField("**Useage**", `\`${config.prefix}${cmd.useage}\``);
-          embed.setFooter("Syntax: <> = required, [] = optional");
+          embed.addField("**Useage**", `\`\`\`${config.prefix}${cmd.useage}\`\`\``);
+          embed.setFooter("Syntax: <> = required, [] = optional", ee.footericon);
         }
-        return message.channel.send(embed.setColor(ee.main));
+        return message.channel.send(embed);
       } else {
         let userperms = message.member.hasPermission("ADMINISTRATOR");
         let owner = config.ownerIDS.includes(message.author.id);
@@ -74,7 +119,7 @@ ${userperms == true ? `\n⚙️ **==>** To see the **Setting** Commands
             let msg;
             if (basemsg) msg = await basemsg.edit(baseembed)
             else msg = await message.channel.send(baseembed);
-            
+
             if (owner) emojis.push("👑")
             if (userperms) {
               emojis.push("⚙️")
@@ -192,7 +237,8 @@ ${userperms == true ? `\n⚙️ **==>** To see the **Setting** Commands
                   try {
                     message.reactions.removeAll().catch(error => console.error('Failed to clear reactions: '));
                   } catch {
-                    /* */ }
+                    /* */
+                  }
                 });
             })
           } catch (e) {
