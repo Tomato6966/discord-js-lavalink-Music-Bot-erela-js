@@ -7,7 +7,7 @@ const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
   name: `equalizer`,
   category: `👀 Filter`,
-  aliases: [`eq`],
+  aliases: [`eq`, "eqs", "seteq", "setequalizer"],
   description: `Changes the Equalizer`,
   usage: `bassboost <music/bassboost/earrape>`,
   parameters: {"type":"music", "activeplayer": true, "previoussong": false},
