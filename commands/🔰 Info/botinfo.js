@@ -49,10 +49,10 @@ module.exports = {
                     .addField("API Latency", `\`${client.ws.ping}ms\``, true)
                     .setFooter("Coded by:    Tomato#6966");
                 message.channel.send(botinfo);
-            }).catch(e => console.log(e));
+            })
         } catch (e) {
             console.log(String(e.stack).bgRed)
-            return message.channel.send(new MessageEmbed()
+            return message.channel.send(new Discord.MessageEmbed()
                 .setColor(ee.wrongcolor)
                 .setFooter(ee.footertext, ee.footericon)
                 .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
