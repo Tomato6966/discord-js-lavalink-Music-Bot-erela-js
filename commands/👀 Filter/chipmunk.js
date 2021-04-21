@@ -5,22 +5,37 @@ const config = require(`../../botconfig/config.json`);
 const ee = require(`../../botconfig/embed.json`);
 const emoji = require(`../../botconfig/emojis.json`);
 module.exports = {
-  name: `cleareq`,
+  name: `chipmunk`,
   category: `👀 Filter`,
-  aliases: [`ceq`, `reseteq`, `clearequalizer`, `resetequalizer`, `restoreequalizer`, `req`],
-  description: `Clears the Equalizer`,
-  usage: `clearEQ`,
+  aliases: [``],
+  description: `Applies a Chipmunk Filter`,
+  usage: `chipmunk`,
   parameters: {"type":"music", "activeplayer": true, "previoussong": false},
   run: async (client, message, args, cmduser, text, prefix, player) => {
     try {
-      player.clearEQ();
+      player.node.send({
+        op: "filters",
+        guildId: message.guild.id,
+        equalizer: player.bands.map((gain, index) => {
+            var Obj = {
+              "band": 0,
+              "gain": 0,
+            };
+            Obj.band = Number(index);
+            Obj.gain = Number(gain)
+            return Obj;
+          }),
+        timescale: {
+              "speed": 1.05,
+              "pitch": 1.35,
+              "rate": 1.25
+          },
+      });
       return message.channel.send(new MessageEmbed()
         .setColor(ee.color)
         .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${emoji.msg.SUCCESS} Success | Resetted the Equalizer`)
-        .addField(`${emoji.msg.equalizer} FILTER: `, `${emoji.msg.ERROR} Nothing`)
-        .addField(`${emoji.msg.equalizer} EQUALIZER: `, `${emoji.msg.ERROR} Nothing`)
-        .setDescription(`Note: *It might take up to 5 seconds until you hear the new Equalizer*`)
+        .setTitle(`${emoji.msg.SUCCESS} Success | Applying the \`CHIPMUNK\` Filter`)
+        .setDescription(`Note: *It might take up to 5 seconds until you hear the Filter*`)
       );
     } catch (e) {
       console.log(String(e.stack).bgRed)

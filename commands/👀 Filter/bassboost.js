@@ -25,17 +25,87 @@ module.exports = {
       switch (level) {
         case `none`:
           player.setEQ(client.bassboost.none);
+          player.node.send({
+            op: "filters",
+            guildId: message.guild.id,
+            equalizer: player.bands.map((gain, index) => {
+                var Obj = {
+                  "band": 0,
+                  "gain": 0,
+                };
+                Obj.band = Number(index);
+                Obj.gain = Number(gain)
+                return Obj;
+              }),
+            timescale: {
+                  "speed": 1.0,
+                  "pitch": 1.0,
+                  "rate": 1.0
+              },
+          });
           break;
         case `low`:
           player.setEQ(client.bassboost.low);
+          player.node.send({
+            op: "filters",
+            guildId: message.guild.id,
+            equalizer: player.bands.map((gain, index) => {
+                var Obj = {
+                  "band": 0,
+                  "gain": 0,
+                };
+                Obj.band = Number(index);
+                Obj.gain = Number(gain)
+                return Obj;
+              }),
+          });
           break;
         case `medium`:
           player.setEQ(client.bassboost.medium);
+          player.node.send({
+            op: "filters",
+            guildId: message.guild.id,
+            equalizer: player.bands.map((gain, index) => {
+                var Obj = {
+                  "band": 0,
+                  "gain": 0,
+                };
+                Obj.band = Number(index);
+                Obj.gain = Number(gain)
+                return Obj;
+              }),
+          });
           break;
         case `high`:
           player.setEQ(client.bassboost.high);
+          player.node.send({
+            op: "filters",
+            guildId: message.guild.id,
+            equalizer: player.bands.map((gain, index) => {
+                var Obj = {
+                  "band": 0,
+                  "gain": 0,
+                };
+                Obj.band = Number(index);
+                Obj.gain = Number(gain)
+                return Obj;
+              }),
+          });
         case `earrape`:
           player.setEQ(client.bassboost.high);
+          player.node.send({
+            op: "filters",
+            guildId: message.guild.id,
+            equalizer: player.bands.map((gain, index) => {
+                var Obj = {
+                  "band": 0,
+                  "gain": 0,
+                };
+                Obj.band = Number(index);
+                Obj.gain = Number(gain)
+                return Obj;
+              }),
+          });
           break;
       }
       return message.channel.send(new MessageEmbed()
