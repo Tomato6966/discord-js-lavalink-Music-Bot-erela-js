@@ -1,5 +1,5 @@
 {
-  "token": "TOKEN",
+  "token": "ODU4ODYyNjI1MzY5MzU4MzU4.YNkUJg.o0WFz3wZvDmXys35xmoR9X_ckIg",
   "prefix": "!",
 
   "clientsettings": {
@@ -41,13 +41,10 @@
   },
 
 
-  "ownerIDS": ["442355791412854784"],
+  "ownerIDS": ["497871949905788958"],
 
 
-  "status": {
-    "text": "!help | powered by milrato.eu",
-    "type": "STREAMING", "COMMENT:": "TYPES ARE: PLAYING, STREAMING, WATCHING, LISTENING",
-    "url": "https://twitch.tv/milratodiscordbot"
+ 
   }
 
 }
