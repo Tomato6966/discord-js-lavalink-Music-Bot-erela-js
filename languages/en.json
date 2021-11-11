@@ -579,6 +579,16 @@
                 "variable34": "``",
                 "variable35": "\"<:no:833101993668771842> Bitte kontaktiere `Tomato#6966`\"",
                 "variable36": "``"
+            },
+            "setup-language": {
+                "variable1": "\"***Select what you need in the `Selection` down Below!***\"",
+                "variable2": "\"<:no:833101993668771842> ABGEBROCHEN the Setup!\"",
+                "variable3": "\"Select your new Language\"",
+                "variable4": "`Current language is: **${languages[ls]}**\\n\\n***Note that this System is not finished yet!***\\n**Only partly working Languages are:**\\n> \\`English\\`, \\`India (Hindi)\\``",
+                "variable5": "`<a:yes:833101995723194437> The new Language is **${languages[lang]}** (\\`${lang})\\``",
+                "variable6": "`<a:yes:833101995723194437> Resetted the Language | The new Language is **🇬🇧 English** (en)`",
+                "variable7": "`📑 Current Language is ${thesettings}`",
+                "variable8": "`\\`\\`\\` ${e.message ? e.message : e.stack ? String(e.stack).substr(0, 2000) : String(e).substr(0, 2000)}\\`\\`\\``"
             }
         },
         "customqueues": {
