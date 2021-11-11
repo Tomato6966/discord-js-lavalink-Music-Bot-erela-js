@@ -1,65 +1,53 @@
-# Discord.js Lavalink Music Bot using erela.js
+## Discord.js Lavalink Music Bot using erela.js
 
-[Erela.js docs](https://solaris.codes/projects/erelajs) **Note this Discord Bot Repository is the Same as for the Public Bot [Lava Music](https://lava.milrato.eu) if u want to support me, then please [invite](https://lava.milrato.eu) him!**
+# LAVA MUSIC 
 
-## [**DISCORD SUPPORT SERVER INVITE**](https://support.milrato.eu)
-
-**IF YOU WANNA USE CUSTOM EMOJIS, AND SHARD THEN CHECK OUT THE CUSTOM-EMOJIS TAB(branch)!**
+[Erela.js docs](https://erelajs-docs.netlify.app/docs/gettingstarted.html) **Note this Discord Bot Repository is the Same as for the Public Bot [Lava Music](https://lava.milrato.dev) if u want to support me, then please [invite](https://lava.milrato.dev) him!**
 
 ## Installation | How to use the Bot
 
- **1.** Install [node.js v12+](https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode) or higher
+ **1.** Install [node.js v16.6+](https://nodejs.org/en) or higher
 
- **2.** Download this repo and unzip it    |    or git clone it
+ **2.** Download this repo and unzip it | or `git clone https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js`
 
- **3.** Install all of the packages with **`npm install`**     |  the important packages are   **`npm install discord.js erela.js`**
+ **3.** Install all of the packages with **`npm install`** | the important packages are   **`npm install discord.js@latest erela.js`**
 
  **4** Fill in the parameters, RIGHT in `botconfig/config.json`!
 
- **5.** [Download Lavalink](https://cdn.discordapp.com/attachments/798196676405755905/827174915714711572/Lavalink.jar) and download Java 15 (Java 13 recommended)
+ **5.** [Download Lavalink](https://github.com/freyacodes/Lavalink/releases/download/3.4/Lavalink.jar) and download Java 13 (Java 11 recommended)
 
- **5.1** Run the Lavalink file with: **`java -jar Lavalink.jar`**
+ **5.1** Put the `lavalink.jar` File in the Same Repository as your Bot `index.js`, and maybe adjust `application.yml` (and `config.json`) 
 
- **MAKE SURE THAT THERE IS THE `application.yml` FILE OTHERWISE IT WILL NOT WORK!
+ **5.2** Run the Lavalink file with: **`java -jar Lavalink.jar`**
 
- **6.** start the bot with **`node index.js`**
+ > **MAKE SURE THAT THERE IS THE `application.yml` FILE OTHERWISE IT WILL NOT WORK!
+
+ **6.** start the bot with **`node index.js` / `node .` / `npm start`**
 
 #### **NOTE:**
 
 *If you are having errors/problems with starting delete the package.json file and do, before you install the packages `npm init`*
 
-
-# THIS IS HOW IT SHOULD LOOK LIKE!
-
-![](https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js/blob/main/Folder_structure.png)
-
-# SHORT OVERVIEW TUTORIAL!
-[![](http://img.youtube.com/vi/_skTgDBMd44/0.jpg)](https://youtu.be/Fp4QXZbKZYM "")
-
-## Windows start Command .bat file
-```bat
-@ECHO OFF
-ECHO ==========================
-ECHO Starting Lavalink
-ECHO ==========================
-start cmd /k java -jar ./Lavalink.jar
-ECHO ==========================
-@ECHO Taking a 5 Second Break for Lavalink
-ECHO ==========================
-timeout /T 5 /nobreak
-ECHO ==========================
-@ECHO Starting BOT
-ECHO ==========================
-start cmd /k node .
-exit /s'
-```
-Windows `start.bat` file
-Which starts Lavalink and the Bot together via one click ;)
-
-Have it in the Same folder as `index.js` and `Lavalink.jar`
-
 <br/>
-  
+
+# Don't want to host your OWN **LAVALINK** ?
+
+Well then skip step **` 5. `**
+
+> And use those settings in the `botconfig/config.json` FIle!
+
+```json
+"clientsettings": {
+      "nodes": [
+         {
+            "host": "lavalinknl.ml",
+            "port": 2333,
+            "password": "Raccoon"
+         }
+      ]
+},
+```
+
 ***
 
 ## [Discord Server 😎](https://discord.gg/milrato) | [Website](https://milrato.dev)
