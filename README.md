@@ -12,6 +12,10 @@
 
 ***
 
+# [Youtube Hosting Tutorial](https://www.youtube.com/watch?v=AnYTaFPB4f8)
+
+***
+
 <br/>
 
 ## Installation | How to use the Bot
