@@ -8,7 +8,7 @@ var {
   ms = require("ms"),
 
   config = require(`${process.cwd()}/botconfig/config.json`),
-  emoji = require("../../botconfig/emojis.json"),
+  emoji = require(`${process.cwd()}/botconfig/emojis.json`),
   ee = require(`${process.cwd()}/botconfig/embed.json`),
 
   {

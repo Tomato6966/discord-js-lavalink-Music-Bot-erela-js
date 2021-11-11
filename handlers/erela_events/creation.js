@@ -7,8 +7,8 @@ var {
     Facebook = require("erela.js-facebook"),
     config = require(`${process.cwd()}/botconfig/config.json`),
   
-    clientID = config.spotify.clientID,
-    clientSecret = config.spotify.clientSecret;
+    clientID = process.env.clientId || config.spotify.clientID,
+    clientSecret = process.env.clientSecret || config.spotify.clientSecret;
   module.exports = (client) => {
       if (!clientID || !clientSecret) {
         client.manager = new Manager({

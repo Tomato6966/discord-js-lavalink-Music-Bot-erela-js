@@ -3,7 +3,7 @@ const { check_if_dj, autoplay, escapeRegex, format, duration, createBar } = requ
 const config = require(`${process.cwd()}/botconfig/config.json`);
 const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
-const playermanager = require(`../../handlers/playermanager`);
+const playermanager = require(`${process.cwd()}/handlers/playermanager`);
 //we need to create the music system, somewhere...
 module.exports = client => {
     client.on("interactionCreate", async (interaction) => {

@@ -5,7 +5,7 @@ const {
 const config = require(`${process.cwd()}/botconfig/config.json`);
 const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
-const playermanager = require(`../../handlers/playermanager`);
+const playermanager = require(`${process.cwd()}/handlers/playermanager`);
 const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     module.exports = {
   name: `join`,

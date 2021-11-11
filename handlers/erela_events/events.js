@@ -7,7 +7,7 @@ var {
   ms = require("ms"),
 
   config = require(`${process.cwd()}/botconfig/config.json`),
-  emoji = require("../../botconfig/emojis.json"),
+  emoji = require(`${process.cwd()}/botconfig/emojis.json`),
   ee = require(`${process.cwd()}/botconfig/embed.json`),
 
   {
@@ -17,7 +17,7 @@ var {
     databasing,
     autoplay
   } = require(`${process.cwd()}/handlers/functions`),
-  playermanager = require("../../handlers/playermanager"),
+  playermanager = require(`${process.cwd()}/handlers/playermanager`),
 
   playercreated = new Map(),
   collector = false,

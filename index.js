@@ -84,7 +84,7 @@ require('events').defaultMaxListeners = 25;
 //those are must haves, they load the dbs, events and commands and important other stuff
 function requirehandlers(){
   client.basicshandlers = Array(
-    "extraevents", "loaddb", "clientvariables", "command", "events", "erelahandler", "slashCommands"
+    "extraevents", "loaddb", "clientvariables", "command", "events", "erelahandler", /*"slashCommands"*/
   );
   client.basicshandlers.forEach(handler => {
     try{ require(`./handlers/${handler}`)(client); }catch (e){ console.log(e.stack ? String(e.stack).grey : String(e).grey) }
@@ -97,7 +97,7 @@ module.exports.requirehandlers = requirehandlers;
  * @param {9} Login_to_the_Bot
  *********************************************************/
 setTimeout(()=>{
-  client.login(config.token);
+  client.login(process.env.token || config.token);
 }, 500)
 
 
