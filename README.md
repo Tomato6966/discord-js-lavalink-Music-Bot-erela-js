@@ -12,7 +12,7 @@
 
 ## Installation | How to use the Bot
 
-> **1.** Install [node.js v16.6+](https://nodejs.org/en) or higher
+> **<kdb>1.</kdb>** Install [node.js v16.6+](https://nodejs.org/en) or higher
 > 
 > **2.** Download this repo and unzip it | or `git clone https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js`
 > 
