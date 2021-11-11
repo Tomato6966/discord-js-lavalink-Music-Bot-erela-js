@@ -14,5 +14,38 @@
     "moment": "^2.29.1",
     "ms": "^2.1.3",
     "radio-browser": "^2.1.8"
-  }
+  },
+  "name": "discord-js-lavalink-music-bot-erela-js-lava-music",
+  "version": "8.0.0",
+  "description": "An advanced Discord.js Music Bot, which connects via Lavalink and erela.js! Including Slash-Commands and a BUTTON-BASED-REQUEST-SYSTEM",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js.git"
+  },
+  "keywords": [
+    "discord",
+    "discord.js",
+    "music",
+    "music-bot",
+    "discord-bot",
+    "nodejs",
+    "erela-js",
+    "lavalink",
+    "buttons",
+    "menu",
+    "youtube",
+    "spotify"
+  ],
+  "author": "Tomato#6966",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js/issues"
+  },
+  "homepage": "https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js#readme"
 }
