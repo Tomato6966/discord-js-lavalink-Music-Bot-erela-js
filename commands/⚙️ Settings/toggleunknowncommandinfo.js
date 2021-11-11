@@ -3,7 +3,7 @@ const {
 } = require("discord.js");
 const config = require(`${process.cwd()}/botconfig/config.json`);
 var ee = require(`${process.cwd()}/botconfig/embed.json`);
-const emoji = require("../../botconfig/emojis.json");
+const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 module.exports = {
   name: "toggleunknowncommandinfo",
   aliases: ["toggleunknowncmdinfo", "toggleunknowninfo", "unknowncmdinfo", "unknowninfo", "unknowncommandinfo"],

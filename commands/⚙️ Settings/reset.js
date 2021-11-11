@@ -1,5 +1,5 @@
 const { MessageEmbed } = require(`discord.js`);
-const { databasing } = require("../../handlers/functions");
+const { databasing } = require(`${process.cwd()}/handlers/functions`);
 const config = require(`${process.cwd()}/botconfig/config.json`);
 var ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);

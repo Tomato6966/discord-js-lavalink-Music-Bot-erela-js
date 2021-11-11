@@ -2,12 +2,12 @@ var {
     MessageEmbed
   } = require(`discord.js`);
   var Discord = require(`discord.js`);
-  var config = require(`../../botconfig/config.json`);
-  var ee = require(`../../botconfig/embed.json`);
-  var emoji = require(`../../botconfig/emojis.json`);
+  var config = require(`${process.cwd()}/botconfig/config.json`);
+  var ee = require(`${process.cwd()}/botconfig/embed.json`);
+  var emoji = require(`${process.cwd()}/botconfig/emojis.json`);
   var {
     databasing
-  } = require(`../../handlers/functions`);
+  } = require(`${process.cwd()}/handlers/functions`);
   const { MessageButton, MessageActionRow, MessageSelectMenu } = require('discord.js')
   module.exports = {
     name: "commands",
