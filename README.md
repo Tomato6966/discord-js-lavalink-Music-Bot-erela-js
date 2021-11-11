@@ -8,6 +8,10 @@
 
 ***
 
+# 🖤 Replit.com Version | [FORK IT!](Fork this [Repl.it](https://replit.com/@OxyTomato/discord-js-lavalink-Music-Bot-erela-js))
+
+***
+
 <br/>
 
 ## Installation | How to use the Bot
