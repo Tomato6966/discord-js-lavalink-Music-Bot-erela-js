@@ -1,5 +1,7 @@
 //here the event starts
-const config = require("../../botconfig/config.json")
+const config = require(`${process.cwd()}/botconfig/config.json`)
+const Discord = require("discord.js")
+const moment = require("moment")
 module.exports = client => {
   //SETTING ALL GUILD DATA FOR THE DJ ONLY COMMANDS for the DEFAULT
   //client.guilds.cache.forEach(guild=>client.settings.set(guild.id, ["autoplay", "clearqueue", "forward", "loop", "jump", "loopqueue", "loopsong", "move", "pause", "resume", "removetrack", "removedupe", "restart", "rewind", "seek", "shuffle", "skip", "stop", "volume"], "djonlycmds"))
@@ -13,31 +15,69 @@ module.exports = client => {
       console.log(`     ┃ `.bold.brightGreen + ` /--/ ${client.user.tag} /--/ `.bold.brightGreen+ " ".repeat(-1+stringlength-` ┃ `.length-` /--/ ${client.user.tag} /--/ `.length)+ "┃".bold.brightGreen)
       console.log(`     ┃ `.bold.brightGreen + " ".repeat(-1+stringlength-` ┃ `.length)+ "┃".bold.brightGreen)
       console.log(`     ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛`.bold.brightGreen)
-    }catch{ /* */ }
+    } catch { /* */ }
 
+    console.table({ 
+      'Bot User:' : `${client.user.tag}` ,
+      'Guild(s):' : `${client.guilds.cache.size} Servers` ,
+      'Watching:' : `${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)} Members` ,
+      'Prefix:' : `${config.prefix}` ,
+      'Commands:' : `${client.commands.size}` ,
+      'Discord.js:' : `v${Discord.version}` ,
+      'Node.js:' : `${process.version}` ,
+      'Plattform:' : `${process.platform} ${process.arch}` ,
+      'Memory:' : `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB / ${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`
+    });
+    
     change_status(client);
     //loop through the status per each 10 minutes
     setInterval(()=>{
       change_status(client);
-    }, 10*1000);
-  }catch (e){
-    console.log(String(e.stack).bgRed)
+    }, 90 * 1000);
+  
+  } catch (e){
+    console.log(String(e.stack).grey.bgRed)
   }
 }
+var state = false;
 function change_status(client){
-  try{
-      client.user.setActivity(config.status.text, {type: config.status.type, url: config.status.url}); //status
-  }catch (e) {
-      console.log(String(e.stack).red);
-      client.user.setActivity(client.user.username, { type: "PLAYING" });
+  if(!state){
+    state = !state;
+    client.stats.get("global", "songs")
+    client.stats.get("global", "setups")
+    client.user.setActivity(`${config.status.text}`
+      .replace("{prefix}", config.prefix)
+      .replace("{guildcount}", client.guilds.cache.size)
+      .replace("{membercount}", client.guilds.cache.reduce((a, b) => a + b.memberCount, 0))
+      .replace("{created}", moment(client.user.createdTimestamp).format("DD/MM/YYYY"))
+      .replace("{createdime}", moment(client.user.createdTimestamp).format("HH:mm:ss"))
+      .replace("{name}", client.user.username)
+      .replace("{tag}", client.user.tag)
+      .replace("{commands}", client.commands.size)
+      .replace("{usedcommands}", client.stats.get("global", "commands"))
+      .replace("{songsplayed}", client.stats.get("global", "songs"))
+    , {type: config.status.type, url: config.status.url});
+  } else {
+    client.user.setActivity(`${config.status.text}`
+    .replace("{prefix}", config.prefix)
+    .replace("{guildcount}", client.guilds.cache.size)
+    .replace("{membercount}", client.guilds.cache.reduce((a, b) => a + b.memberCount, 0))
+    .replace("{created}", moment(client.user.createdTimestamp).format("DD/MM/YYYY"))
+    .replace("{createdime}", moment(client.user.createdTimestamp).format("HH:mm:ss"))
+    .replace("{name}", client.user.username)
+    .replace("{tag}", client.user.tag)
+    .replace("{commands}", client.commands.size)
+    .replace("{usedcommands}", client.stats.get("global", "commands"))
+    .replace("{songsplayed}", client.stats.get("global", "songs"))
+    , {type: config.status.type, url: config.status.url});
   }
 }
 /**
   * @INFO
-  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+  * Bot Coded by Tomato#6966 | https://discord.gg/milrato
   * @INFO
-  * Work for Milrato Development | https://milrato.eu
+  * Work for Milrato Development | https://milrato.dev
   * @INFO
-  * Please mention Him / Milrato Development, when using this Code!
+  * Please mention him / Milrato Development, when using this Code!
   * @INFO
 */

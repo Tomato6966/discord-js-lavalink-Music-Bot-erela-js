@@ -1,103 +1,113 @@
-/**
-  * @INFO
-  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
-  * @INFO
-  * Work for Milrato Development | https://milrato.eu
-  * @INFO
-  * Please mention Him / Milrato Development, when using this Code!
-  * @INFO
-*/
-//Importing all needed Commands
-const Discord = require("discord.js"); //this is the official discord.js wrapper for the Discord Api, which we use!
-const colors = require("colors"); //this Package is used, to change the colors of our Console! (optional and doesnt effect performance)
-const Enmap = require("enmap"); //this package is our Database! We will use it to save the data for ever!
-const fs = require("fs"); //this package is for reading files and getting their inputs
+﻿
+/**********************************************************
+ * @INFO  [TABLE OF CONTENTS]
+ * 1  Import_Modules
+   * 1.1 Validating script for advertisement
+ * 2  CREATE_THE_DISCORD_BOT_CLIENT
+ * 3  Load_Discord_Buttons_and_Discord_Menus
+ * 4  Create_the_client.memer
+ * 5  create_the_languages_objects
+ * 6  Raise_the_Max_Listeners
+ * 8  LOAD_the_BOT_Functions
+ * 9  Login_to_the_Bot
+ * 
+ *   BOT CODED BY: TOMato6966 | https://milrato.dev
+ *********************************************************/
 
-//Creating the Discord.js Client for This Bot with some default settings ;) and with partials, so you can fetch OLD messages
+
+
+/**********************************************************
+ * @param {1} Import_Modules for this FIle
+ *********************************************************/
+const Discord = require("discord.js");
+const colors = require("colors");
+const enmap = require("enmap"); 
+const fs = require("fs"); 
+const config = require("./botconfig/config.json")
+
+
+/**********************************************************
+ * @param {2} CREATE_THE_DISCORD_BOT_CLIENT with some default settings
+ *********************************************************/
 const client = new Discord.Client({
   fetchAllMembers: false,
-  restTimeOffset: 0,
+  failIfNotExists: false,
   shards: "auto",
-  restWsBridgetimeout: 100,
-  disableEveryone: true,
-  partials: ['MESSAGE', 'CHANNEL', 'REACTION']
+  allowedMentions: {
+    parse: ["roles", "users"],
+    repliedUser: false,
+  },
+  partials: ['MESSAGE', 'CHANNEL', 'REACTION', 'GUILD_MEMBER', 'USER'],
+  intents: [ 
+    Discord.Intents.FLAGS.GUILDS,
+    Discord.Intents.FLAGS.GUILD_MEMBERS,
+    Discord.Intents.FLAGS.GUILD_INTEGRATIONS,
+    Discord.Intents.FLAGS.GUILD_VOICE_STATES,
+    Discord.Intents.FLAGS.GUILD_MESSAGES,
+    Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+  ],
+  presence: {
+    activity: {
+      name: `${config.status.text}`.replace("{prefix}", config.prefix), 
+      type: config.status.type, 
+      url: config.status.url
+    },
+    status: "online"
+  }
 });
 
-require('events').EventEmitter.defaultMaxListeners = 100;
-process.setMaxListeners(100);
 
-//Loading files, with the client variable like Command Handler, Event Handler, ...
-["clientvariables", "command", "events", "erelahandler", "requestreacts"].forEach(handler => {
-    require(`./handlers/${handler}`)(client);
-});
+/**********************************************************
+ * @param {5} create_the_languages_objects to select via CODE
+ *********************************************************/
+client.la = { }
+var langs = fs.readdirSync("./languages")
+for(const lang of langs.filter(file => file.endsWith(".json"))){
+  client.la[`${lang.split(".json").join("")}`] = require(`./languages/${lang}`)
+}
+Object.freeze(client.la)
+//function "handlemsg(txt, options? = {})" is in /handlers/functions 
 
-//Each Database gets a own file and folder which is pretty handy!
-client.premium = new Enmap({ name: "premium", dataDir: "./databases/premium" })
-client.stats = new Enmap({ name: "stats", dataDir: "./databases/stats" })
-client.settings = new Enmap({ name: "setups", dataDir: "./databases/settings" })
-client.setups = new Enmap({ name: "setups", dataDir: "./databases/setups" })
-client.queuesaves = new Enmap({ name: "queuesaves", dataDir: "./databases/queuesaves", ensureProps: false})
-client.modActions = new Enmap({ name: 'actions', dataDir: "./databases/warns" });
-client.userProfiles = new Enmap({ name: 'userProfiles', dataDir: "./databases/warns" });
 
-//login into the bot
-client.login(require("./botconfig/config.json").token);
-/**
-  * @INFO
-  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
-  * @INFO
-  * Work for Milrato Development | https://milrato.eu
-  * @INFO
-  * Please mention Him / Milrato Development, when using this Code!
-  * @INFO
-*/
 
-process.on('unhandledRejection', (reason, p) => {
-  console.log('ignore that log'.gray);
-});
-process.on("uncaughtException", (err, origin) => {
-  console.log('ignore that log'.gray);
-})
-process.on('uncaughtExceptionMonitor', (err, origin) => {
-  console.log('ignore that log'.gray);
-});
-process.on('beforeExit', (code) => {
-  console.log('ignore that log'.gray);
-});
-process.on('exit', (code) => {
-  console.log('ignore that log'.gray);
-});
-process.on('multipleResolves', (type, promise, reason) => {
-  console.log('ignore that log'.gray);
-});
-/*
-process.on('unhandledRejection', (reason, p) => {
-  console.log('=== unhandled Rejection ==='.toUpperCase());
-  console.log('Promise: ', p , 'Reason: ', reason.stack ? reason.stack : reason);
-  console.log('=== unhandled Rejection ==='.toUpperCase());
-});
-process.on("uncaughtException", (err, origin) => {
-  console.log('=== uncaught Exception ==='.toUpperCase());
-  console.log('Origin: ', origin, 'Exception: ', err.stack ? err.stack : err)
-  console.log('=== uncaught Exception ==='.toUpperCase());
-})
-process.on('uncaughtExceptionMonitor', (err, origin) => {
-  console.log('=== uncaught Exception Monitor ==='.toUpperCase());
-  console.log('Origin: ', origin, 'Exception: ', err.stack ? err.stack : err)
-  console.log('=== uncaught Exception Monitor ==='.toUpperCase());
-});
-process.on('beforeExit', (code) => {
-  console.log('=== before Exit ==='.toUpperCase());
-  console.log('Code: ', code);
-  console.log('=== before Exit ==='.toUpperCase());
-});
-process.on('exit', (code) => {
-  console.log('=== exit ==='.toUpperCase());
-  console.log('Code: ', code);
-  console.log('=== exit ==='.toUpperCase());
-});
-process.on('multipleResolves', (type, promise, reason) => {
-  console.log('=== multiple Resolves ==='.toUpperCase());
-  console.log(type, promise, reason);
-  console.log('=== multiple Resolves ==='.toUpperCase());
-});*/
+/**********************************************************
+ * @param {6} Raise_the_Max_Listeners to 25 (default 10)
+ *********************************************************/
+client.setMaxListeners(25);
+require('events').defaultMaxListeners = 25;
+
+
+
+/**********************************************************
+ * @param {8} LOAD_the_BOT_Functions 
+ *********************************************************/
+//those are must haves, they load the dbs, events and commands and important other stuff
+function requirehandlers(){
+  client.basicshandlers = Array(
+    "extraevents", "loaddb", "clientvariables", "command", "events", "erelahandler", /*"slashCommands"*/
+  );
+  client.basicshandlers.forEach(handler => {
+    try{ require(`./handlers/${handler}`)(client); }catch (e){ console.log(e.stack ? String(e.stack).grey : String(e).grey) }
+  });
+}requirehandlers();
+module.exports.requirehandlers = requirehandlers;
+
+
+/**********************************************************
+ * @param {9} Login_to_the_Bot
+ *********************************************************/
+setTimeout(()=>{
+  client.login(config.token);
+}, 500)
+
+
+
+/**********************************************************
+ * @INFO
+ * Bot Coded by Tomato#6966 | https://discord.gg/milrato
+ * @INFO
+ * Work for Milrato Development | https://milrato.dev
+ * @INFO
+ * Please mention him / Milrato Development, when using this Code!
+ * @INFO
+ *********************************************************/

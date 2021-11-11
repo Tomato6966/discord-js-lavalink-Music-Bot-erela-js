@@ -1,36 +1,40 @@
 var {
   MessageEmbed
 } = require("discord.js")
-var ee = require("../../botconfig/embed.json")
-var config = require("../../botconfig/config.json")
+var ee = require(`${process.cwd()}/botconfig/embed.json`)
+var config = require(`${process.cwd()}/botconfig/config.json`)
 var {
   format,
-  isrequestchannel,
   delay,
-  edit_request_message_queue_info,
-  edit_request_message_track_info,
   arrayMove
 } = require("../functions")
 
 //function for searching songs
-async function search(client, message, args, type) {
+async function search(client, message, args, type, slashCommand) {
+  let ls = client.settings.get(message.guild.id, "language")
   var search = args.join(" ");
   try {
     var res;
     var player = client.manager.players.get(message.guild.id);
-    if(!player)
-      player = client.manager.create({
+    //if no node, connect it 
+    if (player && player.node && !player.node.connected) await player.node.connect()
+    //if no player create it
+    if (!player) {
+      player = await client.manager.create({
         guild: message.guild.id,
         voiceChannel: message.member.voice.channel.id,
         textChannel: message.channel.id,
-        selfDeafen: config.settings.selfDeaf,
+        selfDeafen: true,
       });
+      if (player && player.node && !player.node.connected) await player.node.connect()
+    }
     let state = player.state;
-    if (state !== "CONNECTED") { 
+    if (state !== "CONNECTED") {
       //set the variables
       player.set("message", message);
       player.set("playerauthor", message.author.id);
       player.connect();
+      try{message.react("863876115584385074").catch(() => {});}catch(e){console.log(String(e).grey)}
       player.stop();
     }
     try {
@@ -45,141 +49,172 @@ async function search(client, message, args, type) {
         message: "Playlists are not supported with this command. Use   ?playlist  "
       };
     } catch (e) {
-      console.log(String(e.stack).red)
-      return message.channel.send(new MessageEmbed()
+      console.log(e.stack ? String(e.stack).grey : String(e).grey)
+      if(slashCommand)
+      return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`❌ Error | There was an error while searching:`)
-        .setDescription(`\`\`\`${e.message}\`\`\``)
-      );
+        .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable1"]))
+        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable2"]))
+      ]}).catch(() => {})
+      return message.reply({embeds: [new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable1"]))
+        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable2"]))
+      ]}).catch(() => {})
     }
 
 
     var max = 10,
-      collected, filter = (m) => m.author.id === message.author.id && /^(\d+|end)$/i.test(m.content);
+      collected, filter = (r, u) => u.id === message.author.id;
     if (res.tracks.length < max) max = res.tracks.length;
     track = res.tracks[0]
-
-    var results = res.tracks
+    var theresults = res.tracks
       .slice(0, max)
-      .map((track, index) => `**${++index})** [\`${String(track.title).substr(0, 60).split("[").join("{").split("]").join("}")}\`](${track.uri}) - \`${format(track.duration).split(" | ")[0]}\``)
+    var results = theresults.map((track, index) => `**${++index})** [\`${String(track.title).substr(0, 60).split("[").join("{").split("]").join("}")}\`](${track.uri}) - \`${format(track.duration).split(" | ")[0]}\``)
       .join('\n');
-
-    message.channel.send(new MessageEmbed()
-      .setTitle(`Search result for: 🔎 **\`${search}`.substr(0, 256 - 3) + "`**")
-      .setColor(ee.color).setFooter(ee.footertext, ee.footericon)
+    let toreact;
+    if(slashCommand)
+      toreact = await message.channel.send({embeds: [new MessageEmbed()
+        .setTitle(`Search-Result for: 🔎 **\`${search}`.substr(0, 256 - 3) + "`**")
+        .setColor(ee.color)
+        .setDescription(results)
+        .setFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
+          dynamic: true
+        }))
+      ]}).catch(() => {});
+    else toreact = await message.reply({embeds: [new MessageEmbed()
+      .setTitle(`Search-Result for: 🔎 **\`${search}`.substr(0, 256 - 3) + "`**")
+      .setColor(ee.color)
       .setDescription(results)
       .setFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
         dynamic: true
       }))
-    )
+    ]}).catch(() => {});
+    const emojiarray = ["❌", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
+    for (let i = 0; i < emojiarray.length; i++) {
+      try {
+        if (i == max + 1) break;
+        toreact.react(emojiarray[i])
+      } catch {}
+    }
 
-    await message.channel.send(new MessageEmbed()
-      .setColor(ee.color)
-      .setFooter(ee.footertext, ee.footericon)
-      .setTitle("Pick your Song with the `INDEX Number`")
-    )
     try {
-      collected = await message.channel.awaitMessages(filter, {
+      collected = await toreact.awaitReactions({filter, 
         max: 1,
         time: 30e3,
         errors: ['time']
       });
     } catch (e) {
       if (!player.queue.current) player.destroy();
-      return message.channel.send(new MessageEmbed()
-        .setTitle("❌ Error | You didn't provide a selection")
+      toreact.reactions.removeAll().catch(error => console.error('Failed to clear reactions: ', error));
+      if(slashCommand)
+      return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
+        .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable3"]))
         .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-      );
+      ]}).catch(() => {});
+      return message.reply({embeds: [new MessageEmbed()
+        .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable3"]))
+        .setColor(ee.wrongcolor)
+      ]}).catch(() => {});
     }
-    var first = collected.first().content;
-    if (first.toLowerCase() === 'end') {
+    var first = collected.first().emoji.name;
+    if (first === '❌') {
       if (!player.queue.current) player.destroy();
-      return message.channel.send(new MessageEmbed()
+      toreact.reactions.removeAll().catch(error => console.error('Failed to clear reactions: ', error));
+      if(slashCommand) 
+      return slashCommand.reply({ephemeral: true,embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle('❌ Error | Cancelled selection.')
-      );
+        .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable4"]))
+      ]}).catch(() => {});
+      return message.reply({embeds: [new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable4"]))
+      ]}).catch(() => {});
     }
-    var index = Number(first) - 1;
-    if (index < 0 || index > max - 1)
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`❌ Error | The number you provided too small or too big (1-${max}).`)
-      );
+
+    toreact.reactions.removeAll().catch(error => console.error('Failed to clear reactions: ', error));
+
+    var index = emojiarray.findIndex(emoji => emoji == first) - 1;
+
+    var pickedresults = theresults.map((track, ii) => `${index == ii ? "" : "~~"}**${++ii})** [\`${String(track.title).substr(0, 60).split("[").join("{").split("]").join("}")}\`](${track.uri}) - \`${format(track.duration).split(" | ")[0]}\`${index == ii ? "" : "~~"}`)
+      .join('\n');
+
+    toreact.edit({
+      embeds: [new MessageEmbed()
+        .setTitle(`Search-Result-PICKED for: 🔎 **\`${search}`.substr(0, 256 - 3) + "`**")
+        .setColor(ee.color)
+        .setDescription(pickedresults)
+        .setFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
+          dynamic: true
+        }))]
+    })
+
     track = res.tracks[index];
-    if (!res.tracks[0])
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-        .setDescription(`Please retry!`)
-      );
+
     if (player.state !== "CONNECTED") {
       //set the variables
       player.set("message", message);
       player.set("playerauthor", message.author.id);
       player.connect();
+      try{message.react("863876115584385074").catch(() => {});}catch(e){console.log(String(e).grey)}
       //add track
       player.queue.add(track);
       //set the variables
       //play track
       player.play();
       player.pause(false);
-      //if its inside a request channel edit the msg
-      var irc = await isrequestchannel(client, player.textChannel, player.guild);
-      if (irc) {
-        edit_request_message_track_info(client, player, player.queue.current);
-        edit_request_message_queue_info(client, player);
-      }
-    } 
-    else if(!player.queue || !player.queue.current){
+
+    } else if (!player.queue || !player.queue.current) {
       //add track
       player.queue.add(track);
       //play track
       player.play();
       player.pause(false);
-      //if its inside a request channel edit the msg
-      var irc = await isrequestchannel(client, player.textChannel, player.guild);
-      if (irc) {
-        edit_request_message_track_info(client, player, player.queue.current);
-        edit_request_message_queue_info(client, player);
-      }
-    }
-    else {
+    } else {
       player.queue.add(track);
-      //if its inside a request channel edit the msg
-      var irc = await isrequestchannel(client, player.textChannel, player.guild);
-      if (irc) {
-        edit_request_message_queue_info(client, player);
-      }
       var embed3 = new MessageEmbed()
-        .setTitle(`Added to Queue 🩸 **\`${track.title}`.substr(0, 256 - 3) + "`**")
-        .setURL(track.uri)
+        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable5"]))
         .setColor(ee.color)
-        .setThumbnail(track.displayThumbnail(1))
+        .setThumbnail(`https://img.youtube.com/vi/${track.identifier}/mqdefault.jpg`)
         .addField("⌛ Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
         .addField("💯 Song By: ", `\`${track.author}\``, true)
         .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-        .setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({
-          dynamic: true
-        }))
-      return message.channel.send(embed3).then(msg => {
-          if(msg) msg.delete({
-            timeout: 4000
-          }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-      });
+        if(slashCommand)
+        slashCommand.reply({ephemeral: true,embeds: [embed3]}).catch(() => {});
+        else message.reply({embeds: [embed3]}).catch(() => {});
+    }
+    if(client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5){
+      let messageId = client.musicsettings.get(player.guild, "message");
+      let guild = client.guilds.cache.get(player.guild);
+      if(!guild) return 
+      let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
+      if(!channel) return 
+      let message = channel.messages.cache.get(messageId);
+      if(!message) message = await channel.messages.fetch(messageId).catch(()=>{});
+      if(!message) return
+      //edit the message so that it's right!
+      var data = require("../erela_events/musicsystem").generateQueueEmbed(client, player.guild)
+      message.edit(data).catch(() => {})
+      if(client.musicsettings.get(player.guild, "channel") == player.textChannel){
+        return;
+      }
     }
 
   } catch (e) {
-    console.log(String(e.stack).red)
-    message.channel.send(new MessageEmbed()
+    console.log(e.stack ? String(e.stack).grey : String(e).grey)
+    if(slashCommand)
+    return slashCommand.reply({ephemeral: true,embeds: [new MessageEmbed()
       .setColor(ee.wrongcolor)
-      .setFooter(ee.footertext, ee.footericon)
       .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-    )
+    ]}).catch(() => {});
+    message.reply({embeds: [new MessageEmbed()
+      .setColor(ee.wrongcolor)
+      .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+    ]}).catch(() => {}).then(msg => {
+      setTimeout(()=>{
+        msg.delete().catch(() => {})
+      }, 3000)
+    })
   }
 }
 

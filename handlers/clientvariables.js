@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const fs = require("fs")
-const config = require("../botconfig/config.json");
-const ee = require("../botconfig/embed.json");
+const config = require(`${process.cwd()}/botconfig/config.json`);
+const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const radios = require("../botconfig/radiostations.json");
 module.exports = (client) => {
   try {
@@ -9,10 +9,14 @@ module.exports = (client) => {
      * @INFO
      * This will be all of our CLIENT VARIABLES for the commands as well as a cooldown system for each cmd!
      */
+    client.invites = {};
     client.commands = new Discord.Collection(); //an collection (like a digital map(database)) for all your commands
     client.aliases = new Discord.Collection(); //an collection for all your command-aliases
+    client.slashCommands = new Discord.Collection(); //an collection for all the slash Commands
     client.categories = fs.readdirSync("./commands/"); //categories
     client.cooldowns = new Discord.Collection(); //an collection for cooldown commands of each user
+
+    
     /**
      * @INFO
      * The Euqalizer Settings
@@ -699,15 +703,15 @@ module.exports = (client) => {
       earrape: client.bassboost.earrape
     };
   } catch (e) {
-    console.log(String(e.stack).bgRed)
+    console.log(String(e.stack).grey.bgRed)
   }
 };
 /**
  * @INFO
- * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+ * Bot Coded by Tomato#6966 | https://discord.gg/milrato
  * @INFO
- * Work for Milrato Development | https://milrato.eu
+ * Work for Milrato Development | https://milrato.dev
  * @INFO
- * Please mention Him / Milrato Development, when using this Code!
+ * Please mention him / Milrato Development, when using this Code!
  * @INFO
  */

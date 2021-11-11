@@ -1,733 +1,610 @@
 var {
-      MessageEmbed
-    } = require("discord.js"),
-    ms = require("ms"),
+  MessageEmbed,
+  MessageButton,
+  MessageActionRow,
+  Permissions
+} = require("discord.js"),
+  ms = require("ms"),
 
-    config = require("../../botconfig/config.json"),
-    emoji = require("../../botconfig/emojis.json"),
-    ee = require("../../botconfig/embed.json"),
-  
-    {
-      createBar,
-      format,
-      databasing,
-      isrequestchannel,
-      edit_request_message_track_info,
-      autoplay
-    } = require("../../handlers/functions"),
-    playermanager = require("../../handlers/playermanager"),
-  
-    hasmap = new Map();
-    var mi;
-  module.exports = (client) => {
-      client.manager
-        .on("playerCreate", async (player) => {
-            player.setVolume(50);
-            player.set("autoplay", false);
-            player.set(`afk-${player.guild}`, false)
-            player.set(`afk-${player.get("playerauthor")}`, false)
-            player.setEQ(client.eqs.music);
-            databasing(client, player.guild, player.get("playerauthor"));
-  
-            var embed = new MessageEmbed();
-              embed.setTitle(`:thumbsup: **Joined** \`${client.channels.cache.get(player.voiceChannel).name}\``)
-              embed.setDescription(`**Commands bound to: ** <#${client.channels.cache.get(player.textChannel).id}>`)
-            
-              var irc = await isrequestchannel(client, player.textChannel, player.guild);
-              if(!irc) client.channels.cache.get(player.textChannel).send(embed.setColor(ee.color)).catch(e=>console.log("this prevents a crash"));
-              if(config.settings.serverDeaf)
-              for(var i = 0; i<= 5; i++){
-                await new Promise((res)=>{
-                  setTimeout(()=>{
-                    res(2)
-                    var guild = client.guilds.cache.get(player.guild)
-                    guild.me.voice.setDeaf(true).catch(e=>console.log("ignore that log".gray));
-                    i = 10;
-                  }, 1000)
+  config = require(`${process.cwd()}/botconfig/config.json`),
+  emoji = require("../../botconfig/emojis.json"),
+  ee = require(`${process.cwd()}/botconfig/embed.json`),
+
+  {
+    createBar,
+    format,
+    check_if_dj,
+    databasing,
+    autoplay
+  } = require(`${process.cwd()}/handlers/functions`),
+  playermanager = require("../../handlers/playermanager"),
+
+  playercreated = new Map(),
+  collector = false,
+  mi;
+module.exports = (client) => {
+  client.manager
+    .on("playerCreate", async (player) => {
+      playercreated.set(player.guild)
+    })
+    .on("playerMove", async (player, oldChannel, newChannel) => {
+      if (!newChannel) {
+        await player.destroy();
+      } else {
+        player.voiceChannel = newChannel;
+        if (player.paused) return;
+        setTimeout(() => {
+          player.pause(true);
+          setTimeout(() => player.pause(false), client.ws.ping * 2);
+        }, client.ws.ping * 2);
+      }
+    })
+    .on("playerDestroy", async (player) => {
+
+      if (player.textChannel && player.guild) {
+        let Queuechannel = client.channels.cache.get(player.textChannel);
+        if (Queuechannel && Queuechannel.permissionsFor(Queuechannel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) {
+          Queuechannel.messages.fetch(player.get("currentmsg")).then(currentSongPlayMsg => {
+            if (currentSongPlayMsg && currentSongPlayMsg.embeds && currentSongPlayMsg.embeds[0]) {
+              var embed = currentSongPlayMsg.embeds[0];
+              embed.author.iconURL = "https://cdn.discordapp.com/attachments/883978730261860383/883978741892649000/847032838998196234.png"
+              embed.footer.text += "\n\n⛔️ SONG & QUEUE ENDED! | Player got DESTROYED (stopped)"
+              currentSongPlayMsg.edit({
+                embeds: [embed],
+                components: []
+              }).catch(() => {})
+            }
+          }).catch(() => {})
+        }
+        if (client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5) {
+          let messageId = client.musicsettings.get(player.guild, "message");
+          let guild = client.guilds.cache.get(player.guild);
+          if (!guild) return
+          let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
+          if (!channel) return
+          let message = channel.messages.cache.get(messageId);
+          if (!message) message = await channel.messages.fetch(messageId).catch(() => {});
+          if (!message) return
+          //edit the message so that it's right!
+          var data = require("./musicsystem").generateQueueEmbed(client, player.guild, true)
+          message.edit(data).catch(() => {})
+          if (client.musicsettings.get(player.guild, "channel") == player.textChannel) {
+            return;
+          }
+        }
+      }
+
+    })
+    .on("trackStart", async (player, track) => {
+      try {
+        let edited = false;
+        if (playercreated.has(player.guild)) {
+          player.set("eq", "💣 None");
+          player.set("filter", "🧨 None");
+          client.settings.ensure(player.guild, {
+            defaultvolume: 10,
+            defaulteq: false,
+            defaultap: true,
+            playmsg: true,
+          });
+          await player.setVolume(client.settings.get(player.guild, "defaultvolume"))
+          await player.set("autoplay", client.settings.get(player.guild, "defaultap"));
+          await player.set(`afk`, false)
+          if (client.settings.get(player.guild, "defaulteq")) {
+            await player.setEQ(client.eqs.music);
+          }
+          databasing(client, player.guild, player.get("playerauthor"));
+          playercreated.delete(player.guild); // delete the playercreated state from the thing
+        }
+        if (client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5) {
+          let messageId = client.musicsettings.get(player.guild, "message");
+          let guild = client.guilds.cache.get(player.guild);
+          if (!guild) return
+          let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
+          if (!channel) return
+          let message = channel.messages.cache.get(messageId);
+          if (!message) message = await channel.messages.fetch(messageId).catch(() => {});
+          if (!message) return
+          //edit the message so that it's right!
+          var data = require("./musicsystem").generateQueueEmbed(client, player.guild)
+          message.edit(data).catch(() => {})
+          if (client.musicsettings.get(player.guild, "channel") == player.textChannel) {
+            return;
+          }
+        }
+        if (player.textChannel && player.get("previoustrack")) {
+          if (!collector.ended) {
+            try {
+              collector.stop()
+            } catch (e) {
+              console.log(e.stack ? String(e.stack).grey : String(e).grey)
+            }
+          }
+          let channel = client.channels.cache.get(player.textChannel);
+          if (channel && channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) {
+            channel.messages.fetch(player.get("currentmsg")).then(currentSongPlayMsg => {
+              if (currentSongPlayMsg && currentSongPlayMsg.embeds && currentSongPlayMsg.embeds[0]) {
+                var embed = currentSongPlayMsg.embeds[0];
+                embed.author.iconURL = "https://cdn.discordapp.com/attachments/883978730261860383/883978741892649000/847032838998196234.png"
+                embed.footer.text += "\n⛔️ SONG ENDED!"
+                currentSongPlayMsg.edit({
+                  embeds: [embed],
+                  components: []
+                }).catch(() => {})
+              }
+            }).catch(() => {})
+          }
+        }
+        //votes for skip --> 0
+        player.set("votes", "0");
+        //set the vote of every user to FALSE so if they voteskip it will vote skip and not remove voteskip if they have voted before bruh
+        for (var userid of client.guilds.cache.get(player.guild).members.cache.map(member => member.user.id))
+          player.set(`vote-${userid}`, false);
+        //set the previous track just have it is used for the autoplay function!
+        player.set("previoustrack", track);
+        //if that's disabled return
+        if (!client.settings.get(player.guild, "playmsg")) {
+          return;
+        }
+        // playANewTrack(client,player,track);
+        let playdata = generateQueueEmbed(client, player, track)
+        //Send message with buttons
+        let channel = client.channels.cache.get(player.textChannel);
+        if (channel && channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) {
+          let swapmsg = await channel.send(playdata).then(msg => {
+            player.set("currentmsg", msg.id);
+            return msg;
+          })
+          //create a collector for the thinggy
+          collector = swapmsg.createMessageComponentCollector({
+            filter: (i) => i.isButton() && i.user && i.message.author.id == client.user.id,
+            time: track.duration > 0 ? track.duration : 600000
+          }); //collector for 5 seconds
+          //array of all embeds, here simplified just 10 embeds with numbers 0 - 9
+          collector.on('collect', async i => {
+            let {
+              member
+            } = i;
+            const {
+              channel
+            } = member.voice
+            const player = client.manager.players.get(i.guild.id);
+            if (!player)
+              return i.reply({
+                content: "<:no:833101993668771842> Nothing Playing yet",
+                ephemeral: true
+              })
+
+            if (!channel)
+              return i.reply({
+                content: `<:no:833101993668771842> **Please join a Voice Channel first!**`,
+                ephemeral: true
+              })
+            if (channel.id !== player.voiceChannel)
+              return i.reply({
+                content: `<:no:833101993668771842> **Please join __my__ Voice Channel first! <#${player.voiceChannel}>**`,
+                ephemeral: true
+              })
+
+            if (i.customId != `10` && check_if_dj(client, i.member, player.queue.current)) {
+              return i.reply({
+                embeds: [new MessageEmbed()
+                  .setColor(ee.wrongcolor)
+                  .setFooter(ee.footertext, ee.footericon)
+                  .setTitle(`<:no:833101993668771842> **You are not a DJ and not the Song Requester!**`)
+                  .setDescription(`**DJ-ROLES:**\n${check_if_dj(client, i.member, player.queue.current)}`)
+                ],
+                ephemeral: true
+              });
+            }
+
+
+            //skip
+            if (i.customId == "1") {
+              //if ther is nothing more to skip then stop music and leave the Channel
+              if (player.queue.size == 0) {
+                //if its on autoplay mode, then do autoplay before leaving...
+                if (player.get("autoplay")) return autoplay(client, player, "skip");
+                i.reply({
+                  embeds: [new MessageEmbed()
+                    .setColor(ee.color)
+                    .setTimestamp()
+                    .setTitle(`⏹ **Stopped playing and left the Channel**`)
+                    .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+                      dynamic: true
+                    }))
+                  ]
+                })
+                edited = true;
+                player.destroy()
+                return
+              }
+              //skip the track
+              player.stop();
+              return i.reply({
+                embeds: [new MessageEmbed()
+                  .setColor(ee.color)
+                  .setTimestamp()
+                  .setTitle(`⏭ **Skipped to the next Song!**`)
+                  .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+                    dynamic: true
+                  }))
+                ]
+              })
+            }
+
+
+
+            //stop
+            if (i.customId == "2") {
+              //Stop the player
+              i.reply({
+                embeds: [new MessageEmbed()
+                  .setColor(ee.color)
+                  .setTimestamp()
+                  .setTitle(`⏹ **Stopped playing and left the Channel**`)
+                  .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+                    dynamic: true
+                  }))
+                ]
+              })
+              edited = true;
+              player.destroy()
+            }
+
+
+
+            //pause/resume
+            if (i.customId == "3") {
+              if (!player.playing) {
+                player.pause(false);
+                i.reply({
+                  embeds: [new MessageEmbed()
+                    .setColor(ee.color)
+                    .setTimestamp()
+                    .setTitle(`▶️ **Resumed!**`)
+                    .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+                      dynamic: true
+                    }))
+                  ]
+                })
+              } else {
+                //pause the player
+                player.pause(true);
+
+                i.reply({
+                  embeds: [new MessageEmbed()
+                    .setColor(ee.color)
+                    .setTimestamp()
+                    .setTitle(`⏸ **Paused!**`)
+                    .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+                      dynamic: true
+                    }))
+                  ]
                 })
               }
-              
-        })
-        .on("playerMove", async (player, oldChannel, newChannel) => {
-          if (!newChannel) {
-              var embed = new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon);
-              embed.setTitle(`${emoji.msg.ERROR} Queue has ended.`)
-              embed.setDescription(`I left the Channel: \`🔈 ${client.channels.cache.get(player.voiceChannel).name}\``)
-              var irc = await isrequestchannel(client, player.textChannel, player.guild);
-              if(irc) edit_request_message_track_info(client, player);
-            client.channels.cache.get(player.textChannel).send(embed);
-            try {
-              client.channels.cache.get(player.textChannel).messages.fetch(player.get("playermessage")).then(msg => {
-                if(msg && msg.deletable)
-                  msg.delete({
-                    timeout: 1500
-                  }).catch(e => console.log("Couldn't delete message this is a catch to prevent a crash".grey));
-              });
-            } catch (e) {
-              console.log(String(e.stack).yellow);
-            }
-            var irc2 = await isrequestchannel(client, player.textChannel, player.guild);
-            if(irc2) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
-            player.destroy();
-          } else {
-            player.voiceChannel = newChannel;
-            if (player.paused) return;
-            setTimeout(() => {
-              player.pause(true);
-              setTimeout(() => player.pause(false), client.ws.ping * 2);
-            }, client.ws.ping * 2);
-          }
-        })
-        .on("trackStart", async (player, track) => {
-          try {
-            //votes for skip --> 0
-            player.set("votes", "0");
-            //set the vote of every user to FALSE so if they voteskip it will vote skip and not remove voteskip if they have voted before bruh
-            for (var userid of client.guilds.cache.get(player.guild).members.cache.map(member => member.user.id))
-              player.set(`vote-${userid}`, false);
-            //set the previous track just have idk where its used ^-^
-            player.set("previoustrack", track);
-            //increasing the stats of the BOT
-            client.stats.inc(player.guild, "songs");
-            client.stats.inc("global", "songs");
-            //wait 500 ms
-            await new Promise((resolve) => {
-              setTimeout(() => {
-                resolve(2);
-              }, 500);
-            });
-            // playANewTrack(client,player,track);
-            var embed = new MessageEmbed().setColor(ee.color)
-              embed.setTitle(`**${emoji.msg.playing} | ${track.title}**`)
-              embed.setURL(track.uri)
-              embed.setThumbnail(`https://img.youtube.com/vi/${track.identifier}/mqdefault.jpg`)
-              embed.addField(`**${emoji.msg.time} Duration: **`, `\`❯ ${track.isStream ? `LIVE STREAM` : format(track.duration)}\``, true)
-              embed.addField(`**${emoji.msg.song_by} Song By:**`, `\`❯ ${track.author}\``, true)
-              embed.addField(`**${emoji.msg.repeat_mode} Queue length:**`, `\`❯ ${player.queue.length} Songs\``, true)
-              embed.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({dynamic: true}));
-            var irc = await isrequestchannel(client, player.textChannel, player.guild);
-            if(irc) {
-              //try to clear the interval
-              try{
-                clearInterval(mi);
-              }catch{ }
-              //LOOP EDIT THE MSG
-              mi = setInterval(()=>{
-                if (!client.manager.players.get(player.guild)) 
-                  return clearInterval(mi);
-                if(!player.queue) return clearInterval(mi);
-                if(!player.queue.current) return clearInterval(mi);
-                var message = player.get("message");
-                if(player && !message.guild) client.channels.fetch(player.textChannel).then(ch=>{
-                  message = ch.lastMessage;
-                })
-                if(message && message.guild) {
-                  message.channel.messages.fetch(client.setups.get(message.guild.id).message_track_info).then(msg=>{
-                    msg.edit(msg.embeds[0].setDescription(`${createBarlul(player)}`)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-                  })
-                  function createBarlul(player) {
-                    try{
-                      //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji)
-                      if (!player.queue.current) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
-                      let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
-                      let total = player.queue.current.duration;
-                      let size = 25;
-                      let line = "▬";
-                      let slider = config.settings.progressbar_emoji;
-                      let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
-                      if (!String(bar[0]).includes(config.settings.progressbar_emoji)) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
-                      return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
-                    }catch (e){
-                      console.log(String(e.stack).bgRed)
-                    }
-                  }
-                } 
-              }, 10000)
-  
-              return edit_request_message_track_info(client, player, player.queue.current);
-            }
-            //if pruning is enabled --> send the msg
-            if (client.settings.get(player.guild, `pruning`))
-              client.channels.cache.get(player.textChannel).send(embed).then(msg => {
-                //try to delete the old playingsongmsg informational track if not available / get able --> catch and dont crash
-                try {
-                  if (player.get(`playingsongmsg`) && msg.id !== player.get(`playingsongmsg`).id)
-                    player.get(`playingsongmsg`).delete().catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                } catch {
-                  /* */ }
-                //set the old message information to a variable
-                player.set(`playingsongmsg`, msg)
-                //react with all emojis
-                var failed = false;
-                  msg.react(emoji.react.rewind).catch(e => failed = true); //rewind 20 seconds
-                  msg.react(emoji.react.forward).catch(e => failed = true); //forward 20 seconds
-                  msg.react(emoji.react.pause_resume).catch(e => failed = true); //pause / resume
-                  msg.react(emoji.react.stop).catch(e => failed = true); //stop playing music
-                  msg.react(emoji.react.previous_track).catch(e => failed = true); //skip back  track / (play previous)
-                  msg.react(emoji.react.skip_track).catch(e => failed = true); //skip track / stop playing
-                  msg.react(emoji.react.replay_track).catch(e => failed = true); //replay track
-                  msg.react(emoji.react.reduce_volume).catch(e => failed = true); //reduce volume by 10%
-                  msg.react(emoji.react.raise_volume).catch(e => failed = true); //raise volume by 10%
-                  msg.react(emoji.react.toggle_mute).catch(e => failed = true); //toggle mute
-                  msg.react(emoji.react.repeat_mode).catch(e => failed = true); //change repeat mode --> track --> Queue --> none
-                  msg.react(emoji.react.autoplay_mode).catch(e => failed = true); //toggle autoplay mode
-                  msg.react(emoji.react.shuffle).catch(e => failed = true); //shuffle the Queue
-                  msg.react(emoji.react.show_queue).catch(e => failed = true); //shows the Queue
-                  msg.react(emoji.react.show_current_track).catch(e => failed = true); //shows the current Track
-               
-                if (failed)
-                  msg.channel.send(new MessageEmbed()
-                    .setColor(ee.wrongcolor)
-                    .setFooter(ee.footertext, ee.footericon)
-                    .setTitle(`${emojis.msg.ERROR} ERROR | Couldn't add Reaction`)
-                    .setDescription(`Make sure that I have permissions to add (custom) REACTIONS`)
-                  )
-                //create the collector
-                var collector = msg.createReactionCollector((reaction, user) => user.id !== client.user.id, {
-                  time: track.duration > 0 ? track.duration : 600000
-                });
-  
-                collector.on(`collect`, async (reaction, user) => {
-                  try {
-                    if (user.bot) return;
-                    //get the message object out of the reaction
-                    var {
-                      message
-                    } = reaction;
-                    //get the database information
-                    var db = client.setups.get(message.guild.id)
-                    //removing the reaction of the User
-                    try {
-                      reaction.users.remove(user.id).catch(e => console.log(String(e.stack).yellow));
-                    } catch {
-                      /* */ }
-                    //get the member who makes the reaction
-                    var member = message.guild.members.cache.get(user.id);
-                    //getting the Voice Channel Data of the Message Member
-                    var {
-                      channel
-                    } = member.voice;
-                    //if not in a Voice Channel return!
-                    if (!channel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle(`${emoji.msg.ERROR} ERROR | You need to join a voice channel.`));
-                    //get the lavalink erela.js player information
-                    var player = client.manager.players.get(message.guild.id);
-                    //if there is a player and the user is not in the same channel as the Bot return information message
-                    if (player && channel.id !== player.voiceChannel) return message.channel.send(new MessageEmbed().setColor(ee.wrongcolor).setFooter(ee.footertext, ee.footericon).setTitle(`${emoji.msg.ERROR} ERROR | I am already playing somewhere else!`).setDescription(`You can listen to me in: ${message.guild.channels.cache.get(player.VoiceChannel).name}`));
-                    //switch case for every single reaction emoji someone
-                    var reactionemoji = reaction.emoji.id || reaction.emoji.name;
-                    switch (reactionemoji) {
-                      case String(emoji.react.rewind):
-                        //get the rewind
-                        var rewind = player.position - 20 * 1000;
-                        //if the rewind is too big or too small set it to 0
-                        if (rewind >= player.queue.current.duration - player.position || rewind < 0) {
-                          rewind = 0;
-                        }
-                        //seek to the position after the rewind
-                        player.seek(Number(rewind));
-                        //send an information message
-                        message.channel.send(new MessageEmbed()
-                          .setTitle(`${emoji.msg.rewind} Rewinded the song for: 20 Seconds, to: ${format(Number(player.position))}`)
-                          .setColor(ee.color)
-                          .setFooter(ee.footertext, ee.footericon)
-                        ).then(msg => {
-                          if(msg && msg.deletable)
-                            msg.delete({
-                              timeout: 4000
-                            }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                        });
-                        break;
-                      case String(emoji.react.forward):
-                        //gets the forward time
-                        var forward = Number(player.position) + 20 * 1000;
-                        //if the forward is too big set it 1 second less
-                        if (Number(forward) >= player.queue.current.duration) {
-                          forward = player.queue.current.duration - 1000;
-                        }
-                        //seek to the amount of time after the forwards
-                        player.seek(Number(forward));
-                        //send an information message
-                        message.channel.send(new MessageEmbed()
-                          .setTitle(`${emoji.msg.forward} Forwarded the Song for: 20 Seconds, to: ${format(Number(player.position))}`)
-                          .setColor(ee.color)
-                          .setFooter(ee.footertext, ee.footericon)
-                        ).then(msg => {
-                          if(msg && msg.deletable)
-                            msg.delete({
-                              timeout: 4000
-                            }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                        });
-                        break;
-                      case String(emoji.react.pause_resume):
-                        //pause the player / resume it
-                        player.pause(player.playing);
-                        //send information message
-                        message.channel.send(new MessageEmbed()
-                          .setTitle(`${player.playing ? `${emoji.msg.resume} Resumed` : `${emoji.msg.pause} Paused`} the Player.`)
-                          .setColor(ee.color)
-                          .setFooter(ee.footertext, ee.footericon)
-                        ).then(msg => {
-                          if(msg && msg.deletable) msg.delete({
-                              timeout: 4000
-                            }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                        });
-                        break;
-  
-                        //////////////////////////////////////
-  
-                      case String(emoji.react.stop):
-                        var irc = await isrequestchannel(client, player.textChannel, player.guild);
-                        if(irc) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
-                        //leave and stop the music
-                        player.destroy();
-                        //send information message
-                        message.channel.send(new MessageEmbed()
-                          .setTitle(`${emoji.msg.stop} Stopped and left your channel`)
-                          .setColor(ee.color)
-                          .setFooter(ee.footertext, ee.footericon)
-                        ).then(msg => {
-                          if(msg && msg.deletable) msg.delete({
-                              timeout: 4000
-                            }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                        });
-                        break;
-                      case String(emoji.react.previous_track):
-                        //if there is no previous track
-                        if (!player.queue.previous || player.queue.previous === null)
-                          return message.channel.send(new MessageEmbed()
-                            .setColor(ee.wrongcolor)
-                            .setFooter(ee.footertext, ee.footericon)
-                            .setTitle(`${emoji.msg.ERROR} Error | There is no previous song yet!`)
-                          ).then(msg => {
-                            if(msg && msg.deletable) msg.delete({
-                                timeout: 4000
-                              }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                          });
-                        message.channel.send(new MessageEmbed()
-                          .setTitle(`${emoji.msg.previous_track} Playing Previous Track`)
-                          .setColor(ee.color)
-                          .setFooter(ee.footertext, ee.footericon)
-                        ).then(msg => {
-                          if(msg && msg.deletable) msg.delete({
-                              timeout: 4000
-                            }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                        });
-                        //define the type
-                        var type = "skiptrack:youtube";
-                        //if the previous was from soundcloud, then use type soundcloud
-                        if (player.queue.previous.uri.includes("soundcloud")) type = "skiptrack:soundcloud"
-                        //plays it
-                        playermanager(client, message, Array(player.queue.previous.uri), type);
-                        break;
-                      case String(emoji.react.skip_track):
-                        //Check if there is a Dj Setup
-                        if (client.settings.get(message.guild.id, `djroles`).toString() !== "") {
-  
-                          var channelmembersize = channel.members.size;
-                          var voteamount = 0;
-                          if (channelmembersize <= 3) voteamount = 1;
-                          voteamount = Math.ceil(channelmembersize / 3);
-  
-                          if (!player.get(`vote-${user.id}`)) {
-                            player.set(`vote-${user.id}`, true);
-                            player.set("votes", String(Number(player.get("votes")) + 1));
-                            if (voteamount <= Number(player.get("votes"))) {
-                              message.channel.send(new MessageEmbed()
-                                .setColor(ee.color)
-                                .setFooter(ee.footertext, ee.footericon)
-                                .setTitle(`${emoji.msg.SUCCESS} Success | Added your Vote!`)
-                                .setDescription(`There are now: ${player.get("votes")} of ${voteamount} needed Votes\n\n> Amount reached! Skipping ${emoji.msg.skip_track}`)
-                              );
-                              if (player.queue.size == 0) {
-                                var irc3 = await isrequestchannel(client, player.textChannel, player.guild);
-                                if(irc3) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
-                                player.destroy();
-                              } else {
-                                player.stop();
-                              }
-                            } else {
-                              return message.channel.send(new MessageEmbed()
-                                .setColor(ee.color)
-                                .setFooter(ee.footertext, ee.footericon)
-                                .setTitle(`${emoji.msg.SUCCESS} Success | Added your Vote!`)
-                                .setDescription(`There are now: ${player.get("votes")} of ${voteamount} needed Votes`)
-                              );
-                            }
-                          } else {
-                            player.set(`vote-${user.id}`, false)
-                            player.set("votes", String(Number(player.get("votes")) - 1));
-                            return message.channel.send(new MessageEmbed()
-                              .setColor(ee.color)
-                              .setFooter(ee.footertext, ee.footericon)
-                              .setTitle(`${emoji.msg.SUCCESS} Success | Removed your Vote!`)
-                              .setDescription(`There are now: ${player.get("votes")} of ${voteamount} needed Votes`)
-                            );
-                          }
-                        } else {
-                          //if ther is nothing more to skip then stop music and leave the Channel
-                          if (player.queue.size == 0) {
-                            //if its on autoplay mode, then do autoplay before leaving...
-                            if (player.get("autoplay")) return autoplay(client, player, "skip");
-                            var irc4 = await isrequestchannel(client, player.textChannel, player.guild);
-                            if(irc4) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
-                            //stop playing
-                            player.destroy();
-                            //send success message
-                            return message.channel.send(new MessageEmbed()
-                              .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
-                              .setColor(ee.color)
-                              .setFooter(ee.footertext, ee.footericon)
-                            );
-                          }
-                          //skip the track
-                          player.stop();
-                          //send success message
-                          return message.channel.send(new MessageEmbed()
-                            .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.skip_track} Skipped to the next Song`)
-                            .setColor(ee.color)
-                            .setFooter(ee.footertext, ee.footericon)
-                          );
-                        }
-                        break;
-  
-                        //////////////////////////////////////
-  
-                      case String(emoji.react.replay_track):
-                        //seek to 0
-                        player.seek(0);
-                        //send an information message
-                        message.channel.send(new MessageEmbed()
-                          .setTitle(`${emoji.msg.replay_track} Replaying Current Track`)
-                          .setColor(ee.color)
-                          .setFooter(ee.footertext, ee.footericon)
-                        ).then(msg => {
-                          if(msg && msg.deletable) msg.delete({
-                              timeout: 4000
-                            }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                        });
-                        break;
-                      case String(emoji.react.reduce_volume):
-                        //get the volume
-                        var volumedown = player.volume - 10;
-                        //if its too small set it to 0
-                        if (volumedown < 0) volumedown = 0;
-                        //set the palyer volume to the volume
-                        player.setVolume(volumedown);
-                        //send an informational message
-                        message.channel.send(new MessageEmbed()
-                          .setTitle(`${emoji.msg.reduce_volume} Volume set to: **${player.volume} %**`)
-                          .setColor(ee.color)
-                          .setFooter(ee.footertext, ee.footericon)
-                        ).then(msg => {
-                          if(msg && msg.deletable) msg.delete({
-                              timeout: 4000
-                            }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                        });
-                        break;
-                      case String(emoji.react.raise_volume):
-                        //get the volume
-                        var volumeup = player.volume + 10;
-                        //if its too small set it to 0
-                        if (volumeup > 150) volumeup = 0;
-                        //set the palyer volume to the volume
-                        player.setVolume(volumeup);
-                        //send an informational message
-                        message.channel.send(new MessageEmbed()
-                          .setTitle(`${emoji.msg.raise_volume} Volume set to: **${player.volume} %**`)
-                          .setColor(ee.color)
-                          .setFooter(ee.footertext, ee.footericon)
-                        ).then(msg => {
-                          if(msg && msg.deletable) msg.delete({
-                              timeout: 4000
-                            }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                        });
-                        break;
-  
-                        //////////////////////////////////////
-  
-                      case String(emoji.react.toggle_mute):
-                        //get the volume
-                        var volumemute = player.volume === 0 ? 50 : 0;
-                        //set the palyer volume to the volume
-                        player.setVolume(volumemute);
-                        //send an informational message
-                        message.channel.send(new MessageEmbed()
-                          .setTitle(`${player.volume === 0 ? `${emoji.msg.toggle_mute} Muted the Player` : `${emoji.msg.reduce_volume} Unmuted the Player`}`)
-                          .setColor(ee.color)
-                          .setFooter(ee.footertext, ee.footericon)
-                        ).then(msg => {
-                          if(msg && msg.deletable) msg.delete({
-                              timeout: 4000
-                            }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                        });
-                        break;
-                      case String(emoji.react.repeat_mode):
-                        //if both repeat modes are off
-                        if (!player.trackRepeat && !hasmap.get(message.guild.id)) {
-                          hasmap.set(message.guild.id, 1)
-                          //and queue repeat mode to off
-                          player.setQueueRepeat(!player.queueRepeat);
-                          //set track repeat mode to on
-                          player.setTrackRepeat(!player.trackRepeat);
-                          //Send an informational message
-                          message.channel.send(new MessageEmbed()
-                            .setTitle(`${emoji.msg.repeat_mode} Track Loop is now ${player.trackRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}.`)
-                            .setDescription(`And Queue Loop is now ${player.queueRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}.`)
-                            .setColor(ee.color)
-                            .setFooter(ee.footertext, ee.footericon)
-                          ).then(msg => {
-                            if(msg && msg.deletable)
-                              msg.delete({
-                                timeout: 4000
-                              }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                          });
-                        }
-                        //if track repeat mode is on and queue repeat mode off
-                        else if (player.trackRepeat && hasmap.get(message.guild.id) === 1) {
-                          hasmap.set(message.guild.id, 2)
-                          //set track repeat mode off
-                          player.setTrackRepeat(!player.trackRepeat);
-                          //set queue repeat mode on
-                          player.setQueueRepeat(!player.queueRepeat);
-                          //send informational message
-                          message.channel.send(new MessageEmbed()
-                            .setTitle(`${emoji.msg.repeat_mode} Queue Loop is now ${player.queueRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}.`)
-                            .setDescription(`And Track Loop is now ${player.trackRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}.`)
-                            .setColor(ee.color)
-                            .setFooter(ee.footertext, ee.footericon)
-                          ).then(msg => {
-                            if(msg && msg.deletable) msg.delete({
-                                timeout: 4000
-                              }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                          });
-                        }
-                        //otherwise like queue on and track should be off...
-                        else {
-                          hasmap.delete(message.guild.id)
-                          //set track repeat mode off
-                          player.setTrackRepeat(false);
-                          //set queue repeat mode off
-                          player.setQueueRepeat(false);
-                          //send informational message
-                          message.channel.send(new MessageEmbed()
-                            .setTitle(`${emoji.msg.repeat_mode} Queue Loop is now ${player.queueRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}.`)
-                            .setDescription(`And Track Loop is now ${player.trackRepeat ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`}.`)
-                            .setColor(ee.color)
-                            .setFooter(ee.footertext, ee.footericon)
-                          ).then(msg => {
-                            if(msg && msg.deletable) msg.delete({
-                                timeout: 4000
-                              }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                          });
-                        }
-                        break;
-                      case String(emoji.react.autoplay_mode):
-                        //toggle autoplay
-                        player.set("autoplay", !player.get("autoplay"))
-                        //Send Success Message
-                        message.channel.send(new MessageEmbed()
-                          .setTitle(`${emoji.msg.SUCCESS} Success | ${player.get("autoplay") ? `${emoji.msg.enabled} Enabled` : `${emoji.msg.disabled} Disabled`} Autoplay`)
-                          .setColor(ee.color)
-                          .setFooter(ee.footertext, ee.footericon)
-                        ).then(msg => {
-                          if(msg && msg.deletable) msg.delete({
-                              timeout: 4000
-                            }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                        });
-                        break;
-  
-                        //////////////////////////////////////
-  
-                      case String(emoji.react.shuffle):
-                        //shuffle the Queue
-                        player.queue.shuffle();
-                        //send informational message
-                        message.channel.send(new MessageEmbed()
-                          .setTitle(`${emoji.msg.shuffle} The queue is now shuffled.`)
-                          .setColor(ee.color)
-                          .setFooter(ee.footertext, ee.footericon)
-                        ).then(msg => {
-                          if(msg && msg.deletable) msg.delete({
-                              timeout: 4000
-                            }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                        });
-                        break;
-                      case String(emoji.react.show_queue):
-                        //define the Embed
-                        var embed = new MessageEmbed()
-                          .setAuthor(`Queue for ${message.guild.name}  -  [ ${player.queue.length} Tracks ]`, message.guild.iconURL({
-                            dynamic: true
-                          }))
-                          .setColor(ee.color);
-                        //if there is something playing rn, then add it to the embed
-                        if (player.queue.current) embed.addField("**0) CURRENT TRACK**", `[${player.queue.current.title.substr(0, 35)}](${player.queue.current.uri}) - ${player.queue.current.isStream ? "LIVE STREAM" : format(player.queue.current.duration).split(" | ")[0]} - request by: **${player.queue.current.requester.tag}**`);
-                        //get the right tracks of the current tracks
-                        var tracks = player.queue;
-                        //if there are no other tracks, information
-                        if (!tracks.length)
-                          return message.channel.send(embed.setDescription(`${emoji.msg.ERROR} No tracks in the queue`)).then(msg => {
-                            if(msg && msg.deletable) msg.delete({
-                                timeout: 4000
-                              }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                          });
-                        //if not too big send queue in channel
-                        if (tracks.length < 15)
-                          return message.channel.send(embed.setDescription(tracks.map((track, i) => `**${++i})** [${track.title.substr(0, 35)}](${track.uri}) - ${track.isStream ? "LIVE STREAM" : format(track.duration).split(" | ")[0]} - **requested by: ${track.requester.tag}**`).join("\n"))).then(msg => {
-                            if(msg && msg.deletable) msg.delete({
-                                timeout: 4000
-                              }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                          })
-                        //get an array of quelist where 15 tracks is one index in the array
-                        var quelist = [];
-                        for (var i = 0; i < tracks.length; i += 15) {
-                          var songs = tracks.slice(i, i + 15);
-                          quelist.push(songs.map((track, index) => `**${i + ++index})** [${track.title.split("[").join("{").split("]").join("}").substr(0, 35)}](${track.uri}) - ${track.isStream ? "LIVE STREAM" : format(track.duration).split(" | ")[0]} - **requested by: ${track.requester.tag}**`).join("\n"))
-                        }
-                        var limit = quelist.length <= 5 ? quelist.length : 5
-                        for (var i = 0; i < limit; i++) {
-                          await user.send(embed.setDescription(String(quelist[i]).substr(0, 2048)));
-                        }
-                        user.send(new MessageEmbed()
-                          .setDescription(`${emoji.msg.SUCCESS} Sent from <#${message.channel.id}>${quelist.length <= 5 ? "" : "\nNote: Send 5 Embeds, but there would be more..."}`)
-                          .setColor(ee.color)
-                          .setFooter(ee.footertext, ee.footericon)
-                        )
-                        message.channel.send(new MessageEmbed()
-                          .setTitle(`${emoji.msg.SUCCESS} Check your direct messages to see the Queue`)
-                          .setColor(ee.color)
-                          .setFooter(ee.footertext, ee.footericon)
-                        ).then(msg => {
-                          if(msg && msg.deletable) msg.delete({
-                              timeout: 4000
-                            }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                        });
-  
-                        break;
-                      case String(emoji.react.show_current_track):
-                        //Send Now playing Message
-                        return message.channel.send(new MessageEmbed()
-                          .setAuthor("Current song playing:", user.displayAvatarURL({
-                            dynamic: true
-                          }))
-                          .setThumbnail(`https://img.youtube.com/vi/${player.queue.current.identifier}/mqdefault.jpg`)
-                          .setURL(player.queue.current.uri)
-                          .setColor(ee.color)
-                          .setFooter(ee.footertext, ee.footericon)
-                          .setTitle(`${player.playing ? emoji.msg.resume : emoji.msg.pause} **${player.queue.current.title}**`)
-                          .addField(`${emoji.msg.time} Duration: `, "`" + format(player.queue.current.duration) + "`", true)
-                          .addField(`${emoji.msg.song_by} Song By: `, "`" + player.queue.current.author + "`", true)
-                          .addField(`${emoji.msg.repeat_mode} Queue length: `, `${player.queue.length} Songs`, true)
-                          .addField(`${emoji.msg.time} Progress: `, createBar(player))
-                          .setFooter(`Requested by: ${player.queue.current.requester.tag}`, player.queue.current.requester.displayAvatarURL({
-                            dynamic: true
-                          }))
-                        ).then(msg => {
-                          if(msg && msg.deletable)   msg.delete({
-                              timeout: 4000
-                            }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                        });
-                        break;
-                    }
-                  } catch (e) {
-                    console.log(e) /* */
-                  }
-                });
+              var data = generateQueueEmbed(client, player, track)
+              swapmsg.edit(data).catch((e) => {
+                //console.log(e.stack ? String(e.stack).grey : String(e).grey)
               })
-          } catch (e) {
-            console.log(String(e.stack).yellow) /* */
+            }
+
+
+
+            //autoplay
+            if (i.customId == "4") {
+              //pause the player
+              player.set(`autoplay`, !player.get(`autoplay`))
+              var data = generateQueueEmbed(client, player, track)
+              swapmsg.edit(data).catch((e) => {
+                //console.log(e.stack ? String(e.stack).grey : String(e).grey)
+              })
+              i.reply({
+                embeds: [new MessageEmbed()
+                  .setColor(ee.color)
+                  .setTimestamp()
+                  .setTitle(`${player.get(`autoplay`) ? `<a:yes:833101995723194437> **Enabled Autoplay**`: `<:no:833101993668771842> **Disabled Autoplay**`}`)
+                  .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+                    dynamic: true
+                  }))
+                ]
+              })
+            }
+
+
+            //Shuffle
+            if (i.customId == `5`) {
+              //set into the player instance an old Queue, before the shuffle...
+              player.set(`beforeshuffle`, player.queue.map(track => track));
+              //shuffle the Queue
+              player.queue.shuffle();
+              //Send Success Message
+              i.reply({
+                embeds: [new MessageEmbed()
+                  .setColor(ee.color)
+                  .setTimestamp()
+                  .setTitle(`🔀 **Shuffled ${player.queue.length} Songs!**`)
+                  .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+                    dynamic: true
+                  }))
+                ]
+              })
+            }
+
+
+            //Songloop
+            if (i.customId == `6`) {
+              //if there is active queue loop, disable it + add embed information
+              if (player.queueRepeat) {
+                player.setQueueRepeat(false);
+              }
+              //set track repeat to revers of old track repeat
+              player.setTrackRepeat(!player.trackRepeat);
+              i.reply({
+                embeds: [new MessageEmbed()
+                  .setColor(ee.color)
+                  .setTimestamp()
+                  .setTitle(`${player.trackRepeat ? `<a:yes:833101995723194437> **Enabled Song Loop**`: `<:no:833101993668771842> **Disabled Song Loop**`}`)
+                  .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+                    dynamic: true
+                  }))
+                ]
+              })
+              var data = generateQueueEmbed(client, player, track)
+              swapmsg.edit(data).catch((e) => {
+                //console.log(e.stack ? String(e.stack).grey : String(e).grey)
+              })
+            }
+
+
+            //QueueLoop
+            if (i.customId == `7`) {
+              //if there is active queue loop, disable it + add embed information
+              if (player.trackRepeat) {
+                player.setTrackRepeat(false);
+              }
+              //set track repeat to revers of old track repeat
+              player.setQueueRepeat(!player.queueRepeat);
+              i.reply({
+                embeds: [new MessageEmbed()
+                  .setColor(ee.color)
+                  .setTimestamp()
+                  .setTitle(`${player.queueRepeat ? `<a:yes:833101995723194437> **Enabled Queue Loop**`: `<:no:833101993668771842> **Disabled Queue Loop**`}`)
+                  .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+                    dynamic: true
+                  }))
+                ]
+              })
+              var data = generateQueueEmbed(client, player, track)
+              swapmsg.edit(data).catch((e) => {
+                //console.log(e.stack ? String(e.stack).grey : String(e).grey)
+              })
+            }
+
+
+            //Forward
+            if (i.customId == `8`) {
+              //get the seektime variable of the user input
+              let seektime = Number(player.position) + 10 * 1000;
+              //if the userinput is smaller then 0, then set the seektime to just the player.position
+              if (10 <= 0) seektime = Number(player.position);
+              //if the seektime is too big, then set it 1 sec earlier
+              if (Number(seektime) >= player.queue.current.duration) seektime = player.queue.current.duration - 1000;
+              //seek to the new Seek position
+              player.seek(Number(seektime));
+              collector.resetTimer({
+                time: (player.queue.current.duration - player.position) * 1000
+              })
+              i.reply({
+                embeds: [new MessageEmbed()
+                  .setColor(ee.color)
+                  .setTimestamp()
+                  .setTitle(`⏩ **Forwarded the song for \`10 Seconds\`!**`)
+                  .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+                    dynamic: true
+                  }))
+                ]
+              })
+            }
+
+
+            //Rewind
+            if (i.customId == `9`) {
+              let seektime = player.position - 10 * 1000;
+              if (seektime >= player.queue.current.duration - player.position || seektime < 0) {
+                seektime = 0;
+              }
+              //seek to the new Seek position
+              player.seek(Number(seektime));
+              collector.resetTimer({
+                time: (player.queue.current.duration - player.position) * 1000
+              })
+              i.reply({
+                embeds: [new MessageEmbed()
+                  .setColor(ee.color)
+                  .setTimestamp()
+                  .setTitle(`⏪ **Rewinded the song for \`10 Seconds\`!**`)
+                  .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+                    dynamic: true
+                  }))
+                ]
+              })
+            }
+          });
+        }
+
+      } catch (e) {
+        console.log(String(e.stack).grey.yellow) /* */
+      }
+    })
+    .on("trackStuck", async (player, track, payload) => {
+      await player.stop();
+      if (player.textChannel) {
+        let channel = client.channels.cache.get(player.textChannel);
+        if (channel && channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) {
+          channel.messages.fetch(player.get("currentmsg")).then(currentSongPlayMsg => {
+            if (currentSongPlayMsg && currentSongPlayMsg.embeds && currentSongPlayMsg.embeds[0]) {
+              var embed = currentSongPlayMsg.embeds[0];
+              embed.author.iconURL = "https://cdn.discordapp.com/attachments/883978730261860383/883978741892649000/847032838998196234.png"
+              embed.footer.text += "\n⚠️⚠️⚠️ SONG STUCKED ⚠️⚠️!"
+              currentSongPlayMsg.edit({
+                embeds: [embed],
+                components: []
+              }).catch(() => {})
+            }
+          }).catch(() => {})
+        }
+        if (client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5) {
+          let messageId = client.musicsettings.get(player.guild, "message");
+          let guild = client.guilds.cache.get(player.guild);
+          if (!guild) return
+          let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
+          if (!channel) return
+          let message = channel.messages.cache.get(messageId);
+          if (!message) message = await channel.messages.fetch(messageId).catch(() => {});
+          if (!message) return
+          //edit the message so that it's right!
+          var data = require("./musicsystem").generateQueueEmbed(client, player.guild)
+          message.edit(data).catch(() => {})
+          if (client.musicsettings.get(player.guild, "channel") == player.textChannel) {
+            return;
           }
-        })
-        .on("trackStuck", (player, track, payload) => {
-          var embed = new MessageEmbed()
-            .setTitle(`${emoji.msg.ERROR} Track got stuck!`)
-            .setDescription(`${emoji.msg.skip_track} I skipped the track: [${track.title}](${track.uri})`)
-            .setThumbnail(`https://img.youtube.com/vi/${track.identifier}/mqdefault.jpg`)
-            .setColor(ee.wrongcolor)
-            .setFooter(ee.footertext, ee.footericon);
-          client.channels.cache
-            .get(player.textChannel)
-            .send(embed).then(msg => {
-              if(msg && msg.deletable) msg.delete({
-                  timeout: 7500
-                }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-            });
-          player.stop();
-        })
-        .on("trackError", (player, track, payload) => {
-          var embed = new MessageEmbed()
-            .setTitle(`${emoji.msg.ERROR} Track got errored!`)
-            .setDescription(`${emoji.msg.skip_track} I skipped the track: **${track.title}**`)
-            .setThumbnail(`https://img.youtube.com/vi/${track.identifier}/mqdefault.jpg`)
-            .setColor(ee.wrongcolor)
-            .setFooter(ee.footertext, ee.footericon);
-          player.stop();
-          client.channels.cache
-            .get(player.textChannel)
-            .send(embed).then(msg => {
-              if(msg && msg.deletable) msg.delete({
-                  timeout: 7500
-                }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-            });
-  
-        })
-        .on("queueEnd", async (player) => {
-          // "uncomment" to enable trackEnd also for one song long Queus
-          // client.manager.emit("trackEnd", player, track)
-          databasing(client, player.guild, player.get("playerauthor"));
-          if (player.get("autoplay")) return autoplay(client, player);
-          //DEvar TIME OUT
-          if (config.settings.LeaveOnEmpty_Queue.enabled) {
+        }
+      }
+    })
+    .on("trackError", async (player, track, payload) => {
+      await player.stop();
+      if (player.textChannel) {
+        let channel = client.channels.cache.get(player.textChannel);
+        if (channel && channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) {
+          channel.messages.fetch(player.get("currentmsg")).then(currentSongPlayMsg => {
+            if (currentSongPlayMsg && currentSongPlayMsg.embeds && currentSongPlayMsg.embeds[0]) {
+              var embed = currentSongPlayMsg.embeds[0];
+              embed.author.iconURL = "https://cdn.discordapp.com/attachments/883978730261860383/883978741892649000/847032838998196234.png"
+              embed.footer.text += "\n⚠️⚠️⚠️ SONG CRASHED ⚠️⚠️!"
+              currentSongPlayMsg.edit({
+                embeds: [embed],
+                components: []
+              }).catch(() => {})
+            }
+          }).catch(() => {})
+        }
+        if (client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5) {
+          let messageId = client.musicsettings.get(player.guild, "message");
+          let guild = client.guilds.cache.get(player.guild);
+          if (!guild) return
+          let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
+          if (!channel) return
+          let message = channel.messages.cache.get(messageId);
+          if (!message) message = await channel.messages.fetch(messageId).catch(() => {});
+          if (!message) return
+          //edit the message so that it's right!
+          var data = require("./musicsystem").generateQueueEmbed(client, player.guild)
+          message.edit(data).catch(() => {})
+          if (client.musicsettings.get(player.guild, "channel") == player.textChannel) {
+            return;
+          }
+        }
+      }
+    })
+    .on("queueEnd", async (player) => {
+      databasing(client, player.guild, player.get("playerauthor"));
+      if (player.get("autoplay")) return autoplay(client, player);
+      //DEvar TIME OUT
+      try {
+        player = client.manager.players.get(player.guild);
+        if (!player.queue || !player.queue.current) {
+          if (client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5) {
+            let messageId = client.musicsettings.get(player.guild, "message");
+            let guild = client.guilds.cache.get(player.guild);
+            if (!guild) return
+            let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
+            if (!channel) return
+            let message = channel.messages.cache.get(messageId);
+            if (!message) message = await channel.messages.fetch(messageId).catch(() => {});
+            if (!message) return
+            //edit the message so that it's right!
+            var data = require("./musicsystem").generateQueueEmbed(client, player.guild, true)
+            message.edit(data).catch(() => {})
+          }
+          //if afk is enbaled return and not destroy the PLAYER
+          if (player.get(`afk`)) {
+            return
+          }
+          if (config.settings.LeaveOnEmpty_Queue.enabled && player) {
             setTimeout(async () => {
               try {
-                player = client.manager.players.get(player.guild);
-                if (!player.queue || !player.queue.current) {
-                  var embed = new MessageEmbed()
-                    embed.setTitle(`${emoji.msg.ERROR} Queue has ended.`)
-                    embed.setDescription(`I left the Channel: ${client.channels.cache.get(player.voiceChannel) ? client.channels.cache.get(player.voiceChannel).name : "UNKNOWN"} because the Queue was empty for: ${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}`)
-                    embed.setColor(ee.wrongcolor)
-                    embed.setFooter(ee.footertext, ee.footericon);
-                  var irc = await isrequestchannel(client, player.textChannel, player.guild);
-                  if(irc) edit_request_message_track_info(client, player);
-                  //if        player afk                              or      guild afk     is enbaled return and not destroy the PLAYER
-                  if (player.get(`afk-${player.get("playerauthor")}`) || player.get(`afk-${player.guild}`))
-                    return client.channels.cache.get(player.textChannel).send(embed.setDescription(`I will not Leave the Channel, cause afk is ✔️ Enabled`)).then(msg => {
-                        if(msg && msg.deletable) msg.delete({
-                          timeout: 4000
-                        }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                    });
-                  
-                  //send information message
-                  client.channels.cache.get(player.textChannel).send(embed).then(msg => {
-                    if(msg && msg.deletable) msg.delete({
-                        timeout: 4000
-                      }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                  });
-  
-                    client.channels.cache
-                      .get(player.textChannel)
-                      .messages.fetch(player.get("playermessage")).then(msg => {
-                        if(msg && msg.deletable) msg.delete({
-                            timeout: 4000
-                          }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                      });
-                  var irc5 = await isrequestchannel(client, player.textChannel, player.guild);
-                  if(irc5) return edit_request_message_track_info(client, player, player.queue.current, "destroy");
-                  player.destroy();
-                }
-              } catch (e) {
-                console.log(String(e.stack).yellow);
-              }
-            }, config.settings.LeaveOnEmpty_Queue.time_delay);
+                let pl = client.manager.players.get(player.guild);;
+                if(!pl.queue || !player.queue.current)
+                await player.destroy();
+              } catch (e) { console.log(e) }
+            }, config.settings.LeaveOnEmpty_Queue.time_delay)
           }
-        });
-  };
-  /**
-   * @INFO
-   * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
-   * @INFO
-   * Work for Milrato Development | https://milrato.eu
-   * @INFO
-   * Please mention Him / Milrato Development, when using this Code!
-   * @INFO
-   */
-  
+        }
+      } catch (e) {
+        console.log(String(e.stack).grey.yellow);
+      }
+    });
+};
+/**
+ * @INFO
+ * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+ * @INFO
+ * Work for Milrato Development | https://milrato.dev
+ * @INFO
+ * Please mention Him / Milrato Development, when using this Code!
+ * @INFO
+ */
+
+
+function generateQueueEmbed(client, player, track) {
+  var embed = new MessageEmbed().setColor(ee.color)
+  embed.setAuthor(`${track.title}`, "https://images-ext-1.discordapp.net/external/DkPCBVBHBDJC8xHHCF2G7-rJXnTwj_qs78udThL8Cy0/%3Fv%3D1/https/cdn.discordapp.com/emojis/859459305152708630.gif", track.uri)
+  embed.setThumbnail(`https://img.youtube.com/vi/${track.identifier}/mqdefault.jpg`)
+  embed.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({
+    dynamic: true
+  }));
+  let skip = new MessageButton().setStyle('PRIMARY').setCustomId('1').setEmoji(`⏭`).setLabel(`Skip`)
+  let stop = new MessageButton().setStyle('DANGER').setCustomId('2').setEmoji(`🏠`).setLabel(`Stop`)
+  let pause = new MessageButton().setStyle('SECONDARY').setCustomId('3').setEmoji('⏸').setLabel(`Pause`)
+  let autoplay = new MessageButton().setStyle('SUCCESS').setCustomId('4').setEmoji('🔁').setLabel(`Autoplay`)
+  let shuffle = new MessageButton().setStyle('PRIMARY').setCustomId('5').setEmoji('🔀').setLabel(`Shuffle`)
+  if (!player.playing) {
+    pause = pause.setStyle('SUCCESS').setEmoji('▶️').setLabel(`Resume`)
+  }
+  if (player.get("autoplay")) {
+    autoplay = autoplay.setStyle('SECONDARY')
+  }
+  let songloop = new MessageButton().setStyle('SUCCESS').setCustomId('6').setEmoji(`🔁`).setLabel(`Song`)
+  let queueloop = new MessageButton().setStyle('SUCCESS').setCustomId('7').setEmoji(`🔂`).setLabel(`Queue`)
+  let forward = new MessageButton().setStyle('PRIMARY').setCustomId('8').setEmoji('⏩').setLabel(`+10 Sec`)
+  let rewind = new MessageButton().setStyle('PRIMARY').setCustomId('9').setEmoji('⏪').setLabel(`-10 Sec`)
+  let lyrics = new MessageButton().setStyle('PRIMARY').setCustomId('10').setEmoji('📝').setLabel(`Lyrics`).setDisabled();
+  if (!player.queueRepeat && !player.trackRepeat) {
+    songloop = songloop.setStyle('SUCCESS')
+    queueloop = queueloop.setStyle('SUCCESS')
+  }
+  if (player.trackRepeat) {
+    songloop = songloop.setStyle('SECONDARY')
+    queueloop = queueloop.setStyle('SUCCESS')
+  }
+  if (player.queueRepeat) {
+    songloop = songloop.setStyle('SUCCESS')
+    queueloop = queueloop.setStyle('SECONDARY')
+  }
+  const row = new MessageActionRow().addComponents([skip, stop, pause, autoplay, shuffle]);
+  const row2 = new MessageActionRow().addComponents([songloop, queueloop, forward, rewind, lyrics]);
+  return {
+    embeds: [embed],
+    components: [row, row2]
+  }
+}
+/**
+ * @INFO
+ * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+ * @INFO
+ * Work for Milrato Development | https://milrato.dev
+ * @INFO
+ * Please mention Him / Milrato Development, when using this Code!
+ * @INFO
+ */

@@ -1,68 +1,93 @@
-const {
+var {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`../../botconfig/config.json`);
-const ee = require(`../../botconfig/embed.json`);
-const emoji = require(`../../botconfig/emojis.json`);
+var config = require(`${process.cwd()}/botconfig/config.json`);
+var emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 module.exports = {
   name: `cmdreload`,
   category: `👑 Owner`,
-  aliases: [``],
+  type: "info",
+  aliases: [`commandreload`],
   description: `Reloads a command`,
   usage: `cmdreload <CMD>`,
   run: async (client, message, args, cmduser, text, prefix) => {
+
+    let es = client.settings.get(message.guild.id, "embed");
+    let ls = client.settings.get(message.guild.id, "language")
     if (!config.ownerIDS.includes(message.author.id))
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(client.user.username, ee.footericon)
-        .setTitle(`${emoji.msg.ERROR}  Error | You are not allowed to run this command! Only the Owner is allowed to run this Cmd`)
-      );
+      return message.channel.send({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setFooter(client.user.username, es.footericon)
+          .setTitle(eval(client.la[ls]["cmds"]["owner"]["cmdreload"]["variable1"]))
+        ]
+      });
     try {
+      if (!args[0])
+        return message.channel.send({
+          embeds: [new MessageEmbed()
+            .setColor(es.wrongcolor)
+            .setFooter(es.footertext, es.footericon)
+            .setTitle(eval(client.la[ls]["cmds"]["owner"]["cmdreload"]["variable2"]))
+          ]
+        });
       let reload = false;
-      for (let i = 0; i < client.categories.length; i += 1) {
-        let dir = client.categories[i];
-        try {
-          if (!args[0])
-            return message.channel.send(new MessageEmbed()
-              .setColor(ee.wrongcolor)
-              .setFooter(ee.footertext, ee.footericon)
-              .setTitle(`${emoji.msg.ERROR}  ERROR | Please include an argument`)
-            );
-          delete require.cache[require.resolve(`../../commands/${dir}/${args[0]}.js`)] // usage !reload <name>
-          client.commands.delete(args[0])
-          const pull = require(`../../commands/${dir}/${args[0]}.js`)
-          client.commands.set(args[0], pull)
-          reload = true;
-        } catch {}
+      let thecmd = client.commands.get(args[0].toLowerCase()) || client.commands.get(client.aliases.get(args[0].toLowerCase()));
+      if (thecmd) {
+        for (let i = 0; i < client.categories.length; i += 1) {
+          let dir = client.categories[i];
+          try {
+            delete require.cache[require.resolve(`../../commands/${dir}/${thecmd.name}.js`)] // usage !reload <name>
+            client.commands.delete(thecmd.name)
+            const pull = require(`../../commands/${dir}/${thecmd.name}.js`)
+            client.commands.set(thecmd.name, pull)
+            reload = true;
+          } catch {}
+        }
+      } else {
+        return message.channel.send({
+          embeds: [new MessageEmbed()
+            .setColor(es.wrongcolor)
+            .setFooter(es.footertext, es.footericon)
+            .setTitle(eval(client.la[ls]["cmds"]["owner"]["cmdreload"]["variable3"]))
+          ]
+        });
       }
       if (reload)
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.SUCCESS}  SUCCESS | Reloaded \`${args[0]}\``)
-        );
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${emoji.msg.ERROR}  ERROR | Could not reload: \`${args[0]}\``)
-      );
+        return message.channel.send({
+          embeds: [new MessageEmbed()
+            .setColor(es.color)
+            .setFooter(es.footertext, es.footericon)
+            .setTitle(eval(client.la[ls]["cmds"]["owner"]["cmdreload"]["variable4"]))
+          ]
+        });
+      return message.channel.send({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setFooter(es.footertext, es.footericon)
+          .setTitle(eval(client.la[ls]["cmds"]["owner"]["cmdreload"]["variable5"]))
+          .setDescription(`Cmd is now removed from the BOT COMMANDS!`)
+        ]
+      });
     } catch (e) {
-      console.log(String(e.stack).bgRed)
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${emoji.msg.ERROR}  ERROR | An error occurred`)
-        .setDescription(`\`\`\`${e.message}\`\`\``)
-      );
+      console.log(String(e.stack).dim.bgRed)
+      return message.channel.send({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setFooter(es.footertext, es.footericon)
+          .setTitle(client.la[ls].common.erroroccur)
+          .setDescription(eval(client.la[ls]["cmds"]["owner"]["cmdreload"]["variable6"]))
+        ]
+      });
     }
   },
 };
 /**
  * @INFO
- * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+ * Bot Coded by Tomato#6966 | https://discord.gg/milrato
  * @INFO
- * Work for Milrato Development | https://milrato.eu
+ * Work for Milrato Development | https://milrato.dev
  * @INFO
- * Please mention Him / Milrato Development, when using this Code!
+ * Please mention him / Milrato Development, when using this Code!
  * @INFO
  */

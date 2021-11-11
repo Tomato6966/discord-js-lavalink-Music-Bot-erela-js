@@ -2,44 +2,53 @@ const Discord = require(`discord.js`);
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`../../botconfig/config.json`);
-const ee = require(`../../botconfig/embed.json`);
-const emoji = require(`../../botconfig/emojis.json`);
+const config = require(`${process.cwd()}/botconfig/config.json`);
+const ee = require(`${process.cwd()}/botconfig/embed.json`);
+const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 const playermanager = require(`../../handlers/playermanager`);
-module.exports = {
+const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
+    module.exports = {
   name: `play`,
   category: `🎶 Music`,
   aliases: [`p`],
   description: `Plays a song from youtube`,
   usage: `play <Song / URL>`,
-  parameters: {"type":"music", "activeplayer": false, "previoussong": false},
+  parameters: {
+    "type": "music",
+    "activeplayer": false,
+    "previoussong": false
+  },
+  type: "queuesong",
   run: async (client, message, args, cmduser, text, prefix, player) => {
-    try{
+    
+    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
+    if (!client.settings.get(message.guild.id, "MUSIC")) {
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setFooter(es.footertext, es.footericon)
+        .setTitle(client.la[ls].common.disabled.title)
+        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
+      ]});
+    }
+    try {
       //if no args return error
       if (!args[0])
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | You need to give me a URL or a Search term.`)
-        );
-          message.channel.send(new MessageEmbed()
-          .setColor(ee.color)
-          .setTitle(`**Searching** 🔎`)
-          .setDescription(`\`\`\`${text}\`\`\``)
-        ).then(msg=>{
-          msg.delete({timeout: 5000}).catch(e=>console.log("Could not delete, this prevents a bug"))
-        })
+        return message.reply({embeds : [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["play"]["variable1"]))
+        ]});
 
+      message.react("🔎").catch(()=>{})
+      message.react("840260133686870036").catch(()=>{})
       //play the SONG from YOUTUBE
       playermanager(client, message, args, `song:youtube`);
     } catch (e) {
-      console.log(String(e.stack).bgRed)
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
-        .setDescription(`\`\`\`${e.message}\`\`\``)
-      );
+      console.log(String(e.stack).dim.bgRed)
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setTitle(client.la[ls].common.erroroccur)
+        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
+      ]});
     }
   }
 };
@@ -47,7 +56,7 @@ module.exports = {
  * @INFO
  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
  * @INFO
- * Work for Milrato Development | https://milrato.eu
+ * Work for Milrato Development | https://milrato.dev
  * @INFO
  * Please mention Him / Milrato Development, when using this Code!
  * @INFO

@@ -1,45 +1,60 @@
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`../../botconfig/config.json`);
-const ee = require(`../../botconfig/embed.json`);
-const emoji = require(`../../botconfig/emojis.json`);
+const config = require(`${process.cwd()}/botconfig/config.json`);
+const ee = require(`${process.cwd()}/botconfig/embed.json`);
+const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 const {
   format,
   arrayMove
-} = require(`../../handlers/functions`);
-module.exports = {
+} = require(`${process.cwd()}/handlers/functions`);
+const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
+    module.exports = {
   name: `move`,
   category: `🎶 Music`,
   aliases: [`mv`],
   description: `Shows the Queue`,
   usage: `move <from> <to>`,
-  parameters: {"type":"music", "activeplayer": true, "previoussong": false},
+  parameters: {
+    "type": "music",
+    "activeplayer": true,
+    "check_dj": true,
+    "previoussong": false
+  },
+  type: "queue",
   run: async (client, message, args, cmduser, text, prefix, player) => {
-    try{
+    
+    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
+    if (!client.settings.get(message.guild.id, "MUSIC")) {
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setFooter(es.footertext, es.footericon)
+        .setTitle(client.la[ls].common.disabled.title)
+        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
+      ]});
+    }
+    try {
       //if no FROM args return error
       if (!args[0])
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} | Wrong Command Usage!`)
-          .setDescription(`Usage: \`${prefix}move <from> <to>\`\nExample: \`${prefix}move ${player.queue.size - 2 <= 0 ? player.queue.size : player.queue.size - 2 } 1\``)
-        );
+        return message.reply({embeds : [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["move"]["variable1"]))
+          .setDescription(eval(client.la[ls]["cmds"]["music"]["move"]["variable2"]))
+        ]});
       //If no TO args return error
       if (!args[1])
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} | Wrong Command Usage!`)
-          .setDescription(`Usage: \`${prefix}move <from> <to>\`\nExample: \`${prefix}move ${player.queue.size - 2 <= 0 ? player.queue.size : player.queue.size - 2 } 1\``));
+        return message.reply({embeds : [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["move"]["variable3"]))
+          .setDescription(eval(client.la[ls]["cmds"]["music"]["move"]["variable4"]))]});
       //if its not a number or too big / too small return error
       if (isNaN(args[0]) || args[0] <= 1 || args[0] > player.queue.length)
-        return message.channel.send(
-          new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} | Error Your Input must be a Number greater then \`1\` and smaller then \`${player.queue.length}\``)
-        );
+        return message.reply(
+          {embeds : [new MessageEmbed()
+          .setColor(es.wrongcolor)
+
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["move"]["variable5"]))
+          ]});
       //get the new Song
       let song = player.queue[player.queue.length - 1];
       //move the Song to the first position using my selfmade Function and save it on an array
@@ -50,21 +65,19 @@ module.exports = {
       for (const track of QueueArray)
         player.queue.add(track);
       //send informational message
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.color)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${emoji.msg.SUCCESS} Success | Mmoved the Song in the Queue from Position \`${args[0]}\` to Position: \`${args[1]}\``)
+      return message.reply({embeds :[new MessageEmbed()
+        .setColor(es.color)
+        .setTitle(eval(client.la[ls]["cmds"]["music"]["move"]["variable6"]))
         .setThumbnail(song.displayThumbnail())
-        .setDescription(`[${song.title}](${song.uri}) - \`${format(song.duration)}\` - requested by **${song.requester.tag}**`)
-      );
+        .setDescription(eval(client.la[ls]["cmds"]["music"]["move"]["variable7"]))
+      ]});
     } catch (e) {
-      console.log(String(e.stack).bgRed)
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
-        .setDescription(`\`\`\`${e.message}\`\`\``)
-      );
+      console.log(String(e.stack).dim.bgRed)
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setTitle(client.la[ls].common.erroroccur)
+        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
+      ]});
     }
   }
 };
@@ -72,7 +85,7 @@ module.exports = {
  * @INFO
  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
  * @INFO
- * Work for Milrato Development | https://milrato.eu
+ * Work for Milrato Development | https://milrato.dev
  * @INFO
  * Please mention Him / Milrato Development, when using this Code!
  * @INFO

@@ -1,77 +1,77 @@
-const {
-  MessageEmbed
-} = require(`discord.js`);
-const config = require(`../../botconfig/config.json`);
-const ee = require(`../../botconfig/embed.json`);
-const emoji = require(`../../botconfig/emojis.json`);
+const { MessageEmbed } = require(`discord.js`);
+const config = require(`${process.cwd()}/botconfig/config.json`);
+var ee = require(`${process.cwd()}/botconfig/embed.json`);
+const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 module.exports = {
-  name: `addbotchat`,
-  aliases: [`addbotchannel`],
-  category: `⚙️ Settings`,
-  description: `Let's you enable a bot only chat where the community is allowed to use commands`,
-  usage: `addbotchat <#chat>`,
-  memberpermissions: [`ADMINISTRATOR`],
-  run: async (client, message, args) => {
-    try {
+    name: `addbotchat`,
+    aliases: [`addbotchannel`],
+    category: `⚙️ Settings`,
+    description: `Let's you enable a bot only chat where the community is allowed to use commands`,
+    usage: `addbotchat <#chat>`,
+    memberpermissions: [`ADMINISTRATOR`],
+    type: "bot",
+    run: async (client, message, args, cmduser, text, prefix) => {
+    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
+    try{
+      
       //get the channel from the Ping
-      let channel = message.mentions.channels.first();
+      let channel = message.mentions.channels.filter(ch=>ch.guild.id==message.guild.id).first() || message.guild.channels.cache.get(message.content.trim().split(" ")[0]);
       //if no channel pinged return error
       if (!channel)
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | Please add a Channel via ping, for example: #channel!`)
-        );
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
+        .setTitle(eval(client.la[ls]["cmds"]["settings"]["addbotchat"]["variable1"]))
+      ]});
       //try to find it, just incase user pings channel from different server
       try {
-        message.guild.channels.cache.get(channel.id)
+          message.guild.channels.cache.get(channel.id)
       } catch {
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | It seems that the Channel does not exist in this Server!`)
-        );
+        return message.reply({embeds :[new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setFooter(es.footertext, es.footericon)
+          .setTitle(eval(client.la[ls]["cmds"]["settings"]["addbotchat"]["variable2"]))
+        ]});
       }
       //if its already in the database return error
-      if (client.settings.get(message.guild.id, `botchannel`).includes(channel.id))
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | This Channel is alerady in the List!`)
-        );
+      if(client.settings.get(message.guild.id,`botchannel`).includes(channel.id))
+        return message.reply({embeds : [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setFooter(es.footertext, es.footericon)
+          .setTitle(eval(client.la[ls]["cmds"]["settings"]["addbotchat"]["variable3"]))
+        ]});
       //push it into the database
       client.settings.push(message.guild.id, channel.id, `botchannel`);
       //these lines create the string of the Bot Channels
       let leftb = ``;
-      if (client.settings.get(message.guild.id, `botchannel`).join(``) === ``) leftb = `no Channels, aka all Channels are Bot Channels`
+      if(client.settings.get(message.guild.id, `botchannel`).join(``) ===``) leftb = `no Channels, aka all Channels are Bot Channels`
       else
-        for (let i = 0; i < client.settings.get(message.guild.id, `botchannel`).length; i++) {
-          leftb += `<#` + client.settings.get(message.guild.id, `botchannel`)[i] + `> | `
-        }
+      for(let i = 0; i < client.settings.get(message.guild.id, `botchannel`).length; i++){
+        leftb += `<#` +client.settings.get(message.guild.id, `botchannel`)[i] + `> | `
+      }
       //send informational message
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.color)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${emoji.msg.SUCCESS} Success | Added the Bot-Chat \`${channel.name}\``)
-        .setDescription(`All Bot Chats:\n> ${leftb.substr(0, leftb.length - 3)}`)
-      );
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+        .setFooter(es.footertext, es.footericon)
+        .setTitle(eval(client.la[ls]["cmds"]["settings"]["addbotchat"]["variable4"]))
+        .setDescription(eval(client.la[ls]["cmds"]["settings"]["addbotchat"]["variable5"]))
+      ]});
     } catch (e) {
-      console.log(String(e.stack).bgRed)
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
-        .setDescription(`\`\`\`${e.message}\`\`\``)
-      );
+        console.log(String(e.stack).grey.bgRed)
+        return message.reply({embeds : [new MessageEmbed()
+            .setColor(es.wrongcolor)
+						.setFooter(es.footertext, es.footericon)
+            .setTitle(client.la[ls].common.erroroccur)
+            .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
+        ]});
     }
   }
 };
 /**
- * @INFO
- * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
- * @INFO
- * Work for Milrato Development | https://milrato.eu
- * @INFO
- * Please mention Him / Milrato Development, when using this Code!
- * @INFO
- */
+  * @INFO
+  * Bot Coded by Tomato#6966 | https://discord.gg/milrato
+  * @INFO
+  * Work for Milrato Development | https://milrato.dev
+  * @INFO
+  * Please mention him / Milrato Development, when using this Code!
+  * @INFO
+*/

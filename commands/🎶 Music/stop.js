@@ -1,95 +1,83 @@
-const Discord = require(`discord.js`);
 const {
-  MessageEmbed
-} = require(`discord.js`);
-const config = require(`../../botconfig/config.json`);
-const ee = require(`../../botconfig/embed.json`);
-const emoji = require(`../../botconfig/emojis.json`);const {
-  format,
-  delay,
-  isrequestchannel,
-  edit_request_message_track_info,
-  arrayMove
-} = require("../../handlers/functions")
-module.exports = {
+  MessageEmbed,
+  MessageButton,
+  MessageActionRow
+} = require("discord.js");
+const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
+const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
+    module.exports = {
   name: `stop`,
   category: `🎶 Music`,
   aliases: [`leave`, "dis", "disconnect", "votestop", "voteleave", "votedis", "votedisconnect", "vstop", "vleave", "vdis", "vdisconnect"],
   description: `Stops current track and leaves the channel`,
   usage: `stop`,
-  parameters: {"type":"music", "activeplayer": true, "previoussong": false},
+  parameters: {
+    "type": "music",
+    "activeplayer": true,
+    "check_dj": true,
+    "previoussong": false
+  },
+  type: "song",
   run: async (client, message, args, cmduser, text, prefix, player) => {
-    try{
+    
+    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
+    if (!client.settings.get(message.guild.id, "MUSIC")) {
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setFooter(es.footertext, es.footericon)
+        .setTitle(client.la[ls].common.disabled.title)
+        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
+      ]});
+    }
+    try {
       //if there is no current track error
-      if (!player){
-        if(message.guild.me.voice.channel) {
-          message.guild.me.voice.channel.leave()
-            return message.channel.send(new MessageEmbed()
-              .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
-              .setColor(ee.color)
-              .setFooter(ee.footertext, ee.footericon)
-            );
-        }
-        else {
-          return message.channel.send(new MessageEmbed()
-            .setFooter(ee.footertext, ee.footericon)
-            .setColor(ee.wrongcolor)
-            .setTitle(`${emoji.msg.ERROR} Error | No song is currently playing in this guild.`)
-          );
-        }
-        return
-      }
-      
-      if (player.queue && !player.queue.current) {
-        if(message.guild.me.voice.channel) {
-          message.guild.me.voice.channel.leave()
-          player.destroy()
-            return message.channel.send(new MessageEmbed()
-              .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
-              .setColor(ee.color)
-              .setFooter(ee.footertext, ee.footericon)
-            );
-        }
-        else {
-          return message.channel.send(new MessageEmbed()
-            .setFooter(ee.footertext, ee.footericon)
-            .setColor(ee.wrongcolor)
-            .setTitle(`${emoji.msg.ERROR} Error | No song is currently playing in this guild.`)
-          );
-        }
-        return
-      }
-        
-      setTimeout(()=>{
-        try{
-          message.guild.me.voice.channel.leave().catch(e=>console.log("PREVENTED BUG"))
-        }catch{ }
-        try{
-          player.destroy()
-        }catch{ }
-      }, 4000)
+      if (!player) {
+        if (message.guild.me.voice.channel) {
+          message.guild.me.voice.disconnect()
+          return message.reply({embeds : [new MessageEmbed()
+            .setTitle(eval(client.la[ls]["cmds"]["music"]["stop"]["variable1"]))
+            .setColor(es.color)
 
-      var irc = await isrequestchannel(client, player.textChannel, player.guild);
-      if(irc) {
-        edit_request_message_track_info(client, player, player.queue.current, "destroy");
-        return;
+          ]});
+        } else {
+          return message.reply({embeds : [new MessageEmbed()
+            .setColor(es.wrongcolor)
+            .setTitle(eval(client.la[ls]["cmds"]["music"]["stop"]["variable2"]))
+          ]});
+        }
+        return
+      }
+
+      if (player.queue && !player.queue.current) {
+        if (message.guild.me.voice.channel) {
+          try {
+            message.guild.me.voice.disconnect();
+          } catch {}
+          try {
+            player.destroy();
+          } catch {}
+          return message.react("⏹️").catch((e) => {})
+        } else {
+          return message.reply({embeds : [new MessageEmbed()
+            .setColor(es.wrongcolor)
+            .setTitle(eval(client.la[ls]["cmds"]["music"]["stop"]["variable3"]))
+          ]});
+        }
+        return
       }
       //stop playing
-      player.destroy();
-      //send success message
-      return message.channel.send(new MessageEmbed()
-        .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.stop} Stopped and left your Channel`)
-        .setColor(ee.color)
-        .setFooter(ee.footertext, ee.footericon)
-      );
+      try {
+        player.destroy();
+      } catch {}
+      //React with the emoji
+      return message.react(emoji.react.stop).catch((e) => {})
     } catch (e) {
-      console.log(String(e.stack).bgRed)
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
-        .setDescription(`\`\`\`${e.message}\`\`\``)
-      );
+      console.log(String(e.stack).dim.bgRed)
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setTitle(client.la[ls].common.erroroccur)
+        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
+      ]});
     }
   }
 };
@@ -97,7 +85,7 @@ module.exports = {
  * @INFO
  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
  * @INFO
- * Work for Milrato Development | https://milrato.eu
+ * Work for Milrato Development | https://milrato.dev
  * @INFO
  * Please mention Him / Milrato Development, when using this Code!
  * @INFO

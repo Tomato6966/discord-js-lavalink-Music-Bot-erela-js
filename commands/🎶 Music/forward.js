@@ -1,29 +1,45 @@
 const {
   MessageEmbed
 } = require(`discord.js`)
-const config = require(`../../botconfig/config.json`)
-const ee = require(`../../botconfig/embed.json`);
-const emoji = require(`../../botconfig/emojis.json`);
+const config = require(`${process.cwd()}/botconfig/config.json`)
+const ee = require(`${process.cwd()}/botconfig/embed.json`);
+const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 const {
   createBar,
   format
-} = require(`../../handlers/functions`);
-module.exports = {
+} = require(`${process.cwd()}/handlers/functions`);
+const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
+    module.exports = {
   name: `forward`,
   category: `🎶 Music`,
   aliases: [`seekforwards`, `fwd`],
   description: `Seeks a specific amount of Seconds forwards`,
   usage: `forward <Duration in Seconds>`,
-  parameters: {"type":"music", "activeplayer": true, "previoussong": false},
+  parameters: {
+    "type": "music",
+    "activeplayer": true,
+    "check_dj": true,
+    "previoussong": false
+  },
+  type: "song",
   run: async (client, message, args, cmduser, text, prefix, player) => {
+    
+    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
+    if (!client.settings.get(message.guild.id, "MUSIC")) {
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setFooter(es.footertext, es.footericon)
+        .setTitle(client.la[ls].common.disabled.title)
+        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
+      ]});
+    }
     try {
       //if no args available, return error
       if (!args[0])
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | You may forward for \`1\` - \`${player.queue.current.duration}\``)
-        );
+        return message.reply({embeds : [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(handlemsg(client.la[ls].cmds.music.forward.allowed, {duration: player.queue.current.duration}))
+        ]});
       //get the seektime variable of the user input
       let seektime = Number(player.position) + Number(args[0]) * 1000;
       //if the userinput is smaller then 0, then set the seektime to just the player.position
@@ -33,21 +49,19 @@ module.exports = {
       //seek to the new Seek position
       player.seek(Number(seektime));
       //Send Success Message
-      return message.channel.send(new MessageEmbed()
-        .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.forward} Forwarded the Song `)
-        .setDescription(`Forwarded for \`${args[0]} Seconds\` to: ${format(Number(player.position))}`)
-        .addField(`${emoji.msg.time} Progress: `, createBar(player))
-        .setColor(ee.color)
-        .setFooter(ee.footertext, ee.footericon)
-      );
+      return message.reply({embeds : [new MessageEmbed()
+        .setTitle(client.la[ls].cmds.music.forward.title)
+        .setDescription(handlemsg(client.la[ls].cmds.music.forward.description, {amount: args[0], time: format(Number(player.position))}))
+        .addField(client.la[ls].cmds.music.forward.field, createBar(player))
+        .setColor(es.color)
+      ]});
     } catch (e) {
-      console.log(String(e.stack).bgRed)
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
-        .setDescription(`\`\`\`${e.message}\`\`\``)
-      );
+      console.log(String(e.stack).dim.bgRed)
+      return message.reply({embeds: [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setTitle(client.la[ls].common.erroroccur)
+        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
+      ]});
     }
   }
 };
@@ -55,7 +69,7 @@ module.exports = {
  * @INFO
  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
  * @INFO
- * Work for Milrato Development | https://milrato.eu
+ * Work for Milrato Development | https://milrato.dev
  * @INFO
  * Please mention Him / Milrato Development, when using this Code!
  * @INFO

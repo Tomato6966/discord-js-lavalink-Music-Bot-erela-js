@@ -1,42 +1,57 @@
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`../../botconfig/config.json`);
-const ee = require(`../../botconfig/embed.json`);
-const emoji = require(`../../botconfig/emojis.json`);
+const config = require(`${process.cwd()}/botconfig/config.json`);
+const ee = require(`${process.cwd()}/botconfig/embed.json`);
+const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 const radios = require(`../../botconfig/radiostations.json`);
 const playermanager = require(`../../handlers/playermanager`);
 const {
   stations
-} = require(`../../handlers/functions`);
-module.exports = {
+} = require(`${process.cwd()}/handlers/functions`);
+const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
+    module.exports = {
   name: `radio`,
   category: `🎶 Music`,
   aliases: [`stream`],
   description: `Plays a defined radiostream`,
   usage: `radio <1-183>`,
-  parameters: {"type":"music", "activeplayer": false, "previoussong": false},
+  parameters: {
+    "type": "music",
+    "activeplayer": false,
+    "previoussong": false
+  },
+  type: "song",
   run: async (client, message, args, cmduser, text, prefix, player) => {
-    try{
+    
+    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
+    if (!client.settings.get(message.guild.id, "MUSIC")) {
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setFooter(es.footertext, es.footericon)
+        .setTitle(client.la[ls].common.disabled.title)
+        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
+      ]});
+    }
+    try {
       //if no args send all stations
       if (!args[0]) return stations(client, config.prefix, message);
       //if not a number error
       if (isNaN(args[0])) {
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | Not a valid radio station`)
-          .setDescription(`Please use a Number between \`1\` and \`183\``)
-        );
+        return message.reply({embeds :[new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["radio"]["variable1"]))
+          .setDescription(eval(client.la[ls]["cmds"]["music"]["radio"]["variable2"]))
+        ]});
       }
       //if the volume number is not valid
       if (Number(args[1]) > 150 || Number(args[1]) < 1)
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | Volume Number out of Range`)
-          .setDescription(`Please use a Number between \`1\` and \`150\``)
-        );
+        return message.reply({embeds : [new MessageEmbed()
+          .setColor(es.wrongcolor)
+
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["radio"]["variable3"]))
+          .setDescription(eval(client.la[ls]["cmds"]["music"]["radio"]["variable4"]))
+        ]});
       //define the volume
       let volume;
       //if its not a number for volume, set it to 50
@@ -68,12 +83,12 @@ module.exports = {
       else if (Number([args[0]]) > 160 && Number(args[0]) <= 183) args2 = radios.OTHERS.request[Number(args[0]) - 160 - 1].split(` `);
       //if not found send an error
       else
-        return message.channel.send(new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
-          .setTitle(`${emoji.msg.ERROR} Error | Radio Station not found`)
-          .setDescription(`Please use a Station between \`1\` and \`183\``)
-        );
+        return message.reply({embeds : [new MessageEmbed()
+          .setColor(es.wrongcolor)
+
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["radio"]["variable5"]))
+          .setDescription(eval(client.la[ls]["cmds"]["music"]["radio"]["variable6"]))
+        ]});
       //get song information of it
       const song = {
         title: args2[0].replace(`-`, ` `),
@@ -81,24 +96,23 @@ module.exports = {
       };
       //define an embed
       let embed = new MessageEmbed()
-        .setColor(ee.color)
-        .setFooter(ee.footertext, ee.footericon)
+        .setColor(es.color)
+
         .setTitle(`Searching: ${emoji.msg.search}` + song.title)
       try {
         embed.setURL(song.url)
       } catch {}
       //send the message of the searching
-      message.channel.send(embed)
+      message.reply({embeds :[embed]})
       //play the radio but make the URL to an array ;) like that: [ `urlhere` ]
       playermanager(client, message, Array(song.url), `song:radio`);
     } catch (e) {
-      console.log(String(e.stack).bgRed)
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
-        .setDescription(`\`\`\`${e.message}\`\`\``)
-      );
+      console.log(String(e.stack).dim.bgRed)
+      return message.reply({embeds :[new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setTitle(client.la[ls].common.erroroccur)
+        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
+      ]});
     }
   }
 };
@@ -106,7 +120,7 @@ module.exports = {
  * @INFO
  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
  * @INFO
- * Work for Milrato Development | https://milrato.eu
+ * Work for Milrato Development | https://milrato.dev
  * @INFO
  * Please mention Him / Milrato Development, when using this Code!
  * @INFO

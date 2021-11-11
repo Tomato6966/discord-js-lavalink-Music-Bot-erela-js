@@ -1,45 +1,59 @@
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`../../botconfig/config.json`);
-const ee = require(`../../botconfig/embed.json`);
-const emoji = require(`../../botconfig/emojis.json`);
-module.exports = {
+const config = require(`${process.cwd()}/botconfig/config.json`);
+const ee = require(`${process.cwd()}/botconfig/embed.json`);
+const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
+const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
+    module.exports = {
   name: `unshuffle`,
   category: `🎶 Music`,
   aliases: [`unmix`, `oldshuffle`, `undoshuffle`, `oldqueue`, `us`],
   description: `Unshuffles the Queue - Restores the old Queue`,
   usage: `unshuffle`,
-  parameters: {"type":"music", "activeplayer": true, "previoussong": false},
+  parameters: {
+    "type": "music",
+    "activeplayer": true,
+    "check_dj": true,
+    "previoussong": false
+  },
+  type: "queue",
   run: async (client, message, args, cmduser, text, prefix, player) => {
-    try{
+    
+    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
+    if (!client.settings.get(message.guild.id, "MUSIC")) {
+      return message.reply({embed : [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setFooter(es.footertext, es.footericon)
+        .setTitle(client.la[ls].common.disabled.title)
+        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
+      ]});
+    }
+    try {
       //if no shuffle happened, return error
       if (!player.get(`beforeshuffle`))
-        return message.channel.send(new MessageEmbed()
-          .setFooter(ee.footertext, ee.footericon)
-          .setColor(ee.wrongcolor)
-          .setTitle(`${emoji.msg.ERROR} Error | You haven't shuffled this Queue yet!`)
-          .setDescription(`To shuffle it type: \`${prefix}shuffle\``)
-        );
+        return message.reply({embeds : [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["unshuffle"]["variable1"]))
+          .setDescription(eval(client.la[ls]["cmds"]["music"]["unshuffle"]["variable2"]))
+        ]});
       //clear teh Queue
       player.queue.clear();
       //now add every old song again
       for (const track of player.get(`beforeshuffle`))
         player.queue.add(track);
       //return success message
-      return message.channel.send(new MessageEmbed()
-        .setTitle(`${emoji.msg.SUCCESS} Success | ${emoji.msg.shuffle} **Re**shuffled the Queue`)
-        .setColor(ee.color)
-        .setFooter(ee.footertext, ee.footericon)
-      );
+      return message.reply({embeds : [new MessageEmbed()
+        .setTitle(eval(client.la[ls]["cmds"]["music"]["unshuffle"]["variable3"]))
+        .setColor(es.color)
+      ]});
     } catch (e) {
-      console.log(String(e.stack).bgRed)
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`${emoji.msg.ERROR} ERROR | An error occurred`)
-        .setDescription(`\`\`\`${e.message}\`\`\``)
-      );
+      console.log(String(e.stack).dim.bgRed)
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setTitle(client.la[ls].common.erroroccur)
+        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
+      ]});
     }
   }
 };
@@ -47,7 +61,7 @@ module.exports = {
  * @INFO
  * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
  * @INFO
- * Work for Milrato Development | https://milrato.eu
+ * Work for Milrato Development | https://milrato.dev
  * @INFO
  * Please mention Him / Milrato Development, when using this Code!
  * @INFO

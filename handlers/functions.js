@@ -1,60 +1,241 @@
 const Discord = require("discord.js");
 const {
-  MessageEmbed
+  Client,
+  Collection,
+  MessageEmbed,
+  MessageAttachment, 
+  MessageButton, 
+  MessageActionRow
 } = require("discord.js");
-const emoji = require("../botconfig/emojis.json");
-const config = require("../botconfig/config.json");
-const ee = require("../botconfig/embed.json");
+const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
+const config = require(`${process.cwd()}/botconfig/config.json`);
+const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const radios = require("../botconfig/radiostations.json");
 const ms = require("ms")
+const moment = require("moment")
+const fs = require('fs')
 
-/**
- * @INFO
- * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
- * @INFO
- * Work for Milrato Development | https://milrato.eu
- * @INFO
- * Please mention Him / Milrato Development, when using this Code!
- * @INFO
- */
-
- module.exports.getMember = getMember 
- module.exports.shuffle = shuffle;
- module.exports.formatDate = formatDate;
- module.exports.duration = duration;
- module.exports.promptMessage = promptMessage;
- module.exports.delay = delay;
- module.exports.getRandomInt = getRandomInt;
- module.exports.getRandomNum = getRandomNum;
- module.exports.createBar = createBar;
- module.exports.format = format;
- module.exports.stations = stations;
- module.exports.databasing = databasing;
- module.exports.escapeRegex = escapeRegex;
- module.exports.autoplay = autoplay;
- module.exports.arrayMove = arrayMove;
- module.exports.isrequestchannel = isrequestchannel;
- module.exports.edit_request_message_track_info = edit_request_message_track_info;
- module.exports.edit_request_message_queue_info = edit_request_message_queue_info;
- module.exports.swap_pages = swap_pages;
- module.exports.swap_pages2 = swap_pages2
-
-
-function getMember(message, toFind = "") {
-  try {
-    toFind = toFind.toLowerCase();
-    let target = message.guild.members.get(toFind);
-    if (!target && message.mentions.members) target = message.mentions.members.first();
-    if (!target && toFind) {
-      target = message.guild.members.find((member) => {
-        return member.displayName.toLowerCase().includes(toFind) || member.user.tag.toLowerCase().includes(toFind);
-      });
+module.exports.handlemsg = handlemsg;
+module.exports.nFormatter = nFormatter;
+module.exports.databasing = databasing;
+module.exports.shuffle = shuffle;
+module.exports.formatDate = formatDate;
+module.exports.delay = delay;
+module.exports.getRandomInt = getRandomInt;
+module.exports.duration = duration;
+module.exports.getRandomNum = getRandomNum;
+module.exports.createBar = createBar;
+module.exports.format = format;
+module.exports.stations = stations;
+module.exports.swap_pages2 = swap_pages2;
+module.exports.swap_pages2_interaction = swap_pages2_interaction;
+module.exports.swap_pages = swap_pages;
+module.exports.escapeRegex = escapeRegex;
+module.exports.autoplay = autoplay;
+module.exports.arrayMove = arrayMove;
+module.exports.isValidURL = isValidURL;
+module.exports.GetUser = GetUser;
+module.exports.GetRole = GetRole;
+module.exports.GetGlobalUser = GetGlobalUser;
+module.exports.parseMilliseconds = parseMilliseconds;
+module.exports.isEqual = isEqual;
+module.exports.check_if_dj = check_if_dj;
+function check_if_dj(client, member, song) {
+  //if no message added return
+  if(!client) return false;
+  var roleid = client.settings.get(member.guild.id, `djroles`)
+  if (String(roleid) == "") return false;
+  var isdj = false;
+  for(const djRole of roleid){
+    if (!member.guild.roles.cache.get(djRole)) {
+      client.settings.remove(message.guild.id, djRole, `djroles`)
+      continue;
     }
-    if (!target) target = message.member;
-    return target;
-  } catch (e) {
-    console.log(String(e.stack).bgRed)
+    if (member.roles.cache.has(djRole)) isdj = true;
   }
+  if (!isdj && !member.permissions.has("ADMINISTRATOR") && song?.requester?.id != member.id)
+      return roleid.map(i=>`<@&${i}>`).join(", ");
+  else
+      return false;
+}
+
+function handlemsg(txt, options) {
+  let text = String(txt);
+  for(const option in options){ 
+    var toreplace = new RegExp(`{${option.toLowerCase()}}`,"ig");
+    text = text.replace(toreplace, options[option]);
+  }
+  return text;
+}
+function isEqual(value, other){
+  const type = Object.prototype.toString.call(value);
+  if (type !== Object.prototype.toString.call(other)) return false;
+  if (["[object Array]", "[object Object]"].indexOf(type) < 0) return false;
+  const valueLen = type === "[object Array]" ? value.length : Object.keys(value).length;
+  const otherLen = type === "[object Array]" ? other.length : Object.keys(other).length;
+  if (valueLen !== otherLen) return false;
+  const compare = (item1, item2) => {
+      const itemType = Object.prototype.toString.call(item1);
+      if (["[object Array]", "[object Object]"].indexOf(itemType) >= 0) {
+          if (!isEqual(item1, item2)) return false;
+      }
+      else {
+          if (itemType !== Object.prototype.toString.call(item2)) return false;
+          if (itemType === "[object Function]") {
+              if (item1.toString() !== item2.toString()) return false;
+          } else {
+              if (item1 !== item2) return false;
+          }
+      }
+  };
+  if (type === "[object Array]") {
+      for (var i = 0; i < valueLen; i++) {
+          if (compare(value[i], other[i]) === false) return false;
+      }
+  } else {
+      for (var key in value) {
+          if (Object.prototype.hasOwnProperty.call(value, key)) {
+              if (compare(value[key], other[key]) === false) return false;
+          }
+      }
+  }
+  return true;
+}
+function parseMilliseconds(milliseconds) {
+	if (typeof milliseconds !== 'number') {
+		throw new TypeError('Expected a number');
+	}
+
+	return {
+		days: Math.trunc(milliseconds / 86400000),
+		hours: Math.trunc(milliseconds / 3600000) % 24,
+		minutes: Math.trunc(milliseconds / 60000) % 60,
+		seconds: Math.trunc(milliseconds / 1000) % 60,
+		milliseconds: Math.trunc(milliseconds) % 1000,
+		microseconds: Math.trunc(milliseconds * 1000) % 1000,
+		nanoseconds: Math.trunc(milliseconds * 1e6) % 1000
+	};
+}
+
+function isValidURL(string) {
+  const args = string.split(" ");
+  let url;
+  for(const arg of args){
+    try {
+      url = new URL(arg);
+      url = url.protocol === "http:" || url.protocol === "https:";
+      break;
+    } catch (_) {
+      url = false;
+    }
+  }
+  return url;
+};
+function GetUser(message, arg){
+  var errormessage = "❌ I failed finding that User...";
+  return new Promise(async (resolve, reject) => {
+    var args = arg, client = message.client;
+    if(!client || !message) return reject("CLIENT IS NOT DEFINED")
+    if(!args || args == null || args == undefined) args = message.content.trim().split(/ +/).slice(1);
+    let user = message.mentions.users.first();
+    if(!user && args[0] && args[0].length == 18) {
+      user = await client.users.fetch(args[0]).catch((e)=>{
+        return reject(errormessage);
+      })
+      if(!user) return reject(errormessage)
+      return resolve(user);
+    }
+    /**
+     * @INFO
+     * Bot Coded by Tomato#6966 | https://discord.gg/milrato
+     * @INFO
+     * Work for Milrato Development | https://milrato.dev
+     * @INFO
+     * Please mention him / Milrato Development, when using this Code!
+     * @INFO
+     */
+    
+    else if(!user && args[0]){
+      let alluser = message.guild.members.cache.map(member=> String(member.user.tag).toLowerCase())
+      user = alluser.find(user => user.startsWith(args.join(" ").toLowerCase()))
+      user = message.guild.members.cache.find(me => String(me.user.tag).toLowerCase() == user)
+      if(!user || user == null || !user.id) {
+        alluser = message.guild.members.cache.map(member => String(member.displayName + "#" + member.user.discriminator).toLowerCase())
+        user = alluser.find(user => user.startsWith(args.join(" ").toLowerCase()))
+        user = message.guild.members.cache.find(me => String(me.displayName + "#" + me.user.discriminator).toLowerCase() == user)
+        if(!user || user == null || !user.id) return reject(errormessage)
+      }
+      user = await client.users.fetch(user.user.id).catch(() => {})
+      if(!user) return reject(errormessage)
+      return resolve(user);
+    }
+    else {
+      user = message.mentions.users.first() || message.author;
+      return resolve(user);
+    }
+  })
+}
+function GetRole(message, arg){
+  var errormessage = "❌ I failed finding that Role...";
+  return new Promise(async (resolve, reject) => {
+    var args = arg, client = message.client;
+    if(!client || !message) return reject("CLIENT IS NOT DEFINED")
+    if(!args || args == null || args == undefined) args = message.content.trim().split(/ +/).slice(1);
+    let user = message.mentions.roles.filter(role=>role.guild.id==message.guild.id).first();
+    if(!user && args[0] && args[0].length == 18) {
+      user = message.guild.roles.cache.get(args[0])
+      if(!user) return reject(errormessage)
+      return resolve(user);
+    }
+    else if(!user && args[0]){
+      let alluser = message.guild.roles.cache.map(role => String(role.name).toLowerCase())
+      user = alluser.find(r => r.split(" ").join("").includes(args.join("").toLowerCase()))
+      user = message.guild.roles.cache.find(role => String(role.name).toLowerCase() === user)
+      if(!user) return reject(errormessage)
+      return resolve(user);
+    }
+    else {
+      user = message.mentions.roles.filter(role=>role.guild.id==message.guild.id).first();
+      if(!user) return reject(errormessage)
+      return resolve(user);
+    }
+  })
+}
+function GetGlobalUser(message, arg){
+  var errormessage = "❌ I failed finding that User...";
+  return new Promise(async (resolve, reject) => {
+    var args = arg, client = message.client;
+    if(!client || !message) return reject("CLIENT IS NOT DEFINED")
+    if(!args || args == null || args == undefined) args = message.content.trim().split(/ +/).slice(1);
+    let user = message.mentions.users.first();
+    if(!user && args[0] && args[0].length == 18) {
+      user = await client.users.fetch(args[0]).catch(() => {})
+      if(!user) return reject(errormessage)
+      return resolve(user);
+    }
+    else if(!user && args[0]){
+      let alluser = [], allmembers = [];
+      var guilds = [...client.guilds.cache.values()];
+      for(const g of guilds){
+        var members = g.members.cache.map(this_Code_is_by_Tomato_6966 => this_Code_is_by_Tomato_6966);
+        for(const m of members) { alluser.push(m.user.tag); allmembers.push(m); }
+      }
+      user = alluser.find(user => user.startsWith(args.join(" ").toLowerCase()))
+      user = allmembers.find(me => String(me.user.tag).toLowerCase() == user)
+      if(!user || user == null || !user.id) {
+        user = alluser.find(user => user.startsWith(args.join(" ").toLowerCase()))
+        user = allmembers.find(me => String(me.displayName + "#" + me.user.discriminator).toLowerCase() == user)
+        if(!user || user == null || !user.id) return reject(errormessage)
+      }
+      user = await client.users.fetch(user.user.id).catch(() => {})
+      if(!user) return reject(errormessage)
+      return resolve(user);
+    }
+    else {
+      user = message.mentions.users.first() || message.author;
+      return resolve(user);
+    }
+  })
 }
 
 function shuffle(a) {
@@ -68,7 +249,7 @@ function shuffle(a) {
     }
     return a;
   } catch (e) {
-    console.log(String(e.stack).bgRed)
+    console.log(String(e.stack).grey.bgRed)
   }
 }
 
@@ -76,18 +257,69 @@ function formatDate(date) {
   try {
     return new Intl.DateTimeFormat("en-US").format(date);
   } catch (e) {
-    console.log(String(e.stack).bgRed)
+    console.log(String(e.stack).grey.bgRed)
   }
 }
 
-function duration(ms) {
-  const sec = Math.floor((ms / 1000) % 60).toString();
-  const min = Math.floor((ms / (60 * 1000)) % 60).toString();
-  const hrs = Math.floor((ms / (60 * 60 * 1000)) % 60).toString();
-  const days = Math.floor((ms / (24 * 60 * 60 * 1000)) % 60).toString();
-  return `${days}Days,${hrs}Hours,${min}Minutes,${sec}Seconds`;
-}
 
+function duration(duration, useMilli = false) {
+    let remain = duration;
+    let days = Math.floor(remain / (1000 * 60 * 60 * 24));
+    remain = remain % (1000 * 60 * 60 * 24);
+    let hours = Math.floor(remain / (1000 * 60 * 60));
+    remain = remain % (1000 * 60 * 60);
+    let minutes = Math.floor(remain / (1000 * 60));
+    remain = remain % (1000 * 60);
+    let seconds = Math.floor(remain / (1000));
+    remain = remain % (1000);
+    let milliseconds = remain;
+    let time = {
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds
+    };
+    let parts = []
+    if (time.days) {
+      let ret = time.days + ' Day'
+      if (time.days !== 1) {
+        ret += 's'
+      }
+      parts.push(ret)
+    }
+    if (time.hours) {
+      let ret = time.hours + ' Hr'
+      if (time.hours !== 1) {
+        ret += 's'
+      }
+      parts.push(ret)
+    }
+    if (time.minutes) {
+      let ret = time.minutes + ' Min'
+      if (time.minutes !== 1) {
+        ret += 's'
+      }
+      parts.push(ret)
+  
+    }
+    if (time.seconds) {
+      let ret = time.seconds + ' Sec'
+      if (time.seconds !== 1) {
+        ret += 's'
+      }
+      parts.push(ret)
+    }
+    if (useMilli && time.milliseconds) {
+      let ret = time.milliseconds + ' ms'
+      parts.push(ret)
+    }
+    if (parts.length === 0) {
+      return ['instantly']
+    } else {
+      return parts
+    }
+ }
 
 
 function delay(delayInms) {
@@ -98,42 +330,44 @@ function delay(delayInms) {
       }, delayInms);
     });
   } catch (e) {
-    console.log(String(e.stack).bgRed)
+    console.log(String(e.stack).grey.bgRed)
   }
 }
 
-//randomnumber between 0 and x
 function getRandomInt(max) {
   try {
     return Math.floor(Math.random() * Math.floor(max));
   } catch (e) {
-    console.log(String(e.stack).bgRed)
+    console.log(String(e.stack).grey.bgRed)
   }
 }
-//random number between y and x
+
 function getRandomNum(min, max) {
   try {
     return Math.floor(Math.random() * Math.floor((max - min) + min));
   } catch (e) {
-    console.log(String(e.stack).bgRed)
+    console.log(String(e.stack).grey.bgRed)
   }
 }
+
 function createBar(player) {
-  try{
-    //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji)
-    if (!player.queue.current) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
-    let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
-    let total = player.queue.current.duration;
+  try {
     let size = 25;
     let line = "▬";
-    let slider = config.settings.progressbar_emoji;
+    //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", "🔷")
+    if (!player.queue.current) return `**[${"🔷"}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
+    let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
+    let total = player.queue.current.duration;
+
+    let slider = "🔷";
     let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
-    if (!String(bar[0]).includes(config.settings.progressbar_emoji)) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
+    if (!String(bar).includes("🔷")) return `**[${"🔷"}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
     return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
-  }catch (e){
-    console.log(String(e.stack).bgRed)
+  } catch (e) {
+    console.log(String(e.stack).grey.bgRed)
   }
 }
+
 function format(millis) {
   try {
     var h = Math.floor(millis / 3600000),
@@ -142,15 +376,28 @@ function format(millis) {
     if (h < 1) return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
     else return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
   } catch (e) {
-    console.log(String(e.stack).bgRed)
+    console.log(String(e.stack).grey.bgRed)
   }
 }
+
 function stations(client, prefix, message) {
+  let es = client.settings.get(message.guild.id, "embed");
+  let ls = client.settings.get(message.guild.id, "language");
+  
+
   try {
     let amount = 0;
-    const stationsembed = new Discord.MessageEmbed().setColor(ee.color).setFooter(ee.footertext, ee.footericon).setTitle("Pick your Station, by typing in the right `INDEX` Number!").setDescription("Example: `?radio 11`");
-    const stationsembed2 = new Discord.MessageEmbed().setColor(ee.color).setFooter(ee.footertext, ee.footericon).setTitle("Pick your Station, by typing in the right `INDEX` Number!").setDescription("Example: `?radio 69`");
-    const stationsembed3 = new Discord.MessageEmbed().setColor(ee.color).setFooter(ee.footertext, ee.footericon).setTitle("Pick your Station, by typing in the right `INDEX` Number!").setDescription("Example: `?radio 180`");
+    const stationsembed = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon : null).setFooter(es.footertext, es.footericon)
+    .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable4"]))
+    .setDescription(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable4_1"]))
+    const stationsembed2 = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+    .setFooter(es.footertext, es.footericon)
+    .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable5"]))
+    .setDescription(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable5_1"]))
+    const stationsembed3 = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+    .setFooter(es.footertext, es.footericon)
+    .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable6"]))
+    .setDescription(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable6_1"]))
     let United_Kingdom = "";
     for (let i = 0; i < radios.EU.United_Kingdom.length; i++) {
       United_Kingdom += `**${i + 1 + 10 * amount}**[${radios.EU.United_Kingdom[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.United_Kingdom[i].split(" ")[1]})\n`;
@@ -259,79 +506,102 @@ function stations(client, prefix, message) {
       } catch {}
     }
     stationsembed3.addField("🧾 OTHERS", `>>> ${requests}`, true);
-    message.channel.send(stationsembed);
-    message.channel.send(stationsembed2);
-    message.channel.send(stationsembed3);
+    message.channel.send({embeds: [stationsembed]}).catch(e => console.log(e.stack ? String(e.stack).grey : String(e).grey))
+    message.channel.send({embeds: [stationsembed2]}).catch(e => console.log(e.stack ? String(e.stack).grey : String(e).grey))
+    message.channel.send({embeds: [stationsembed3]}).catch(e => console.log(e.stack ? String(e.stack).grey : String(e).grey))
   } catch (e) {
-    console.log(String(e.stack).bgRed)
+    console.log(String(e.stack).grey.bgRed)
   }
 }
-function databasing(client, guildid, userid) {
-  try {
-    client.stats.ensure("global", {
-      commands: 0,
-      songs: 0,
-      setups: 0
-    });
-    client.premium.ensure("premiumlist", {
-      list: [{
-        "u": "XXXYYYXXXYYYXXXYYY"
-      }, {
-        "g": "XXXYYYXXXYYYXXXYYY"
-      }]
-    })
-    if (guildid) {
-      client.stats.ensure(guildid, {
-        commands: 0,
-        songs: 0
-      });
-      client.premium.ensure(guildid, {
-        enabled: false,
-      })
-      client.setups.ensure(guildid, {
-        textchannel: "0",
-        voicechannel: "0",
-        category: "0",
-        message_cmd_info: "0",
-        message_queue_info: "0",
-        message_track_info: "0"
-      });
-      client.settings.ensure(guildid, {
-        prefix: config.prefix,
-        pruning: true,
-        requestonly: true,
-        djroles: [],
-        djonlycmds: ["autoplay", "clearqueue", "forward", "loop", "jump", "loopqueue", "loopsong", "move", "pause", "resume", "removetrack", "removedupe", "restart", "rewind", "seek", "shuffle", "skip", "stop", "volume"],
-        botchannel: [],
-      });
-    }
-    if (userid) {
-      client.premium.ensure(userid, {
-        enabled: false,
-      })
-      client.queuesaves.ensure(userid, {
-        "TEMPLATEQUEUEINFORMATION": ["queue", "sadasd"]
-      });
-    }
-    if (userid && guildid) {
-      client.userProfiles.ensure(userid, {
-        id: userid,
-        guild: guildid,
-        totalActions: 0,
-        warnings: [],
-        kicks: []
-      });
-    }
-    return;
-  } catch (e) {
-    console.log(String(e.stack).bgRed)
-  }
-}
+
 function escapeRegex(str) {
   try {
     return str.replace(/[.*+?^${}()|[\]\\]/g, `\\$&`);
   } catch (e) {
-    console.log(String(e.stack).bgRed)
+    console.log(String(e.stack).grey.bgRed)
+  }
+}
+
+async function autoplay(client, player, type) {
+  client.settings.ensure(player.guild, {
+    prefix: config.prefix,
+    embed: {
+      "color": ee.color,
+      "thumb": true,
+      "wrongcolor": ee.wrongcolor,
+      "footertext": client.guilds.cache.get(player.guild) ? client.guilds.cache.get(player.guild).name : ee.footertext,
+      "footericon": client.guilds.cache.get(player.guild) ? client.guilds.cache.get(player.guild).iconURL({
+        dynamic: true
+      }) : ee.footericon,
+    },
+    language: "en"
+  })
+  let es = client.settings.get(player.guild, "embed") 
+  if(!client.settings.has(player.guild, "language")) client.settings.ensure(player.guild, { language: "en" });
+  let ls = client.settings.get(player.guild, "language")
+  try {
+    if (player.queue.length > 0) return;
+    const previoustrack = player.get("previoustrack");
+    if (!previoustrack) return;
+
+    const mixURL = `https://www.youtube.com/watch?v=${previoustrack.identifier}&list=RD${previoustrack.identifier}`;
+    const response = await client.manager.search(mixURL, previoustrack.requester);
+    //if nothing is found, send error message, plus if there  is a delay for the empty QUEUE send error message TOO
+    if (!response || response.loadType === 'LOAD_FAILED' || response.loadType !== 'PLAYLIST_LOADED') {
+      let embed = new MessageEmbed()
+        .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable7"]))
+        .setDescription(config.settings.LeaveOnEmpty_Queue.enabled && type != "skip" ? `I'll leave the Channel: \`${client.channels.cache.get(player.voiceChannel).name}\` in: \`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\`, If the Queue stays Empty! ` : eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable9"]))
+        .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon);
+      client.channels.cache.get(player.textChannel).send({embeds: [embed]}).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
+      if (config.settings.LeaveOnEmpty_Queue.enabled && type != "skip") {
+        return setTimeout(() => {
+          try {
+            player = client.manager.players.get(player.guild);
+            if (player.queue.size === 0) {
+              let embed = new MessageEmbed()
+              try {
+                embed.setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable8"]))
+              } catch {}
+              try {
+                embed.setDescription(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable1"]))
+              } catch {}
+              try {
+                embed.setColor(es.wrongcolor)
+              } catch {}
+              try {
+                embed.setFooter(es.footertext, es.footericon);
+              } catch {}
+              client.channels.cache
+                .get(player.textChannel)
+                .send({embeds: [embed]}).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
+              try {
+                client.channels.cache
+                  .get(player.textChannel)
+                  .messages.fetch(player.get("playermessage")).then(async msg => {
+                    try {
+                      await delay(7500)
+                      msg.delete().catch(() => {});
+                    } catch {
+                      /* */
+                    }
+                  }).catch(() => {});
+              } catch (e) {
+                console.log(String(e.stack).grey.yellow);
+              }
+              player.destroy();
+            }
+          } catch (e) {
+            console.log(String(e.stack).grey.yellow);
+          }
+        }, config.settings.LeaveOnEmpty_Queue.time_delay);
+      } else {
+        player.destroy();
+      }
+    }
+    player.queue.add(response.tracks[Math.floor(Math.random() * Math.floor(response.tracks.length))]);
+    return player.play();
+  } catch (e) {
+    console.log(String(e.stack).grey.bgRed)
   }
 }
 
@@ -346,471 +616,341 @@ function arrayMove(array, from, to) {
     }
     return array;
   } catch (e) {
-    console.log(String(e.stack).bgRed)
+    console.log(String(e.stack).grey.bgRed)
   }
 }
-async function promptMessage(message, author, time, validReactions) {
-  try {
-    time *= 1000;
-    for (const reaction of validReactions) await message.react(reaction);
-    const filter = (reaction, user) => validReactions.includes(reaction.emoji.name) && user.id === author.id;
-    return message.awaitReactions(filter, {
-      max: 1,
-      time: time
-    }).then((collected) => collected.first() && collected.first().emoji.name);
-  } catch (e) {
-    console.log(String(e.stack).bgRed)
-  }
-}
-async function autoplay (client, player, type) {
-  try {
-    if (player.queue.size > 0) return;
-    const previoustrack = player.get("previoustrack");
-    if (!previoustrack) return;
-
-    const mixURL = `https://www.youtube.com/watch?v=${previoustrack.identifier}&list=RD${previoustrack.identifier}`;
-    const response = await client.manager.search(mixURL, previoustrack.requester);
-    //if nothing is found, send error message, plus if there  is a delay for the empty QUEUE send error message TOO
-    if (!response || response.loadType === 'LOAD_FAILED' || response.loadType !== 'PLAYLIST_LOADED') {
-      let embed = new MessageEmbed()
-        .setTitle("❌ Error | Found nothing related for the latest Song!")
-        .setDescription(config.settings.LeaveOnEmpty_Queue.enabled && type != "skip" ? `I'll leave the Channel: ${client.channels.cache.get(player.voiceChannel).name} in: ${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })} If the Queue stays Empty! ` : `I left the Channel: ${client.channels.cache.get(player.voiceChannel).name} because the Queue was empty for: ${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}`)
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon);
-      client.channels.cache.get(player.textChannel).send(embed);
-      if (config.settings.LeaveOnEmpty_Queue.enabled && type != "skip") {
-        return setTimeout(() => {
-          try {
-            player = client.manager.players.get(player.guild);
-            if (player.queue.size === 0) {
-              let embed = new MessageEmbed()
-              try {
-                embed.setTitle("❌ Queue has ended.")
-              } catch {}
-              try {
-                embed.setDescription(`I left the Channel: ${client.channels.cache.get(player.voiceChannel).name} because the Queue was empty for: ${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}`)
-              } catch {}
-              try {
-                embed.setColor(ee.wrongcolor)
-              } catch {}
-              try {
-                embed.setFooter(ee.footertext, ee.footericon);
-              } catch {}
-              client.channels.cache
-                .get(player.textChannel)
-                .send(embed)
-              try {
-                client.channels.cache
-                  .get(player.textChannel)
-                  .messages.fetch(player.get("playermessage")).then(msg => {
-                    try {
-                      msg.delete({
-                        timeout: 7500
-                      }).catch(e => console.log("couldn't delete message this is a catch to prevent a crash".grey));
-                    } catch {
-                      /* */ }
-                  });
-              } catch (e) {
-                console.log(String(e.stack).yellow);
-              }
-              player.destroy();
-            }
-          } catch (e) {
-            console.log(String(e.stack).yellow);
-          }
-        }, config.settings.LeaveOnEmpty_Queue.time_delay);
-      } else {
-        player.destroy();
-      }
-    }
-    player.queue.add(response.tracks[Math.floor(Math.random() * Math.floor(response.tracks.length))]);
-    return player.play();
-  } catch (e) {
-    console.log(String(e.stack).bgRed)
-  }
-}
-async function isrequestchannel(client, channelid, guildid) {
-    //get the setup channel from the database
-    
-    if (client.setups.get(guildid, "textchannel") !== "0") {
-      try{
-        //get the channel from the database channelid data
-        let channel = await client.channels.fetch(String(client.setups.get(guildid, "textchannel"))).catch(e=>{return false;});
-        //if the channel is undefined aka not existing reset the database
-        if (!channel) {
-          return false;
-        }
-        //if its in the request channel do this
-        if (channel.id === channelid) {
-          return true;
-        } else {
-          return false;
-        }
-      }catch {
-        return false;
-      }
-    }
-    else {
-      return false;
-    }
-}
-
-async function edit_request_message_track_info(client, player, track, type) {
- 
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(2);
-    }, 50);
+function nFormatter(num, digits = 2) {
+  const lookup = [
+    { value: 1, symbol: "" },
+    { value: 1e3, symbol: "k" },
+    { value: 1e6, symbol: "M" },
+    { value: 1e9, symbol: "G" },
+    { value: 1e12, symbol: "T" },
+    { value: 1e15, symbol: "P" },
+    { value: 1e18, symbol: "E" }
+  ];
+  const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+  var item = lookup.slice().reverse().find(function(item) {
+    return num >= item.value;
   });
-
-  try {
-    const Player = client.manager.players.get(player.guild)
-    
-    let message = player.get("message");
-    if(player && !message.guild) client.channels.fetch(player.textChannel).then(ch=>{
-      message = ch.lastMessage;
-    })
-    let db = client.setups.get(message.guild.id);
-
-    //GET QUEUE INFO MSG
-    let queue_info_msg = await message.channel.messages.fetch(db.message_queue_info);
-            //IF NO QUEUE INFO MSG AVAILABLE --> resend it --> try find TRACK INFO MSG --> delete it!
-            if (!queue_info_msg) return message.channel.send(new MessageEmbed()).then(async msg => {
-              message.edit(QueueEmbed(client, player)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-              client.setups.set(message.guild.id, msg.id, "message_queue_info");
-              let track_info_msg = await message.channel.messages.fetch(db.message_track_info);
-              if (track_info_msg) track_info_msg.delete().catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-              return message.channel.send(new MessageEmbed()).then(msg => {
-                msg.edit(SongEmbed(player.queue.current)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-                client.setups.set(message.guild.id, msg.id, "message_track_info");
-              })
-            })
-    //GET TRACK INFO MSG
-    let track_info_msg = await message.channel.messages.fetch(db.message_track_info);
-            //IF NO TRACK INFO MSG --> DELETE
-            if (!track_info_msg) return message.channel.send(new MessageEmbed()).then(msg => {
-              msg.react(emoji.react.rewind) //rewind 20 seconds
-              msg.react(emoji.react.forward) //forward 20 seconds
-              msg.react(emoji.react.pause_resume) //pause / resume
-              msg.react(emoji.react.stop) //stop playing music
-              msg.react(emoji.react.previous_track) //skip back  track / (play previous)
-              msg.react(emoji.react.skip_track) //skip track / stop playing
-              msg.react(emoji.react.replay_track) //replay track
-              msg.react(emoji.react.reduce_volume) //reduce volume by 10%
-              msg.react(emoji.react.raise_volume) //raise volume by 10%
-              msg.react(emoji.react.toggle_mute) //toggle mute
-              msg.react(emoji.react.repeat_mode) //change repeat mode --> track --> Queue --> none
-              msg.react(emoji.react.autoplay_mode) //toggle autoplay mode
-              msg.react(emoji.react.shuffle) //shuffle the Queue
-              msg.react(emoji.react.show_queue) //shows the Queue
-              msg.react(emoji.react.show_current_track) //shows the current Track
-              msg.edit(SongEmbed(player.queue.current));
-              client.setups.set(message.guild.id, msg.id, "message_track_info");
-            })
-    if(type && type == "destroy"){
-      reset(track_info_msg, queue_info_msg);
-      player.destroy();
-      if(message.guild.me.voice.channel) {
-        message.guild.me.voice.channel.leave()
-      }
-      else {
-      }
-      return;
-    }
-    if (!Player) {
-      reset(track_info_msg, queue_info_msg);
-      return;
-    }
-    
-    await track_info_msg.edit(SongEmbed(player.queue.current)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-    await queue_info_msg.edit(QueueEmbed(client, player)).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-    
-    
-
-    setTimeout(()=>{
-      if (!Player || !Player.queue || !Player.queue.current) {
-        reset(track_info_msg, queue_info_msg);
-        return;
-      }
-    }, 5000)
-
-    function reset(track_info_msg, queue_info_msg) {
-      let embed2 = new MessageEmbed()
-        .setColor(ee.color)
-        .setFooter(`Prefix for this Server is:   ${client.settings.get(track_info_msg.guild.id, "prefix")}`, ee.footericon)
-        .setTitle("Lava Music | Music Queue")
-        .setImage("https://cdn.discordapp.com/attachments/752548978259787806/820014471556759601/ezgif-1-2d764d377842.gif")
-        .setDescription(`Empty\nJoin a voice channel and queue songs by name or url in here.`)
-      let embed3 = new MessageEmbed()
-        .setColor(ee.color)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle("Lava Music | Currently no song is playing!")
-        .setDescription(`> Join a voice channel and enter a song name or url to play.\n\n[Invite Lava Music](https://lava.milrato.eu) • [Support Server](https://discord.com/invite/wvCp7q88G3) • [Website](https://milrato.eu)`)
-        .setImage("https://cdn.discordapp.com/attachments/754700756170440774/812443980293603329/lavamusic.gif")
-      track_info_msg.edit(embed3).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-      queue_info_msg.edit(embed2).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-    }
-
-    function createBarlul(player) {
-      try{
-        //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", config.settings.progressbar_emoji)
-        if (!player.queue.current) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
-        let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
-        let total = player.queue.current.duration;
-        let size = 25;
-        let line = "▬";
-        let slider = config.settings.progressbar_emoji;
-        let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
-        if (!String(bar[0]).includes(config.settings.progressbar_emoji)) return `**[${config.settings.progressbar_emoji}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
-        return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
-      }catch (e){
-        console.log(String(e.stack).bgRed)
-      }
-    }
-
-    function SongEmbed(track) {
-      if(!track) return reset(track_info_msg, queue_info_msg);
-      let embed = new MessageEmbed()
-        embed.setAuthor(`${format(track.duration).split(" | ")[0]} ${track.title}`, client.user.displayAvatarURL(), track.uri)
-        embed.setColor(ee.color)
-        embed.setTitle(`⌛️ Progress:`)
-        embed.setDescription(`${createBarlul(player)}`)
-        embed.addField("💯 **Song By:**", `\`${track.author}\``, true)
-        embed.addField(`⏯ **State**`, `\`${player.playing ? `${emoji.msg.resume}  Playing` : `${emoji.msg.pause}  Paused`}\``, true)
-        embed.addField(`🩸 **Requested by:**`, `${track.requester}`, true)
-        embed.setThumbnail(`https://img.youtube.com/vi/${track.identifier}/mqdefault.jpg`)
-        embed.setFooter(`Queue: ${Player.queue.size}  •  Volume: ${Player.volume}%  •  Autoplay: ${Player.get(`autoplay`) ? `✔️` : `❌`}  •  Loop: ${Player.queueRepeat ? `✔️` : Player.trackRepeat ? `✔️` : `❌`}`, Player.queue.current.requester.displayAvatarURL({
-          dynamic: true
-        }))
-      return embed;
-    }
-    function QueueEmbed(client, player) {
-      if(!player) return reset(track_info_msg, queue_info_msg);
-      const queue = player.queue;
-      if(!queue) return reset(track_info_msg, queue_info_msg);
-      const embed = new MessageEmbed().setAuthor(`Lava Music | Music Queue`);
-      const multiple = 15;
-      const page = 1;
-      const end = page * multiple;
-      const start = end - multiple;
-      const tracks = queue.slice(start, end);
-      if (queue.current) embed.addField("**0) CURRENT TRACK**", `${queue.current.title.split("[").join("\[").split("]").join("\]").substr(0, 60)} [${track.isStream ? "LIVE STREAM" : format(track.duration).split(" | ")[0]}]\nby: ${queue.current.requester}`);
-      if (!tracks.length) embed.setDescription(`No tracks in ${page > 1 ? `page ${page}` : "the queue"}.`);
-      else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** ${track.title.split("[").join("\[").split("]").join("\]").substr(0, 60)} [${track.isStream ? "LIVE STREAM" : format(track.duration).split(" | ")[0]}]\nby: ${track.requester}`).join("\n"));
-   embed.setColor(ee.color);
-      embed.setImage("https://cdn.discordapp.com/attachments/752548978259787806/820014471556759601/ezgif-1-2d764d377842.gif");
-      embed.setFooter(ee.footertext, ee.footericon);
-      return embed;
-    }
-    function format(millis) {
-      try {
-        var h = Math.floor(millis / 3600000),
-          m = Math.floor(millis / 60000),
-          s = ((millis % 60000) / 1000).toFixed(0);
-        if (h < 1) return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
-        else return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
-      } catch (e) {
-        console.log(String(e.stack).bgRed)
-      }
-    }
-  } catch (e) {
-    console.log(String(e.stack).bgRed)
-  }
-}
-
-async function edit_request_message_queue_info(client, player) {
-  try {
-    const queue = player.queue;
-    const embed = new MessageEmbed().setAuthor(`Lava Music | Music Queue`);
-    const multiple = 15;
-    const page = 1;
-    const end = page * multiple;
-    const start = end - multiple;
-    const tracks = queue.slice(start, end);
-    if (queue.current) embed.addField("**0) CURRENT TRACK**", `${queue.current.title.split("[").join("\[").split("]").join("\]").substr(0, 60)} [${queue.current.isStream ? "LIVE STREAM" : format(queue.current.duration).split(" | ")[0]}]\nby: ${queue.current.requester}`);
-    if (!tracks.length) embed.setDescription(`No tracks in ${page > 1 ? `page ${page}` : "the queue"}.`);
-    else embed.setDescription(tracks.map((track, i) => `**${start + ++i})** ${track.title.split("[").join("\[").split("]").join("\]").substr(0, 60)} [${track.isStream ? "LIVE STREAM" : format(track.duration).split(" | ")[0]}]\nby: ${track.requester}`).join("\n"));
-    embed.setColor(ee.color);
-    embed.setImage("https://cdn.discordapp.com/attachments/752548978259787806/820014471556759601/ezgif-1-2d764d377842.gif");
-    embed.setFooter(ee.footertext, ee.footericon);
-    embed;
-    let message = player.get("message");
-    if(player && !message.guild) client.channels.fetch(player.textChannel).then(ch=>{
-      message = ch.lastMessage;
-    })
-    let db = client.setups.get(message.guild.id)
-
-    function format(millis) {
-      try {
-        var h = Math.floor(millis / 3600000),
-          m = Math.floor(millis / 60000),
-          s = ((millis % 60000) / 1000).toFixed(0);
-        if (h < 1) return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
-        else return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
-      } catch (e) {
-        console.log(String(e.stack).bgRed)
-      }
-    }
-    //GET QUEUE INFO MSG
-    let queue_info_msg = await message.channel.messages.fetch(db.message_queue_info);
-    let track_info_msg = await message.channel.messages.fetch(db.message_track_info);
-   
-    let oldembed = track_info_msg.embeds[0]
-    track_info_msg.edit(oldembed.setFooter(`Queue: ${player.queue.size}  •  Volume: ${player.volume}%  •  Autoplay: ${player.get(`autoplay`) ? `✔️` : `❌`}  •  Loop: ${player.queueRepeat ? `✔️ Queue` : player.trackRepeat ? `✔️ Song` : `❌`}`, player.queue.current.requester.displayAvatarURL({
-      dynamic: true
-    }))).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-    queue_info_msg.edit(embed).catch(e => console.log("Couldn't delete msg, this is for preventing a bug".gray));
-
-    function format(millis) {
-      try {
-        var h = Math.floor(millis / 3600000),
-          m = Math.floor(millis / 60000),
-          s = ((millis % 60000) / 1000).toFixed(0);
-        if (h < 1) return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
-        else return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
-      } catch (e) {
-        console.log(String(e.stack).bgRed)
-      }
-    }
-  } catch (e) {
-    console.log(String(e.stack).bgRed)
-  }
+  return item ? (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol : "0";
 }
 
 async function swap_pages(client, message, description, TITLE) {
+  client.settings.ensure(message.guild.id, {
+    prefix: config.prefix,
+    embed: {
+      "color": ee.color,
+      "thumb": true,
+      "wrongcolor": ee.wrongcolor,
+      "footertext": client.guilds.cache.get(message.guild.id) ? client.guilds.cache.get(message.guild.id).name : ee.footertext,
+      "footericon": client.guilds.cache.get(message.guild.id) ? client.guilds.cache.get(message.guild.id).iconURL({
+        dynamic: true
+      }) : ee.footericon,
+    }
+  })
+  let es = client.settings.get(message.guild.id, "embed");
+  let prefix = client.settings.get(message.guild.id, "prefix");
+  let cmduser = message.author;
+
+/**
+ * @INFO
+ * Bot Coded by Tomato#6966 | https://discord.gg/milrato
+ * @INFO
+ * Work for Milrato Development | https://milrato.dev
+ * @INFO
+ * Please mention him / Milrato Development, when using this Code!
+ * @INFO
+ */
+
   let currentPage = 0;
   //GET ALL EMBEDS
   let embeds = [];
   //if input is an array
   if (Array.isArray(description)) {
     try {
-      let k = 15;
-      for (let i = 0; i < description.length; i += 15) {
+      let k = 20;
+      for (let i = 0; i < description.length; i += 20) {
         const current = description.slice(i, k);
-        k += 15;
-        const embed = new Discord.MessageEmbed()
-          .setDescription(current)
+        k += 20;
+        const embed = new MessageEmbed()
+          .setDescription(current.join("\n"))
           .setTitle(TITLE)
-          .setColor(ee.color)
-          .setFooter(ee.footertext, ee.footericon)
+          .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+          .setFooter(es.footertext, es.footericon)
         embeds.push(embed);
       }
       embeds;
-    } catch {}
+    } catch (e){console.log(e.stack ? String(e.stack).grey : String(e).grey)}
   } else {
     try {
       let k = 1000;
       for (let i = 0; i < description.length; i += 1000) {
         const current = description.slice(i, k);
         k += 1000;
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
           .setDescription(current)
           .setTitle(TITLE)
-          .setColor(ee.color)
-          .setFooter(ee.footertext, ee.footericon)
+          .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+          .setFooter(es.footertext, es.footericon)
         embeds.push(embed);
       }
       embeds;
-    } catch {}
+    } catch (e){console.log(e.stack ? String(e.stack).grey : String(e).grey)}
   }
-  if (embeds.length === 1) return message.channel.send(embeds[0])
-  const queueEmbed = await message.channel.send(
-    `**Current Page - ${currentPage + 1}/${embeds.length}**`,
-    embeds[currentPage]
-  );
-  let reactionemojis = ["⬅️", "⏹", "➡️"];
-  try {
-    for (const emoji of reactionemojis)
-      await queueEmbed.react(emoji);
-  } catch {}
+  if (embeds.length === 0) return message.channel.send({embeds: [new MessageEmbed()
+  .setTitle(`${emoji.msg.ERROR} No Content added to the SWAP PAGES Function`)
+  .setColor(es.wrongcolor).setThumbnail(es.thumb ? es.footericon : null)
+  .setFooter(es.footertext, es.footericon)]}).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
+  if (embeds.length === 1) return message.channel.send({embeds: [embeds[0]]}).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
 
-  const filter = (reaction, user) =>
-    (reactionemojis.includes(reaction.emoji.name) || reactionemojis.includes(reaction.emoji.name)) && message.author.id === user.id;
-  const collector = queueEmbed.createReactionCollector(filter, {
-    time: 45000
+  let button_back = new MessageButton().setStyle('SUCCESS').setCustomId('1').setEmoji("833802907509719130").setLabel("Back")
+  let button_home = new MessageButton().setStyle('DANGER').setCustomId('2').setEmoji("🏠").setLabel("Home")
+  let button_forward = new MessageButton().setStyle('SUCCESS').setCustomId('3').setEmoji('832598861813776394').setLabel("Forward")
+  const allbuttons = [new MessageActionRow().addComponents([button_back, button_home, button_forward])]
+  //Send message with buttons
+  let swapmsg = await message.channel.send({   
+      content: `***Click on the __Buttons__ to swap the Pages***`,
+      embeds: [embeds[0]], 
+      components: allbuttons
   });
-
-  collector.on("collect", async (reaction, user) => {
-    try {
-      if (reaction.emoji.name === reactionemojis[2] || reaction.emoji.id === reactionemojis[2]) {
-        if (currentPage < embeds.length - 1) {
-          currentPage++;
-          queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
-        } else {
-          currentPage = 0
-          queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
+  //create a collector for the thinggy
+  const collector = swapmsg.createMessageComponentCollector({filter: (i) => i.isButton() && i.user && i.user.id == cmduser.id && i.message.author.id == client.user.id, time: 180e3 }); //collector for 5 seconds
+  //array of all embeds, here simplified just 10 embeds with numbers 0 - 9
+  collector.on('collect', async b => {
+      if(b.user.id !== message.author.id)
+        return b.reply({content: `❌ **Only the one who typed ${prefix}help is allowed to react!**`, ephemeral: true})
+        //page forward
+        if(b.customId == "1") {
+          //b.reply("***Swapping a PAGE FORWARD***, *please wait 2 Seconds for the next Input*", true)
+            if (currentPage !== 0) {
+              currentPage -= 1
+              await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
+              await b.deferUpdate();
+            } else {
+                currentPage = embeds.length - 1
+                await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
+                await b.deferUpdate();
+            }
         }
-      } else if (reaction.emoji.name === reactionemojis[0] || reaction.emoji.id === reactionemojis[0]) {
-        if (currentPage !== 0) {
-          --currentPage;
-          queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
-        } else {
-          currentPage = embeds.length - 1
-          queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
-        }
-      } else {
-        collector.stop();
-        reaction.message.reactions.removeAll();
+        //go home
+        else if(b.customId == "2"){
+          //b.reply("***Going Back home***, *please wait 2 Seconds for the next Input*", true)
+            currentPage = 0;
+            await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
+            await b.deferUpdate();
+        } 
+        //go forward
+        else if(b.customId == "3"){
+          //b.reply("***Swapping a PAGE BACK***, *please wait 2 Seconds for the next Input*", true)
+            if (currentPage < embeds.length - 1) {
+                currentPage++;
+                await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
+                await b.deferUpdate();
+            } else {
+                currentPage = 0
+                await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
+                await b.deferUpdate();
+            }
+        
       }
-      await reaction.users.remove(message.author.id);
-    } catch {}
   });
+
 
 }
-
 async function swap_pages2(client, message, embeds) {
   let currentPage = 0;
-  if (embeds.length === 1) return message.channel.send(embeds[0])
-  queueEmbed = await message.channel.send(
-    `**Current Page - ${currentPage + 1}/${embeds.length}**`,
-    embeds[currentPage]
-  );
-  let reactionemojis = ["⬅️", "⏹", "➡️"];
-  try {
-    for (const emoji of reactionemojis)
-      await queueEmbed.react(emoji);
-  } catch {}
-
-  const filter = (reaction, user) =>
-    (reactionemojis.includes(reaction.emoji.name) || reactionemojis.includes(reaction.emoji.name)) && message.author.id === user.id;
-  const collector = queueEmbed.createReactionCollector(filter, {
-    time: 45000
+  let cmduser = message.author;
+  if (embeds.length === 1) return message.channel.send({embeds: [embeds[0]]}).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
+  let button_back = new MessageButton().setStyle('SUCCESS').setCustomId('1').setEmoji("833802907509719130").setLabel("Back")
+  let button_home = new MessageButton().setStyle('DANGER').setCustomId('2').setEmoji("🏠").setLabel("Home")
+  let button_forward = new MessageButton().setStyle('SUCCESS').setCustomId('3').setEmoji('832598861813776394').setLabel("Forward")
+  const allbuttons = [new MessageActionRow().addComponents([button_back, button_home, button_forward])]
+  let prefix = client.settings.get(message.guild.id, "prefix");
+  //Send message with buttons
+  let swapmsg = await message.channel.send({   
+      content: `***Click on the __Buttons__ to swap the Pages***`,
+      embeds: [embeds[0]], 
+      components: allbuttons
   });
-
-  collector.on("collect", async (reaction, user) => {
-    try {
-      if (reaction.emoji.name === reactionemojis[2] || reaction.emoji.id === reactionemojis[2]) {
-        if (currentPage < embeds.length - 1) {
-          currentPage++;
-          queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
-        } else {
-          currentPage = 0
-          queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
+  //create a collector for the thinggy
+  const collector = swapmsg.createMessageComponentCollector({filter: (i) => i.isButton() && i.user && i.user.id == cmduser.id && i.message.author.id == client.user.id, time: 180e3 }); //collector for 5 seconds
+  //array of all embeds, here simplified just 10 embeds with numbers 0 - 9
+  collector.on('collect', async b => {
+      if(b.user.id !== message.author.id)
+        return b.reply({content: `❌ **Only the one who typed ${prefix}help is allowed to react!**`, ephemeral: true})
+        //page forward
+        if(b.customId == "1") {
+          //b.reply("***Swapping a PAGE FORWARD***, *please wait 2 Seconds for the next Input*", true)
+            if (currentPage !== 0) {
+              currentPage -= 1
+              await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
+              await b.deferUpdate();
+            } else {
+                currentPage = embeds.length - 1
+                await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
+                await b.deferUpdate();
+            }
         }
-      } else if (reaction.emoji.name === reactionemojis[0] || reaction.emoji.id === reactionemojis[0]) {
-        if (currentPage !== 0) {
-          --currentPage;
-          queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
-        } else {
-          currentPage = embeds.length - 1
-          queueEmbed.edit(`**Current Page - ${currentPage + 1}/${embeds.length}**`, embeds[currentPage]);
-        }
-      } else {
-        collector.stop();
-        reaction.message.reactions.removeAll();
+        //go home
+        else if(b.customId == "2"){
+          //b.reply("***Going Back home***, *please wait 2 Seconds for the next Input*", true)
+            currentPage = 0;
+            await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
+            await b.deferUpdate();
+        } 
+        //go forward
+        else if(b.customId == "3"){
+          //b.reply("***Swapping a PAGE BACK***, *please wait 2 Seconds for the next Input*", true)
+            if (currentPage < embeds.length - 1) {
+                currentPage++;
+                await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
+                await b.deferUpdate();
+            } else {
+                currentPage = 0
+                await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
+                await b.deferUpdate();
+            }
+        
       }
-      await reaction.users.remove(message.author.id);
-    } catch {}
   });
 
 }
+async function swap_pages2_interaction(client, interaction, embeds) {
+  let currentPage = 0;
+  let cmduser = interaction.member.user;
+  if (embeds.length === 1) return interaction.reply({ephemeral: true, embeds: [embeds[0]]}).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
+  let button_back = new MessageButton().setStyle('SUCCESS').setCustomId('1').setEmoji("833802907509719130").setLabel("Back")
+  let button_home = new MessageButton().setStyle('DANGER').setCustomId('2').setEmoji("🏠").setLabel("Home")
+  let button_forward = new MessageButton().setStyle('SUCCESS').setCustomId('3').setEmoji('832598861813776394').setLabel("Forward")
+  const allbuttons = [new MessageActionRow().addComponents([button_back, button_home, button_forward])]
+  let prefix = client.settings.get(interaction.member.guild.id, "prefix");
+  //Send message with buttons
+  let swapmsg = await interaction.reply({   
+      content: `***Click on the __Buttons__ to swap the Pages***`,
+      embeds: [embeds[0]], 
+      components: allbuttons,
+      ephemeral: true
+  });
+  //create a collector for the thinggy
+  const collector = swapmsg.createMessageComponentCollector({filter: (i) => i.isButton() && i.user && i.user.id == cmduser.id && i.message.author.id == client.user.id, time: 180e3 }); //collector for 5 seconds
+  //array of all embeds, here simplified just 10 embeds with numbers 0 - 9
+  collector.on('collect', async b => {
+      if(b.user.id !== cmduser.id)
+        return b.reply({content: `❌ **Only the one who typed ${prefix}help is allowed to react!**`, ephemeral: true})
+        //page forward
+        if(b.customId == "1") {
+          //b.reply("***Swapping a PAGE FORWARD***, *please wait 2 Seconds for the next Input*", true)
+            if (currentPage !== 0) {
+              currentPage -= 1
+              await swapmsg.edit({ephemeral: true,embeds: [embeds[currentPage]], components: allbuttons});
+              await b.deferUpdate();
+            } else {
+                currentPage = embeds.length - 1
+                await swapmsg.edit({ephemeral: true,embeds: [embeds[currentPage]], components: allbuttons});
+                await b.deferUpdate();
+            }
+        }
+        //go home
+        else if(b.customId == "2"){
+          //b.reply("***Going Back home***, *please wait 2 Seconds for the next Input*", true)
+            currentPage = 0;
+            await swapmsg.edit({ephemeral: true,embeds: [embeds[currentPage]], components: allbuttons});
+            await b.deferUpdate();
+        } 
+        //go forward
+        else if(b.customId == "3"){
+          //b.reply("***Swapping a PAGE BACK***, *please wait 2 Seconds for the next Input*", true)
+            if (currentPage < embeds.length - 1) {
+                currentPage++;
+                await swapmsg.edit({ephemeral: true,embeds: [embeds[currentPage]], components: allbuttons});
+                await b.deferUpdate();
+            } else {
+                currentPage = 0
+                await swapmsg.edit({ephemeral: true,embeds: [embeds[currentPage]], components: allbuttons});
+                await b.deferUpdate();
+            }
+        
+      }
+  });
+
+}
+
+function databasing(client, guildid, userid) {
+  if(!client || client == undefined || !client.user || client.user == undefined) return;
+  try {
+    if(userid){
+      client.settings.ensure(userid, {
+        dm: true,
+      })
+      client.queuesaves.ensure(userid, {
+        "TEMPLATEQUEUEINFORMATION": ["queue", "sadasd"]
+      });
+    }
+    if (guildid) {
+      client.musicsettings.ensure(guildid, {
+        "channel": "",
+        "message": ""
+      })
+      client.stats.ensure(guildid, {
+        commands: 0,
+        songs: 0
+      });
+      client.settings.ensure(guildid, {
+        prefix: config.prefix,
+        pruning: true,
+        requestonly: true,
+        unkowncmdmessage: false,
+        defaultvolume: 30,
+        channel: "",
+        language: "en",
+        embed: {
+          "color": ee.color,
+          "thumb": true,
+          "wrongcolor": ee.wrongcolor,
+          "footertext": client.guilds.cache.get(guildid) ? client.guilds.cache.get(guildid).name : ee.footertext,
+          "footericon": client.guilds.cache.get(guildid) ? client.guilds.cache.get(guildid).iconURL({
+            dynamic: true
+          }) : ee.footericon,
+        },
+        volume: "69",
+        
+        showdisabled: true,
+
+        MUSIC: true,
+        FUN: true,
+        ANIME: true,
+        MINIGAMES: true,
+        ECONOMY: true,
+        SCHOOL: true,
+        NSFW: false,
+        VOICE: true,
+        RANKING: true,
+        PROGRAMMING: true,
+        CUSTOMQUEUE: true,
+        FILTER: true,
+        SOUNDBOARD: true,
+
+        djroles: [],
+        djonlycmds: ["autoplay", "clearqueue", "forward", "loop", "jump", "loopqueue", "loopsong", "move", "pause", "resume", "removetrack", "removedupe", "restart", "rewind", "seek", "shuffle", "skip", "stop", "volume"],
+        botchannel: [],
+      });
+    }
+    return;
+  } catch (e) {
+    console.log(String(e.stack).grey.bgRed)
+  }
+}
+
 
 /**
  * @INFO
- * Bot Coded by Tomato#6966 | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js
+ * Bot Coded by Tomato#6966 | https://discord.gg/milrato
  * @INFO
- * Work for Milrato Development | https://milrato.eu
+ * Work for Milrato Development | https://milrato.dev
  * @INFO
- * Please mention Him / Milrato Development, when using this Code!
+ * Please mention him / Milrato Development, when using this Code!
  * @INFO
  */
+
+
