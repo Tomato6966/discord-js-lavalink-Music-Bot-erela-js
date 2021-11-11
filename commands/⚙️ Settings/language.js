@@ -85,7 +85,7 @@ var {
             .setAuthor("Language System Setup", 
             "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/282/flag-united-kingdom_1f1ec-1f1e7.png",
             "https://discord.gg/milrato")
-            .setDescription(eval(client.la[ls]["cmds"]["setup"]["setup-language"]["variable1"]))
+            .setDescription(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable1"]))
           let used1 = false;
           //send the menu msg
           let menumsg = await message.reply({embeds: [MenuEmbed], components: [new MessageActionRow().addComponents(Selection)]})
@@ -93,7 +93,7 @@ var {
           function menuselection(menu) {
             let menuoptiondata = menuoptions.find(v => v.value == menu.values[0])
             let menuoptionindex = menuoptions.findIndex(v => v.value == menu.values[0])
-            if(menu.values[0] == "Cancel") return menu.reply(eval(client.la[ls]["cmds"]["setup"]["setup-language"]["variable2"]))
+            if(menu.values[0] == "Cancel") return menu.reply(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable2"]))
             menu.deferUpdate(); used1 = true;
             handle_the_picks(menuoptionindex, menuoptiondata)
           }
@@ -126,8 +126,8 @@ var {
               let helpmsg = await message.reply({   
                   content: `***Click on a __Button__ to select the Language***`,
                   embeds: [new Discord.MessageEmbed()
-                    .setTitle(eval(client.la[ls]["cmds"]["setup"]["setup-language"]["variable3"]))
-                    .setDescription(eval(client.la[ls]["cmds"]["setup"]["setup-language"]["variable4"]))
+                    .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable3"]))
+                    .setDescription(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable4"]))
                     .setColor(es.color)
                     .setFooter(es.footertext, es.footericon)], 
                   components: allbuttons
@@ -144,7 +144,7 @@ var {
                     let lang = b.customId.replace("language_", "")
                     client.settings.set(message.guild.id, lang, "language");
                     message.reply({embeds: [new Discord.MessageEmbed()
-                      .setTitle(eval(client.la[ls]["cmds"]["setup"]["setup-language"]["variable5"]))
+                      .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable5"]))
                       .setColor(es.color)
                       .setFooter(es.footertext, es.footericon)]
                     });
@@ -169,7 +169,7 @@ var {
             case 1: {
               client.settings.set(message.guild.id, "en", "language");
               return message.reply({embeds: [new Discord.MessageEmbed()
-                .setTitle(eval(client.la[ls]["cmds"]["setup"]["setup-language"]["variable6"]))
+                .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable6"]))
                 .setColor(es.color)
                 .setFooter(es.footertext, es.footericon)]
               });
@@ -177,7 +177,7 @@ var {
             case 2: {
               let thesettings = client.settings.get(message.guild.id, `language`)
               return message.reply({embeds: [new Discord.MessageEmbed()
-                .setTitle(eval(client.la[ls]["cmds"]["setup"]["setup-language"]["variable7"]))
+                .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable7"]))
                 .setColor(es.color)
                 .setFooter(es.footertext, es.footericon)
               ]});

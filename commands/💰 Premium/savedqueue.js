@@ -1,27 +1,26 @@
 const {
-  MessageEmbed
+MessageEmbed
 } = require(`discord.js`);
 const config = require(`${process.cwd()}/botconfig/config.json`);
 var ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 const {
-  TrackUtils
+TrackUtils
 } = require("erela.js");
 const {
-  format,
-  delay,
-  swap_pages,
-  swap_pages2,
-  shuffle
+format,
+delay,
+swap_pages,
+swap_pages2,
+shuffle
 } = require(`${process.cwd()}/handlers/functions`);
 module.exports = {
-  name: `savedqueue`,
-  type: "music",
-  category: `💰 Premium`,
-  aliases: [`savequeue`, `customqueue`, `savedqueue`],
-  description: `Saves the Current Queue onto a Name`,
-  extracustomdesc: "\`savedqueue create\`, \`savedqueue addcurrenttrack\`, \`savedqueue addcurrentqueue\`, \`savedqueue removetrack\`, \`savedqueue removedupes\`, \`savedqueueshowall\`, \`savedqueue showdetails\`, \`savedqueue createsave\`, \`savedqueue delete\`, \`savedqueue play\`, \`savedqueue shuffle\`",
-  usage: `\`savedqueue <Type> <Name> [Options]\`\n
+name: `savedqueue`,
+category: `💰 Premium`,
+aliases: [`savequeue`, `customqueue`, `savedqueue`],
+description: `Saves the Current Queue onto a Name`,
+extracustomdesc: "\`savedqueue create\`, \`savedqueue addcurrenttrack\`, \`savedqueue addcurrentqueue\`, \`savedqueue removetrack\`, \`savedqueue removedupes\`, \`savedqueueshowall\`, \`savedqueue showdetails\`, \`savedqueue createsave\`, \`savedqueue delete\`, \`savedqueue play\`, \`savedqueue shuffle\`",
+usage: `\`savedqueue <Type> <Name> [Options]\`\n
 **Types**:
 > \`create\`, \`addcurrenttrack\`, \`addcurrentqueue\`, \`removetrack\`, \`removedupes\`, \`showall\`, \`showdetails\`, \`createsave\`, \`delete\`, \`play\`, \`shuffle\`
 **Name**:
@@ -29,99 +28,29 @@ module.exports = {
 **Options**:
 > \`pick the track which you want to remove\``,
 
-  run: async (client, message, args, cmduser, text, prefix) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-        if(!client.settings.get(message.guild.id, "MUSIC")){
-          return message.reply({embeds : [new MessageEmbed()
-            .setColor(es.wrongcolor)
-            .setFooter(es.footertext, es.footericon)
-            .setTitle(client.la[ls].common.disabled.title)
-            .setDescription(require(`${process.cwd()}/handlers/functions`).handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
-          ]});
-        }
-    try {
-      let Type = args[0];
-      let Name = args[1];
-      let Options = args.slice(2).join(` `);
-      if (!Type)
+run: async (client, message, args, cmduser, text, prefix) => {
+  
+  let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
+      if(!client.settings.get(message.guild.id, "MUSIC")){
         return message.reply({embeds : [new MessageEmbed()
           .setColor(es.wrongcolor)
           .setFooter(es.footertext, es.footericon)
-          .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable1"]))
-          .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable2"]))
+          .setTitle(client.la[ls].common.disabled.title)
+          .setDescription(require(`${process.cwd()}/handlers/functions`).handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
         ]});
-      switch (Type.toLowerCase()) {
-        case `create`: {
-          if (!Name)
-            return message.reply({embeds :[new MessageEmbed()
-              .setColor(es.wrongcolor)
-              .setFooter(es.footertext, es.footericon)
-              .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable3"]))
-              .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable4"]))
-            ]});
-          if (Name.length > 10)
-            return message.reply({embeds : [new MessageEmbed()
-              .setColor(es.wrongcolor)
-              .setFooter(client.user.username, ee.footericon)
-              .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable5"]))
-              .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable6"]))
-            ]});
-          //if the queue does not exist yet, error
-          if (client.queuesaves.get(message.author.id, `${Name}`))
-            return message.reply({embeds :[new MessageEmbed()
-              .setFooter(es.footertext, es.footericon)
-              .setColor(es.wrongcolor)
-              .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable7"]))
-              .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable8"]))
-            ]});
-         //get the player instance
-        var player = client.manager.players
-        //if no player available return error | aka not playing anything
-        if (!player)
-          return message.reply({embeds : [new MessageEmbed()
-            .setColor(es.wrongcolor)
-            .setFooter(client.user.username, ee.footericon)
-            .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable67"]))
-          ]});
-        //get all tracks
-        const tracks = player.queue;
-        //if there are no other tracks, information
-        if (!tracks.length)
-          return message.reply({embeds : [new MessageEmbed()
-            .setFooter(es.footertext, es.footericon)
-            .setColor(es.wrongcolor)
-            .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable68"]))
-          ]});
-        //get the old tracks from the Name
-        let oldtracks = client.queuesaves.get(message.author.id, `${Name}`);
-        if (!Array.isArray(oldtracks)) oldtracks = [];
-        const newtracks = [];
-
-        if (player.queue.current) {
-          newtracks.push({
-            "title": player.queue.current.title,
-            "url": player.queue.current.uri
-          });
-        }
-        for (const track of tracks)
-          newtracks.push({
-            "title": track.title,
-            "url": track.uri
-          });
-        //define the new customqueue by adding the newtracks to the old tracks
-        let newqueue = oldtracks.concat(newtracks)
-        //save the newcustomqueue into the db
-        client.queuesaves.set(message.author.id, newqueue, `${Name}`);
-        //return susccess message
-        return message.reply({embeds : [new MessageEmbed()
-          .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable69"]))
-          .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable70"]))
-          .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-          .setFooter(es.footertext, es.footericon)
-        ]})
-        }
-        break;
+      }
+  try {
+    let Type = args[0];
+    let Name = args[1];
+    let Options = args.slice(2).join(` `);
+    if (!Type)
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setFooter(es.footertext, es.footericon)
+        .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable1"]))
+        .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable2"]))
+      ]});
+    switch (Type.toLowerCase()) {
       case `addcurrenttrack`: {
         if (!Name)
           return message.reply({embeds : [new MessageEmbed()
@@ -146,7 +75,7 @@ module.exports = {
             .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable16"]))
           ]});
         //get the player instance
-        var player = client.manager.players
+        var player = client.manager.players.get(message.guild.id);
         //if no player available return error | aka not playing anything
         if (!player)
           return message.reply({embeds : [new MessageEmbed()
@@ -203,7 +132,7 @@ module.exports = {
             .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable25"]))
           ]});
         //get the player instance
-        var player = client.manager.players
+        var player = client.manager.players.get(message.guild.id);
         //if no player available return error | aka not playing anything
         if (!player)
           return message.reply({embeds : [new MessageEmbed()
@@ -428,6 +357,7 @@ module.exports = {
         return swap_pages(client, message, description, `Your Saved Queues`)
       }
       break;
+      case `create`:
       case `createsave`:
       case `cs`:
       case `save`: {
@@ -453,7 +383,7 @@ module.exports = {
             .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable66"]))
           ]});
         //get the player instance
-        var player = client.manager.players
+        var player = client.manager.players.get(message.guild.id);
         //if no player available return error | aka not playing anything
         if (!player)
           return message.reply({embeds : [new MessageEmbed()
@@ -464,7 +394,7 @@ module.exports = {
         //get all tracks
         const tracks = player.queue;
         //if there are no other tracks, information
-        if (!tracks.length)
+        if (!tracks || !tracks.length || tracks.length == 0)
           return message.reply({embeds : [new MessageEmbed()
             .setFooter(es.footertext, es.footericon)
             .setColor(es.wrongcolor)
@@ -566,7 +496,7 @@ module.exports = {
           ]});
         const mechannel = message.guild.me.voice.channel;
         //get the player instance
-        var player = client.manager.players
+        var player = client.manager.players.get(message.guild.id);
         let playercreate = false;
         if (!player) {
           player = client.manager.create({
@@ -614,7 +544,8 @@ module.exports = {
           .setFooter(es.footertext, es.footericon)
           .setAuthor(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable89"]), "https://cdn.discordapp.com/emojis/763781458417549352.gif")
           .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable90"]))]})
-        for (const track of [... client.queuesaves.get(message.author.id, `${Name}`)]) {
+        
+        for (const track of client.queuesaves.get(message.author.id, `${Name}`)) {
           try {
             // Advanced way using the title, author, and duration for a precise search.
             const unresolvedTrack = TrackUtils.buildUnresolved({
@@ -628,7 +559,7 @@ module.exports = {
           }
           let res;
           /* old way, --> slow way!
-           try {
+            try {
               // Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
               if(track.url.toLowerCase().includes(`youtu`))
               res = await client.manager.search({query: track.url, source: `youtube`}, message.author);
@@ -662,70 +593,70 @@ module.exports = {
       case `showdetails`:
       case `showdetail`:
       case `details`: {
-        if (!Name)
-          return message.reply({embeds : [new MessageEmbed()
-            .setColor(es.wrongcolor)
-            .setFooter(es.footertext, es.footericon)
-            .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable92"]))
-            .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable93"]))
-          ]});
-        if (Name.length > 10)
-          return message.reply({embeds :[new MessageEmbed()
-            .setColor(es.wrongcolor)
-            .setFooter(client.user.username, ee.footericon)
-            .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable94"]))
-            .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable95"]))
-          ]});
-        //if the queue already exists, then errors
-        if (!client.queuesaves.get(message.author.id, `${Name}`))
-          return message.reply({embeds : [new MessageEmbed()
-            .setFooter(es.footertext, es.footericon)
-            .setColor(es.wrongcolor)
-            .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable96"]))
-            .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable97"]))
-          ]});
-        //get all tracks
-        const tracks = client.queuesaves.get(message.author.id, `${Name}`);
-        //return susccess message
-        let array = [];
-        tracks.map((track, index) => array.push(`**${index})** [${track.title.split(`]`).join(`}`).split(`[`).join(`{`).substr(0, 60)}](${track.url})`)).join(`\n`)
-        return swap_pages(client, message, array, `Detailed Information about: \`${Name}\` [${tracks.length} Tracks]`)
-      }
-      break;
-      default:
+      if (!Name)
         return message.reply({embeds : [new MessageEmbed()
           .setColor(es.wrongcolor)
           .setFooter(es.footertext, es.footericon)
-          .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable98"]))
-          .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable99"]))
+          .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable92"]))
+          .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable93"]))
         ]});
-        break;
-
-      }
-
-    } catch (e) {
-      console.log(String(e.stack).grey.bgRed)
-      return message.reply({embeds :[new MessageEmbed()
-        .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-      ]});
+      if (Name.length > 10)
+        return message.reply({embeds :[new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setFooter(client.user.username, ee.footericon)
+          .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable94"]))
+          .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable95"]))
+        ]});
+      //if the queue already exists, then errors
+      if (!client.queuesaves.get(message.author.id, `${Name}`))
+        return message.reply({embeds : [new MessageEmbed()
+          .setFooter(es.footertext, es.footericon)
+          .setColor(es.wrongcolor)
+          .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable96"]))
+          .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable97"]))
+        ]});
+      //get all tracks
+      const tracks = client.queuesaves.get(message.author.id, `${Name}`);
+      //return susccess message
+      let array = [];
+      tracks.map((track, index) => array.push(`**${index})** [${track.title.split(`]`).join(`}`).split(`[`).join(`{`).substr(0, 60)}](${track.url})`)).join(`\n`)
+      return swap_pages(client, message, array, `Detailed Information about: \`${Name}\` [${tracks.length} Tracks]`)
     }
+    break;
+    default:
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setFooter(es.footertext, es.footericon)
+        .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable98"]))
+        .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable99"]))
+      ]});
+      break;
+
+    }
+
+  } catch (e) {
+    console.log(String(e.stack).grey.bgRed)
+    return message.reply({embeds :[new MessageEmbed()
+      .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
+      .setTitle(client.la[ls].common.erroroccur)
+      .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable100"]))
+    ]});
   }
+}
 };
 Object.size = function (obj) {
-  var size = 0,
-    key;
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) size++;
-  }
-  return size;
+var size = 0,
+  key;
+for (key in obj) {
+  if (obj.hasOwnProperty(key)) size++;
+}
+return size;
 };
 /**
  * @INFO
  * Bot Coded by Tomato#6966 | https://discord.gg/milrato
  * @INFO
- * Work for Milrato Development | https://milrato.dev
+ * Work for Milrato Development | https://milrato.eu
  * @INFO
  * Please mention him / Milrato Development, when using this Code!
  * @INFO
