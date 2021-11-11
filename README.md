@@ -86,6 +86,24 @@ Well then skip step **` 5. `**
 [![Musicium Music Bot](https://cdn.discordapp.com/attachments/742446682381221938/770055673965707264/test1.png)](https://musicium.musicium.dev)
 [![Milrato Multi Bot](https://cdn.discordapp.com/attachments/742446682381221938/770056826724679680/test1.png)](https://milrato.milrato.dev)
 
+***
+
 # Credits
 
 > If consider using this Bot, make sure to credit me!
+
+***
+
+## Contributing on LANGUAGE SYSTEM
+
+> - ` 1. ` Copy a .json file in `languages`
+> 
+> - ` 2. ` Replace the Text, which aren't variables
+> 
+> - ` 3. ` Create a Pull Request
+
+***
+
+## TODO:
+
+> - `40% is Language able` ... finish the rest of it!
