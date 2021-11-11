@@ -8,7 +8,7 @@
 
 ***
 
-# 🖤 Replit.com Version | [FORK IT!](https://replit.com/@OxyTomato/Lava-Music)
+# 🖤 Replit.com Version | [FORK IT!](https://replit.com/@OxyTomato/Lava-Music?v=1)
 
 ***
 
