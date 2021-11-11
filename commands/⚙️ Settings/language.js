@@ -149,19 +149,19 @@ var {
                       .setFooter(es.footertext, es.footericon)]
                     });
                     edited = true;
-                    helpmsg.edit({content: `Time has ended type ${prefix}setup-language again!`, embeds: helpmsg.embeds[0], components: alldisabledbuttons})
+                    helpmsg.edit({content: `Time has ended type ${prefix}setup-language again!`, embeds: helpmsg.embeds[0], components: []})
                   }
               });
               collector.on('end', collected => {
                 if(!edited){
                   edited = true;
-                  helpmsg.edit({content: `Time has ended type ${prefix}setup-language again!`, embeds: helpmsg.embeds[0], components: alldisabledbuttons})
+                  helpmsg.edit({content: `Time has ended type ${prefix}setup-language again!`, embeds: helpmsg.embeds[0], components: []})
                 }
               });
               setTimeout(()=>{
                 if(!edited){
                   edited = true;
-                  helpmsg.edit({content: `Time has ended type ${prefix}setup-language again!`, embeds: helpmsg.embeds[0], components: alldisabledbuttons})
+                  helpmsg.edit({content: `Time has ended type ${prefix}setup-language again!`, embeds: helpmsg.embeds[0], components: []})
                 }
               }, 180e3 + 150)
               return;
