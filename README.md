@@ -8,7 +8,7 @@
 
 ***
 
-# 🖤 Replit.com Version | [FORK IT!](Fork this [Repl.it](https://replit.com/@OxyTomato/discord-js-lavalink-Music-Bot-erela-js))
+# 🖤 Replit.com Version | [FORK IT!](https://replit.com/@OxyTomato/discord-js-lavalink-Music-Bot-erela-js)
 
 ***
 
