@@ -1,0 +1,37 @@
+server: # REST and WS server
+  port: 2333
+  address: 0.0.0.0
+lavalink:
+  server:
+    password: "youshallnotpass"
+    sources:
+      youtube: true
+      bandcamp: true
+      soundcloud: true
+      twitch: true
+      vimeo: true
+      mixer: true
+      http: true
+      local: false
+    bufferDurationMs: 250
+    youtubePlaylistLoadLimit: 5   # 5 Means ... 500 Songs maximum / Playlist
+    youtubeSearchEnabled: true
+    soundcloudSearchEnabled: true
+    gc-warnings: true
+    #ratelimit:
+      #ipBlocks: ["Ipv6/48", "OTHER_Ipv6/48"]   # list of ip blocks
+      #strategy: "RotateOnBan"   # RotateOnBan | LoadBalance | NanoSwitch | RotatingNanoSwitch
+metrics:
+  prometheus:
+    enabled: false
+    endpoint: /metrics
+sentry:
+  dsn: ""
+logging:
+  file:
+    max-history: 10
+    max-size: 100MB
+  path: ./logs/
+  level:
+    root: INFO
+    lavalink: INFO
