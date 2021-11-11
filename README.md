@@ -62,9 +62,9 @@ Well then skip step **` 5. `**
 
 ## How to enable the Slash Commands?
 
-> ` 1. ` Start the Bot!
+> <kbd>1.</kbd> Start the Bot!
 > 
-> ` 2. ` type: `?deploy` or `@BOT deploy`, for GLOBAL Slash Commands (for all Servers and all new Servers)
+> <kbd>2.</kbd> type: `?deploy` or `@BOT deploy`, for GLOBAL Slash Commands (for all Servers and all new Servers)
 > OR: Type: `?deply [SERVER_ID]` for GUILD SLASH COMMANDS (just for this Server)
 
 <br/>
@@ -96,11 +96,11 @@ Well then skip step **` 5. `**
 
 ## Contributing on LANGUAGE SYSTEM
 
-> - ` 1. ` Copy a .json file in `languages`
+> <kbd>1.</kbd> Copy a .json file in `languages`
 > 
-> - ` 2. ` Replace the Text, which aren't variables
+> <kbd>2.</kbd> Replace the Text, which aren't variables
 > 
-> - ` 3. ` Create a Pull Request
+> <kbd>3.</kbd> Create a Pull Request
 
 ***
 
