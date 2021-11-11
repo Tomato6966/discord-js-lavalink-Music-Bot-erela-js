@@ -12,22 +12,22 @@
 
 ## Installation | How to use the Bot
 
-> **<kdb>1.</kdb>** Install [node.js v16.6+](https://nodejs.org/en) or higher
+> **<kbd>1.</kbd>** Install [node.js v16.6+](https://nodejs.org/en) or higher
 > 
-> **2.** Download this repo and unzip it | or `git clone https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js`
+> **<kbd>2.</kbd>** Download this repo and unzip it | or `git clone https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js`
 > 
-> **3.** Install all of the packages with **`npm install`** | the important packages are   **`npm install discord.js@latest erela.js`**
+> **<kbd>3.</kbd>** Install all of the packages with **`npm install`** | the important packages are   **`npm install discord.js@latest erela.js`**
 > 
-> **4** Fill in the parameters, RIGHT in `botconfig/config.json`!
+> **<kbd>4.</kbd>** Fill in the parameters, RIGHT in `botconfig/config.json`!
 > 
-> **5.** [Download Lavalink](https://github.com/freyacodes/Lavalink/releases/download/3.4/Lavalink.jar) and download Java 13 (Java 11 recommended)
+> **<kbd>5.</kbd>** [Download Lavalink](https://github.com/freyacodes/Lavalink/releases/download/3.4/Lavalink.jar) and download Java 13 (Java 11 recommended)
 > 
-> **5.1** Put the `lavalink.jar` File in the Same Repository as your Bot `index.js`, and maybe adjust `application.yml` (and `config.json`) 
+> **<kbd>5.1</kbd>** Put the `lavalink.jar` File in the Same Repository as your Bot `index.js`, and maybe adjust `application.yml` (and `config.json`) 
 > 
-> **5.2** Run the Lavalink file with: **`java -jar Lavalink.jar`**
+> **<kbd>5.2</kbd>** Run the Lavalink file with: **`java -jar Lavalink.jar`**
 > **MAKE SURE THAT THERE IS THE `application.yml` FILE OTHERWISE IT WILL NOT WORK!
 > 
-> **6.** start the bot with **`node index.js` / `node .` / `npm start`**
+> **<kbd>6.</kbd>** start the bot with **`node index.js` / `node .` / `npm start`**
 
 #### **NOTE:**
 > *If you are having errors/problems with starting delete the package.json file and do, before you install the packages `npm init`*
