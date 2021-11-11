@@ -32,10 +32,6 @@
 #### **NOTE:**
 > *If you are having errors/problems with starting delete the package.json file and do, before you install the packages `npm init`*
 
-<br/>
-
-<br/>
-
 ***
 
 # Don't want to host your OWN **LAVALINK** ?
