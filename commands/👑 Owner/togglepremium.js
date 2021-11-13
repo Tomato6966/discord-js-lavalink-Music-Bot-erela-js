@@ -9,7 +9,7 @@ const {
     category: `👑 Owner`,
     description: `ENABLE / DISABLE the PREMIUM - STATE of a GUILD`,
     usage: `togglepremium <GUILDID>`,
-    cooldown: 360,
+    cooldown: 5,
     run: async (client, message, args, cmduser, text, prefix) => {
       let es = client.settings.get(message.guild.id, "embed"); let ls = client.settings.get(message.guild.id, "language")
       if (!config.ownerIDS.includes(message.author.id))
@@ -27,7 +27,7 @@ const {
               owner.send(`❌ Your Guild is no longer a \`PREMIUM-GUILD\``).catch(()=>{});
             }).catch(()=>{});
           }
-          return message.reply(`✅ **The Guild ${guild ? guild.name : args[0]} is now __no longer__ a \`PREMIUM-GUILD\`**`)
+          return message.reply(`✅ **The Guild ${guild && guild.name ? guild.name : args[0]} is now __no longer__ a \`PREMIUM-GUILD\`**`)
         } else {
           client.premium.push("global", args[0], "guilds");
           let guild = client.guilds.cache.get(args[0]);
