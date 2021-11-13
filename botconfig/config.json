@@ -12,6 +12,8 @@
    "debug-discordjs-logs": false,
    "show-serverjoins": false,
    
+   "deleteBeforePruningMessages": true,
+   
    "status": {
       "text": "{prefix}help | played {songsplayed} Songs on {guildcount} Guilds | Support: discord.gg/milrato",
       "type": "PLAYING",
