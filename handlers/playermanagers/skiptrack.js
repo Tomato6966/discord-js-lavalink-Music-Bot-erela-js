@@ -60,7 +60,7 @@ async function skiptrack(client, message, args, type, slashCommand) {
     }
   } catch (e) {
     console.log(e)
-    if(slashCommand)
+    if(slashCommand && slashCommand.isCommand())
       return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable1"]))
@@ -75,7 +75,7 @@ async function skiptrack(client, message, args, type, slashCommand) {
 
   async function song_() {
     if (!res.tracks[0]){
-      if(slashCommand) 
+      if(slashCommand && slashCommand.isCommand()) 
       return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
@@ -127,7 +127,7 @@ async function skiptrack(client, message, args, type, slashCommand) {
   //function ffor playist
   async function playlist_() {
     if (!res.tracks[0]){
-      if(slashCommand) 
+      if(slashCommand && slashCommand.isCommand()) 
       return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
@@ -191,7 +191,7 @@ async function skiptrack(client, message, args, type, slashCommand) {
       .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
         dynamic: true
       }))
-      if(slashCommand) slashCommand.reply({ephemeral: true, embeds: [playlistembed]})
+      if(slashCommand && slashCommand.isCommand()) slashCommand.reply({ephemeral: true, embeds: [playlistembed]})
       else message.channel.send({embeds: [playlistembed]})
       //Update the Music System Message - Embed
       client.updateMusicSystem(player);

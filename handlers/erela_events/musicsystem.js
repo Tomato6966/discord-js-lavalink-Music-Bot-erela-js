@@ -1,5 +1,5 @@
 const { MessageEmbed, MessageButton, MessageActionRow, MessageSelectMenu} = require("discord.js")
-const { check_if_dj, autoplay, escapeRegex, format, duration, createBar } = require("../functions");
+const { check_if_dj, autoplay, escapeRegex, format, duration, createBar, delay } = require("../functions");
 const config = require(`${process.cwd()}/botconfig/config.json`);
 const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
@@ -325,6 +325,7 @@ module.exports = client => {
     })
     //this was step 1 now we need to code the REQUEST System...
 
+
     client.on("messageCreate", async message => {
         if(!message.guild) return;
         client.musicsettings.ensure(message.guild.id, {
@@ -338,12 +339,16 @@ module.exports = client => {
         //if not the right channel return
         if(musicChannelId != message.channel.id) return;
         //Delete the message once it got sent into the channel, bot messages after 5 seconds, user messages instantly!
-        if (message.author.id === client.user.id) 
-            setTimeout(()=>{try{message.delete().catch(() => {setTimeout(()=>{try{message.delete().catch(() => {});}catch(e){ }}, 5000)});}catch(e){setTimeout(()=>{try{message.delete().catch(() => {});}catch(e){ }}, 5000)}}, 5000)
-        else 
-            {
-              try{message.delete().catch(() => {setTimeout(()=>{try{message.delete().catch(() => {});}catch(e){ }}, 5000)});}catch(e){setTimeout(()=>{try{message.delete().catch(() => {});}catch(e){ }}, 5000)}
-            }
+        if (message.author.id === client.user.id) {
+          await delay(5000);
+          if(!message.deleted){
+            message.delete().catch((e) => {  console.log(e) })
+          }
+        } else  {
+          if(!message.deleted){
+            message.delete().catch((e) => {  console.log(e) })
+          }
+        }
         if (message.author.bot) return; // if the message  author is a bot, return aka ignore the inputs
         var prefix = client.settings.get(message.guild.id, "prefix")
         //get the prefix regex system

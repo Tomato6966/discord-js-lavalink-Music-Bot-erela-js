@@ -48,7 +48,7 @@ async function request(client, message, args, type, slashCommand) {
   async function song_() {
     //if no tracks found return info msg
     if (!res.tracks[0]){
-      if(slashCommand)
+      if(slashCommand && slashCommand.isCommand())
       return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
@@ -93,7 +93,7 @@ async function request(client, message, args, type, slashCommand) {
   //function for playist
   async function playlist_() {
     if (!res.tracks[0]){
-      if(slashCommand)
+      if(slashCommand && slashCommand.isCommand())
         return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")

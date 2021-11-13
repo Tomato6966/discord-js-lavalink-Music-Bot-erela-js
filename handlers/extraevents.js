@@ -51,7 +51,7 @@ module.exports = client => {
     } 
   }
 
-  client.updateMusicSystem = async (player) => {
+  client.updateMusicSystem = async (player, leave = false) => {
     if (client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5) {
       client.logger("Update Music System called and executed")
       let messageId = client.musicsettings.get(player.guild, "message");
@@ -68,8 +68,8 @@ module.exports = client => {
       if (!message) message = await channel.messages.fetch(messageId).catch(() => {}) || false;
       if (!message) return client.logger("Music System - Message not found!")
       //edit the message so that it's right!
-      var data = require(`${process.cwd}/handlers/erela_events/musicsystem`).generateQueueEmbed(client, player.guild, true)
-      message.edit(data).catch(() => {})
+      var data = require(`${process.cwd()}/handlers/erela_events/musicsystem`).generateQueueEmbed(client, player.guild, leave)
+      message.edit(data).catch((e) => { console.log(e) })
     }
   }
 
@@ -116,3 +116,5 @@ module.exports = client => {
     }
   }
 }
+
+

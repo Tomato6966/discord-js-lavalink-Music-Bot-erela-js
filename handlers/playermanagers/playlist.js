@@ -47,7 +47,7 @@ async function playlist(client, message, args, type, slashCommand = false) {
       };
     } catch (e) {
       console.log(e.stack ? String(e.stack).grey : String(e).grey)
-      if(slashCommand)
+      if(slashCommand && slashCommand.isCommand())
         return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable1"]))
@@ -65,7 +65,7 @@ async function playlist(client, message, args, type, slashCommand = false) {
     }
 
     if (!res.tracks[0]){
-      if(slashCommand)
+      if(slashCommand && slashCommand.isCommand())
         return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
@@ -110,14 +110,14 @@ async function playlist(client, message, args, type, slashCommand = false) {
       .addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
       .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
       
-    if(slashCommand) slashCommand.reply({ephemeral: true, embeds: [playlistembed]}).catch(() => {});
+    if(slashCommand && slashCommand.isCommand()) slashCommand.reply({ephemeral: true, embeds: [playlistembed]}).catch(() => {});
     else message.channel.send({embeds: [playlistembed]}).catch(() => {})
     //Update the Music System Message - Embed
     client.updateMusicSystem(player);
   } catch (e) {
     console.log(e.stack ? String(e.stack).grey : String(e).grey)
     
-    if(slashCommand)
+    if(slashCommand && slashCommand.isCommand())
     return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
       .setColor(ee.wrongcolor)
       .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")

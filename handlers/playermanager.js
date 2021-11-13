@@ -8,9 +8,6 @@ module.exports = async (client, message, args, type, slashCommand = false, extra
   let method = type.includes(":") ? type.split(":") : Array(type)
   if (!message.guild) return;
   //start typing
-  if(!slashCommand){
-    await message.channel.sendTyping();
-  }
   //just visual for the console
   
   let ls = client.settings.get(message.guild.id, "language");

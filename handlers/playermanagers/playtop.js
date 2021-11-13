@@ -51,7 +51,7 @@ async function playtop(client, message, args, type, slashCommand) {
     //if no tracks found return info msg
 
     if (!res.tracks[0]){
-      if(slashCommand)
+      if(slashCommand && slashCommand.isCommand())
       return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
@@ -109,7 +109,7 @@ async function playtop(client, message, args, type, slashCommand) {
       .addField("⌛ Duration: ", `\`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
       .addField("💯 Song By: ", `\`${res.tracks[0].author}\``, true)
       .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-    if(slashCommand) slashCommand.reply({ephemeral: true, embeds: [playembed]}).catch(() => {});
+    if(slashCommand && slashCommand.isCommand()) slashCommand.reply({ephemeral: true, embeds: [playembed]}).catch(() => {});
     else message.channel.send({embeds: [playembed]}).catch(() => {});
     //Update the Music System Message - Embed
     client.updateMusicSystem(player);
@@ -118,7 +118,7 @@ async function playtop(client, message, args, type, slashCommand) {
   async function playlist_() {
 
     if (!res.tracks[0]){
-      if(slashCommand)
+      if(slashCommand && slashCommand.isCommand())
         return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
@@ -180,11 +180,11 @@ async function playtop(client, message, args, type, slashCommand) {
       .addField("Enqueued", `\`${res.tracks.length}\``, true)
     //if bot allowed to send embed, do it otherwise pure txt msg
     if (message.guild.me.permissionsIn(message.channel).has("EMBED_LINKS")){
-      if(slashCommand)
+      if(slashCommand && slashCommand.isCommand())
         return slashCommand.reply({ephemeral: true, embeds: [playlistembed]}).catch(() => {});
       message.channel.send({embeds: [playlistembed]}).catch(() => {});
     } else{
-      if(slashCommand)
+      if(slashCommand && slashCommand.isCommand())
         return slashCommand.reply({ephemeral: true, content: [eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable6"])]}).catch(() => {});
       message.channel.send({content: [eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable6"])]}).catch(() => {});
     }

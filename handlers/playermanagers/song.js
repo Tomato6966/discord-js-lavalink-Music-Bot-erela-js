@@ -62,7 +62,7 @@ async function song(client, message, args, type, slashCommand, extras) {
     }
   } catch (e) {
     console.log(e)
-    if(slashCommand)
+    if(slashCommand && slashCommand.isCommand())
       return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable1"]))
@@ -77,7 +77,7 @@ async function song(client, message, args, type, slashCommand, extras) {
 
   async function song_() {
     if (!res.tracks[0]){
-      if(slashCommand) 
+      if(slashCommand && slashCommand.isCommand()) 
       return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
@@ -122,7 +122,7 @@ async function song(client, message, args, type, slashCommand, extras) {
         .addField("⌛ Duration: ", `\`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
         .addField("💯 Song By: ", `\`${res.tracks[0].author}\``, true)
         .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-      if(slashCommand) slashCommand.reply({ephemeral: true, embeds: [playembed]})
+      if(slashCommand && slashCommand.isCommand()) slashCommand.reply({ephemeral: true, embeds: [playembed]})
       else message.channel.send({embeds: [playembed]})
     }
     //Update the Music System Message - Embed
@@ -131,7 +131,7 @@ async function song(client, message, args, type, slashCommand, extras) {
   //function ffor playist
   async function playlist_() {
     if (!res.tracks[0]){
-      if(slashCommand) 
+      if(slashCommand && slashCommand.isCommand()) 
       return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
@@ -187,7 +187,7 @@ async function song(client, message, args, type, slashCommand, extras) {
         .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
           dynamic: true
         }))
-      if(slashCommand) {
+      if(slashCommand && slashCommand.isCommand()) {
         try{
           slashCommand.reply({ephemeral: true, embeds: [playlistembed]})
         }catch{

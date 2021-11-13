@@ -13,6 +13,9 @@ var {
 async function search(client, message, args, type, slashCommand) {
   let ls = client.settings.get(message.guild.id, "language")
   var search = args.join(" ");
+  if(!slashCommand){
+    await message.channel.sendTyping();
+  }
   try {
     var res;
     var player = client.manager.players.get(message.guild.id);
@@ -49,7 +52,7 @@ async function search(client, message, args, type, slashCommand) {
       };
     } catch (e) {
       console.log(e.stack ? String(e.stack).grey : String(e).grey)
-      if(slashCommand)
+      if(slashCommand && slashCommand.isCommand())
       return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable1"]))
@@ -99,7 +102,7 @@ async function search(client, message, args, type, slashCommand) {
         .addOptions(songoptions)
       //send the menu msg
       let menumsg;
-      if(slashCommand){
+      if(slashCommand && slashCommand.isCommand()){
         menumsg = await message.channel.send({
           embeds: [
             new MessageEmbed()
@@ -141,7 +144,7 @@ async function search(client, message, args, type, slashCommand) {
           collector.stop();
           menu.deferUpdate();
           if(menu.values[0] == "Cancel"){
-            if(slashCommand) {
+            if(slashCommand && slashCommand.isCommand()) {
               return slashCommand.reply({ephemeral: true,embeds: [new MessageEmbed()
                 .setColor(ee.wrongcolor)
                 .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable4"]))
@@ -194,7 +197,7 @@ async function search(client, message, args, type, slashCommand) {
               .addField("⌛ Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
               .addField("💯 Song By: ", `\`${track.author}\``, true)
               .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-            if(slashCommand){
+            if(slashCommand && slashCommand.isCommand()){
               await slashCommand.reply({ephemeral: true,embeds: [embed3]}).catch(() => {});
             } else {
               await message.channel.send({embeds: [embed3]}).catch(() => {});
@@ -216,7 +219,7 @@ async function search(client, message, args, type, slashCommand) {
 
   } catch (e) {
     console.log(e.stack ? String(e.stack).grey : String(e).grey)
-    if(slashCommand){
+    if(slashCommand && slashCommand.isCommand()){
       return slashCommand.reply({ephemeral: true,embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")

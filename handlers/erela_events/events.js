@@ -21,11 +21,38 @@ var {
 
   playercreated = new Map(),
   collector = false,
-  mi;
+  mi,
+  playerintervals = new Map();
 module.exports = (client) => {
   client.manager
     .on("playerCreate", async (player) => {
-      playercreated.set(player.guild)
+      playercreated.set(player.guild, true)
+      var interval = setInterval(async() => {
+        if (client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5) {
+          client.logger("Music System - Relevant Checker - Checkingfor unrelevant Messages")
+          let messageId = client.musicsettings.get(player.guild, "message");
+          //try to get the guild
+          let guild = client.guilds.cache.get(player.guild);
+          if (!guild) return client.logger("Music System - Relevant Checker - Guild not found!")
+          //try to get the channel
+          let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
+          if (!channel) channel = await guild.channels.fetch(client.musicsettings.get(player.guild, "channel")).catch(()=>{}) || false
+          if (!channel) return client.logger("Music System - Relevant Checker - Channel not found!")
+          if(!channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.MANAGE_MESSAGES)) return client.logger("Music System - Relevant Checker - Missing Permissions")
+          //try to get the channel
+          let messages = await channel.messages.fetch();
+          if(messages.filter(m => m.id != messageId).size > 0){
+            channel.bulkDelete(messages.filter(m => m.id != messageId)).catch(()=>{})
+            .then(messages => client.logger(`Music System - Relevant Checker - Bulk deleted ${messages.size} messages`))
+          } else {
+            client.logger("Music System - Relevant Checker - No Relevant Messages")
+          }
+          //edit the message so that it's right!
+          var data = require(`${process.cwd()}/handlers/erela_events/musicsystem`).generateQueueEmbed(client, player.guild, true)
+          message.edit(data).catch((e) => { console.log(e) })
+        }
+      }, 60000);
+      playerintervals.set(player.guild, interval)
     })
     .on("playerMove", async (player, oldChannel, newChannel) => {
       if (!newChannel) {
@@ -40,12 +67,15 @@ module.exports = (client) => {
       }
     })
     .on("playerDestroy", async (player) => {
-
+      //clear the interval for the music system
+      clearInterval(playerintervals.get(player.guild))
+      playerintervals.delete(player.guild);
+      //
       if (player.textChannel && player.guild) {
         //update the last Played Song Message
         client.editLastPruningMessage(player, "\n⛔️ SONG & QUEUE ENDED! | Player got DESTROYED (stopped)!")
         //Update the Music System Message - Embed
-        client.updateMusicSystem(player);
+        client.updateMusicSystem(player, true);
 
       }
 
@@ -101,7 +131,9 @@ module.exports = (client) => {
 
         //Update the Music System Message - Embed
         client.updateMusicSystem(player);
-
+        if(client.musicsettings.get(player.guild, "channel") == player.textChannel) {
+          return client.logger("No PRUNING-Message sent, because Player-TextChannel == Music System Text Channel")
+        }
         if (player.textChannel && player.get("previoustrack")) {
           if (!collector.ended) {
             try {
@@ -445,7 +477,7 @@ module.exports = (client) => {
         
         if (!player.queue || !player.queue.current) {
           //Update the Music System Message - Embed
-          client.updateMusicSystem(player);
+          client.updateMusicSystem(player, true);
   
           //if afk is enbaled return and not destroy the PLAYER
           if (player.get(`afk`)) {
