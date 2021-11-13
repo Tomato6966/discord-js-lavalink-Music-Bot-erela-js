@@ -11,6 +11,9 @@
 
    "debug-discordjs-logs": false,
    "show-serverjoins": false,
+   "show_loaded_commands": false,
+   "show_loaded_events": false,
+   
    
    "deleteMessagesBeforeTheLastSongPlayedMessages": true,
    
