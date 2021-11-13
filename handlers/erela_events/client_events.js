@@ -60,30 +60,31 @@ module.exports = (client) => {
       }
     }
   })
-  //Auto Leave Channel on EMPTY
+  //Auto Leave Channel on EMPTY OR EVERYONE IS DEAFED!
   client.on("voiceStateUpdate", async (oS, nS) => {
     if (oS.channelId && (!nS.channelId || nS.channelId)) {
       var player = client.manager.players.get(nS.guild.id);
       if (player && oS.channelId == player.voiceChannel) {
         if ((!oS.streaming && nS.streaming) || (oS.streaming && !nS.streaming) ||
-          /*(!oS.serverDeaf && nS.serverDeaf) ||*/ (oS.serverDeaf && !nS.serverDeaf) ||
-          (!oS.serverMute && nS.serverMute) || (oS.serverMute && !nS.serverMute) ||
-          /*(!oS.selfDeaf && nS.selfDeaf) ||*/ (oS.selfDeaf && !nS.selfDeaf) ||
-          (!oS.selfMute && nS.selfMute) || (oS.selfMute && !nS.selfMute) ||
-          (!oS.selfVideo && nS.selfVideo) || (oS.selfVideo && !nS.selfVideo)) return; //not the right voicestate
+          (!oS.serverMute && nS.serverMute && (!nS.serverDeaf && !nS.selfDeaf)) || (oS.serverMute && !nS.serverMute && (!nS.serverDeaf && !nS.selfDeaf)) ||
+          (!oS.selfMute && nS.selfMute && (!nS.serverDeaf && !nS.selfDeaf)) || (oS.selfMute && !nS.selfMute && (!nS.serverDeaf && !nS.selfDeaf)) ||
+          (!oS.selfVideo && nS.selfVideo) || (oS.selfVideo && !nS.selfVideo)) 
+        return //not the right voicestate
         //if player exist, but not connected or channel got empty (for no bots)
-        if (config.settings.leaveOnEmpty_Channel.enabled && player && (oS.channel.members.filter(mem => !mem.user.bot && mem.voice.deaf !== true && mem.voice.selfDeaf !== true).size < 1)) {
-            setTimeout(async () => {
+        if (config.settings.leaveOnEmpty_Channel.enabled && player && (!oS.channel.members || oS.channel.members.size == 0 || oS.channel.members.filter(mem => !mem.user.bot && !mem.voice.deaf && !mem.voice.selfDeaf).size < 1)) {
+        setTimeout(async () => {
               try {
-                let vc = nS.guild.channels.cache.get(nS.channelId);
-                if(vc) await vc.fetch();
-                if(!vc) vc = await nS.guild.channels.fetch(nS.channelId).catch(()=>{}) || false;
+                let vc = nS.guild.channels.cache.get(player.voiceChannel);
+                if(vc) vc = await vc.fetch();
+                if(!vc) vc = await nS.guild.channels.fetch(player.voiceChannel).catch(()=>{}) || false;
                 if(!vc) return player.destroy();
-                if(vc.members.filter(mem => !mem.user.bot && mem.voice.deaf !== true && mem.voice.selfDeaf !== true).size < 1) {
+                if(!vc.members || vc.members.size == 0 || vc.members.filter(mem => !mem.user.bot && !mem.voice.deaf && !mem.voice.selfDeaf).size < 1) {
                   player.destroy();
+                } else {
+                  console.log(vc.members.size)
                 }
               } catch (e) { console.log(e) }
-            }, config.settings.leaveOnEmpty_Channel.time_delay)
+            }, config.settings.leaveOnEmpty_Channel.time_delay || 30000)
         }
       }
     }
