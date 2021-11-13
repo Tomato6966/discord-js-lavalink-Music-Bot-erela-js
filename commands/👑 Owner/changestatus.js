@@ -55,7 +55,7 @@ module.exports = {
           },
           {
             value: "Cancel",
-            description: `Cancel and stop the Ai-Chat-Setup!`,
+            description: `Cancel and stop the Change-Status!`,
             emoji: "862306766338523166"
           }
         ]
@@ -80,7 +80,7 @@ module.exports = {
         let MenuEmbed = new MessageEmbed()
           .setColor(es.color)
           .setAuthor('Change Status', 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/au-kddi/190/purple-heart_1f49c.png', 'https://discord.gg/milrato')
-          .setDescription(eval(client.la[ls]["cmds"]["setup"]["setup-ticket"]["variable2"]))
+          .setDescription(eval(client.la[ls]["cmds"]["owner"]["changestatus"]["variable4"]))
         //send the menu msg
         let menumsg = await message.reply({
           embeds: [MenuEmbed],
@@ -95,7 +95,7 @@ module.exports = {
         collector.on('collect', menu => {
           if (menu.user.id === cmduser.id) {
             collector.stop();
-            if (menu.values[0] == "Cancel") return menu.reply(eval(client.la[ls]["cmds"]["setup"]["setup-ticket"]["variable3"]))
+            if (menu.values[0] == "Cancel") return menu.reply(eval(client.la[ls]["cmds"]["owner"]["changestatus"]["variable3"]))
             menu.deferUpdate();
             handle_the_picks(menu.values[0])
           } else menu.reply({
@@ -108,7 +108,7 @@ module.exports = {
           menumsg.edit({
             embeds: [menumsg.embeds[0].setDescription(`~~${menumsg.embeds[0].description}~~`)],
             components: [],
-            content: `${collected && collected.first() && collected.first().values ? `<a:yes:833101995723194437> **Selected: \`${collected ? collected.first().values[0] : "Nothing"}\`**` : "❌ **NOTHING SELECTED - CANCELLED**" }`
+            content: `${collected && collected.first() && collected.first().values ? `<:yes:905944886790987796> **Selected: \`${collected ? collected.first().values[0] : "Nothing"}\`**` : "❌ **NOTHING SELECTED - CANCELLED**" }`
           })
         });
       }
@@ -220,7 +220,7 @@ module.exports = {
               },
               {
                 value: "Cancel",
-                description: `Cancel and stop the Ai-Chat-Setup!`,
+                description: `Cancel and stop the Change-Status!`,
                 emoji: "862306766338523166"
               }
             ]
@@ -243,9 +243,9 @@ module.exports = {
 
             //define the embed
             let MenuEmbed = new MessageEmbed()
-              .setColor(es.color)
+              .setColor(es.color) // status type
               .setAuthor('Change Status', 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/au-kddi/190/purple-heart_1f49c.png', 'https://discord.gg/milrato')
-              .setDescription(eval(client.la[ls]["cmds"]["setup"]["setup-ticket"]["variable2"]))
+              .setDescription(`**_What \`type\` of status do you want?_**`)
             //send the menu msg
             let menumsg = await message.reply({
               embeds: [MenuEmbed],
@@ -260,7 +260,7 @@ module.exports = {
             collector.on('collect', menu => {
               if (menu.user.id === cmduser.id) {
                 collector.stop();
-                if (menu.values[0] == "Cancel") return menu.reply(eval(client.la[ls]["cmds"]["setup"]["setup-ticket"]["variable3"]))
+                if (menu.values[0] == "Cancel") return menu.reply(eval(client.la[ls]["cmds"]["owner"]["changestatus"]["variable3"]))
                 menu.deferUpdate();
                 let temptype = menu.values[0]
                 let status = config
@@ -299,7 +299,7 @@ module.exports = {
               menumsg.edit({
                 embeds: [menumsg.embeds[0].setDescription(`~~${menumsg.embeds[0].description}~~`)],
                 components: [],
-                content: `${collected && collected.first() && collected.first().values ? `<a:yes:833101995723194437> **Selected: \`${collected ? collected.first().values[0] : "Nothing"}\`**` : "❌ **NOTHING SELECTED - CANCELLED**" }`
+                content: `${collected && collected.first() && collected.first().values ? `<:yes:905944886790987796> **Selected: \`${collected ? collected.first().values[0] : "Nothing"}\`**` : "❌ **NOTHING SELECTED - CANCELLED**" }`
               })
             });
           }
@@ -399,7 +399,7 @@ module.exports = {
               },
               {
                 value: "Cancel",
-                description: `Cancel and stop the Ai-Chat-Setup!`,
+                description: `Cancel and stop the Change-Status!`,
                 emoji: "862306766338523166"
               }
             ]
@@ -424,7 +424,7 @@ module.exports = {
             let MenuEmbed = new MessageEmbed()
               .setColor(es.color)
               .setAuthor('Change Status', 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/au-kddi/190/purple-heart_1f49c.png', 'https://discord.gg/milrato')
-              .setDescription(eval(client.la[ls]["cmds"]["setup"]["setup-ticket"]["variable2"]))
+              .setDescription(`**_Choose a status \`state\` to change!_**`)
             //send the menu msg
             let menumsg = await message.reply({
               embeds: [MenuEmbed],
@@ -460,7 +460,7 @@ module.exports = {
               menumsg.edit({
                 embeds: [menumsg.embeds[0].setDescription(`~~${menumsg.embeds[0].description}~~`)],
                 components: [],
-                content: `${collected && collected.first() && collected.first().values ? `<a:yes:833101995723194437> **Selected: \`${collected ? collected.first().values[0] : "Nothing"}\`**` : "❌ **NOTHING SELECTED - CANCELLED**" }`
+                content: `${collected && collected.first() && collected.first().values ? `<:yes:905944886790987796> **Selected: \`${collected ? collected.first().values[0] : "Nothing"}\`**` : "❌ **NOTHING SELECTED - CANCELLED**" }`
               })
             });
           }
@@ -481,12 +481,3 @@ module.exports = {
     }
   },
 };
-/**
- * @INFO
- * Bot Coded by Tomato#6966 | https://discord.gg/milrato
- * @INFO
- * Work for Milrato Development | https://milrato.dev
- * @INFO
- * Please mention him / Milrato Development, when using this Code!
- * @INFO
- */
