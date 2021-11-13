@@ -45,7 +45,7 @@ module.exports = async (client, oS, nS) => {
     /**
      * ALWAYS SERVER DEAF THE BOT WHEN JOING
      */
-    if (nS.channelId != oS.channelId && !nS.guild.me.voice.deaf) {
+    if (nS.id === client.user.id && nS.channelId != oS.channelId && !nS.guild.me.voice.deaf) {
         if (nS.guild.me.permissions.has(Permissions.FLAGS.DEAFEN_MEMBERS) || (nS.channel && nS.channel.permissionsFor(nS.guild.me).has(Permissions.FLAGS.DEAFEN_MEMBERS))) {
             nS.setDeaf(true).catch(() => {});
         }
