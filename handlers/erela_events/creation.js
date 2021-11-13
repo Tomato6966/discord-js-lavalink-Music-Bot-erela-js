@@ -5,6 +5,7 @@ var {
     Spotify = require("erela.js-spotify"),
     Deezer = require("erela.js-deezer"),
     Facebook = require("erela.js-facebook"),
+    AppleMusic  = require("erela.js-apple"),
     config = require(`${process.cwd()}/botconfig/config.json`),
   
     clientID = process.env.clientID || config.spotify.clientID,
@@ -16,6 +17,7 @@ var {
           plugins: [
             new Deezer(),
             new Facebook(),
+            new AppleMusic(),
           ],
           send(id, payload) {
             var guild = client.guilds.cache.get(id);
@@ -32,6 +34,7 @@ var {
             }),
             new Deezer(),
             new Facebook(),
+            new AppleMusic(),
           ],
           send(id, payload) {
             var guild = client.guilds.cache.get(id);
