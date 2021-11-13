@@ -1,10 +1,14 @@
 {
    "token": "Bot Token",
-
    "prefix": "?",
    "ownerIDS": [
       "442355791412854784"
    ],
+   
+   "debug-logs": true, 
+   "debug-discordjs": false,
+   "show-serverjoins": false,
+   
    "status": {
       "text": "{prefix}help | played {songsplayed} Songs on {guildcount} Guilds | Support: discord.gg/milrato",
       "type": "PLAYING",
