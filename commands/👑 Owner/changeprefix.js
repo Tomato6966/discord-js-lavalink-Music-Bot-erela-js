@@ -59,7 +59,7 @@ module.exports = {
             embeds: [new MessageEmbed()
               .setFooter(es.footertext, es.footericon)
               .setColor(es.wrongcolor)
-              .setTitle(`❌ Something went wrong`)
+              .setTitle(client.la[ls].common.erroroccur)
               .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
             ]
           })
@@ -68,7 +68,7 @@ module.exports = {
           embeds: [new MessageEmbed()
             .setFooter(es.footertext, es.footericon)
             .setColor(es.color)
-            .setTitle(`<a:yes:833101995723194437> Successfully changed the Prefix`)
+            .setTitle(`👍 Successfully changed the Prefix`)
             .setDescription(`**To change it in this Server use the: \`${prefix}prefix <newprefix>\` Command!**`)
           ]
         })

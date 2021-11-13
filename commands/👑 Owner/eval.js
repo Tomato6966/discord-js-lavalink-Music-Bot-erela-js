@@ -2,8 +2,12 @@ const {
   MessageEmbed,
   Util: {
     splitMessage
-  }
+  },
+  MessageAttachment, MessageActionRow, MessageButton, Collection
 } = require(`discord.js`);
+const Discord = require(`discord.js`);
+const moment = require("moment");
+const ms = require("ms")
 var config = require(`${process.cwd()}/botconfig/config.json`);
 var emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 const {

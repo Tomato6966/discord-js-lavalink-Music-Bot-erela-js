@@ -55,8 +55,8 @@ module.exports = {
           },
           {
             value: "Cancel",
-            description: `Cancel and stop the Ai-Chat-Setup!`,
-            emoji: "862306766338523166"
+            description: `Cancel and stop the Change-Status-Setup!`,
+            emoji: "⛔"
           }
         ]
         //define the selection
@@ -80,7 +80,7 @@ module.exports = {
         let MenuEmbed = new MessageEmbed()
           .setColor(es.color)
           .setAuthor('Change Status', 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/au-kddi/190/purple-heart_1f49c.png', 'https://discord.gg/milrato')
-          .setDescription(eval(client.la[ls]["cmds"]["setup"]["setup-ticket"]["variable2"]))
+          .setDescription(`***Select what you need in the \`Selection\` down below***`)
         //send the menu msg
         let menumsg = await message.reply({
           embeds: [MenuEmbed],
@@ -95,7 +95,7 @@ module.exports = {
         collector.on('collect', menu => {
           if (menu.user.id === cmduser.id) {
             collector.stop();
-            if (menu.values[0] == "Cancel") return menu.reply(eval(client.la[ls]["cmds"]["setup"]["setup-ticket"]["variable3"]))
+            if (menu.values[0] == "Cancel") return menu.reply(`❌ Cancelled the Process`)
             menu.deferUpdate();
             handle_the_picks(menu.values[0])
           } else menu.reply({
@@ -108,7 +108,7 @@ module.exports = {
           menumsg.edit({
             embeds: [menumsg.embeds[0].setDescription(`~~${menumsg.embeds[0].description}~~`)],
             components: [],
-            content: `${collected && collected.first() && collected.first().values ? `<a:yes:833101995723194437> **Selected: \`${collected ? collected.first().values[0] : "Nothing"}\`**` : "❌ **NOTHING SELECTED - CANCELLED**" }`
+            content: `${collected && collected.first() && collected.first().values ? `👍 **Selected: \`${collected ? collected.first().values[0] : "Nothing"}\`**` : "❌ **NOTHING SELECTED - CANCELLED**" }`
           })
         });
       }
@@ -220,8 +220,8 @@ module.exports = {
               },
               {
                 value: "Cancel",
-                description: `Cancel and stop the Ai-Chat-Setup!`,
-                emoji: "862306766338523166"
+                description: `Cancel and stop the Change-Status-Setup!`,
+                emoji: "⛔"
               }
             ]
             //define the selection
@@ -245,7 +245,7 @@ module.exports = {
             let MenuEmbed = new MessageEmbed()
               .setColor(es.color)
               .setAuthor('Change Status', 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/au-kddi/190/purple-heart_1f49c.png', 'https://discord.gg/milrato')
-              .setDescription(eval(client.la[ls]["cmds"]["setup"]["setup-ticket"]["variable2"]))
+              .setDescription(`***Select what you need in the \`Selection\` down below***`)
             //send the menu msg
             let menumsg = await message.reply({
               embeds: [MenuEmbed],
@@ -260,7 +260,7 @@ module.exports = {
             collector.on('collect', menu => {
               if (menu.user.id === cmduser.id) {
                 collector.stop();
-                if (menu.values[0] == "Cancel") return menu.reply(eval(client.la[ls]["cmds"]["setup"]["setup-ticket"]["variable3"]))
+                if (menu.values[0] == "Cancel") return menu.reply(`❌ Cancelled the Process`)
                 menu.deferUpdate();
                 let temptype = menu.values[0]
                 let status = config
@@ -299,7 +299,7 @@ module.exports = {
               menumsg.edit({
                 embeds: [menumsg.embeds[0].setDescription(`~~${menumsg.embeds[0].description}~~`)],
                 components: [],
-                content: `${collected && collected.first() && collected.first().values ? `<a:yes:833101995723194437> **Selected: \`${collected ? collected.first().values[0] : "Nothing"}\`**` : "❌ **NOTHING SELECTED - CANCELLED**" }`
+                content: `${collected && collected.first() && collected.first().values ? `👍 **Selected: \`${collected ? collected.first().values[0] : "Nothing"}\`**` : "❌ **NOTHING SELECTED - CANCELLED**" }`
               })
             });
           }
@@ -399,8 +399,8 @@ module.exports = {
               },
               {
                 value: "Cancel",
-                description: `Cancel and stop the Ai-Chat-Setup!`,
-                emoji: "862306766338523166"
+                description: `Cancel and stop the Change-Status-Setup!`,
+                emoji: "⛔"
               }
             ]
             //define the selection
@@ -424,7 +424,7 @@ module.exports = {
             let MenuEmbed = new MessageEmbed()
               .setColor(es.color)
               .setAuthor('Change Status', 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/au-kddi/190/purple-heart_1f49c.png', 'https://discord.gg/milrato')
-              .setDescription(eval(client.la[ls]["cmds"]["setup"]["setup-ticket"]["variable2"]))
+              .setDescription(`***Select what you need in the \`Selection\` down below***`)
             //send the menu msg
             let menumsg = await message.reply({
               embeds: [MenuEmbed],
@@ -439,7 +439,7 @@ module.exports = {
             collector.on('collect', menu => {
               if (menu.user.id === cmduser.id) {
                 collector.stop();
-                if (menu.values[0] == "Cancel") return menu.reply(eval(client.la[ls]["cmds"]["setup"]["setup-ticket"]["variable3"]))
+                if (menu.values[0] == "Cancel") return menu.reply(`❌ Cancelled the Process`)
                 menu.deferUpdate();
                 let temptype = menu.values[0]
                 client.user.setStatus(temptype)
@@ -460,7 +460,7 @@ module.exports = {
               menumsg.edit({
                 embeds: [menumsg.embeds[0].setDescription(`~~${menumsg.embeds[0].description}~~`)],
                 components: [],
-                content: `${collected && collected.first() && collected.first().values ? `<a:yes:833101995723194437> **Selected: \`${collected ? collected.first().values[0] : "Nothing"}\`**` : "❌ **NOTHING SELECTED - CANCELLED**" }`
+                content: `${collected && collected.first() && collected.first().values ? `👍 **Selected: \`${collected ? collected.first().values[0] : "Nothing"}\`**` : "❌ **NOTHING SELECTED - CANCELLED**" }`
               })
             });
           }
