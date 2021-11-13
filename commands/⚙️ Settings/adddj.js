@@ -44,7 +44,7 @@ module.exports = {
       client.settings.push(message.guild.id, role.id, `djroles`);
       //these lines creates a string with all djroles
       var leftb = client.settings.get(message.guild.id, `djroles`).map(r => `<@&${r}>`);
-      if (leftb.length == 0) leftb = "`not setup`";
+      if (leftb.length == 0) leftb = client.la[ls]["common"]["nodjs"];
       else leftb = String(leftb.join(", "));
 
       return message.reply({embeds : [new MessageEmbed()

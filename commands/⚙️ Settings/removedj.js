@@ -45,7 +45,7 @@ module.exports = {
       client.settings.remove(message.guild.id, role.id, `djroles`);
       //These lines create the String for all left Roles
       var leftb = client.settings.get(message.guild.id, `djroles`).map(r => `<@&${r}>`);
-      if (leftb.length == 0) leftb = "`not setup`";
+      if (leftb.length == 0) leftb = client.la[ls]["common"]["nodjs"];
       else leftb.join(", ");
       //send the success message
       return message.reply({embeds: [new MessageEmbed()
