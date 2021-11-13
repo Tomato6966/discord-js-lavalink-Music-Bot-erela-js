@@ -5,8 +5,11 @@
       "442355791412854784"
    ],
    
+
    "debug-logs": true, 
-   "debug-discordjs": false,
+   "anti-crash-logs": true,
+
+   "debug-discordjs-logs": false,
    "show-serverjoins": false,
    
    "status": {
