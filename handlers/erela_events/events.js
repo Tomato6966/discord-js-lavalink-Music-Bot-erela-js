@@ -77,6 +77,7 @@ module.exports = (client) => {
     })
     .on("trackStart", async (player, track) => {
       try {
+        try { client.stats.inc("global", "songs") } catch (e) { }
         let edited = false;
         if (playercreated.has(player.guild)) {
           player.set("eq", "💣 None");
