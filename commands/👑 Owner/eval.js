@@ -41,42 +41,30 @@ module.exports = {
         ]
       });
     let evaled;
-    try {
-      if (args.join(` `).includes(`token`)) return console.log(`ERROR NO TOKEN GRABBING ;)`.dim);
+    if (args.join(` `).includes(`token`)) return console.log(`ERROR NO TOKEN GRABBING ;)`.dim);
 
-      evaled = await eval(args.join(` `));
-      //make string out of the evaluation
-      let string = inspect(evaled);
-      //if the token is included return error
-      //if (string.includes(client.token)) return console.log(`ERROR NO TOKEN GRABBING ;)`.dim);
-      //define queueembed
-      let evalEmbed = new MessageEmbed()
-        .setTitle(eval(client.la[ls]["cmds"]["owner"]["eval"]["variable3"]))
-        .setColor(es.color);
-      //split the description
-      const splitDescription = splitMessage(string, {
-        maxLength: 2040,
-        char: `\n`,
-        prepend: ``,
-        append: ``
-      });
-      //(over)write embed description
-      evalEmbed.setDescription(eval(client.la[ls]["cmds"]["owner"]["eval"]["variable4"]));
-      //send embed
-      message.channel.send({
-        embeds: [evalEmbed]
-      });
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
-      return message.channel.send({
-        embeds: [new MessageEmbed()
-          .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
-          .setTitle(eval(client.la[ls]["cmds"]["owner"]["eval"]["variable5"]))
-          .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-        ]
-      });
-    }
+    evaled = await eval(args.join(` `));
+    //make string out of the evaluation
+    let string = inspect(evaled);
+    //if the token is included return error
+    //if (string.includes(client.token)) return console.log(`ERROR NO TOKEN GRABBING ;)`.dim);
+    //define queueembed
+    let evalEmbed = new MessageEmbed()
+      .setTitle(eval(client.la[ls]["cmds"]["owner"]["eval"]["variable3"]))
+      .setColor(es.color);
+    //split the description
+    const splitDescription = splitMessage(string, {
+      maxLength: 2040,
+      char: `\n`,
+      prepend: ``,
+      append: ``
+    });
+    //(over)write embed description
+    evalEmbed.setDescription(eval(client.la[ls]["cmds"]["owner"]["eval"]["variable4"]));
+    //send embed
+    message.channel.send({
+      embeds: [evalEmbed]
+    });
   },
 };
 /**

@@ -24,8 +24,6 @@ module.exports = {
           .setDescription(eval(client.la[ls]["cmds"]["owner"]["changename"]["variable2"]))
         ]
       });
-    try {
-
       if (!args[0])
         return message.channel.send({
           embeds: [new MessageEmbed()
@@ -63,16 +61,6 @@ module.exports = {
             ]
           });
         });
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
-      return message.channel.send({
-        embeds: [new MessageEmbed()
-          .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
-          .setTitle(client.la[ls].common.erroroccur)
-          .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-        ]
-      });
-    }
   },
 };
 /**

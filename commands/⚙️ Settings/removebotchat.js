@@ -12,9 +12,8 @@ module.exports = {
     type: "bot",
     run: async (client, message, args, cmduser, text, prefix) => {
     
-      let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    try{
-      
+      let es = client.settings.get(message.guild.id, "embed");
+      let ls = client.settings.get(message.guild.id, "language")
       //get the mentioned channel
       let channel = message.mentions.channels.filter(ch=>ch.guild.id==message.guild.id).first() || message.guild.channels.cache.get(message.content.trim().split(" ")[0]);
       if (!channel)
@@ -55,15 +54,6 @@ module.exports = {
         .setTitle(eval(client.la[ls]["cmds"]["settings"]["removebotchat"]["variable4"]))
         .setDescription(eval(client.la[ls]["cmds"]["settings"]["removebotchat"]["variable5"]))
       ]});
-    } catch (e) {
-        console.log(String(e.stack).grey.bgRed)
-        return message.reply({embeds :[new MessageEmbed()
-            .setColor(es.wrongcolor)
-						.setFooter(es.footertext, es.footericon)
-            .setTitle(client.la[ls].common.erroroccur)
-            .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-        ]});
-    }
   }
 };
 /**

@@ -24,42 +24,25 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
   type: "song",
   run: async (client, message, args, cmduser, text, prefix, player) => {
     
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    if (!client.settings.get(message.guild.id, "MUSIC")) {
+    let es = client.settings.get(message.guild.id, "embed");
+    let ls = client.settings.get(message.guild.id, "language")
+    if (!args[0])
       return message.reply({embeds : [new MessageEmbed()
         .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.disabled.title)
-        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
+        .setTitle(eval(client.la[ls]["cmds"]["music"]["rewind"]["variable1"]))
       ]});
+    let seektime = player.position - Number(args[0]) * 1000;
+    if (seektime >= player.queue.current.duration - player.position || seektime < 0) {
+      seektime = 0;
     }
-    try {
-
-      if (!args[0])
-        return message.reply({embeds : [new MessageEmbed()
-          .setColor(es.wrongcolor)
-          .setTitle(eval(client.la[ls]["cmds"]["music"]["rewind"]["variable1"]))
-        ]});
-      let seektime = player.position - Number(args[0]) * 1000;
-      if (seektime >= player.queue.current.duration - player.position || seektime < 0) {
-        seektime = 0;
-      }
-      //seek to the right time
-      player.seek(Number(seektime));
-      //send success message
-      return message.reply({embeds : [new MessageEmbed()
-        .setTitle(eval(client.la[ls]["cmds"]["music"]["rewind"]["variable2"]))
-        .addField(`${emoji.msg.time} Progress: `, createBar(player))
-        .setColor(es.color)
-      ]});
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-      ]});
-    }
+    //seek to the right time
+    player.seek(Number(seektime));
+    //send success message
+    return message.reply({embeds : [new MessageEmbed()
+      .setTitle(eval(client.la[ls]["cmds"]["music"]["rewind"]["variable2"]))
+      .addField(`${emoji.msg.time} Progress: `, createBar(player))
+      .setColor(es.color)
+    ]});
   }
 };
 /**

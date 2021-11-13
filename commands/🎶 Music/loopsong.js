@@ -20,39 +20,24 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
   type: "song",
   run: async (client, message, args, cmduser, text, prefix, player) => {
     
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    if (!client.settings.get(message.guild.id, "MUSIC")) {
-      return message.reply({embeds :[new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.disabled.title)
-        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
-      ]});
-    }
-    try {
-      //define the Embed
-      const embed = new MessageEmbed()
-        .setTitle(player.trackRepeat ? client.la[ls].cmds.music.loop.track.disabled : client.la[ls].cmds.music.loop.track.enabled)
-        .setColor(es.color)
+    let es = client.settings.get(message.guild.id, "embed");
+    let ls = client.settings.get(message.guild.id, "language")
 
-      //if there is active queue loop, disable it + add embed information
-      if (player.queueRepeat) {
-        embed.setDescription(client.la[ls].cmds.music.loop.andqueue);
-        player.setQueueRepeat(false);
-      }
-      //set track repeat to revers of old track repeat
-      player.setTrackRepeat(!player.trackRepeat);
-      //send informational message
-      return message.reply({embeds :[embed]});
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
-      return message.reply({embeds :[new MessageEmbed()
-        .setColor(es.wrongcolor)
+    //define the Embed
+    const embed = new MessageEmbed()
+      .setTitle(player.trackRepeat ? client.la[ls].cmds.music.loop.track.disabled : client.la[ls].cmds.music.loop.track.enabled)
+      .setColor(es.color)
 
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-      ]});
+    //if there is active queue loop, disable it + add embed information
+    if (player.queueRepeat) {
+      embed.setDescription(client.la[ls].cmds.music.loop.andqueue);
+      player.setQueueRepeat(false);
     }
+    //set track repeat to revers of old track repeat
+    player.setTrackRepeat(!player.trackRepeat);
+    //send informational message
+    return message.reply({embeds :[embed]});
+  
   }
 };
 /**

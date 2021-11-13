@@ -22,32 +22,18 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
   type: "queue",
   run: async (client, message, args, cmduser, text, prefix, player) => {
     
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    if (!client.settings.get(message.guild.id, "MUSIC")) {
-      return message.reply({embeds :[new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.disabled.title)
-        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
-      ]});
-    }
-    try {
-      //if no args return error
-      if (!args[0])
-        return message.reply({embeds : [new MessageEmbed()
-          .setColor(es.wrongcolor)
-          .setTitle(eval(client.la[ls]["cmds"]["music"]["search"]["variable1"]))
-        ]});
-      //search the song for YOUTUBE
-      playermanager(client, message, args, `search:youtube`);
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
+    let es = client.settings.get(message.guild.id, "embed");
+    let ls = client.settings.get(message.guild.id, "language")
+    
+    //if no args return error
+    if (!args[0])
       return message.reply({embeds : [new MessageEmbed()
         .setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
+        .setTitle(eval(client.la[ls]["cmds"]["music"]["search"]["variable1"]))
       ]});
-    }
+    //search the song for YOUTUBE
+    playermanager(client, message, args, `search:youtube`);
+  
   }
 };
 /**

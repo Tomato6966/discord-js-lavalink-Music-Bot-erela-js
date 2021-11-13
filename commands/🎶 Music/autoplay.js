@@ -22,44 +22,20 @@ module.exports = {
   type: "queue",
   run: async (client, message, args, cmduser, text, prefix, player) => {
     
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    if (!client.settings.get(message.guild.id, "MUSIC")) {
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.disabled.title)
-        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
-      ]});
-    }
-    try {
-      //toggle autoplay
-      player.set(`autoplay`, !player.get(`autoplay`))
-      if(player.get(`autoplay`)){
-        try{
-          message.react("♾").catch(()=>{})
-          message.react("833101995723194437").catch(()=>{})
-        }catch{ }
-      }else {
-        try{
-          message.react("♾").catch(()=>{})
-          message.react("833101993668771842").catch(()=>{})
-        }catch{  }
-      }
-      //Send Success Message
-      return message.reply({embeds :[new MessageEmbed()
-        .setColor(es.color)
-        .setTitle(eval(client.la[ls]["cmds"]["music"]["autoplay"]["variable1"]))
-        .setDescription(eval(client.la[ls]["cmds"]["music"]["autoplay"]["variable2"]))
-      ]});
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
-      return message.reply({embeds: [new MessageEmbed()
-        .setColor(es.wrongcolor)
+    let es = client.settings.get(message.guild.id, "embed");
+    let ls = client.settings.get(message.guild.id, "language")
+    //toggle autoplay
+    player.set(`autoplay`, !player.get(`autoplay`)) 
 
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-      ]});
-    }
+    message.react(emoji.react.autoplay_mode).catch(()=>{})
+    message.react(eomji.react.enabled).catch(()=>{})
+
+    //Send Success Message
+    return message.reply({embeds :[new MessageEmbed()
+      .setColor(es.color)
+      .setTitle(eval(client.la[ls]["cmds"]["music"]["autoplay"]["variable1"]))
+      .setDescription(eval(client.la[ls]["cmds"]["music"]["autoplay"]["variable2"]))
+    ]});
   }
 };
 /**

@@ -24,48 +24,33 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
   type: "bot",
   run: async (client, message, args, cmduser, text, prefix, player) => {
     
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    if (!client.settings.get(message.guild.id, "MUSIC")) {
+    let es = client.settings.get(message.guild.id, "embed");
+    let ls = client.settings.get(message.guild.id, "language")
+
+    let channel = message.member.voice.channel;
+    let botchannel = message.guild.me.voice.channel;
+    if (!botchannel)
       return message.reply({embeds :[new MessageEmbed()
         .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.disabled.title)
-        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
+        .setTitle(eval(client.la[ls]["cmds"]["music"]["moveme"]["variable1"]))
       ]});
-    }
-    try {
-      let channel = message.member.voice.channel;
-      let botchannel = message.guild.me.voice.channel;
-      if (!botchannel)
-        return message.reply({embeds :[new MessageEmbed()
-          .setColor(es.wrongcolor)
-          .setTitle(eval(client.la[ls]["cmds"]["music"]["moveme"]["variable1"]))
-        ]});
-      if (!channel)
-        return message.reply({embeds : [new MessageEmbed()
-          .setColor(es.wrongcolor)
-          .setTitle(eval(client.la[ls]["cmds"]["music"]["moveme"]["variable2"]))
-        ]});
-      if (botchannel.userLimit >= botchannel.members.length)
-        return message.reply({embeds :[new MessageEmbed()
-          .setColor(es.wrongcolor)
-          .setTitle(eval(client.la[ls]["cmds"]["music"]["moveme"]["variable3"]))
-        ]});
-      if (botchannel.id == channel.id)
-        return message.reply({embeds :[new MessageEmbed()
-          .setColor(es.wrongcolor)
-          .setTitle(eval(client.la[ls]["cmds"]["music"]["moveme"]["variable4"]))
-        ]});
-      message.member.voice.setChannel(botchannel);
-      message.react("👌").catch(e => {});
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
+    if (!channel)
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setTitle(eval(client.la[ls]["cmds"]["music"]["moveme"]["variable2"]))
+      ]});
+    if (botchannel.userLimit >= botchannel.members.length)
       return message.reply({embeds :[new MessageEmbed()
         .setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
+        .setTitle(eval(client.la[ls]["cmds"]["music"]["moveme"]["variable3"]))
       ]});
-    }
+    if (botchannel.id == channel.id)
+      return message.reply({embeds :[new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setTitle(eval(client.la[ls]["cmds"]["music"]["moveme"]["variable4"]))
+      ]});
+    message.member.voice.setChannel(botchannel);
+    message.react(emoji.react.SUCCESS).catch(e => {});
   }
 };
 /**

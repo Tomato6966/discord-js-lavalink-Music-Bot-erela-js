@@ -15,15 +15,7 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
   run: async (client, message, args, cmduser, text, prefix, player) => {
     
     let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    if (!client.settings.get(message.guild.id, "MUSIC")) {
-      return message.channel.send({embeds :[new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.disabled.title)
-        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
-      ]});
-    }
-    try {
+
       player.node.send({
         op: "filters",
         guildId: message.guild.id,
@@ -48,14 +40,6 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
         .setTitle(eval(client.la[ls]["cmds"]["filter"]["chipmunk"]["variable1"]))
         .setDescription(eval(client.la[ls]["cmds"]["filter"]["chipmunk"]["variable2"]))
       ]});
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
-      return message.channel.send({embeds :[new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-      ]});
-    }
   }
 };
 /**

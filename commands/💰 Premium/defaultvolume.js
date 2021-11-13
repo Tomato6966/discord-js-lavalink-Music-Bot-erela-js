@@ -15,46 +15,38 @@ module.exports = {
   type: "bot",
   run: async (client, message, args, cmduser, text, prefix) => {
     
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    try {
-      client.settings.ensure(message.guild.id, {
-        defaultvolume: 15
-      });
-      if(!args[0]){
-        return message.reply({embeds : [new MessageEmbed()
-          .setFooter(es.footertext, es.footericon).setColor(es.wrongcolor)
-          .setTitle(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable1"]))
-          .setDescription(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable2"]))
-        ]});
-      }
-      let volume = args[0];
-      if(isNaN(volume)){
-        return message.reply({embeds : [new MessageEmbed()
-          .setFooter(es.footertext, es.footericon).setColor(es.wrongcolor)
-          .setTitle(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable3"]))
-          .setDescription(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable4"]))
-        ]});
-      }
-      if(Number(volume) > 150 || Number(volume) < 1){
-        return message.reply({embeds : [new MessageEmbed()
-          .setFooter(es.footertext, es.footericon).setColor(es.wrongcolor)
-          .setTitle(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable5"]))
-          .setDescription(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable6"]))
-        ]});
-      }
-      client.settings.set(message.guild.id, Number(volume), "defaultvolume");
-      return message.reply({embeds : [new MessageEmbed()
-        .setFooter(es.footertext, es.footericon).setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-        .setTitle(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable7"]))
-      ]});
-    } catch (e) {
-      console.log(String(e.stack).grey.bgRed)
+    let es = client.settings.get(message.guild.id, "embed");
+    let ls = client.settings.get(message.guild.id, "language")
+    client.settings.ensure(message.guild.id, {
+      defaultvolume: 15
+    });
+    if(!args[0]){
       return message.reply({embeds : [new MessageEmbed()
         .setFooter(es.footertext, es.footericon).setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
+        .setTitle(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable1"]))
+        .setDescription(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable2"]))
       ]});
     }
+    let volume = args[0];
+    if(isNaN(volume)){
+      return message.reply({embeds : [new MessageEmbed()
+        .setFooter(es.footertext, es.footericon).setColor(es.wrongcolor)
+        .setTitle(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable3"]))
+        .setDescription(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable4"]))
+      ]});
+    }
+    if(Number(volume) > 150 || Number(volume) < 1){
+      return message.reply({embeds : [new MessageEmbed()
+        .setFooter(es.footertext, es.footericon).setColor(es.wrongcolor)
+        .setTitle(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable5"]))
+        .setDescription(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable6"]))
+      ]});
+    }
+    client.settings.set(message.guild.id, Number(volume), "defaultvolume");
+    return message.reply({embeds : [new MessageEmbed()
+      .setFooter(es.footertext, es.footericon).setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+      .setTitle(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable7"]))
+    ]});
   }
 }
 /**

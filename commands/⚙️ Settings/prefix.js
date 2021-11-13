@@ -11,45 +11,36 @@ module.exports = {
     type: "bot",
     run: async (client, message, args, cmduser, text, prefix) => {
     
-      let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    try{
-    
-    //if no args return error
-    if (!args[0])
-      return message.reply({embeds :[new MessageEmbed()
-        .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
-        .setTitle(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable1"]))
-        .setDescription(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable2"]))
-      ]});
-    //if there are multiple arguments
-    if (args[1])
+      let es = client.settings.get(message.guild.id, "embed");
+      let ls = client.settings.get(message.guild.id, "language")
+
+      //if no args return error
+      if (!args[0])
+        return message.reply({embeds :[new MessageEmbed()
+          .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
+          .setTitle(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable1"]))
+          .setDescription(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable2"]))
+        ]});
+      //if there are multiple arguments
+      if (args[1])
+        return message.reply({embeds : [new MessageEmbed()
+          .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
+          .setTitle(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable3"]))
+        ]});
+      //if the prefix is too long
+      if (args[0].length > 5)
+        return message.reply({embeds : [new MessageEmbed()
+          .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
+          .setTitle(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable4"]))
+        ]});
+      //set the new prefix
+      client.settings.set(message.guild.id, args[0], `prefix`);
+      //return success embed
       return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
-        .setTitle(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable3"]))
+        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+        .setFooter(es.footertext, es.footericon)
+        .setTitle(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable5"]))
       ]});
-    //if the prefix is too long
-    if (args[0].length > 5)
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
-        .setTitle(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable4"]))
-      ]});
-    //set the new prefix
-    client.settings.set(message.guild.id, args[0], `prefix`);
-    //return success embed
-    return message.reply({embeds : [new MessageEmbed()
-      .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-      .setFooter(es.footertext, es.footericon)
-      .setTitle(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable5"]))
-    ]});
-  } catch (e) {
-      console.log(String(e.stack).grey.bgRed)
-      return message.reply({embeds : [new MessageEmbed()
-          .setColor(es.wrongcolor)
-					.setFooter(es.footertext, es.footericon)
-          .setTitle(client.la[ls].common.erroroccur)
-          .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-      ]});
-  }
   }
 };
 /**

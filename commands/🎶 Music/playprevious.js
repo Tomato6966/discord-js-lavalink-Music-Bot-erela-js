@@ -22,31 +22,47 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
   type: "song",
   run: async (client, message, args, cmduser, text, prefix, player) => {
     
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    if (!client.settings.get(message.guild.id, "MUSIC")) {
-      return message.reply({embeds: [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.disabled.title)
-        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
-      ]});
-    }
-    try {
-      //define the type
-      let type = `skiptrack:youtube`;
-      //if the previous was from soundcloud, then use type soundcloud
-      if (player.queue.previous.uri.includes(`soundcloud`)) type = `skiptrack:soundcloud`
-      //plays it
-      if (type != "skiptrack:soundcloud") message.react("840260133686870036").catch(()=>{})
-      else message.react("840260133686870036").catch(()=>{})
-      playermanager(client, message, Array(player.queue.previous.uri), type);
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
-      return message.reply({embeds :[new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-      ]});
+    let es = client.settings.get(message.guild.id, "embed");
+    let ls = client.settings.get(message.guild.id, "language")
+
+    //plays it
+    if(player.queue.previous.uri.includes("soundcloud")){
+      message.reply({
+        embeds: [
+          new MessageEmbed().setColor(es.color)
+          .setTitle(`${emoji.msg.search} Playing the Previous Track on ${emoji.msg.soundcloud} Soundcloud`)
+          .setDescription(`[${layer.queue.previous.title}](${layer.queue.previous.uri})`)
+        ]
+      })
+      playermanager(client, message, Array(player.queue.previous.uri), `song:soundcloud`);
+    } else if(player.queue.previous.uri.includes("spotify")){
+      message.reply({
+        embeds: [
+          new MessageEmbed().setColor(es.color)
+          .setTitle(`${emoji.msg.search} Playing the Previous Track on ${emoji.msg.spotify} Spotify`)
+          .setDescription(`[${layer.queue.previous.title}](${layer.queue.previous.uri})`)
+        ]
+      })
+      playermanager(client, message, Array(player.queue.previous.uri), `song:raw`);
+    } else if(player.queue.previous.uri.includes("apple")){
+      message.reply({
+        embeds: [
+          new MessageEmbed().setColor(es.color)
+          .setTitle(`${emoji.msg.search} Playing the Previous Track on ${emoji.msg.apple} Apple-Music`)
+          .setDescription(`[${layer.queue.previous.title}](${layer.queue.previous.uri})`)
+        ]
+      })
+      playermanager(client, message, Array(player.queue.previous.uri), `song:raw`);
+    } else {
+      message.reply({
+        embeds: [
+          new MessageEmbed().setColor(es.color)
+          .setTitle(`${emoji.msg.search} Playing the Previous Track on ${emoji.msg.youtube} Youtube`)
+          .setDescription(`[${layer.queue.previous.title}](${layer.queue.previous.uri})`)
+        ]
+      })
+      //play from YOUTUBE
+      playermanager(client, message, Array(player.queue.previous.uri), `song:youtube`);
     }
   }
 };

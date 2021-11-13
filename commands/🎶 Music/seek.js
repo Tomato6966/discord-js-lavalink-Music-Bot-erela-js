@@ -24,40 +24,25 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
   type: "song",
   run: async (client, message, args, cmduser, text, prefix, player) => {
     
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    if (!client.settings.get(message.guild.id, "MUSIC")) {
+    let es = client.settings.get(message.guild.id, "embed");
+    let ls = client.settings.get(message.guild.id, "language")
+    
+    //if number is out of range return error
+    if (Number(args[0]) < 0 || Number(args[0]) >= player.queue.current.duration / 1000)
       return message.reply({embeds :[new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.disabled.title)
-        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
-      ]});
-    }
-    try {
-      //if number is out of range return error
-      if (Number(args[0]) < 0 || Number(args[0]) >= player.queue.current.duration / 1000)
-        return message.reply({embeds :[new MessageEmbed()
 
-          .setColor(es.wrongcolor)
-          .setTitle(eval(client.la[ls]["cmds"]["music"]["seek"]["variable1"]))
-        ]});
-      //seek to the position
-      player.seek(Number(args[0]) * 1000);
-      //send success message
-      return message.reply({embeds :[new MessageEmbed()
-        .setTitle(eval(client.la[ls]["cmds"]["music"]["seek"]["variable2"]))
-        .addField(`${emoji.msg.time} Progress: `, createBar(player))
-        .setColor(es.color)
-
-      ]});
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
-      return message.reply({embeds : [new MessageEmbed()
         .setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
+        .setTitle(eval(client.la[ls]["cmds"]["music"]["seek"]["variable1"]))
       ]});
-    }
+    //seek to the position
+    player.seek(Number(args[0]) * 1000);
+    //send success message
+    return message.reply({embeds :[new MessageEmbed()
+      .setTitle(eval(client.la[ls]["cmds"]["music"]["seek"]["variable2"]))
+      .addField(`${emoji.msg.time} Progress: `, createBar(player))
+      .setColor(es.color)
+
+    ]});
   }
 };
 /**

@@ -23,34 +23,50 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
   run: async (client, message, args, cmduser, text, prefix, player) => {
     
     let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    if (!client.settings.get(message.guild.id, "MUSIC")) {
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.disabled.title)
-        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
-      ]});
-    }
-    try {
-      //if no args return error
-      if (!args[0])
-        return message.reply({embeds :[new MessageEmbed()
-          .setColor(es.wrongcolor)
 
-          .setTitle(eval(client.la[ls]["cmds"]["music"]["playskipsc"]["variable1"]))
-        ]});
-      message.react("🔎").catch(()=>{})
-      message.react("825095625884434462").catch(()=>{})
-      message.react(emoji.react.skip_track).catch(()=>{})
-      //play the SONG from YOUTUBE
-      playermanager(client, message, args, `skiptrack:soundcloud`);
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
+    //if no args return error
+    if (!args[0])
       return message.reply({embeds :[new MessageEmbed()
         .setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
+        .setTitle(eval(client.la[ls]["cmds"]["music"]["playskipsc"]["variable1"]))
       ]});
+    if(args.join("").includes("yout")){
+      message.reply({
+        embeds: [
+          new MessageEmbed().setColor(es.color)
+          .setTitle(`${emoji.msg.search} Searching for your Request on ${emoji.msg.youtube} Youtube & then ${emoji.msg.skip_track} Skipping to it!`)
+          .setDescription(`\`\`\`${String(args.join(" ")).substr(0, 2000)}\`\`\``)
+        ]
+      })
+      playermanager(client, message, args, `skiptrack:youtube`);
+    } else if(args.join("").includes("spotify")){
+      message.reply({
+        embeds: [
+          new MessageEmbed().setColor(es.color)
+          .setTitle(`${emoji.msg.search} Searching for your Request on ${emoji.msg.spotify} Spotify & then ${emoji.msg.skip_track} Skipping to it!`)
+          .setDescription(`\`\`\`${String(args.join(" ")).substr(0, 2000)}\`\`\``)
+        ]
+      })
+      playermanager(client, message, args, `skiptrack:raw`);
+    } else if(args.join("").includes("apple")){
+      message.reply({
+        embeds: [
+          new MessageEmbed().setColor(es.color)
+          .setTitle(`${emoji.msg.search} Searching for your Request on ${emoji.msg.apple} Apple-Music & then ${emoji.msg.skip_track} Skipping to it!`)
+          .setDescription(`\`\`\`${String(args.join(" ")).substr(0, 2000)}\`\`\``)
+        ]
+      })
+      playermanager(client, message, args, `skiptrack:raw`);
+    } else {
+      message.reply({
+        embeds: [
+          new MessageEmbed().setColor(es.color)
+          .setTitle(`${emoji.msg.search} Searching for your Request on ${emoji.msg.soundcloud} Soundcloud & then ${emoji.msg.skip_track} Skipping to it!`)
+          .setDescription(`\`\`\`${String(args.join(" ")).substr(0, 2000)}\`\`\``)
+        ]
+      })
+      //play from YOUTUBE
+      playermanager(client, message, args, `skiptrack:soundcloud`);
     }
   }
 };

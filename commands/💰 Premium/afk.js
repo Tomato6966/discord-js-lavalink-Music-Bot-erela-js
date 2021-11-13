@@ -15,22 +15,14 @@ module.exports = {
   parameters: {"type":"music", "activeplayer": true, },
   type: "music",
   run: async (client, message, args, user, text, prefix, player) => {
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    try {
+    let es = client.settings.get(message.guild.id, "embed");
+    let ls = client.settings.get(message.guild.id, "language")
       await player.set(`afk`, !player.get(`afk`))
       return message.reply({embeds : [new MessageEmbed()
         .setFooter(es.footertext, es.footericon).setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
         .setTitle(eval(client.la[ls]["cmds"]["settings"]["afk"]["variable1"]))
         .setDescription(eval(client.la[ls]["cmds"]["settings"]["afk"]["variable2"]))
       ]});
-    } catch (e) {
-      console.log(String(e.stack).grey.bgRed)
-      return message.reply({embeds : [new MessageEmbed()
-        .setFooter(es.footertext, es.footericon).setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-      ]});
-    }
   }
 }
 /**

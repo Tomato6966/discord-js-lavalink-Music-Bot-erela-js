@@ -26,14 +26,6 @@ module.exports = {
   run: async (client, message, args, cmduser, text, prefix) => {
     
     let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    if (!client.settings.get(message.guild.id, "MUSIC")) {
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.disabled.title)
-        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
-      ]});
-    }
     try {
       //get the channel instance from the Member
       const {
@@ -57,7 +49,7 @@ module.exports = {
             .setTitle(client.la[ls].cmds.music.skip.title)
             .setColor(es.color)
           ]});
-          return message.react("⏹️").catch((e) => {})
+          return message.react(emoji.react.stop).catch((e) => {})
         } else {
           return message.reply({embeds :[new MessageEmbed()
             .setColor(es.wrongcolor)
@@ -88,7 +80,7 @@ module.exports = {
             .setTitle(client.la[ls].cmds.music.skip.title)
             .setColor(es.color)
           ]});
-          return message.react("⏹️").catch((e) => {})
+          return message.react(emoji.react.stop).catch((e) => {})
         } else {
           //stop playing
           try {
@@ -99,7 +91,7 @@ module.exports = {
             .setColor(es.color)
           ]});
           //React with the emoji
-          return message.react("⏹️").catch((e) => {})
+          return message.react(emoji.react.stop).catch((e) => {})
         }
         return
       }
@@ -112,7 +104,7 @@ module.exports = {
         .setColor(es.color)
       ]});
 
-      return message.react("⏭").catch((e) => {})
+      return message.react(emoji.react.skip_track).catch((e) => {})
     } catch (e) {
       console.log(String(e.stack).dim.bgRed)
       return message.reply({embeds : [new MessageEmbed()

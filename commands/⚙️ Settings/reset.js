@@ -14,71 +14,63 @@ module.exports = {
   run: async (client, message, args, cmduser, text, prefix) => {
     
     let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    try{
-      
-      //if not enough permissions aka not the guild owner, return error
-      if (message.member.guild.ownerId !== message.author.id)
-        return message.reply({embeds : [new MessageEmbed()
+    //if not enough permissions aka not the guild owner, return error
+    if (message.member.guild.ownerId !== message.author.id)
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setFooter(es.footertext, es.footericon)
+        .setTitle(eval(client.la[ls]["cmds"]["settings"]["reset"]["variable1"]))
+      ]});
+    //ask for second yes
+    let themsg = message.reply({embeds : [new MessageEmbed()
+      .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+      .setFooter(es.footertext, es.footericon)
+      .setTitle(eval(client.la[ls]["cmds"]["settings"]["reset"]["variable2"]))
+      .setDescription(eval(client.la[ls]["cmds"]["settings"]["reset"]["variable3"]))
+    ]}).then((msg) => {
+      //wait for answer of the right user
+      msg.channel.awaitMessages({filter: m => m.author.id === message.author.id,
+        max: 1,
+        time: 30 * 1000,
+        errors: ['time']
+      })
+      //after right user answered
+      .then(async collected => {
+        //and if its yes
+        if(collected.first().content.toLowerCase() === `yes`)
+        {
+
+          if(client.stats.has(message.guild.id)){
+            client.stats.delete(message.guild.id)
+          }
+          if(client.musicsettings.has(message.guild.id)){
+            client.musicsettings.delete(message.guild.id)
+          }
+          if(client.settings.has(message.guild.id)){
+            client.settings.delete(message.guild.id)
+          }
+          if(client.queuesaves.has(message.guild.id)){
+            client.queuesaves.delete(message.guild.id)
+          }  
+          databasing(client, message.guild.id)
+          //send the success message
+          return message.reply({embeds : [new MessageEmbed()
+            .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+            .setFooter(es.footertext, es.footericon)
+            .setTitle(eval(client.la[ls]["cmds"]["settings"]["reset"]["variable4"]))
+            .setDescription(eval(client.la[ls]["cmds"]["settings"]["reset"]["variable5"]))
+          ]});
+        }
+        //if an error happens, reply
+      }).catch(e => {
+        console.log(String(e.stack).grey.yellow)
+        return message.reply({embeds :[new MessageEmbed()
           .setColor(es.wrongcolor)
           .setFooter(es.footertext, es.footericon)
-          .setTitle(eval(client.la[ls]["cmds"]["settings"]["reset"]["variable1"]))
+          .setTitle(eval(client.la[ls]["cmds"]["settings"]["reset"]["variable6"]))
         ]});
-      //ask for second yes
-      let themsg = message.reply({embeds : [new MessageEmbed()
-        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(eval(client.la[ls]["cmds"]["settings"]["reset"]["variable2"]))
-        .setDescription(eval(client.la[ls]["cmds"]["settings"]["reset"]["variable3"]))
-      ]}).then((msg) => {
-        //wait for answer of the right user
-        msg.channel.awaitMessages({filter: m => m.author.id === message.author.id,
-          max: 1,
-          time: 30 * 1000,
-          errors: ['time']
-        })
-        //after right user answered
-        .then(async collected => {
-          //and if its yes
-          if(collected.first().content.toLowerCase() === `yes`)
-          {
-            
-            if(client.stats.has(message.guild.id))
-              client.stats.delete(message.guild.id)
-            if(client.musicsettings.has(message.guild.id))
-              client.musicsettings.delete(message.guild.id)
-            if(client.settings.has(message.guild.id))
-              client.settings.delete(message.guild.id)
-            if(client.queuesaves.has(message.guild.id))
-              client.queuesaves.delete(message.guild.id)
-              
-            databasing(client, message.guild.id)
-            //send the success message
-            return message.reply({embeds : [new MessageEmbed()
-              .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-              .setFooter(es.footertext, es.footericon)
-              .setTitle(eval(client.la[ls]["cmds"]["settings"]["reset"]["variable4"]))
-              .setDescription(eval(client.la[ls]["cmds"]["settings"]["reset"]["variable5"]))
-            ]});
-          }
-          //if an error happens, reply
-        }).catch(e => {
-          console.log(String(e.stack).grey.yellow)
-          return message.reply({embeds :[new MessageEmbed()
-            .setColor(es.wrongcolor)
-            .setFooter(es.footertext, es.footericon)
-            .setTitle(eval(client.la[ls]["cmds"]["settings"]["reset"]["variable6"]))
-          ]});
-        })
-      });
-    } catch (e) {
-        console.log(String(e.stack).grey.bgRed)
-        return message.reply({embeds :[new MessageEmbed()
-            .setColor(es.wrongcolor)
-						.setFooter(es.footertext, es.footericon)
-            .setTitle(client.la[ls].common.erroroccur)
-            .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-        ]});
-    }
+      })
+    });
   }
 };
 /**

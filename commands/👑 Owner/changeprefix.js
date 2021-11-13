@@ -24,7 +24,6 @@ module.exports = {
           .setDescription(eval(client.la[ls]["cmds"]["owner"]["changename"]["variable2"]) + `\n\nIf you want to change the Settings for **this Server** then type use the \`${prefix}prefix <newprefix>\` Command`)
         ]
       });
-    try {
       //if no args return error
       if (!args[0])
         return message.reply({
@@ -73,17 +72,6 @@ module.exports = {
           ]
         })
       });
-    } catch (e) {
-      console.log(String(e.stack).grey.bgRed)
-      return message.reply({
-        embeds: [new MessageEmbed()
-          .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
-          .setTitle(client.la[ls].common.erroroccur)
-          .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-        ]
-      });
-    }
   }
 };
 /**

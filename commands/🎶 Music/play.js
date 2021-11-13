@@ -22,33 +22,52 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
   run: async (client, message, args, cmduser, text, prefix, player) => {
     
     let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    if (!client.settings.get(message.guild.id, "MUSIC")) {
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.disabled.title)
-        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
-      ]});
-    }
-    try {
-      //if no args return error
-      if (!args[0])
-        return message.reply({embeds : [new MessageEmbed()
-          .setColor(es.wrongcolor)
-          .setTitle(eval(client.la[ls]["cmds"]["music"]["play"]["variable1"]))
-        ]});
 
-      message.react("🔎").catch(()=>{})
-      message.react("840260133686870036").catch(()=>{})
-      //play the SONG from YOUTUBE
-      playermanager(client, message, args, `song:youtube`);
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
+    //if no args return error
+    if (!args[0])
       return message.reply({embeds : [new MessageEmbed()
         .setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
+        .setTitle(eval(client.la[ls]["cmds"]["music"]["play"]["variable1"]))
       ]});
+
+    
+    if(args.join("").includes("soundcloud")){
+      message.reply({
+        embeds: [
+          new MessageEmbed().setColor(es.color)
+          .setTitle(`${emoji.msg.search} Searching for your Request on ${emoji.msg.soundcloud} Soundcloud`)
+          .setDescription(`\`\`\`${String(args.join(" ")).substr(0, 2000)}\`\`\``)
+        ]
+      })
+      playermanager(client, message, args, `song:soundcloud`);
+    } else if(args.join("").includes("spotify")){
+      message.reply({
+        embeds: [
+          new MessageEmbed().setColor(es.color)
+          .setTitle(`${emoji.msg.search} Searching for your Request on ${emoji.msg.spotify} Spotify`)
+          .setDescription(`\`\`\`${String(args.join(" ")).substr(0, 2000)}\`\`\``)
+        ]
+      })
+      playermanager(client, message, args, `song:raw`);
+    } else if(args.join("").includes("apple")){
+      message.reply({
+        embeds: [
+          new MessageEmbed().setColor(es.color)
+          .setTitle(`${emoji.msg.search} Searching for your Request on ${emoji.msg.apple} Apple-Music`)
+          .setDescription(`\`\`\`${String(args.join(" ")).substr(0, 2000)}\`\`\``)
+        ]
+      })
+      playermanager(client, message, args, `song:raw`);
+    } else {
+      message.reply({
+        embeds: [
+          new MessageEmbed().setColor(es.color)
+          .setTitle(`${emoji.msg.search} Searching for your Request on ${emoji.msg.youtube} Youtube`)
+          .setDescription(`\`\`\`${String(args.join(" ")).substr(0, 2000)}\`\`\``)
+        ]
+      })
+      //play from YOUTUBE
+      playermanager(client, message, args, `song:youtube`);
     }
   }
 };

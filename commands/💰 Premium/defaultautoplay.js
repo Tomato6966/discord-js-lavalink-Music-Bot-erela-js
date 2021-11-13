@@ -14,13 +14,12 @@ module.exports = {
   memberpermissions: ["ADMINISTRATOR"],
   type: "bot",
   run: async (client, message, args, cmduser, text, prefix) => {
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    try {
+    let es = client.settings.get(message.guild.id, "embed");
+    let ls = client.settings.get(message.guild.id, "language")
       client.settings.ensure(message.guild.id, {
         defaultap: true,
       });
 
-      
       client.settings.set(message.guild.id, !client.settings.get(message.guild.id, "defaultap"), "defaultap");
       
       return message.reply({embeds : [new MessageEmbed()
@@ -28,14 +27,6 @@ module.exports = {
         .setTitle(eval(client.la[ls]["cmds"]["settings"]["defaultautoplay"]["variable1"]))
         .setDescription(eval(client.la[ls]["cmds"]["settings"]["defaultautoplay"]["variable2"]))
       ]});
-    } catch (e) {
-      console.log(String(e.stack).grey.bgRed)
-      return message.reply({embeds : [new MessageEmbed()
-        .setFooter(es.footertext, es.footericon).setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-      ]});
-    }
   }
 }
 /**

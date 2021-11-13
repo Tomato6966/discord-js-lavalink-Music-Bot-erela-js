@@ -30,7 +30,6 @@ module.exports = {
           .setDescription(eval(client.la[ls]["cmds"]["owner"]["changestatus"]["variable2"]))
         ]
       });
-    try {
       first_layer()
       async function first_layer() {
         let menuoptions = [{
@@ -469,16 +468,6 @@ module.exports = {
 
         }
       }
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
-      return message.channel.send({
-        embeds: [new MessageEmbed()
-          .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
-          .setTitle(client.la[ls].common.erroroccur)
-          .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-        ]
-      });
-    }
   },
 };
 /**

@@ -22,7 +22,6 @@ module.exports = {
           .setTitle(eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable1"]))
         ]
       });
-    try {
       let loadSlashsGlobal = true;
       let guildId = args[0];
       if (guildId) {
@@ -48,17 +47,6 @@ module.exports = {
           themsg.edit(`**Could not load the Slahs Commands for ${guild.name}**\n\n**Did you invite me with this Link in that Server?**\n> $https://discord.com/api/oauth2/authorize?client_id=${user.id}&permissions=8&scope=bot%20applications.commands`)
         });
       }
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
-      return message.channel.send({
-        embeds: [new MessageEmbed()
-          .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
-          .setTitle(client.la[ls].common.erroroccur)
-          .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-        ]
-      });
-    }
   },
 };
 /**

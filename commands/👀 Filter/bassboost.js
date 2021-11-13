@@ -15,15 +15,6 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
   run: async (client, message, args, cmduser, text, prefix, player) => {
     
     let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    if (!client.settings.get(message.guild.id, "MUSIC")) {
-      return message.channel.send({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.disabled.title)
-        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
-      ]});
-    }
-    try {
       let level = `none`;
       if (!args.length || (!client.bassboost[args[0].toLowerCase()] && args[0].toLowerCase() != `none`))
         return message.channel.send({embeds: [new MessageEmbed()
@@ -129,14 +120,6 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
         .setTitle(eval(client.la[ls]["cmds"]["filter"]["bassboost"]["variable3"]))
         .setDescription(eval(client.la[ls]["cmds"]["filter"]["bassboost"]["variable4"]))
       ]});
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
-      return message.channel.send({embeds :[new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-      ]});
-    }
   }
 };
 /**

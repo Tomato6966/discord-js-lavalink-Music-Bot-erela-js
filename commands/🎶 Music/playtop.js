@@ -22,21 +22,51 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
   run: async (client, message, args, cmduser, text, prefix, player) => {
     
     let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    if (!client.settings.get(message.guild.id, "MUSIC")) {
-      return message.reply({embeds :[new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.disabled.title)
-        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
-      ]});
-    }
+
     //if no args added return error message if allowed to send an embed
     if (!args[0])
       return message.reply({embeds : [new MessageEmbed()
         .setColor(es.wrongcolor)
         .setTitle(eval(client.la[ls]["cmds"]["music"]["playtop"]["variable1"]))
       ]});
-    return playermanager(client, message, args, `playtop:youtube`);
+      if(args.join("").includes("soundcloud")){
+        message.reply({
+          embeds: [
+            new MessageEmbed().setColor(es.color)
+            .setTitle(`${emoji.msg.search} Searching for your Request on ${emoji.msg.soundcloud} Soundcloud & then adding it to the TOP of the QUEUE`)
+            .setDescription(`\`\`\`${String(args.join(" ")).substr(0, 2000)}\`\`\``)
+          ]
+        })
+        playermanager(client, message, args, `playtop:soundcloud`);
+      } else if(args.join("").includes("spotify")){
+        message.reply({
+          embeds: [
+            new MessageEmbed().setColor(es.color)
+            .setTitle(`${emoji.msg.search} Searching for your Request on ${emoji.msg.spotify} Spotify & then adding it to the TOP of the QUEUE`)
+            .setDescription(`\`\`\`${String(args.join(" ")).substr(0, 2000)}\`\`\``)
+          ]
+        })
+        playermanager(client, message, args, `playtop:raw`);
+      } else if(args.join("").includes("apple")){
+        message.reply({
+          embeds: [
+            new MessageEmbed().setColor(es.color)
+            .setTitle(`${emoji.msg.search} Searching for your Request on ${emoji.msg.apple} Apple-Music & then adding it to the TOP of the QUEUE`)
+            .setDescription(`\`\`\`${String(args.join(" ")).substr(0, 2000)}\`\`\``)
+          ]
+        })
+        playermanager(client, message, args, `playtop:raw`);
+      } else {
+        message.reply({
+          embeds: [
+            new MessageEmbed().setColor(es.color)
+            .setTitle(`${emoji.msg.search} Searching for your Request on ${emoji.msg.youtube} Youtube & then adding it to the TOP of the QUEUE`)
+            .setDescription(`\`\`\`${String(args.join(" ")).substr(0, 2000)}\`\`\``)
+          ]
+        })
+        //play from YOUTUBE
+        playermanager(client, message, args, `playtop:youtube`);
+      }
   }
 };
 /**

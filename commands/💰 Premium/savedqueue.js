@@ -28,18 +28,11 @@ usage: `\`savedqueue <Type> <Name> [Options]\`\n
 **Options**:
 > \`pick the track which you want to remove\``,
 
-run: async (client, message, args, cmduser, text, prefix) => {
-  
-  let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-      if(!client.settings.get(message.guild.id, "MUSIC")){
-        return message.reply({embeds : [new MessageEmbed()
-          .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
-          .setTitle(client.la[ls].common.disabled.title)
-          .setDescription(require(`${process.cwd()}/handlers/functions`).handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
-        ]});
-      }
-  try {
+  run: async (client, message, args, cmduser, text, prefix) => {
+    
+    let es = client.settings.get(message.guild.id, "embed");
+    let ls = client.settings.get(message.guild.id, "language")
+      
     let Type = args[0];
     let Name = args[1];
     let Options = args.slice(2).join(` `);
@@ -633,24 +626,15 @@ run: async (client, message, args, cmduser, text, prefix) => {
       break;
 
     }
-
-  } catch (e) {
-    console.log(String(e.stack).grey.bgRed)
-    return message.reply({embeds :[new MessageEmbed()
-      .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
-      .setTitle(client.la[ls].common.erroroccur)
-      .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable100"]))
-    ]});
   }
-}
 };
 Object.size = function (obj) {
-var size = 0,
-  key;
-for (key in obj) {
-  if (obj.hasOwnProperty(key)) size++;
-}
-return size;
+  var size = 0,
+    key;
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) size++;
+  }
+  return size;
 };
 /**
  * @INFO

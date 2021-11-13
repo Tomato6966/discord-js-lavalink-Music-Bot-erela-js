@@ -25,49 +25,33 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
   run: async (client, message, args, cmduser, text, prefix, player) => {
     
     let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    if (!client.settings.get(message.guild.id, "MUSIC")) {
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.disabled.title)
-        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
-      ]});
+    
+    client.settings.ensure(message.guild.id, {
+      playmsg: true
+    });
+    //toggle autoplay
+    let embed = new MessageEmbed()
+    embed.setTitle(eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variable1"]))
+    embed.setDescription(eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variable2"]))
+    embed.addField(`${emoji.msg.raise_volume} Volume`, `\`\`\`${player.volume}%\`\`\``, true)
+    embed.addField(`${emoji.msg.repeat_mode} Queue Length: `, `\`\`\`${player.queue.length} Songs\`\`\``, true)
+    embed.addField(`📨 Pruning: `, `\`\`\`${client.settings.get(message.guild.id, "playmsg") ? `✅ Enabled` : `❌ Disabled`}\`\`\``, true)
+
+    embed.addField(`${emoji.msg.autoplay_mode} Song Loop: `, `\`\`\`${player.trackRepeat ? `✅ Enabled` : `❌ Disabled`}\`\`\``, true)
+    embed.addField(`${emoji.msg.autoplay_mode} Queue Loop: `, `\`\`\`${player.queueRepeat ? `✅ Enabled` : `❌ Disabled`}\`\`\``, true)
+    embed.addField(eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variablex_3"]), eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variable3"]), true)
+
+    embed.addField(`${emoji.msg.equalizer} Equalizer: `, `\`\`\`${player.get("eq")}\`\`\``, true)
+    embed.addField(`🎛 Filter: `, `\`\`\`${player.get("filter")}\`\`\``, true)
+    embed.addField(`:clock1: AFK Mode`, `\`\`\`PLAYER: ${player.get("afk") ? `✅ Enabled` : `❌ Disabled`}\`\`\``, true)
+
+    embed.setColor(es.color)
+
+    embed.addField(eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variablex_4"]), eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variable4"]))
+    if (player.queue && player.queue.current) {
+      embed.addField(eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variablex_5"]), eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variable5"]))
     }
-    try {
-      client.settings.ensure(message.guild.id, {
-        playmsg: true
-      });
-      //toggle autoplay
-      let embed = new MessageEmbed()
-      embed.setTitle(eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variable1"]))
-      embed.setDescription(eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variable2"]))
-      embed.addField(`${emoji.msg.raise_volume} Volume`, `\`\`\`${player.volume}%\`\`\``, true)
-      embed.addField(`${emoji.msg.repeat_mode} Queue Length: `, `\`\`\`${player.queue.length} Songs\`\`\``, true)
-      embed.addField(`📨 Pruning: `, `\`\`\`${client.settings.get(message.guild.id, "playmsg") ? `✅ Enabled` : `❌ Disabled`}\`\`\``, true)
-
-      embed.addField(`${emoji.msg.autoplay_mode} Song Loop: `, `\`\`\`${player.trackRepeat ? `✅ Enabled` : `❌ Disabled`}\`\`\``, true)
-      embed.addField(`${emoji.msg.autoplay_mode} Queue Loop: `, `\`\`\`${player.queueRepeat ? `✅ Enabled` : `❌ Disabled`}\`\`\``, true)
-      embed.addField(eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variablex_3"]), eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variable3"]), true)
-
-      embed.addField(`${emoji.msg.equalizer} Equalizer: `, `\`\`\`${player.get("eq")}\`\`\``, true)
-      embed.addField(`🎛 Filter: `, `\`\`\`${player.get("filter")}\`\`\``, true)
-      embed.addField(`:clock1: AFK Mode`, `\`\`\`PLAYER: ${player.get("afk") ? `✅ Enabled` : `❌ Disabled`}\`\`\``, true)
-
-      embed.setColor(es.color)
-
-      embed.addField(eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variablex_4"]), eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variable4"]))
-      if (player.queue && player.queue.current) {
-        embed.addField(eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variablex_5"]), eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variable5"]))
-      }
-      message.reply({embeds : [embed]});
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-      ]});
-    }
+    message.reply({embeds : [embed]});
   }
 };
 

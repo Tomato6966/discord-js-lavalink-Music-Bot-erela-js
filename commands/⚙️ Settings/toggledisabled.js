@@ -13,9 +13,8 @@ module.exports = {
   type: "bot",
   run: async (client, message, args, cmduser, text, prefix) => {
     
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    try {
-
+    let es = client.settings.get(message.guild.id, "embed");
+    let ls = client.settings.get(message.guild.id, "language")
       client.settings.set(message.guild.id, !client.settings.get(message.guild.id, "showdisabled"), `showdisabled`);
       return message.reply({embeds : [new MessageEmbed()
         .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
@@ -23,14 +22,6 @@ module.exports = {
         .setTitle(`<a:yes:833101995723194437> ${client.settings.get(message.guild.id, "showdisabled") ? "Enabled": "Disabled"} Disabled-Cmds Showing`)
         .setDescription(`${client.settings.get(message.guild.id, "showdisabled") ? "I will now show disabled commands in the Help Menu" : "I will not show disabled Commands in the Help Menu"}`.substr(0, 2048))
       ]});
-    } catch (e) {
-      console.log(String(e.stack).grey.bgRed)
-      return message.reply({embeds :[new MessageEmbed()
-        .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-       ]} );
-    }
   }
 };
 /**

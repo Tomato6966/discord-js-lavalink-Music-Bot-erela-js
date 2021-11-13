@@ -13,27 +13,18 @@ module.exports = {
     run: async (client, message, args, cmduser, text, prefix) => {
     
     let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    try{
-      client.settings.ensure(message.guild.id, {
-        playmsg: true
-      });
-      
-      client.settings.set(message.guild.id, !client.settings.get(message.guild.id, "playmsg"), "playmsg");
-      
-      return message.reply({embeds : [new MessageEmbed()
-        .setFooter(es.footertext, es.footericon).setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-        .setTitle(eval(client.la[ls]["cmds"]["settings"]["togglepruning"]["variable1"]))
-        .setDescription(eval(client.la[ls]["cmds"]["settings"]["togglepruning"]["variable2"]))
-      ]});
-    } catch (e) {
-        console.log(String(e.stack).grey.bgRed)
-        return message.reply({embeds : [new MessageEmbed()
-            .setColor(es.wrongcolor)
-						.setFooter(es.footertext, es.footericon)
-            .setTitle(client.la[ls].common.erroroccur)
-            .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-        ]});
-    }
+
+    client.settings.ensure(message.guild.id, {
+      playmsg: true
+    });
+    
+    client.settings.set(message.guild.id, !client.settings.get(message.guild.id, "playmsg"), "playmsg");
+    
+    return message.reply({embeds : [new MessageEmbed()
+      .setFooter(es.footertext, es.footericon).setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+      .setTitle(eval(client.la[ls]["cmds"]["settings"]["togglepruning"]["variable1"]))
+      .setDescription(eval(client.la[ls]["cmds"]["settings"]["togglepruning"]["variable2"]))
+    ]});
   }
 };
 /**

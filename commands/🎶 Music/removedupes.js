@@ -22,49 +22,32 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
   run: async (client, message, args, cmduser, text, prefix, player) => {
     
     let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    if (!client.settings.get(message.guild.id, "MUSIC")) {
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.disabled.title)
-        .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
-      ]});
-    }
-    try {
-      //make a new array of each single song which is not a dupe
-      let tracks = player.queue;
-      const newtracks = [];
-      for (let i = 0; i < tracks.length; i++) {
-        let exists = false;
-        for (j = 0; j < newtracks.length; j++) {
-          if (tracks[i].uri === newtracks[j].uri) {
-            exists = true;
-            break;
-          }
-        }
-        if (!exists) {
-          newtracks.push(tracks[i]);
+    //make a new array of each single song which is not a dupe
+    let tracks = player.queue;
+    const newtracks = [];
+    for (let i = 0; i < tracks.length; i++) {
+      let exists = false;
+      for (j = 0; j < newtracks.length; j++) {
+        if (tracks[i].uri === newtracks[j].uri) {
+          exists = true;
+          break;
         }
       }
-      //clear the Queue
-      player.queue.clear();
-      //now add every not dupe song again
-      for (const track of newtracks)
-        player.queue.add(track);
-      //Send Success Message
-      return message.reply({embeds : [new MessageEmbed()
-        .setTitle(eval(client.la[ls]["cmds"]["music"]["removedupes"]["variable1"]))
-        .setColor(es.color)
-
-      ]});
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-      ]});
+      if (!exists) {
+        newtracks.push(tracks[i]);
+      }
     }
+    //clear the Queue
+    player.queue.clear();
+    //now add every not dupe song again
+    for (const track of newtracks)
+      player.queue.add(track);
+    //Send Success Message
+    return message.reply({embeds : [new MessageEmbed()
+      .setTitle(eval(client.la[ls]["cmds"]["music"]["removedupes"]["variable1"]))
+      .setColor(es.color)
+
+    ]});
   }
 };
 /**

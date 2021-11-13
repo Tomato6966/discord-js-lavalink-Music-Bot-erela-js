@@ -22,7 +22,6 @@ module.exports = {
           .setTitle(eval(client.la[ls]["cmds"]["owner"]["cmdreload"]["variable1"]))
         ]
       });
-    try {
       if (!args[0])
         return message.channel.send({
           embeds: [new MessageEmbed()
@@ -69,17 +68,6 @@ module.exports = {
           .setDescription(`Cmd is now removed from the BOT COMMANDS!`)
         ]
       });
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
-      return message.channel.send({
-        embeds: [new MessageEmbed()
-          .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
-          .setTitle(client.la[ls].common.erroroccur)
-          .setDescription(eval(client.la[ls]["cmds"]["owner"]["cmdreload"]["variable6"]))
-        ]
-      });
-    }
   },
 };
 /**

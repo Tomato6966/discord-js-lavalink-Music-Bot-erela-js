@@ -26,23 +26,13 @@ module.exports = {
         .setTitle(eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable2"]))
         .setDescription(eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable3"]))
       ]});
-    try {
-      let guild = client.guilds.cache.get(args[0]);
-      if(!guild) return message.reply({content : eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable4"])})
-      guild.leave().then(g=>{
-        message.channel.send({content : eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable5"])})
-      }).catch(e=>{
-        message.reply(`${e.message ? e.message : e}`, {code: "js"})
-      })
-    } catch (e) {
-      console.log(String(e.stack).dim.bgRed)
-      return message.channel.send({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
-        .setTitle(client.la[ls].common.erroroccur)
-        .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-      ]});
-    }
+    let guild = client.guilds.cache.get(args[0]);
+    if(!guild) return message.reply({content : eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable4"])})
+    guild.leave().then(g=>{
+      message.channel.send({content : eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable5"])})
+    }).catch(e=>{
+      message.reply(`${e.message ? e.message : e}`, {code: "js"})
+    })
   },
 };
 /**

@@ -11,17 +11,17 @@ module.exports = {
 	usage: "sponsor",
 	type: "bot",
 	run: async (client, message, args, cmduser, text, prefix) => {
-		let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
+		let es = client.settings.get(message.guild.id, "embed");
+		let ls = client.settings.get(message.guild.id, "language")
 		
-	try{
-			let embed1 = new MessageEmbed()
-		    .setColor(es.color)
-		    .setTitle(eval(client.la[ls]["cmds"]["info"]["sponsor"]["variable1"]))
-		    .setURL("http://bero-host.de/?utm_source=bot&utm_medium=cpc&utm_id=milrato")
-		    .setDescription(eval(client.la[ls]["cmds"]["info"]["sponsor"]["variable2"]))
-		    .setImage("https://cdn.bero-host.de/img/logo/bero_white.png")
-		    .setFooter("BERO-HOST | Code 'milrato' == -5%",  "https://imgur.com/jXyDEyb.png")
-		
+		let embed1 = new MessageEmbed()
+			.setColor(es.color)
+			.setTitle(eval(client.la[ls]["cmds"]["info"]["sponsor"]["variable1"]))
+			.setURL("http://bero-host.de/?utm_source=bot&utm_medium=cpc&utm_id=milrato")
+			.setDescription(eval(client.la[ls]["cmds"]["info"]["sponsor"]["variable2"]))
+			.setImage("https://cdn.bero-host.de/img/logo/bero_white.png")
+			.setFooter("BERO-HOST | Code 'milrato' == -5%",  "https://imgur.com/jXyDEyb.png")
+	
 		let embed2 = new MessageEmbed()
 			.setColor(es.color)
 			.setTimestamp()
@@ -31,15 +31,7 @@ module.exports = {
 			.setURL("https://nextnode.de")
 			.setDescription(eval(client.la[ls]["cmds"]["info"]["sponsor"]["variable4"]));
 			swap_pages2(client, message, [embed1, embed2])
-		} catch (e) {
-        console.log(String(e.stack).grey.bgRed)
-		return message.reply({embeds: [new MessageEmbed()
-		  .setColor(es.wrongcolor)
-		  .setFooter(es.footertext, es.footericon)
-		  .setTitle(client.la[ls].common.erroroccur)
-          .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-		]});
-    }
+		
   }
 }
 /**

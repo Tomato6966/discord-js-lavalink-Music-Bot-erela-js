@@ -11,59 +11,51 @@ module.exports = {
     memberpermissions: [`ADMINISTRATOR`],
     type: "bot",
     run: async (client, message, args, cmduser, text, prefix) => {
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    try{
-      
-      //get the channel from the Ping
-      let channel = message.mentions.channels.filter(ch=>ch.guild.id==message.guild.id).first() || message.guild.channels.cache.get(message.content.trim().split(" ")[0]);
-      //if no channel pinged return error
-      if (!channel)
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
-        .setTitle(eval(client.la[ls]["cmds"]["settings"]["addbotchat"]["variable1"]))
-      ]});
-      //try to find it, just incase user pings channel from different server
-      try {
-          message.guild.channels.cache.get(channel.id)
-      } catch {
-        return message.reply({embeds :[new MessageEmbed()
-          .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
-          .setTitle(eval(client.la[ls]["cmds"]["settings"]["addbotchat"]["variable2"]))
-        ]});
-      }
-      //if its already in the database return error
-      if(client.settings.get(message.guild.id,`botchannel`).includes(channel.id))
-        return message.reply({embeds : [new MessageEmbed()
-          .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
-          .setTitle(eval(client.la[ls]["cmds"]["settings"]["addbotchat"]["variable3"]))
-        ]});
-      //push it into the database
-      client.settings.push(message.guild.id, channel.id, `botchannel`);
-      //these lines create the string of the Bot Channels
-      let leftb = ``;
-      if(client.settings.get(message.guild.id, `botchannel`).join(``) ===``) leftb = client.la[ls]["common"]["nobotchannels"];
-      else
-      for(let i = 0; i < client.settings.get(message.guild.id, `botchannel`).length; i++){
-        leftb += `<#` +client.settings.get(message.guild.id, `botchannel`)[i] + `> | `
-      }
-      //send informational message
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+    let es = client.settings.get(message.guild.id, "embed");
+    let ls = client.settings.get(message.guild.id, "language")
+    
+    //get the channel from the Ping
+    let channel = message.mentions.channels.filter(ch=>ch.guild.id==message.guild.id).first() || message.guild.channels.cache.get(message.content.trim().split(" ")[0]);
+    //if no channel pinged return error
+    if (!channel)
+    return message.reply({embeds : [new MessageEmbed()
+      .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
+      .setTitle(eval(client.la[ls]["cmds"]["settings"]["addbotchat"]["variable1"]))
+    ]});
+    //try to find it, just incase user pings channel from different server
+    try {
+        message.guild.channels.cache.get(channel.id)
+    } catch {
+      return message.reply({embeds :[new MessageEmbed()
+        .setColor(es.wrongcolor)
         .setFooter(es.footertext, es.footericon)
-        .setTitle(eval(client.la[ls]["cmds"]["settings"]["addbotchat"]["variable4"]))
-        .setDescription(eval(client.la[ls]["cmds"]["settings"]["addbotchat"]["variable5"]))
+        .setTitle(eval(client.la[ls]["cmds"]["settings"]["addbotchat"]["variable2"]))
       ]});
-    } catch (e) {
-        console.log(String(e.stack).grey.bgRed)
-        return message.reply({embeds : [new MessageEmbed()
-            .setColor(es.wrongcolor)
-						.setFooter(es.footertext, es.footericon)
-            .setTitle(client.la[ls].common.erroroccur)
-            .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-        ]});
     }
+    //if its already in the database return error
+    if(client.settings.get(message.guild.id,`botchannel`).includes(channel.id))
+      return message.reply({embeds : [new MessageEmbed()
+        .setColor(es.wrongcolor)
+        .setFooter(es.footertext, es.footericon)
+        .setTitle(eval(client.la[ls]["cmds"]["settings"]["addbotchat"]["variable3"]))
+      ]});
+    //push it into the database
+    client.settings.push(message.guild.id, channel.id, `botchannel`);
+    //these lines create the string of the Bot Channels
+    let leftb = ``;
+    if(client.settings.get(message.guild.id, `botchannel`).join(``) ===``) leftb = client.la[ls]["common"]["nobotchannels"];
+    else
+    for(let i = 0; i < client.settings.get(message.guild.id, `botchannel`).length; i++){
+      leftb += `<#` +client.settings.get(message.guild.id, `botchannel`)[i] + `> | `
+    }
+    //send informational message
+    return message.reply({embeds : [new MessageEmbed()
+      .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+      .setFooter(es.footertext, es.footericon)
+      .setTitle(eval(client.la[ls]["cmds"]["settings"]["addbotchat"]["variable4"]))
+      .setDescription(eval(client.la[ls]["cmds"]["settings"]["addbotchat"]["variable5"]))
+    ]});
+  
   }
 };
 /**
