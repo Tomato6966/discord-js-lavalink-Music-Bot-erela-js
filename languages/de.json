@@ -562,18 +562,18 @@
                 "variable8": "`Note that a HEX COLOR looks like that: \\`#ffee22\\``",
                 "variable9": "\"<:no:833101993668771842> Please add a valid COLOR\"",
                 "variable10": "`Note that a HEX COLOR looks like that: \\`#ffee22\\``",
-                "variable11": "`<a:yes:833101995723194437> The new Embed Color is: \\`${es.color}\\``",
+                "variable11": "`👍 The new Embed Color is: \\`${es.color}\\``",
                 "variable12": "\"<:no:833101993668771842> Ein Fehler ist aufgetreten, please contact: `Tomato#6966`\"",
                 "variable13": "`\\u200b`",
                 "variable14": "\"<:no:833101993668771842> Deine Zeit ist abgelaufen\"",
                 "variable15": "\"Which Image do you want to use?\"",
                 "variable16": "`Note that you may not delete this image from where ever the source is from! A Link is appreciated`",
-                "variable17": "`<a:yes:833101995723194437> The new Embed Image is: \\`${es.link}\\``",
+                "variable17": "`👍 The new Embed Image is: \\`${es.link}\\``",
                 "variable18": "\"<:no:833101993668771842> Ein Fehler ist aufgetreten, please contact: `Tomato#6966`\"",
                 "variable19": "`\\u200b`",
                 "variable20": "\"<:no:833101993668771842> Please add a valid IMAGE-LINK\"",
                 "variable21": "\"<:no:833101993668771842> Please add a valid IMAGE-LINK\"",
-                "variable22": "`<a:yes:833101995723194437> The new Embed Image is: \\`${es.link}\\``",
+                "variable22": "`👍 The new Embed Image is: \\`${es.link}\\``",
                 "variable23": "\"<:no:833101993668771842> Ein Fehler ist aufgetreten, please contact: `Tomato#6966`\"",
                 "variable24": "`\\u200b`",
                 "variable25": "\"<:no:833101993668771842> Deine Zeit ist abgelaufen\"",
@@ -582,7 +582,7 @@
                 "variable28": "\"<:no:833101993668771842> Ein Fehler ist aufgetreten, please contact: `Tomato#6966`\"",
                 "variable29": "`\\u200b`",
                 "variable30": "\"<:no:833101993668771842> Deine Zeit ist abgelaufen\"",
-                "variable31": "`<a:yes:833101995723194437> The Thumbnail is now ${es.thumb ? \"enabled\": \"disabled\"}`",
+                "variable31": "`👍 The Thumbnail is now ${es.thumb ? \"enabled\": \"disabled\"}`",
                 "variable32": "`${es.thumb ? \"Ich werde nun add Thumbnails to each Embed Message\": \"Ich werde nun **not** add a Thumbnail to Embed Messages\"}`",
                 "variable33": "\"<:no:833101993668771842> Ein Fehler ist aufgetreten, please contact: `Tomato#6966`\"",
                 "variable34": "`\\u200b`",
@@ -594,8 +594,8 @@
                 "variable2": "\"<:no:833101993668771842> ABGEBROCHEN the Setup!\"",
                 "variable3": "\"Select your new Language\"",
                 "variable4": "`Current language is: **${languages[ls]}**\\n\\n***Note that this System is not finished yet!***\\n**Only partly working Languages are:**\\n> \\`English\\`, \\`India (Hindi)\\``",
-                "variable5": "`<a:yes:833101995723194437> The new Language is **${languages[lang]}** (\\`${lang})\\``",
-                "variable6": "`<a:yes:833101995723194437> Resetted the Language | The new Language is **🇬🇧 English** (en)`",
+                "variable5": "`👍 The new Language is **${languages[lang]}** (\\`${lang})\\``",
+                "variable6": "`👍 Resetted the Language | The new Language is **🇬🇧 English** (en)`",
                 "variable7": "`📑 Current Language is ${thesettings}`",
                 "variable8": "`\\`\\`\\` ${e.message ? e.message : e.stack ? String(e.stack).substr(0, 2000) : String(e).substr(0, 2000)}\\`\\`\\``"
             }
@@ -898,50 +898,50 @@
         }
     },
     "common": {
-        "usernotfound": "❌ Could not find the USER",
-        "rolenotfound": "❌ Could not find the ROLE",
+        "deaf": "❌ Während du `DEAF` / `SERVERDEAF` bist, kannst du diesen Befehl nicht ausführen",
+        "usernotfound": "❌ Konnte diesen Nutzer nicht finden",
+        "rolenotfound": "❌ Konnte diese Rolle nicht finden",
         "erroroccur": "❌ Ein Fehler ist aufgetreten",
         "disabled": {
-            "title": "❌ **This Command is currently, disabled**",
-            "description": "**An Admin can enable it with: `{prefix}setup-commands`**"
+            "title": "❌ **Dieser Command ist zurzeit deaktiviert**",
+            "description": "**Ein Admin kann ihn mit dem Befehl: `{prefix}setup-commands` wieder aktivieren**"
         },
-        "nothing_playing": "❌ **I am currently not playing something!**",
-        "join_vc": "❌ **You need to join a Voice-Channel first!**",
-        "wrong_vc": "❌ **You need to be in my voice channel to use this command!**",
-        "not_connected": "❌ **I am not connected to a Voice Channel anymore!**",
-        "dms_disabled": "❌ **Your Dm's are disabled!**",
-        "example": "For example",
+        "nothing_playing": "❌ **Zurzeit spiele ich keine Musik**",
+        "join_vc": "❌ **Bitte trete zuerst einen Voice-Channel bei**",
+        "wrong_vc": "❌ **Du musst in __meinen__ Voice-Channel sein um diesen Befehl ausführen zu können**",
+        "not_connected": "❌ **Ich bin mit keinem Voice-Channel verbunden**",
+        "dms_disabled": "❌ **Deine Direkt-Nachrichten sind deaktiviert**",
+        "example": "Zum Beispiel",
         "botchat": {
-            "title": "❌ **Not in the Bot Chat!**",
-            "description": "**There is a Bot chat setup in this GUILD! Try using the Bot Commands here:**"
+            "title": "❌ **Nicht im Bot-Chat!**",
+            "description": "**Es gibt einen Bot-Chat-Setup in diesem Server, bitte nutze den Befehl in einem dieser Channel:**"
         },
-        "ping": "👍 **To see all Commands type: `{prefix}help`!**",
+        "ping": "👍 **Um alle Befehle zu sehen, nutze: `{prefix}help`!**",
         "unknowncmd": {
             "title": "❌ **Unkown Command, try: `{prefix}help`!**",
             "description": "**The prefix for this Guild is: `{prefix}`**\n\n*You can also **ping** me, instead of using a Prefix!*\n\n**To see all Commands Type `{prefix}help [Cat/Cmd]`!**\n\n**To see all available setups type `{prefix}setup`!**"
         },
-        "cooldown": "❌ Please wait {time} more second(s) before reusing the `{commandname}` command.",
+        "cooldown": "❌ Bitte warte noch {time} Sekunde(n), bevor du den Befehl `{commandname}` wieder nutzen kannst.",
         "premium": {
-            "title": "❌ **This Command is Premium Only!** <a:nitro:833402717506502707>",
-            "description": "> *This means, you need to **pay** in Order to be able to use this Command!*\n\n> [Website](https://milrato.dev) - [Pay through here](https://discord.gg/milrato)"
+            "title": "❌ **Dieser Befehl ist nur für PREMIUM-SERVER!** 💰",
+            "description": "Ein Admin kann mit dem Befehl `{prefix}premium` diesen Server als PREMIUM-SERVER anfragen lassen."
         },
         "permissions": {
             "title": "❌ **Du bist nicht berechtigt diesen Befehl auszuführen!!**",
-            "description": "**You need these Permissions:**"
+            "description": "**Du benötigst diese Berechtigungen:**"
         },
         "missingroles": {
             "title": "❌ **Du bist nicht berechtigt diesen Befehl auszuführen!!**",
-            "description": "**You need these Roles:**",
-            "description2": "**You need to be the Requester of the current playing Track!**\nOR: **You need these Roles:**"
+            "description": "**Du benötigst diese Rollen:**",
+            "description2": "**Du musst der Anfragender des Songs sein!**\nODER: **Du benötigst eine dieser Rollen:**"
         },
-        "nodjs": "no Dj Roles, aka all Users are Djs",
+        "nodjs": "keine DJ-ROLLEN eingestellt! Jeder kann Musik Befehle ausführen.",
+        "nobotchannels": "Keine Bot-CHANNELS eingestellt! Jeder Befehl kann in jedem Channel ausgeführt werden",
         "somethingwentwrong": "❌ **Ein Fehler ist aufgetreten while, running this Command!**"
     },
     "handlers": {
         "erelaevents": {
             "client_events": {
-                "variable1": "\"Don't unmute me!, i muted my self again! This safes Data so it gives you a faster and smoother experience\"",
-                "variable2": "\"Don't unmute me!, i muted my self again! This safes Data so it gives you a faster and smoother experience\"",
                 "variable3": "`❌ Queue has ended | Channel Empty`",
                 "variable4": "`I left the Channel: ${client.channels.cache.get(player.voiceChannel).name} because the Channel got empty`"
             },

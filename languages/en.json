@@ -553,18 +553,18 @@
                 "variable8": "`Note that a HEX COLOR looks like that: \\`#ffee22\\``",
                 "variable9": "\"<:no:833101993668771842> Please add a valid COLOR\"",
                 "variable10": "`Note that a HEX COLOR looks like that: \\`#ffee22\\``",
-                "variable11": "`<a:yes:833101995723194437> The new Embed Color is: \\`${es.color}\\``",
+                "variable11": "`👍 The new Embed Color is: \\`${es.color}\\``",
                 "variable12": "\"<:no:833101993668771842> Ein Fehler ist aufgetreten, please contact: `Tomato#6966`\"",
                 "variable13": "``",
                 "variable14": "\"<:no:833101993668771842> Deine Zeit ist abgelaufen\"",
                 "variable15": "\"Which Image do you want to use?\"",
                 "variable16": "`Note that you may not delete this image from where ever the source is from! A Link is appreciated`",
-                "variable17": "`<a:yes:833101995723194437> The new Embed Image is: \\`${es.link}\\``",
+                "variable17": "`👍 The new Embed Image is: \\`${es.link}\\``",
                 "variable18": "\"<:no:833101993668771842> Ein Fehler ist aufgetreten, please contact: `Tomato#6966`\"",
                 "variable19": "``",
                 "variable20": "\"<:no:833101993668771842> Please add a valid IMAGE-LINK\"",
                 "variable21": "\"<:no:833101993668771842> Please add a valid IMAGE-LINK\"",
-                "variable22": "`<a:yes:833101995723194437> The new Embed Image is: \\`${es.link}\\``",
+                "variable22": "`👍 The new Embed Image is: \\`${es.link}\\``",
                 "variable23": "\"<:no:833101993668771842> Ein Fehler ist aufgetreten, please contact: `Tomato#6966`\"",
                 "variable24": "``",
                 "variable25": "\"<:no:833101993668771842> Deine Zeit ist abgelaufen\"",
@@ -573,7 +573,7 @@
                 "variable28": "\"<:no:833101993668771842> Ein Fehler ist aufgetreten, please contact: `Tomato#6966`\"",
                 "variable29": "``",
                 "variable30": "\"<:no:833101993668771842> Deine Zeit ist abgelaufen\"",
-                "variable31": "`<a:yes:833101995723194437> The Thumbnail is now ${es.thumb ? \"enabled\": \"disabled\"}`",
+                "variable31": "`👍 The Thumbnail is now ${es.thumb ? \"enabled\": \"disabled\"}`",
                 "variable32": "`${es.thumb ? \"Ich werde nun add Thumbnails to each Embed Message\": \"Ich werde nun **not** add a Thumbnail to Embed Messages\"}`",
                 "variable33": "\"<:no:833101993668771842> Ein Fehler ist aufgetreten, please contact: `Tomato#6966`\"",
                 "variable34": "``",
@@ -585,8 +585,8 @@
                 "variable2": "\"<:no:833101993668771842> ABGEBROCHEN the Setup!\"",
                 "variable3": "\"Select your new Language\"",
                 "variable4": "`Current language is: **${languages[ls]}**\\n\\n***Note that this System is not finished yet!***\\n**Only partly working Languages are:**\\n> \\`English\\`, \\`India (Hindi)\\``",
-                "variable5": "`<a:yes:833101995723194437> The new Language is **${languages[lang]}** (\\`${lang})\\``",
-                "variable6": "`<a:yes:833101995723194437> Resetted the Language | The new Language is **🇬🇧 English** (en)`",
+                "variable5": "`👍 The new Language is **${languages[lang]}** (\\`${lang})\\``",
+                "variable6": "`👍 Resetted the Language | The new Language is **🇬🇧 English** (en)`",
                 "variable7": "`📑 Current Language is ${thesettings}`",
                 "variable8": "`\\`\\`\\` ${e.message ? e.message : e.stack ? String(e.stack).substr(0, 2000) : String(e).substr(0, 2000)}\\`\\`\\``"
             }
@@ -885,6 +885,7 @@
         }
     },
     "common": {
+        "deaf": "❌ You cannot execute this command while you are `DEAF` / `SERVERDEAF`",
         "usernotfound": "❌ Could not find the USER",
         "rolenotfound": "❌ Could not find the ROLE",
         "erroroccur": "❌ An error occurred",
@@ -909,8 +910,8 @@
         },
         "cooldown": "❌ Please wait {time} more second(s) before reusing the `{commandname}` command.",
         "premium": {
-            "title": "❌ **This Command is Premium Only!** <a:nitro:833402717506502707>",
-            "description": "> *This means, you need to **pay** in Order to be able to use this Command!*\n\n> [Website](https://milrato.dev) - [Pay through here](https://discord.gg/milrato)"
+            "title": "❌ **This Command is Premium Only!** 💰",
+            "description": "An Admin can request this Server as PREMIUM-GUILD by typing: `{prefix}premium`"
         },
         "permissions": {
             "title": "❌ **You are not allowed to run this command!**",
@@ -921,14 +922,13 @@
             "description": "**You need these Roles:**",
             "description2": "**You need to be the Requester of the current playing Track!**\nOR: **You need these Roles:**"
         },
-        "nodjs": "no Dj Roles, aka all Users are Djs",
+        "nodjs": "no DJ-Roles setupped! Everyone can use the Music-Commands.",
+        "nobotchannels": "No Bot-Channels setupped! The Commands are useable in all Channels.",
         "somethingwentwrong": "❌ **An error occurred while, running this Command!**"
     },
     "handlers": {
         "erelaevents": {
             "client_events": {
-                "variable1": "\"Don't unmute me!, i muted my self again! This safes Data so it gives you a faster and smoother experience\"",
-                "variable2": "\"Don't unmute me!, i muted my self again! This safes Data so it gives you a faster and smoother experience\"",
                 "variable3": "`❌ Queue has ended | Channel Empty`",
                 "variable4": "`I left the Channel: ${client.channels.cache.get(player.voiceChannel).name} because the Channel got empty`"
             },
