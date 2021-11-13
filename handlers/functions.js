@@ -19,11 +19,8 @@ module.exports.handlemsg = handlemsg;
 module.exports.nFormatter = nFormatter;
 module.exports.databasing = databasing;
 module.exports.shuffle = shuffle;
-module.exports.formatDate = formatDate;
 module.exports.delay = delay;
-module.exports.getRandomInt = getRandomInt;
 module.exports.duration = duration;
-module.exports.getRandomNum = getRandomNum;
 module.exports.createBar = createBar;
 module.exports.format = format;
 module.exports.stations = stations;
@@ -34,11 +31,6 @@ module.exports.escapeRegex = escapeRegex;
 module.exports.autoplay = autoplay;
 module.exports.arrayMove = arrayMove;
 module.exports.isValidURL = isValidURL;
-module.exports.GetUser = GetUser;
-module.exports.GetRole = GetRole;
-module.exports.GetGlobalUser = GetGlobalUser;
-module.exports.parseMilliseconds = parseMilliseconds;
-module.exports.isEqual = isEqual;
 module.exports.check_if_dj = check_if_dj;
 function check_if_dj(client, member, song) {
   //if no message added return
@@ -67,56 +59,6 @@ function handlemsg(txt, options) {
   }
   return text;
 }
-function isEqual(value, other){
-  const type = Object.prototype.toString.call(value);
-  if (type !== Object.prototype.toString.call(other)) return false;
-  if (["[object Array]", "[object Object]"].indexOf(type) < 0) return false;
-  const valueLen = type === "[object Array]" ? value.length : Object.keys(value).length;
-  const otherLen = type === "[object Array]" ? other.length : Object.keys(other).length;
-  if (valueLen !== otherLen) return false;
-  const compare = (item1, item2) => {
-      const itemType = Object.prototype.toString.call(item1);
-      if (["[object Array]", "[object Object]"].indexOf(itemType) >= 0) {
-          if (!isEqual(item1, item2)) return false;
-      }
-      else {
-          if (itemType !== Object.prototype.toString.call(item2)) return false;
-          if (itemType === "[object Function]") {
-              if (item1.toString() !== item2.toString()) return false;
-          } else {
-              if (item1 !== item2) return false;
-          }
-      }
-  };
-  if (type === "[object Array]") {
-      for (var i = 0; i < valueLen; i++) {
-          if (compare(value[i], other[i]) === false) return false;
-      }
-  } else {
-      for (var key in value) {
-          if (Object.prototype.hasOwnProperty.call(value, key)) {
-              if (compare(value[key], other[key]) === false) return false;
-          }
-      }
-  }
-  return true;
-}
-function parseMilliseconds(milliseconds) {
-	if (typeof milliseconds !== 'number') {
-		throw new TypeError('Expected a number');
-	}
-
-	return {
-		days: Math.trunc(milliseconds / 86400000),
-		hours: Math.trunc(milliseconds / 3600000) % 24,
-		minutes: Math.trunc(milliseconds / 60000) % 60,
-		seconds: Math.trunc(milliseconds / 1000) % 60,
-		milliseconds: Math.trunc(milliseconds) % 1000,
-		microseconds: Math.trunc(milliseconds * 1000) % 1000,
-		nanoseconds: Math.trunc(milliseconds * 1e6) % 1000
-	};
-}
-
 function isValidURL(string) {
   const args = string.split(" ");
   let url;
@@ -131,112 +73,6 @@ function isValidURL(string) {
   }
   return url;
 };
-function GetUser(message, arg){
-  var errormessage = "❌ I failed finding that User...";
-  return new Promise(async (resolve, reject) => {
-    var args = arg, client = message.client;
-    if(!client || !message) return reject("CLIENT IS NOT DEFINED")
-    if(!args || args == null || args == undefined) args = message.content.trim().split(/ +/).slice(1);
-    let user = message.mentions.users.first();
-    if(!user && args[0] && args[0].length == 18) {
-      user = await client.users.fetch(args[0]).catch((e)=>{
-        return reject(errormessage);
-      })
-      if(!user) return reject(errormessage)
-      return resolve(user);
-    }
-    /**
-     * @INFO
-     * Bot Coded by Tomato#6966 | https://discord.gg/milrato
-     * @INFO
-     * Work for Milrato Development | https://milrato.dev
-     * @INFO
-     * Please mention him / Milrato Development, when using this Code!
-     * @INFO
-     */
-    
-    else if(!user && args[0]){
-      let alluser = message.guild.members.cache.map(member=> String(member.user.tag).toLowerCase())
-      user = alluser.find(user => user.startsWith(args.join(" ").toLowerCase()))
-      user = message.guild.members.cache.find(me => String(me.user.tag).toLowerCase() == user)
-      if(!user || user == null || !user.id) {
-        alluser = message.guild.members.cache.map(member => String(member.displayName + "#" + member.user.discriminator).toLowerCase())
-        user = alluser.find(user => user.startsWith(args.join(" ").toLowerCase()))
-        user = message.guild.members.cache.find(me => String(me.displayName + "#" + me.user.discriminator).toLowerCase() == user)
-        if(!user || user == null || !user.id) return reject(errormessage)
-      }
-      user = await client.users.fetch(user.user.id).catch(() => {})
-      if(!user) return reject(errormessage)
-      return resolve(user);
-    }
-    else {
-      user = message.mentions.users.first() || message.author;
-      return resolve(user);
-    }
-  })
-}
-function GetRole(message, arg){
-  var errormessage = "❌ I failed finding that Role...";
-  return new Promise(async (resolve, reject) => {
-    var args = arg, client = message.client;
-    if(!client || !message) return reject("CLIENT IS NOT DEFINED")
-    if(!args || args == null || args == undefined) args = message.content.trim().split(/ +/).slice(1);
-    let user = message.mentions.roles.filter(role=>role.guild.id==message.guild.id).first();
-    if(!user && args[0] && args[0].length == 18) {
-      user = message.guild.roles.cache.get(args[0])
-      if(!user) return reject(errormessage)
-      return resolve(user);
-    }
-    else if(!user && args[0]){
-      let alluser = message.guild.roles.cache.map(role => String(role.name).toLowerCase())
-      user = alluser.find(r => r.split(" ").join("").includes(args.join("").toLowerCase()))
-      user = message.guild.roles.cache.find(role => String(role.name).toLowerCase() === user)
-      if(!user) return reject(errormessage)
-      return resolve(user);
-    }
-    else {
-      user = message.mentions.roles.filter(role=>role.guild.id==message.guild.id).first();
-      if(!user) return reject(errormessage)
-      return resolve(user);
-    }
-  })
-}
-function GetGlobalUser(message, arg){
-  var errormessage = "❌ I failed finding that User...";
-  return new Promise(async (resolve, reject) => {
-    var args = arg, client = message.client;
-    if(!client || !message) return reject("CLIENT IS NOT DEFINED")
-    if(!args || args == null || args == undefined) args = message.content.trim().split(/ +/).slice(1);
-    let user = message.mentions.users.first();
-    if(!user && args[0] && args[0].length == 18) {
-      user = await client.users.fetch(args[0]).catch(() => {})
-      if(!user) return reject(errormessage)
-      return resolve(user);
-    }
-    else if(!user && args[0]){
-      let alluser = [], allmembers = [];
-      var guilds = [...client.guilds.cache.values()];
-      for(const g of guilds){
-        var members = g.members.cache.map(this_Code_is_by_Tomato_6966 => this_Code_is_by_Tomato_6966);
-        for(const m of members) { alluser.push(m.user.tag); allmembers.push(m); }
-      }
-      user = alluser.find(user => user.startsWith(args.join(" ").toLowerCase()))
-      user = allmembers.find(me => String(me.user.tag).toLowerCase() == user)
-      if(!user || user == null || !user.id) {
-        user = alluser.find(user => user.startsWith(args.join(" ").toLowerCase()))
-        user = allmembers.find(me => String(me.displayName + "#" + me.user.discriminator).toLowerCase() == user)
-        if(!user || user == null || !user.id) return reject(errormessage)
-      }
-      user = await client.users.fetch(user.user.id).catch(() => {})
-      if(!user) return reject(errormessage)
-      return resolve(user);
-    }
-    else {
-      user = message.mentions.users.first() || message.author;
-      return resolve(user);
-    }
-  })
-}
 
 function shuffle(a) {
   try {
@@ -248,14 +84,6 @@ function shuffle(a) {
       a[j] = x;
     }
     return a;
-  } catch (e) {
-    console.log(String(e.stack).grey.bgRed)
-  }
-}
-
-function formatDate(date) {
-  try {
-    return new Intl.DateTimeFormat("en-US").format(date);
   } catch (e) {
     console.log(String(e.stack).grey.bgRed)
   }
@@ -319,8 +147,7 @@ function duration(duration, useMilli = false) {
     } else {
       return parts
     }
- }
-
+}
 
 function delay(delayInms) {
   try {
@@ -329,22 +156,6 @@ function delay(delayInms) {
         resolve(2);
       }, delayInms);
     });
-  } catch (e) {
-    console.log(String(e.stack).grey.bgRed)
-  }
-}
-
-function getRandomInt(max) {
-  try {
-    return Math.floor(Math.random() * Math.floor(max));
-  } catch (e) {
-    console.log(String(e.stack).grey.bgRed)
-  }
-}
-
-function getRandomNum(min, max) {
-  try {
-    return Math.floor(Math.random() * Math.floor((max - min) + min));
   } catch (e) {
     console.log(String(e.stack).grey.bgRed)
   }

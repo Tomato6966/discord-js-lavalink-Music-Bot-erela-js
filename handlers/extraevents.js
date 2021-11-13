@@ -68,7 +68,7 @@ module.exports = client => {
       if (!message) message = await channel.messages.fetch(messageId).catch(() => {}) || false;
       if (!message) return client.logger("Music System - Message not found!")
       //edit the message so that it's right!
-      var data = require("./musicsystem").generateQueueEmbed(client, player.guild, true)
+      var data = require(`${process.cwd}/handlers/erela_events/musicsystem`).generateQueueEmbed(client, player.guild, true)
       message.edit(data).catch(() => {})
     }
   }

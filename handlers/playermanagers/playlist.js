@@ -53,7 +53,7 @@ async function playlist(client, message, args, type, slashCommand = false) {
           .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable1"]))
           .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable2"]))
         ]}).catch(() => {});
-      return message.reply({embeds: [new MessageEmbed()
+      return message.channel.send({embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable1"]))
         .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable2"]))
@@ -71,7 +71,7 @@ async function playlist(client, message, args, type, slashCommand = false) {
           .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
           .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable3"]))
         ]}).catch(() => {})
-      return message.reply({embeds: [new MessageEmbed()
+      return message.channel.send({embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
         .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable3"]))
@@ -111,7 +111,7 @@ async function playlist(client, message, args, type, slashCommand = false) {
       .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
       
     if(slashCommand) slashCommand.reply({ephemeral: true, embeds: [playlistembed]}).catch(() => {});
-    else message.reply({embeds: [playlistembed]}).catch(() => {})
+    else message.channel.send({embeds: [playlistembed]}).catch(() => {})
     //Update the Music System Message - Embed
     client.updateMusicSystem(player);
   } catch (e) {
@@ -122,7 +122,7 @@ async function playlist(client, message, args, type, slashCommand = false) {
       .setColor(ee.wrongcolor)
       .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
     ]}).catch(() => {})
-    message.reply({embeds: [new MessageEmbed()
+    message.channel.send({embeds: [new MessageEmbed()
       .setColor(ee.wrongcolor)
       .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
     ]}).catch(() => {}).then(msg => {

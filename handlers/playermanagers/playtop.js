@@ -57,7 +57,7 @@ async function playtop(client, message, args, type, slashCommand) {
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
         .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable1"]))
       ]}).catch(() => {})
-      return message.reply({embeds: [new MessageEmbed()
+      return message.channel.send({embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
         .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable1"]))
@@ -110,7 +110,7 @@ async function playtop(client, message, args, type, slashCommand) {
       .addField("💯 Song By: ", `\`${res.tracks[0].author}\``, true)
       .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
     if(slashCommand) slashCommand.reply({ephemeral: true, embeds: [playembed]}).catch(() => {});
-    else message.reply({embeds: [playembed]}).catch(() => {});
+    else message.channel.send({embeds: [playembed]}).catch(() => {});
     //Update the Music System Message - Embed
     client.updateMusicSystem(player);
   }
@@ -124,7 +124,7 @@ async function playtop(client, message, args, type, slashCommand) {
           .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
           .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable3"]))
         ]}).catch(() => {})
-      return message.reply({embeds: [new MessageEmbed()
+      return message.channel.send({embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
         .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable3"]))
@@ -182,11 +182,11 @@ async function playtop(client, message, args, type, slashCommand) {
     if (message.guild.me.permissionsIn(message.channel).has("EMBED_LINKS")){
       if(slashCommand)
         return slashCommand.reply({ephemeral: true, embeds: [playlistembed]}).catch(() => {});
-      message.reply({embeds: [playlistembed]}).catch(() => {});
+      message.channel.send({embeds: [playlistembed]}).catch(() => {});
     } else{
       if(slashCommand)
         return slashCommand.reply({ephemeral: true, content: [eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable6"])]}).catch(() => {});
-      message.reply({content: [eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable6"])]}).catch(() => {});
+      message.channel.send({content: [eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable6"])]}).catch(() => {});
     }
       
   }

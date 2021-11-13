@@ -42,6 +42,9 @@ module.exports = async (client, message) => {
     const [, matchedPrefix] = message.content.match(prefixRegex);
     //CHECK PERMISSIONS
     if(!message.guild.me.permissions.has(Discord.Permissions.FLAGS.SEND_MESSAGES)) return;
+
+    await message.channel.sendTyping();
+
     if(!message.guild.me.permissions.has(Discord.Permissions.FLAGS.USE_EXTERNAL_EMOJIS))
       return message.reply(`❌ **I am missing the Permission to USE EXTERNAL EMOJIS**`)
     if(!message.guild.me.permissions.has(Discord.Permissions.FLAGS.EMBED_LINKS))

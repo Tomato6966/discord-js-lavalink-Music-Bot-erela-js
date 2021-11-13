@@ -41,7 +41,7 @@ async function similar(client, message, args, type, slashCommand) {
         .addField("⌛ Duration: ", `\`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
         .addField("💯 Song By: ", `\`${res.tracks[0].author}\``, true)
         .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-      message.reply({embeds: [embed2]})
+      message.channel.send({embeds: [embed2]})
       //Update the Music System Message - Embed
       client.updateMusicSystem(player);
       return
@@ -64,8 +64,8 @@ async function similar(client, message, args, type, slashCommand) {
         .setFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
           dynamic: true
         }))
-      message.reply({embeds: [searchembed]})
-      await message.reply({embeds: [new MessageEmbed()
+      message.channel.send({embeds: [searchembed]})
+      await message.channel.send({embeds: [new MessageEmbed()
         .setColor(ee.color)
         .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable3"]))
       ]})
@@ -77,7 +77,7 @@ async function similar(client, message, args, type, slashCommand) {
         });
       } catch (e) {
         if (!player.queue.current) player.destroy();
-        return message.reply({embeds: [new MessageEmbed()
+        return message.channel.send({embeds: [new MessageEmbed()
           .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable4"]))
           .setColor(ee.wrongcolor)
         ]});
@@ -85,20 +85,20 @@ async function similar(client, message, args, type, slashCommand) {
       var first = collected.first().content;
       if (first.toLowerCase() === 'end') {
         if (!player.queue.current) player.destroy();
-        return message.reply({embeds: [new MessageEmbed()
+        return message.channel.send({embeds: [new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable5"]))
         ]});
       }
       var index = Number(first) - 1;
       if (index < 0 || index > max - 1)
-        return message.reply({embeds: [new MessageEmbed()
+        return message.channel.send({embeds: [new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable6"]))
         ]});
       track = res.tracks[index];
       if (!track)
-        return message.reply({embeds: [new MessageEmbed()
+        return message.channel.send({embeds: [new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setTitle(String("❌ Error | Found nothing for: **`" + player.queue.current.title).substr(0, 256 - 3) + "`**")
           .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable7"]))
@@ -126,28 +126,14 @@ async function similar(client, message, args, type, slashCommand) {
           .addField("⌛ Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
           .addField("💯 Song By: ", `\`${track.author}\``, true)
           .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-        message.reply({embeds: [embed]})
+        message.channel.send({embeds: [embed]})
       }
-      if(client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5){
-        let messageId = client.musicsettings.get(player.guild, "message");
-        let guild = client.guilds.cache.get(player.guild);
-        if(!guild) return 
-        let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
-        if(!channel) return 
-        let message = channel.messages.cache.get(messageId);
-        if(!message) message = await channel.messages.fetch(messageId).catch(()=>{});
-        if(!message) return
-        //edit the message so that it's right!
-        var data = require("../erela_events/musicsystem").generateQueueEmbed(client, player.guild)
-        message.edit(data).catch(() => {})
-        if(client.musicsettings.get(player.guild, "channel") == player.textChannel){
-          return;
-        }
-      }
+      //Update the Music System Message - Embed
+      client.updateMusicSystem(player);
     }
   } catch (e) {
     console.log(e.stack ? String(e.stack).grey : String(e).grey)
-    return message.reply({embeds: [new MessageEmbed()
+    return message.channel.send({embeds: [new MessageEmbed()
       .setColor(ee.wrongcolor)
       .setTitle(String("❌ Error | Found nothing for: **`" + player.queue.current.title).substr(0, 256 - 3) + "`**")
     ]}).then(msg => {

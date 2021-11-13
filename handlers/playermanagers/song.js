@@ -61,24 +61,17 @@ async function song(client, message, args, type, slashCommand, extras) {
       song_()
     }
   } catch (e) {
-    console.log(e.stack ? e.stack : e)
+    console.log(e)
     if(slashCommand)
       return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable1"]))
         .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable2"]))
       ]});
-    
-      if(slashCommand) 
-      return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable1"]))
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable2"]))
-      ]});
-    return message.reply({embeds: [new MessageEmbed()
+    return message.channel.send({embeds: [new MessageEmbed()
       .setColor(ee.wrongcolor)
-      .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable1"]))
-      .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable2"]))
+      .setTitle(String("❌ **There was an Error while searching: `" + search).substr(0, 256 - 3) + "`**")
+      .setDescription(`\`\`\`${e}\`\`\``.substr(0, 2000))
     ]});
   }
 
@@ -90,7 +83,7 @@ async function song(client, message, args, type, slashCommand, extras) {
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
         .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable3"]))
       ]})
-      return message.reply({embeds: [new MessageEmbed()
+      return message.channel.send({embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
         .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable3"]))
@@ -130,7 +123,7 @@ async function song(client, message, args, type, slashCommand, extras) {
         .addField("💯 Song By: ", `\`${res.tracks[0].author}\``, true)
         .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
       if(slashCommand) slashCommand.reply({ephemeral: true, embeds: [playembed]})
-      else message.reply({embeds: [playembed]})
+      else message.channel.send({embeds: [playembed]})
     }
     //Update the Music System Message - Embed
     client.updateMusicSystem(player);
@@ -144,7 +137,7 @@ async function song(client, message, args, type, slashCommand, extras) {
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
         .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable5"]))
       ]})
-      return message.reply({embeds: [new MessageEmbed()
+      return message.channel.send({embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
         .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable5"]))
@@ -185,33 +178,25 @@ async function song(client, message, args, type, slashCommand, extras) {
       player.queue.add(res.tracks);
     }
     //send information
-    var playlistembed = new MessageEmbed()
-      .setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256 - 3) + "`**")
-      .setURL(res.playlist.uri).setColor(ee.color)
-      .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
-      .addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
-      .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-      .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
-        dynamic: true
-      }))
-      if(slashCommand) slashCommand.reply({ephemeral: true, embeds: [playlistembed]})
-      else message.reply({embeds: [playlistembed]})
-    if(client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5){
-      let messageId = client.musicsettings.get(player.guild, "message");
-      let guild = client.guilds.cache.get(player.guild);
-      if(!guild) return 
-      let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
-      if(!channel) return 
-      let message = channel.messages.cache.get(messageId);
-      if(!message) message = await channel.messages.fetch(messageId).catch(()=>{});
-      if(!message) return
-      //edit the message so that it's right!
-      var data = require("../erela_events/musicsystem").generateQueueEmbed(client, player.guild)
-      message.edit(data).catch(() => {})
-      if(client.musicsettings.get(player.guild, "channel") == player.textChannel){
-        return;
+      var playlistembed = new MessageEmbed()
+        .setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256 - 3) + "`**")
+        .setURL(res.playlist.uri).setColor(ee.color)
+        .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
+        .addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
+        .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
+        .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
+          dynamic: true
+        }))
+      if(slashCommand) {
+        try{
+          slashCommand.reply({ephemeral: true, embeds: [playlistembed]})
+        }catch{
+          message.channel.send({embeds: [playlistembed]})
+        }  
       }
-    }
+      else message.channel.send({embeds: [playlistembed]})
+      //Update the Music System Message - Embed
+      client.updateMusicSystem(player);
   }
 
 }

@@ -1,21 +1,23 @@
 var {
-    Manager
-  } = require("erela.js"),
-    { Permissions } = require("discord.js"),
-    Spotify = require("erela.js-spotify"),
-    Deezer = require("erela.js-deezer"),
-    Facebook = require("erela.js-facebook"),
-    config = require(`${process.cwd()}/botconfig/config.json`),
-  
-    clientID = process.env.clientID || config.spotify.clientID,
-    clientSecret = process.env.clientSecret || config.spotify.clientSecret;
-  module.exports = (client) => {
+  Manager
+} = require("erela.js");
+var { Permissions } = require("discord.js");
+var Spotify = require("erela.js-spotify");
+var AppleMusic = require("erela.js-apple");
+var Deezer = require("erela.js-deezer");
+var Facebook = require("erela.js-facebook");
+var config = require(`${process.cwd()}/botconfig/config.json`);
+
+clientID = process.env.clientID || config.spotify.clientID,
+clientSecret = process.env.clientSecret || config.spotify.clientSecret;
+module.exports = (client) => {
       if ((!clientID || clientID.length <5) || (!clientSecret || clientSecret.length <5)) {
         client.manager = new Manager({
           nodes: config.clientsettings.nodes,
           plugins: [
             new Deezer(),
             new Facebook(),
+            new AppleMusic(),
           ],
           send(id, payload) {
             var guild = client.guilds.cache.get(id);
@@ -32,6 +34,7 @@ var {
             }),
             new Deezer(),
             new Facebook(),
+            new AppleMusic(),
           ],
           send(id, payload) {
             var guild = client.guilds.cache.get(id);
