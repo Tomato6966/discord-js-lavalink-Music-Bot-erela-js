@@ -16,6 +16,7 @@
    
    "status": {
       "text": "{prefix}help | played {songsplayed} Songs on {guildcount} Guilds | Support: discord.gg/milrato",
+      "text2": "By: milrato.dev",
       "type": "PLAYING",
       "url": "https://twitch.tv/#"
    },
