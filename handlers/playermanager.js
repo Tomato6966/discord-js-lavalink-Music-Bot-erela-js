@@ -3,12 +3,7 @@ const {
   MessageEmbed
 } = require("discord.js")
 const config = require(`${process.cwd()}/botconfig/config.json`)
-ee = require(`${process.cwd()}/botconfig/embed.json`)
-const {
-  format,
-  delay,
-  arrayMove
-} = require(`${process.cwd()}/handlers/functions`)
+var ee = require(`${process.cwd()}/botconfig/embed.json`)
 module.exports = async (client, message, args, type, slashCommand = false, extras = false) => {
   let method = type.includes(":") ? type.split(":") : Array(type)
   if (!message.guild) return;

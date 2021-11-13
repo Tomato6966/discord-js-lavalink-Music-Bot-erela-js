@@ -1,16 +1,16 @@
 var {
     Manager
   } = require("erela.js"),
-  
+    { Permissions } = require("discord.js"),
     Spotify = require("erela.js-spotify"),
     Deezer = require("erela.js-deezer"),
     Facebook = require("erela.js-facebook"),
     config = require(`${process.cwd()}/botconfig/config.json`),
   
-    clientID = process.env.clientId || config.spotify.clientID,
+    clientID = process.env.clientID || config.spotify.clientID,
     clientSecret = process.env.clientSecret || config.spotify.clientSecret;
   module.exports = (client) => {
-      if (!clientID || !clientSecret) {
+      if ((!clientID || clientID.length <5) || (!clientSecret || clientSecret.length <5)) {
         client.manager = new Manager({
           nodes: config.clientsettings.nodes,
           plugins: [
@@ -27,7 +27,7 @@ var {
           nodes: config.clientsettings.nodes,
           plugins: [
             new Spotify({
-              clientID, //get a clientid from there: https://developer.spotify.com/dashboard
+              clientID, //get a clientID from there: https://developer.spotify.com/dashboard
               clientSecret
             }),
             new Deezer(),
@@ -39,9 +39,15 @@ var {
           },
         });
       }
+      //Log information
+      client.logger(`Player for the Bot ${client.user ? client.user.username + " " : ""}created!`);
+      
+      
+      client.once("ready", () => {
+        client.manager.init(client.user.id);
+      });
       //require the other events
       require("./node_events")(client)
-      require("./client_events")(client)
       require("./events")(client)
       require("./musicsystem")(client)
       

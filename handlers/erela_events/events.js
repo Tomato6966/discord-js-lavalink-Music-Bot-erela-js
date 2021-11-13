@@ -42,36 +42,11 @@ module.exports = (client) => {
     .on("playerDestroy", async (player) => {
 
       if (player.textChannel && player.guild) {
-        let Queuechannel = client.channels.cache.get(player.textChannel);
-        if (Queuechannel && Queuechannel.permissionsFor(Queuechannel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) {
-          Queuechannel.messages.fetch(player.get("currentmsg")).then(currentSongPlayMsg => {
-            if (currentSongPlayMsg && currentSongPlayMsg.embeds && currentSongPlayMsg.embeds[0]) {
-              var embed = currentSongPlayMsg.embeds[0];
-              embed.author.iconURL = "https://cdn.discordapp.com/attachments/883978730261860383/883978741892649000/847032838998196234.png"
-              embed.footer.text += "\n\n⛔️ SONG & QUEUE ENDED! | Player got DESTROYED (stopped)"
-              currentSongPlayMsg.edit({
-                embeds: [embed],
-                components: []
-              }).catch(() => {})
-            }
-          }).catch(() => {})
-        }
-        if (client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5) {
-          let messageId = client.musicsettings.get(player.guild, "message");
-          let guild = client.guilds.cache.get(player.guild);
-          if (!guild) return
-          let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
-          if (!channel) return
-          let message = channel.messages.cache.get(messageId);
-          if (!message) message = await channel.messages.fetch(messageId).catch(() => {});
-          if (!message) return
-          //edit the message so that it's right!
-          var data = require("./musicsystem").generateQueueEmbed(client, player.guild, true)
-          message.edit(data).catch(() => {})
-          if (client.musicsettings.get(player.guild, "channel") == player.textChannel) {
-            return;
-          }
-        }
+        //update the last Played Song Message
+        client.editLastPruningMessage(player, "\n⛔️ SONG & QUEUE ENDED! | Player got DESTROYED (stopped)!")
+        //Update the Music System Message - Embed
+        client.updateMusicSystem(player);
+
       }
 
     })
@@ -79,6 +54,15 @@ module.exports = (client) => {
       try {
         try { client.stats.inc("global", "songs") } catch (e) { }
         let edited = false;
+        let guild = client.guilds.cache.get(player.guild);
+        if(!guild) return;
+
+        let channel = guild.channels.cache.get(player.textChannel);
+        if(!channel) channel = await guild.channels.fetch(player.textChannel);
+
+        let es = client.settings.get(player.guild, "embed");
+        let ls = client.settings.get(player.guild, "language");
+
         if (playercreated.has(player.guild)) {
           player.set("eq", "💣 None");
           player.set("filter", "🧨 None");
@@ -96,62 +80,54 @@ module.exports = (client) => {
           }
           databasing(client, player.guild, player.get("playerauthor"));
           playercreated.delete(player.guild); // delete the playercreated state from the thing
-        }
-        if (client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5) {
-          let messageId = client.musicsettings.get(player.guild, "message");
-          let guild = client.guilds.cache.get(player.guild);
-          if (!guild) return
-          let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
-          if (!channel) return
-          let message = channel.messages.cache.get(messageId);
-          if (!message) message = await channel.messages.fetch(messageId).catch(() => {});
-          if (!message) return
-          //edit the message so that it's right!
-          var data = require("./musicsystem").generateQueueEmbed(client, player.guild)
-          message.edit(data).catch(() => {})
-          if (client.musicsettings.get(player.guild, "channel") == player.textChannel) {
-            return;
+          client.logger(`Player Created in ${guild ? guild.name : player.guild} | Set the - Guild Default Data`);
+          /*client.logger({
+            Default_volume: client.settings.get(player.guild, "defaultvolume"),
+            Default_Equalizer: client.settings.get(player.guild, "defaulteq"),
+            Default_Autoplay: client.settings.get(player.guild, "defaultap"),
+            Pruning_Song_Messages: client.settings.get(player.guild, "playmsg") 
+          });*/
+          if(channel && channel.permissionsFor(guild.me).has(Permissions.FLAGS.SEND_MESSAGES)){
+            channel.send({
+              embeds: [
+                new MessageEmbed().setColor(es.color)
+                .setDescription(`> 👍 **Joined** <#${player.voiceChannel}>\n\n> 📃 **And bound to** <#${player.textChannel}>`)
+                .setTimestamp()
+                .setFooter(es.footertext, es.footericon)
+              ]
+            })
           }
         }
+
+        //Update the Music System Message - Embed
+        client.updateMusicSystem(player);
+
         if (player.textChannel && player.get("previoustrack")) {
           if (!collector.ended) {
             try {
-              collector.stop()
+              collector.stop();
             } catch (e) {
               console.log(e.stack ? String(e.stack).grey : String(e).grey)
             }
           }
-          let channel = client.channels.cache.get(player.textChannel);
-          if (channel && channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) {
-            channel.messages.fetch(player.get("currentmsg")).then(currentSongPlayMsg => {
-              if (currentSongPlayMsg && currentSongPlayMsg.embeds && currentSongPlayMsg.embeds[0]) {
-                var embed = currentSongPlayMsg.embeds[0];
-                embed.author.iconURL = "https://cdn.discordapp.com/attachments/883978730261860383/883978741892649000/847032838998196234.png"
-                embed.footer.text += "\n⛔️ SONG ENDED!"
-                currentSongPlayMsg.edit({
-                  embeds: [embed],
-                  components: []
-                }).catch(() => {})
-              }
-            }).catch(() => {})
-          }
+          //update the last Played Song Message
+          client.editLastPruningMessage(player, "\n⛔️ SONG ENDED!")
         }
         //votes for skip --> 0
         player.set("votes", "0");
         //set the vote of every user to FALSE so if they voteskip it will vote skip and not remove voteskip if they have voted before bruh
-        for (var userid of client.guilds.cache.get(player.guild).members.cache.map(member => member.user.id))
+        for (var userid of guild.members.cache.map(member => member.user.id))
           player.set(`vote-${userid}`, false);
         //set the previous track just have it is used for the autoplay function!
         player.set("previoustrack", track);
         //if that's disabled return
         if (!client.settings.get(player.guild, "playmsg")) {
-          return;
+          return client.logger("Pruning Disabled - Not Sending a Message");
         }
         // playANewTrack(client,player,track);
         let playdata = generateQueueEmbed(client, player, track)
         //Send message with buttons
-        let channel = client.channels.cache.get(player.textChannel);
-        if (channel && channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) {
+        if (channel && channel.permissionsFor(guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) {
           let swapmsg = await channel.send(playdata).then(msg => {
             player.set("currentmsg", msg.id);
             return msg;
@@ -172,18 +148,18 @@ module.exports = (client) => {
             const player = client.manager.players.get(i.guild.id);
             if (!player)
               return i.reply({
-                content: "<:no:833101993668771842> Nothing Playing yet",
+                content: "❌ Nothing Playing yet",
                 ephemeral: true
               })
 
             if (!channel)
               return i.reply({
-                content: `<:no:833101993668771842> **Please join a Voice Channel first!**`,
+                content: `❌ **Please join a Voice Channel first!**`,
                 ephemeral: true
               })
             if (channel.id !== player.voiceChannel)
               return i.reply({
-                content: `<:no:833101993668771842> **Please join __my__ Voice Channel first! <#${player.voiceChannel}>**`,
+                content: `❌ **Please join __my__ Voice Channel first! <#${player.voiceChannel}>**`,
                 ephemeral: true
               })
 
@@ -192,7 +168,7 @@ module.exports = (client) => {
                 embeds: [new MessageEmbed()
                   .setColor(ee.wrongcolor)
                   .setFooter(ee.footertext, ee.footericon)
-                  .setTitle(`<:no:833101993668771842> **You are not a DJ and not the Song Requester!**`)
+                  .setTitle(`❌ **You are not a DJ and not the Song Requester!**`)
                   .setDescription(`**DJ-ROLES:**\n${check_if_dj(client, i.member, player.queue.current)}`)
                 ],
                 ephemeral: true
@@ -304,7 +280,7 @@ module.exports = (client) => {
                 embeds: [new MessageEmbed()
                   .setColor(ee.color)
                   .setTimestamp()
-                  .setTitle(`${player.get(`autoplay`) ? `<a:yes:833101995723194437> **Enabled Autoplay**`: `<:no:833101993668771842> **Disabled Autoplay**`}`)
+                  .setTitle(`${player.get(`autoplay`) ? `<a:yes:833101995723194437> **Enabled Autoplay**`: `❌ **Disabled Autoplay**`}`)
                   .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
                     dynamic: true
                   }))
@@ -345,7 +321,7 @@ module.exports = (client) => {
                 embeds: [new MessageEmbed()
                   .setColor(ee.color)
                   .setTimestamp()
-                  .setTitle(`${player.trackRepeat ? `<a:yes:833101995723194437> **Enabled Song Loop**`: `<:no:833101993668771842> **Disabled Song Loop**`}`)
+                  .setTitle(`${player.trackRepeat ? `<a:yes:833101995723194437> **Enabled Song Loop**`: `❌ **Disabled Song Loop**`}`)
                   .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
                     dynamic: true
                   }))
@@ -370,7 +346,7 @@ module.exports = (client) => {
                 embeds: [new MessageEmbed()
                   .setColor(ee.color)
                   .setTimestamp()
-                  .setTitle(`${player.queueRepeat ? `<a:yes:833101995723194437> **Enabled Queue Loop**`: `<:no:833101993668771842> **Disabled Queue Loop**`}`)
+                  .setTitle(`${player.queueRepeat ? `<a:yes:833101995723194437> **Enabled Queue Loop**`: `❌ **Disabled Queue Loop**`}`)
                   .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
                     dynamic: true
                   }))
@@ -441,103 +417,48 @@ module.exports = (client) => {
     .on("trackStuck", async (player, track, payload) => {
       await player.stop();
       if (player.textChannel) {
-        let channel = client.channels.cache.get(player.textChannel);
-        if (channel && channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) {
-          channel.messages.fetch(player.get("currentmsg")).then(currentSongPlayMsg => {
-            if (currentSongPlayMsg && currentSongPlayMsg.embeds && currentSongPlayMsg.embeds[0]) {
-              var embed = currentSongPlayMsg.embeds[0];
-              embed.author.iconURL = "https://cdn.discordapp.com/attachments/883978730261860383/883978741892649000/847032838998196234.png"
-              embed.footer.text += "\n⚠️⚠️⚠️ SONG STUCKED ⚠️⚠️!"
-              currentSongPlayMsg.edit({
-                embeds: [embed],
-                components: []
-              }).catch(() => {})
-            }
-          }).catch(() => {})
-        }
-        if (client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5) {
-          let messageId = client.musicsettings.get(player.guild, "message");
-          let guild = client.guilds.cache.get(player.guild);
-          if (!guild) return
-          let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
-          if (!channel) return
-          let message = channel.messages.cache.get(messageId);
-          if (!message) message = await channel.messages.fetch(messageId).catch(() => {});
-          if (!message) return
-          //edit the message so that it's right!
-          var data = require("./musicsystem").generateQueueEmbed(client, player.guild)
-          message.edit(data).catch(() => {})
-          if (client.musicsettings.get(player.guild, "channel") == player.textChannel) {
-            return;
-          }
-        }
+        //update the last Played Song Message
+        client.editLastPruningMessage(player, "\n⚠️⚠️⚠️ SONG STUCKED ⚠️⚠️!")
+        //Update the Music System Message - Embed
+        client.updateMusicSystem(player);
+
       }
     })
     .on("trackError", async (player, track, payload) => {
       await player.stop();
       if (player.textChannel) {
-        let channel = client.channels.cache.get(player.textChannel);
-        if (channel && channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) {
-          channel.messages.fetch(player.get("currentmsg")).then(currentSongPlayMsg => {
-            if (currentSongPlayMsg && currentSongPlayMsg.embeds && currentSongPlayMsg.embeds[0]) {
-              var embed = currentSongPlayMsg.embeds[0];
-              embed.author.iconURL = "https://cdn.discordapp.com/attachments/883978730261860383/883978741892649000/847032838998196234.png"
-              embed.footer.text += "\n⚠️⚠️⚠️ SONG CRASHED ⚠️⚠️!"
-              currentSongPlayMsg.edit({
-                embeds: [embed],
-                components: []
-              }).catch(() => {})
-            }
-          }).catch(() => {})
-        }
-        if (client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5) {
-          let messageId = client.musicsettings.get(player.guild, "message");
-          let guild = client.guilds.cache.get(player.guild);
-          if (!guild) return
-          let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
-          if (!channel) return
-          let message = channel.messages.cache.get(messageId);
-          if (!message) message = await channel.messages.fetch(messageId).catch(() => {});
-          if (!message) return
-          //edit the message so that it's right!
-          var data = require("./musicsystem").generateQueueEmbed(client, player.guild)
-          message.edit(data).catch(() => {})
-          if (client.musicsettings.get(player.guild, "channel") == player.textChannel) {
-            return;
-          }
-        }
+        //update the last Played Song Message
+        client.editLastPruningMessage(player, "\n⚠️⚠️⚠️ SONG CRASHED ⚠️⚠️!")
+        //Update the Music System Message - Embed
+        client.updateMusicSystem(player);
+
       }
     })
     .on("queueEnd", async (player) => {
+      //ensure the database data
       databasing(client, player.guild, player.get("playerauthor"));
+      //if autoplay is enabled, then continue with the autoplay function
       if (player.get("autoplay")) return autoplay(client, player);
-      //DEvar TIME OUT
       try {
+        //update the player
         player = client.manager.players.get(player.guild);
+        
         if (!player.queue || !player.queue.current) {
-          if (client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5) {
-            let messageId = client.musicsettings.get(player.guild, "message");
-            let guild = client.guilds.cache.get(player.guild);
-            if (!guild) return
-            let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
-            if (!channel) return
-            let message = channel.messages.cache.get(messageId);
-            if (!message) message = await channel.messages.fetch(messageId).catch(() => {});
-            if (!message) return
-            //edit the message so that it's right!
-            var data = require("./musicsystem").generateQueueEmbed(client, player.guild, true)
-            message.edit(data).catch(() => {})
-          }
+          //Update the Music System Message - Embed
+          client.updateMusicSystem(player);
+  
           //if afk is enbaled return and not destroy the PLAYER
           if (player.get(`afk`)) {
-            return
+            return client.logger(`Queue went empty in ${client.guilds.cache.get(player.guild) ? client.guilds.cache.get(player.guild).name : player.guild}, not leaving, because AFK is enabled!`)
           }
           if (config.settings.LeaveOnEmpty_Queue.enabled && player) {
             setTimeout(async () => {
               try {
-                let pl = client.manager.players.get(player.guild);;
-                if(!pl.queue || !player.queue.current)
-                await player.destroy();
+                let pl = client.manager.players.get(player.guild);
+                if(!pl.queue || !pl.queue.current) {
+                  await pl.destroy();
+                  return client.logger(`Queue destroyed because it went Empty`)
+                }
               } catch (e) { console.log(e) }
             }, config.settings.LeaveOnEmpty_Queue.time_delay)
           }
@@ -546,6 +467,7 @@ module.exports = (client) => {
         console.log(String(e.stack).grey.yellow);
       }
     });
+
 };
 /**
  * @INFO

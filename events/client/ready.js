@@ -5,36 +5,27 @@ const moment = require("moment")
 module.exports = client => {
   //SETTING ALL GUILD DATA FOR THE DJ ONLY COMMANDS for the DEFAULT
   //client.guilds.cache.forEach(guild=>client.settings.set(guild.id, ["autoplay", "clearqueue", "forward", "loop", "jump", "loopqueue", "loopsong", "move", "pause", "resume", "removetrack", "removedupe", "restart", "rewind", "seek", "shuffle", "skip", "stop", "volume"], "djonlycmds"))
-  try{
-    try{
-      const stringlength = 69;
-      console.log("\n")
-      console.log(`     ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓`.bold.brightGreen)
-      console.log(`     ┃ `.bold.brightGreen + " ".repeat(-1+stringlength-` ┃ `.length)+ "┃".bold.brightGreen)
-      console.log(`     ┃ `.bold.brightGreen + `Discord Bot is online!`.bold.brightGreen + " ".repeat(-1+stringlength-` ┃ `.length-`Discord Bot is online!`.length)+ "┃".bold.brightGreen)
-      console.log(`     ┃ `.bold.brightGreen + ` /--/ ${client.user.tag} /--/ `.bold.brightGreen+ " ".repeat(-1+stringlength-` ┃ `.length-` /--/ ${client.user.tag} /--/ `.length)+ "┃".bold.brightGreen)
-      console.log(`     ┃ `.bold.brightGreen + " ".repeat(-1+stringlength-` ┃ `.length)+ "┃".bold.brightGreen)
-      console.log(`     ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛`.bold.brightGreen)
-    } catch { /* */ }
+  try {
+    client.logger(`Discord Bot is now online and ready to be used!`)
 
-    console.table({ 
-      'Bot User:' : `${client.user.tag}` ,
-      'Guild(s):' : `${client.guilds.cache.size} Servers` ,
-      'Watching:' : `${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)} Members` ,
-      'Prefix:' : `${config.prefix}` ,
-      'Commands:' : `${client.commands.size}` ,
-      'Discord.js:' : `v${Discord.version}` ,
-      'Node.js:' : `${process.version}` ,
-      'Plattform:' : `${process.platform} ${process.arch}` ,
-      'Memory:' : `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB / ${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`
-    });
+    client.logger( 
+      `Bot User: `.brightBlue+`${client.user.tag}`.blue+`\n` +
+      `Guild(s): `.brightBlue+`${client.guilds.cache.size} Servers`.blue+`\n` +
+      `Watching: `.brightBlue+`${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)} Members`.blue+`\n` +
+      `Prefix: `.brightBlue+`${config.prefix}`.blue+`\n` +
+      `Commands: `.brightBlue+`${client.commands.size}`.blue+`\n` +
+      `Discord.js: `.brightBlue+`v${Discord.version}`.blue+`\n` +
+      `Node.js: `.brightBlue+`${process.version}`.blue+`\n` +
+      `Plattform: `.brightBlue+`${process.platform} ${process.arch}`.blue+`\n` +
+      `Memory: `.brightBlue+`${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB / ${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`.blue
+    );
     
     change_status(client);
     //loop through the status per each 10 minutes
     setInterval(()=>{
       change_status(client);
     }, 90 * 1000);
-  
+    
   } catch (e){
     console.log(String(e.stack).grey.bgRed)
   }
@@ -57,8 +48,9 @@ function change_status(client){
       .replace("{usedcommands}", client.stats.get("global", "commands"))
       .replace("{songsplayed}", client.stats.get("global", "songs"))
     , {type: config.status.type, url: config.status.url});
+    client.logger("Set the first Status Text")
   } else {
-    client.user.setActivity(`${config.status.text}`
+    client.user.setActivity(`${config.status.text2}`
     .replace("{prefix}", config.prefix)
     .replace("{guildcount}", client.guilds.cache.size)
     .replace("{membercount}", client.guilds.cache.reduce((a, b) => a + b.memberCount, 0))
@@ -70,6 +62,7 @@ function change_status(client){
     .replace("{usedcommands}", client.stats.get("global", "commands"))
     .replace("{songsplayed}", client.stats.get("global", "songs"))
     , {type: config.status.type, url: config.status.url});
+    client.logger("Set the Second Status Text")
   }
 }
 /**

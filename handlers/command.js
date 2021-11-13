@@ -2,7 +2,7 @@ const {
   readdirSync
 } = require("fs");
 const Enmap = require("enmap");
-console.log("Welcome to SERVICE HANDLER /--/ By https://milrato.dev /--/ Discord: Tomato#6966".yellow);
+const config = require(`${process.cwd()}/botconfig/config.json`)
 module.exports = (client) => {
   try {
     readdirSync("./commands/").forEach((dir) => {
@@ -12,9 +12,11 @@ module.exports = (client) => {
           let pull = require(`../commands/${dir}/${file}`);
           if (pull.name) {
             client.commands.set(pull.name, pull);
-            //console.log(`    | ${file} :: Ready`.brightGreen)
+            if(config.show_loaded_commands) {
+              client.logger(`Loaded Command: ${file}`)
+            }
           } else {
-            console.log(`    | ${file} :: error -> missing a help.name,or help.name is not a string.`.brightRed)
+            client.logger(`Error on Command: ${file} -> missing a help.name,or help.name is not a string.`)
             continue;
           }
           if (pull.aliases && Array.isArray(pull.aliases)) pull.aliases.forEach((alias) => client.aliases.set(alias, pull.name));

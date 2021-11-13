@@ -1,6 +1,8 @@
 //here the event starts
+const config = require(`${process.cwd()}/botconfig/config.json`);
 module.exports = (client, rateLimitData) => {
-    console.log(JSON.stringify(rateLimitData).grey)
+    if(!config["ratelimit-logs"]) return;
+      console.warn(rateLimitData)
 }
 /**
   * @INFO

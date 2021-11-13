@@ -1,5 +1,7 @@
 //here the event starts
+const config = require(`${process.cwd()}/botconfig/config.json`);
 module.exports = (client, info) => {
+  if(!config[`debug-discordjs-logs`]) return;
   console.log(String(info).grey);
 }
 /**

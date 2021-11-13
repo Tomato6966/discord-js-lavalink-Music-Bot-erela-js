@@ -35,7 +35,6 @@ async function playlist(client, message, args, type, slashCommand = false) {
       player.set("message", message);
       player.set("playerauthor", message.author.id);
       player.connect();
-      try{message.react("863876115584385074").catch(() => {});}catch(e){console.log(String(e).grey)}
       player.stop();
     }
     try {
@@ -88,7 +87,6 @@ async function playlist(client, message, args, type, slashCommand = false) {
       player.set("message", message);
       player.set("playerauthor", message.author.id);
       player.connect();
-      try{message.react("863876115584385074").catch(() => {});}catch(e){console.log(String(e).grey)}
       //add track
       player.queue.add(res.tracks);
       //play track
@@ -114,22 +112,8 @@ async function playlist(client, message, args, type, slashCommand = false) {
       
     if(slashCommand) slashCommand.reply({ephemeral: true, embeds: [playlistembed]}).catch(() => {});
     else message.reply({embeds: [playlistembed]}).catch(() => {})
-    if(client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5){
-      let messageId = client.musicsettings.get(player.guild, "message");
-      let guild = client.guilds.cache.get(player.guild);
-      if(!guild) return 
-      let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
-      if(!channel) return 
-      let message = channel.messages.cache.get(messageId);
-      if(!message) message = await channel.messages.fetch(messageId).catch(()=>{});
-      if(!message) return
-      //edit the message so that it's right!
-      var data = require("../erela_events/musicsystem").generateQueueEmbed(client, player.guild)
-      message.edit(data).catch(() => {})
-      if(client.musicsettings.get(player.guild, "channel") == player.textChannel){
-        return;
-      }
-    }
+    //Update the Music System Message - Embed
+    client.updateMusicSystem(player);
   } catch (e) {
     console.log(e.stack ? String(e.stack).grey : String(e).grey)
     

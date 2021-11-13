@@ -2,6 +2,7 @@ const {
   MessageEmbed
 } = require("discord.js");
 const config = require(`${process.cwd()}/botconfig/config.json`);
+const moment = require("moment");
 const {
   databasing
 } = require(`${process.cwd()}/handlers/functions`);
@@ -36,124 +37,82 @@ module.exports = client => {
     console.log('=== multiple Resolves ===\n\n\n\n\n'.toUpperCase().yellow.dim);
   });
 
-  //ALWAYS SERVER DEAF THE BOT WHEN JOING
-  client.on("voiceStateUpdate", (oldState, newState) => {
-    try {
-      //skip if not the bot
-      if (client.user.id != newState.id) return;
-      if (
-        (!oldState.streaming && newState.streaming) ||
-        (oldState.streaming && !newState.streaming) ||
-        (!oldState.serverDeaf && newState.serverDeaf) ||
-        (oldState.serverDeaf && !newState.serverDeaf) ||
-        (!oldState.serverMute && newState.serverMute) ||
-        (oldState.serverMute && !newState.serverMute) ||
-        (!oldState.selfDeaf && newState.selfDeaf) ||
-        (oldState.selfDeaf && !newState.selfDeaf) ||
-        (!oldState.selfMute && newState.selfMute) ||
-        (oldState.selfMute && !newState.selfMute) ||
-        (!oldState.selfVideo && newState.selfVideo) ||
-        (oldState.selfVideo && !newState.selfVideo)
-      )
-        if (((!oldState.channelId && newState.channelId) || (oldState.channelId && newState.channelId))) {
-          try {
-            newState.setDeaf(true);
-          } catch {}
-          return;
-        }
-    } catch {
-
+  client.logger = (data) => {
+    if(!config[`debug-logs`]) return;
+    let logstring = `${String(`L`+`a`+`v`+`a`+`-`+`M`+`u`+`s`+`i`+`c`+ ` Logs`).brightGreen}${` | `.grey}${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.cyan}${` [::] `.magenta}`
+    if(typeof data == "string"){
+      console.log(logstring, data.split("\n").map(d => `${d}`.green).join(`\n${logstring} `))
+    } else if(typeof data == "object"){
+      console.log(logstring, JSON.stringify(data, null, 3).green)
+    } else if(typeof data == "boolean"){
+      console.log(logstring, String(data).cyan)
+    } else {
+      console.log(logstring, data)
+    } 
+  }
+  
+  client.updateMusicSystem = async (player) => {
+    if (client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5) {
+      client.logger("Update Music System called and executed")
+      let messageId = client.musicsettings.get(player.guild, "message");
+      //try to get the guild
+      let guild = client.guilds.cache.get(player.guild);
+      if (!guild) return client.logger("Music System - Guild not found!")
+      //try to get the channel
+      let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
+      if (!channel) channel = await guild.channels.fetch(client.musicsettings.get(player.guild, "channel")).catch(()=>{}) || false
+      if (!channel) return client.logger("Music System - Channel not found!")
+      if(!channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) return client.logger("Music System - Missing Permissions")
+      //try to get the channel
+      let message = channel.messages.cache.get(messageId);
+      if (!message) message = await channel.messages.fetch(messageId).catch(() => {}) || false;
+      if (!message) return client.logger("Music System - Message not found!")
+      //edit the message so that it's right!
+      var data = require("./musicsystem").generateQueueEmbed(client, player.guild, true)
+      message.edit(data).catch(() => {})
     }
+  }
 
-  });
-  //ANTI UNMUTE THING
-  client.on("voiceStateUpdate", async (oldState, newState) => {
-    if(newState.id === client.user.id && oldState.serverDeaf === true && newState.serverDeaf === false){
-      try{
-        newState.setDeaf(true).catch(() => {});
-      } catch (e){
-        //console.log(e)
-      }
-    }
-  });
-
-  client.on("interactionCreate", async interaction => {
-    if(interaction.isButton() && interaction.message.author.id == client.user.id && interaction.customId.includes("PREMIUM-")){
-      let requesterId = interaction.message.embeds[0].footer.text.split("-")[0];
-      let guildId = interaction.message.embeds[0].footer.text.split("-")[1];
-      let guild = client.guilds.cache.get(guildId)
-      if(!guild) return interaction.reply("❌ **I got kicked out of that Guild**")
-      let requester = guild.members.cache.get(requesterId);
-      if(!requester) requester = await guild.members.fetch(requesterId).catch(()=>{}) || false;
-      if(requester){
-        requester.send(`${interaction.customId == "PREMIUM-ACCEPT" ? `✅ **Your Requested for: \`${guild.name}\` got accepted!**` : `❌ **Your Requested for: \`${guild.name}\` got declined!**` }`).catch(()=>{});
-      }
-      if(interaction.customId == "PREMIUM-ACCEPT" && requester.id != guild.ownerId){
-        guild.fetchOwner(owner => {
-          owner.send(`✅ **Your Guild: \`${guild.name}\` got accepted for PREMIUM!**`).catch(()=>{});
-        }).catch(()=>{});
-      }
-      if(interaction.customId == "PREMIUM-ACCEPT"){
-        if(client.premium.get("global", "guilds").includes(guild.id)){
-          interaction.update({embeds: [interaction.message.embeds[0].setTitle(`✅ Guild is already a PREMIUM Member!`)], components: []})
-        } else {
-          client.premium.push("global", guild.id, "guilds");
-          interaction.update({embeds: [interaction.message.embeds[0].setTitle(`✅ Accepted the Guild!`)], components: []})
-        }
-      } else {
-        if(client.premium.get("global", "guilds").includes(guild.id)){
-          interaction.update({embeds: [interaction.message.embeds[0].setTitle(`✅ Guild is already a PREMIUM Member!`)], components: []})
-        } else {
-          interaction.update({embeds: [interaction.message.embeds[0].setTitle(`❌ Denied the Guild!`)], components: []})
-        }
-      }
-    }
-  })
-
-  client.on("guildCreate", async guild => {
-    if(!guild || guild.available === false) return
-    let theowner = "NO OWNER DATA! ID: ";
-    await guild.fetchOwner().then(({ user }) => {
-      theowner = user;
+  client.editLastPruningMessage = async (player, footertext = "\n⛔️ SONG ENDED!") => {
+    client.logger("Editing the Last Message System called and executed")
+    let guild = client.guilds.cache.get(player.guild);
+    if (!guild) return client.logger("Editing the Last Message - Guild not found!")
+    //try to get the channel
+    let channel = guild.channels.cache.get(player.textChannel);
+    if(!channel) channel = await guild.channels.fetch(player.textChannel).catch(()=>{}) || false;
+    if(!channel) return client.logger("Editing the Last Message - Channel not found")
+    if(!channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) return client.logger("Editing the Last Message - Missing Permissions")
+    //try to get the message
+    let message = channel.messages.cache.get(player.get("currentmsg"));
+    if (!message) message = await channel.messages.fetch(player.get("currentmsg")).catch(() => {}) || false;
+    if (!message) return client.logger("Editing the Last Message - Message not found!")
+    if (!message.embeds || !message.embeds[0]) return client.logger("Editing the Last Message - Embeds got removed!")
+    //get the embed + change it
+    var embed = message.embeds[0];
+    embed.author.iconURL = "https://cdn.discordapp.com/attachments/883978730261860383/883978741892649000/847032838998196234.png"
+    embed.footer.text += footertext;
+    //Edit the message
+    message.edit({
+      embeds: [embed],
+      components: []
     }).catch(() => {})
-    databasing(client, guild.id)
-    let ls = client.settings.get(guild.id, "language")
-    let embed = new MessageEmbed()
-      .setColor("GREEN")
-      .setTitle(`<a:Join_vc:863876115584385074> Joined a New Server`)
-      .addField("Guild Info", `>>> \`\`\`${guild.name} (${guild.id})\`\`\``)
-      .addField("Owner Info", `>>> \`\`\`${theowner ? `${theowner.tag} (${theowner.id})` : `${theowner} (${guild.ownerId})`}\`\`\``)
-      .addField("Member Count", `>>> \`\`\`${guild.memberCount}\`\`\``)
-      .addField("Servers Bot is in", `>>> \`\`\`${client.guilds.cache.size}\`\`\``)
-      .addField("Leave Server:", `>>> \`\`\`${config.prefix}leaveserver ${guild.id}\`\`\``)
-      .setThumbnail(guild.iconURL({dynamic: true}));
-    for(const owner of config.ownerIDS){
-      client.users.fetch(owner).then(user => {
-        user.send({ embeds: [embed] }).catch(() => {})
-      }).catch(() => {});
+    //if the messages before the last song played message, should get deleted
+    if(config.deleteMessagesBeforeTheLastSongPlayedMessages){
+      if(!player.get("beforemessage")) {
+        //first time setting the before message, there is no before message yet, that's why return
+        return player.set("beforemessage", message.id);
+      }
+      //get the actual beforemessage
+      let beforemessage = channel.messages.cache.get(player.get("beforemessage"))
+      if (!beforemessage) message = await channel.messages.fetch(player.get("beforemessage")).catch(() => {}) || false;
+      if (!beforemessage) return client.logger("Editing the Last Message - Before - Message not found!")
+      //if not able to 
+      if(beforemessage.deleted) return client.logger("Editing the Last Message - Before - Message already deleted");
+      if(!beforemessage.deletable) return client.logger("Editing the Last Message - Before - Message not delete able");
+      //delete the message
+      beforemessage.delete().catch(() => {})
+      //set the new before message
+      player.set("beforemessage", message.id);
     }
-  });
-
-  client.on("guildDelete", async guild => {
-    if(!guild || guild.available === false) return
-    let theowner = "NO OWNER DATA! ID: ";
-    await guild.fetchOwner().then(({ user }) => {
-      theowner = user;
-    }).catch(() => {})
-    let ls = "en"
-    let embed = new MessageEmbed()
-      .setColor("RED")
-      .setTitle(`<:leaves:866356598356049930> Left a Server`)
-      .addField("Guild Info", `>>> \`\`\`${guild.name} (${guild.id})\`\`\``)
-      .addField("Owner Info", `>>> \`\`\`${theowner ? `${theowner.tag} (${theowner.id})` : `${theowner} (${guild.ownerId})`}\`\`\``)
-      .addField("Member Count", `>>> \`\`\`${guild.memberCount}\`\`\``)
-      .addField("Servers Bot is in", `>>> \`\`\`${client.guilds.cache.size}\`\`\``)
-      .addField("Leave Server:", `>>> \`\`\`${config.prefix}leaveserver ${guild.id}\`\`\``)
-      .setThumbnail(guild.iconURL({dynamic: true}));
-    for(const owner of config.ownerIDS){
-      client.users.fetch(owner).then(user => {
-        user.send({ embeds: [embed] }).catch(() => {})
-      }).catch(() => {});
-    }
-  });
+  }
 }
