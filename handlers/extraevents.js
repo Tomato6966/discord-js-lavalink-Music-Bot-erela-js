@@ -1,5 +1,5 @@
 const {
-  MessageEmbed
+  MessageEmbed, Permissions
 } = require("discord.js");
 const config = require(`${process.cwd()}/botconfig/config.json`);
 const moment = require("moment");
@@ -50,7 +50,7 @@ module.exports = client => {
       console.log(logstring, data)
     } 
   }
-  
+
   client.updateMusicSystem = async (player) => {
     if (client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5) {
       client.logger("Update Music System called and executed")
