@@ -5,15 +5,14 @@
       "442355791412854784"
    ],
    
-
    "debug-logs": true, 
    "anti-crash-logs": true,
+   "ratelimit-logs": true,
 
    "debug-discordjs-logs": false,
    "show-serverjoins": false,
    "show_loaded_commands": false,
    "show_loaded_events": false,
-   
    
    "deleteMessagesBeforeTheLastSongPlayedMessages": true,
    
