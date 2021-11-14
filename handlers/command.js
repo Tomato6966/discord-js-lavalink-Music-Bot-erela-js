@@ -3,16 +3,17 @@ const {
 } = require("fs");
 const Enmap = require("enmap");
 const config = require(`${process.cwd()}/botconfig/config.json`)
+const settings = require(`${process.cwd()}/botconfig/settings.json`);
 module.exports = (client) => {
   try {
     readdirSync("./commands/").forEach((dir) => {
       const commands = readdirSync(`./commands/${dir}/`).filter((file) => file.endsWith(".js"));
       for (let file of commands) {
-        try{
+        try {
           let pull = require(`../commands/${dir}/${file}`);
           if (pull.name) {
             client.commands.set(pull.name, pull);
-            if(config.show_loaded_commands) {
+            if (settings.show_loaded_commands) {
               client.logger(`Loaded Command: ${file}`)
             }
           } else {
@@ -20,7 +21,7 @@ module.exports = (client) => {
             continue;
           }
           if (pull.aliases && Array.isArray(pull.aliases)) pull.aliases.forEach((alias) => client.aliases.set(alias, pull.name));
-        }catch(e){
+        } catch (e) {
           console.log(String(e.stack).grey.bgRed)
         }
       }

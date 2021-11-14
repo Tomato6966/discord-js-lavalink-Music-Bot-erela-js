@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const fs = require("fs")
 const config = require(`${process.cwd()}/botconfig/config.json`);
+const settings = require(`${process.cwd()}/botconfig/settings.json`);
 const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const radios = require("../botconfig/radiostations.json");
 module.exports = (client) => {
@@ -12,11 +13,12 @@ module.exports = (client) => {
     client.invites = {};
     client.commands = new Discord.Collection(); //an collection (like a digital map(database)) for all your commands
     client.aliases = new Discord.Collection(); //an collection for all your command-aliases
+    client.rateLimit = new Discord.Collection();
     client.slashCommands = new Discord.Collection(); //an collection for all the slash Commands
     client.categories = fs.readdirSync("./commands/"); //categories
     client.cooldowns = new Discord.Collection(); //an collection for cooldown commands of each user
 
-    
+
     /**
      * @INFO
      * The Euqalizer Settings

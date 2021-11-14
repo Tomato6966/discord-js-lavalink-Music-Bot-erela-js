@@ -1,21 +1,22 @@
 const fs = require("fs");
 const allevents = [];
 const config = require(`${process.cwd()}/botconfig/config.json`)
+const settings = require(`${process.cwd()}/botconfig/settings.json`);
 module.exports = async (client) => {
   try {
     const load_dir = (dir) => {
       const event_files = fs.readdirSync(`./events/${dir}`).filter((file) => file.endsWith(".js"));
       for (const file of event_files) {
-        try{
+        try {
           const event = require(`../events/${dir}/${file}`)
           let eventName = file.split(".")[0];
-          if(eventName == "message") continue;
+          if (eventName == "message") continue;
           allevents.push(eventName);
           client.on(eventName, event.bind(null, client));
-          if(config.show_loaded_events) {
+          if (settings.show_loaded_events) {
             client.logger(`Loaded Event: ${file}`)
           }
-        }catch(e){
+        } catch (e) {
           console.log(String(e.stack).grey.bgRed)
         }
       }

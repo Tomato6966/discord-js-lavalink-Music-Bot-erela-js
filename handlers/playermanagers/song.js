@@ -40,8 +40,8 @@ async function song(client, message, args, type, slashCommand, extras) {
   }
   try {
     // Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
-    if (type.split(":")[1] === "youtube" || type.split(":")[1] === "soundcloud"){
-      if(isValidURL(search)){
+    if (type.split(":")[1] === "youtube" || type.split(":")[1] === "soundcloud") {
+      if (isValidURL(search)) {
         res = await client.manager.search(search, message.author);
       } else {
         res = await client.manager.search({
@@ -49,8 +49,7 @@ async function song(client, message, args, type, slashCommand, extras) {
           source: type.split(":")[1]
         }, message.author);
       }
-    }
-    else {
+    } else {
       res = await client.manager.search(search, message.author);
     }
     // Check the load type as this command is not that advanced for basics
@@ -62,33 +61,43 @@ async function song(client, message, args, type, slashCommand, extras) {
     }
   } catch (e) {
     console.log(e)
-    if(slashCommand && slashCommand.isCommand())
-      return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
+    if (slashCommand && slashCommand.isCommand())
+      return slashCommand.reply({
+        ephemeral: true,
+        embeds: [new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable1"]))
+          .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable2"]))
+        ]
+      });
+    return message.channel.send({
+      embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
-        .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable1"]))
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable2"]))
-      ]});
-    return message.channel.send({embeds: [new MessageEmbed()
-      .setColor(ee.wrongcolor)
-      .setTitle(String("❌ **There was an Error while searching: `" + search).substr(0, 256 - 3) + "`**")
-      .setDescription(`\`\`\`${e}\`\`\``.substr(0, 2000))
-    ]});
+        .setTitle(String("❌ **There was an Error while searching: `" + search).substr(0, 256 - 3) + "`**")
+        .setDescription(`\`\`\`${e}\`\`\``.substr(0, 2000))
+      ]
+    });
   }
 
   async function song_() {
-    if (!res.tracks[0]){
-      if(slashCommand && slashCommand.isCommand()) 
-      return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable3"]))
-      ]})
-      return message.channel.send({embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable3"]))
-      ]}).then(msg => {
-        setTimeout(()=>{
+    if (!res.tracks[0]) {
+      if (slashCommand && slashCommand.isCommand())
+        return slashCommand.reply({
+          ephemeral: true,
+          embeds: [new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+            .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable3"]))
+          ]
+        })
+      return message.channel.send({
+        embeds: [new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+          .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable3"]))
+        ]
+      }).then(msg => {
+        setTimeout(() => {
           msg.delete().catch(() => {})
         }, 3000)
       })
@@ -122,27 +131,37 @@ async function song(client, message, args, type, slashCommand, extras) {
         .addField("⌛ Duration: ", `\`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
         .addField("💯 Song By: ", `\`${res.tracks[0].author}\``, true)
         .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-      if(slashCommand && slashCommand.isCommand()) slashCommand.reply({ephemeral: true, embeds: [playembed]})
-      else message.channel.send({embeds: [playembed]})
+      if (slashCommand && slashCommand.isCommand()) slashCommand.reply({
+        ephemeral: true,
+        embeds: [playembed]
+      })
+      else message.channel.send({
+        embeds: [playembed]
+      })
     }
     //Update the Music System Message - Embed
     client.updateMusicSystem(player);
   }
   //function ffor playist
   async function playlist_() {
-    if (!res.tracks[0]){
-      if(slashCommand && slashCommand.isCommand()) 
-      return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable5"]))
-      ]})
-      return message.channel.send({embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable5"]))
-      ]}).then(msg => {
-        setTimeout(()=>{
+    if (!res.tracks[0]) {
+      if (slashCommand && slashCommand.isCommand())
+        return slashCommand.reply({
+          ephemeral: true,
+          embeds: [new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+            .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable5"]))
+          ]
+        })
+      return message.channel.send({
+        embeds: [new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+          .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable5"]))
+        ]
+      }).then(msg => {
+        setTimeout(() => {
           msg.delete().catch(() => {})
         }, 3000)
       })
@@ -178,25 +197,31 @@ async function song(client, message, args, type, slashCommand, extras) {
       player.queue.add(res.tracks);
     }
     //send information
-      var playlistembed = new MessageEmbed()
-        .setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256 - 3) + "`**")
-        .setURL(res.playlist.uri).setColor(ee.color)
-        .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
-        .addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
-        .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-        .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
-          dynamic: true
-        }))
-      if(slashCommand && slashCommand.isCommand()) {
-        try{
-          slashCommand.reply({ephemeral: true, embeds: [playlistembed]})
-        }catch{
-          message.channel.send({embeds: [playlistembed]})
-        }  
+    var playlistembed = new MessageEmbed()
+      .setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256 - 3) + "`**")
+      .setURL(res.playlist.uri).setColor(ee.color)
+      .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
+      .addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
+      .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
+      .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
+        dynamic: true
+      }))
+    if (slashCommand && slashCommand.isCommand()) {
+      try {
+        slashCommand.reply({
+          ephemeral: true,
+          embeds: [playlistembed]
+        })
+      } catch {
+        message.channel.send({
+          embeds: [playlistembed]
+        })
       }
-      else message.channel.send({embeds: [playlistembed]})
-      //Update the Music System Message - Embed
-      client.updateMusicSystem(player);
+    } else message.channel.send({
+      embeds: [playlistembed]
+    })
+    //Update the Music System Message - Embed
+    client.updateMusicSystem(player);
   }
 
 }

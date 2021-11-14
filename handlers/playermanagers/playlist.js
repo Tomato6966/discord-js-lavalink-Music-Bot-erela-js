@@ -47,36 +47,46 @@ async function playlist(client, message, args, type, slashCommand = false) {
       };
     } catch (e) {
       console.log(e.stack ? String(e.stack).grey : String(e).grey)
-      if(slashCommand && slashCommand.isCommand())
-        return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
+      if (slashCommand && slashCommand.isCommand())
+        return slashCommand.reply({
+          ephemeral: true,
+          embeds: [new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable1"]))
+            .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable2"]))
+          ]
+        }).catch(() => {});
+      return message.channel.send({
+        embeds: [new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable1"]))
           .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable2"]))
-        ]}).catch(() => {});
-      return message.channel.send({embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable1"]))
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable2"]))
-      ]}).catch(() => {}).then(msg => {
-        setTimeout(()=>{
+        ]
+      }).catch(() => {}).then(msg => {
+        setTimeout(() => {
           msg.delete().catch(() => {})
         }, 3000)
       })
     }
 
-    if (!res.tracks[0]){
-      if(slashCommand && slashCommand.isCommand())
-        return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
+    if (!res.tracks[0]) {
+      if (slashCommand && slashCommand.isCommand())
+        return slashCommand.reply({
+          ephemeral: true,
+          embeds: [new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+            .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable3"]))
+          ]
+        }).catch(() => {})
+      return message.channel.send({
+        embeds: [new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
           .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable3"]))
-        ]}).catch(() => {})
-      return message.channel.send({embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable3"]))
-      ]}).catch(() => {}).then(msg => {
-        setTimeout(()=>{
+        ]
+      }).catch(() => {}).then(msg => {
+        setTimeout(() => {
           msg.delete().catch(() => {})
         }, 3000)
       })
@@ -109,24 +119,34 @@ async function playlist(client, message, args, type, slashCommand = false) {
       .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
       .addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
       .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-      
-    if(slashCommand && slashCommand.isCommand()) slashCommand.reply({ephemeral: true, embeds: [playlistembed]}).catch(() => {});
-    else message.channel.send({embeds: [playlistembed]}).catch(() => {})
+
+    if (slashCommand && slashCommand.isCommand()) slashCommand.reply({
+      ephemeral: true,
+      embeds: [playlistembed]
+    }).catch(() => {});
+    else message.channel.send({
+      embeds: [playlistembed]
+    }).catch(() => {})
     //Update the Music System Message - Embed
     client.updateMusicSystem(player);
   } catch (e) {
     console.log(e.stack ? String(e.stack).grey : String(e).grey)
-    
-    if(slashCommand && slashCommand.isCommand())
-    return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
-      .setColor(ee.wrongcolor)
-      .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-    ]}).catch(() => {})
-    message.channel.send({embeds: [new MessageEmbed()
-      .setColor(ee.wrongcolor)
-      .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-    ]}).catch(() => {}).then(msg => {
-      setTimeout(()=>{
+
+    if (slashCommand && slashCommand.isCommand())
+      return slashCommand.reply({
+        ephemeral: true,
+        embeds: [new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+        ]
+      }).catch(() => {})
+    message.channel.send({
+      embeds: [new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+      ]
+    }).catch(() => {}).then(msg => {
+      setTimeout(() => {
         msg.delete().catch(() => {})
       }, 3000)
     })

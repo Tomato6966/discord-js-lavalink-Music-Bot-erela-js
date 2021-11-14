@@ -41,7 +41,9 @@ async function similar(client, message, args, type, slashCommand) {
         .addField("⌛ Duration: ", `\`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
         .addField("💯 Song By: ", `\`${res.tracks[0].author}\``, true)
         .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-      message.channel.send({embeds: [embed2]})
+      message.channel.send({
+        embeds: [embed2]
+      })
       //Update the Music System Message - Embed
       client.updateMusicSystem(player);
       return
@@ -64,46 +66,59 @@ async function similar(client, message, args, type, slashCommand) {
         .setFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
           dynamic: true
         }))
-      message.channel.send({embeds: [searchembed]})
-      await message.channel.send({embeds: [new MessageEmbed()
-        .setColor(ee.color)
-        .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable3"]))
-      ]})
+      message.channel.send({
+        embeds: [searchembed]
+      })
+      await message.channel.send({
+        embeds: [new MessageEmbed()
+          .setColor(ee.color)
+          .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable3"]))
+        ]
+      })
       try {
-        collected = await message.channel.awaitMessages({filter, 
+        collected = await message.channel.awaitMessages({
+          filter,
           max: 1,
           time: 30e3,
           errors: ['time']
         });
       } catch (e) {
         if (!player.queue.current) player.destroy();
-        return message.channel.send({embeds: [new MessageEmbed()
-          .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable4"]))
-          .setColor(ee.wrongcolor)
-        ]});
+        return message.channel.send({
+          embeds: [new MessageEmbed()
+            .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable4"]))
+            .setColor(ee.wrongcolor)
+          ]
+        });
       }
       var first = collected.first().content;
       if (first.toLowerCase() === 'end') {
         if (!player.queue.current) player.destroy();
-        return message.channel.send({embeds: [new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable5"]))
-        ]});
+        return message.channel.send({
+          embeds: [new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable5"]))
+          ]
+        });
       }
       var index = Number(first) - 1;
       if (index < 0 || index > max - 1)
-        return message.channel.send({embeds: [new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable6"]))
-        ]});
+        return message.channel.send({
+          embeds: [new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable6"]))
+          ]
+        });
       track = res.tracks[index];
       if (!track)
-        return message.channel.send({embeds: [new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setTitle(String("❌ Error | Found nothing for: **`" + player.queue.current.title).substr(0, 256 - 3) + "`**")
-          .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable7"]))
-        ]}).then(msg => {
-          setTimeout(()=>{
+        return message.channel.send({
+          embeds: [new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setTitle(String("❌ Error | Found nothing for: **`" + player.queue.current.title).substr(0, 256 - 3) + "`**")
+            .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable7"]))
+          ]
+        }).then(msg => {
+          setTimeout(() => {
             msg.delete().catch(() => {})
           }, 3000)
         })
@@ -126,18 +141,22 @@ async function similar(client, message, args, type, slashCommand) {
           .addField("⌛ Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
           .addField("💯 Song By: ", `\`${track.author}\``, true)
           .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-        message.channel.send({embeds: [embed]})
+        message.channel.send({
+          embeds: [embed]
+        })
       }
       //Update the Music System Message - Embed
       client.updateMusicSystem(player);
     }
   } catch (e) {
     console.log(e.stack ? String(e.stack).grey : String(e).grey)
-    return message.channel.send({embeds: [new MessageEmbed()
-      .setColor(ee.wrongcolor)
-      .setTitle(String("❌ Error | Found nothing for: **`" + player.queue.current.title).substr(0, 256 - 3) + "`**")
-    ]}).then(msg => {
-      setTimeout(()=>{
+    return message.channel.send({
+      embeds: [new MessageEmbed()
+        .setColor(ee.wrongcolor)
+        .setTitle(String("❌ Error | Found nothing for: **`" + player.queue.current.title).substr(0, 256 - 3) + "`**")
+      ]
+    }).then(msg => {
+      setTimeout(() => {
         msg.delete().catch(() => {})
       }, 3000)
     })

@@ -1,7 +1,9 @@
 const {
-  MessageEmbed, Permissions
+  MessageEmbed,
+  Permissions
 } = require("discord.js");
 const config = require(`${process.cwd()}/botconfig/config.json`);
+const settings = require(`${process.cwd()}/botconfig/settings.json`);
 const moment = require("moment");
 const {
   databasing
@@ -38,18 +40,18 @@ module.exports = client => {
   });
 
   client.logger = (data) => {
-    if(!config[`debug-logs`]) return;
+    if (!settings[`debug-logs`]) return;
     let logstring = `${String(`L`+`a`+`v`+`a`+`-`+`M`+`u`+`s`+`i`+`c`+ ` Logs`).brightGreen}${` | `.grey}${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.cyan}${` [::] `.magenta}`
-    if(typeof data == "string"){
+    if (typeof data == "string") {
       console.log(logstring, data.split("\n").map(d => `${d}`.green).join(`\n${logstring} `))
-    } else if(typeof data == "object"){
+    } else if (typeof data == "object") {
       console.log(logstring, JSON.stringify(data, null, 3).green)
-    } else if(typeof data == "boolean"){
+    } else if (typeof data == "boolean") {
       console.log(logstring, String(data).cyan)
     } else {
       console.log(logstring, data)
-    } 
-  }
+    }
+  };
 
   client.updateMusicSystem = async (player, leave = false) => {
     if (client.musicsettings.get(player.guild, "channel") && client.musicsettings.get(player.guild, "channel").length > 5) {
@@ -60,18 +62,20 @@ module.exports = client => {
       if (!guild) return client.logger("Music System - Guild not found!")
       //try to get the channel
       let channel = guild.channels.cache.get(client.musicsettings.get(player.guild, "channel"));
-      if (!channel) channel = await guild.channels.fetch(client.musicsettings.get(player.guild, "channel")).catch(()=>{}) || false
+      if (!channel) channel = await guild.channels.fetch(client.musicsettings.get(player.guild, "channel")).catch(() => {}) || false
       if (!channel) return client.logger("Music System - Channel not found!")
-      if(!channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) return client.logger("Music System - Missing Permissions")
+      if (!channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) return client.logger("Music System - Missing Permissions")
       //try to get the channel
       let message = channel.messages.cache.get(messageId);
       if (!message) message = await channel.messages.fetch(messageId).catch(() => {}) || false;
       if (!message) return client.logger("Music System - Message not found!")
       //edit the message so that it's right!
       var data = require(`${process.cwd()}/handlers/erela_events/musicsystem`).generateQueueEmbed(client, player.guild, leave)
-      message.edit(data).catch((e) => { console.log(e) })
+      message.edit(data).catch((e) => {
+        console.log(e)
+      })
     }
-  }
+  };
 
   client.editLastPruningMessage = async (player, footertext = "\n⛔️ SONG ENDED!") => {
     client.logger("Editing the Last Message System called and executed")
@@ -79,9 +83,9 @@ module.exports = client => {
     if (!guild) return client.logger("Editing the Last Message - Guild not found!")
     //try to get the channel
     let channel = guild.channels.cache.get(player.textChannel);
-    if(!channel) channel = await guild.channels.fetch(player.textChannel).catch(()=>{}) || false;
-    if(!channel) return client.logger("Editing the Last Message - Channel not found")
-    if(!channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) return client.logger("Editing the Last Message - Missing Permissions")
+    if (!channel) channel = await guild.channels.fetch(player.textChannel).catch(() => {}) || false;
+    if (!channel) return client.logger("Editing the Last Message - Channel not found")
+    if (!channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) return client.logger("Editing the Last Message - Missing Permissions")
     //try to get the message
     let message = channel.messages.cache.get(player.get("currentmsg"));
     if (!message) message = await channel.messages.fetch(player.get("currentmsg")).catch(() => {}) || false;
@@ -97,8 +101,8 @@ module.exports = client => {
       components: []
     }).catch(() => {})
     //if the messages before the last song played message, should get deleted
-    if(config.deleteMessagesBeforeTheLastSongPlayedMessages){
-      if(!player.get("beforemessage")) {
+    if (settings.deleteMessagesBeforeTheLastSongPlayedMessages) {
+      if (!player.get("beforemessage")) {
         //first time setting the before message, there is no before message yet, that's why return
         return player.set("beforemessage", message.id);
       }
@@ -107,8 +111,8 @@ module.exports = client => {
       if (!beforemessage) message = await channel.messages.fetch(player.get("beforemessage")).catch(() => {}) || false;
       if (!beforemessage) return client.logger("Editing the Last Message - Before - Message not found!")
       //if not able to 
-      if(beforemessage.deleted) return client.logger("Editing the Last Message - Before - Message already deleted");
-      if(!beforemessage.deletable) return client.logger("Editing the Last Message - Before - Message not delete able");
+      if (beforemessage.deleted) return client.logger("Editing the Last Message - Before - Message already deleted");
+      if (!beforemessage.deletable) return client.logger("Editing the Last Message - Before - Message not delete able");
       //delete the message
       beforemessage.delete().catch(() => {})
       //set the new before message
@@ -116,5 +120,3 @@ module.exports = client => {
     }
   }
 }
-
-

@@ -1,5 +1,7 @@
 var {
-  MessageEmbed, MessageActionRow, MessageSelectMenu
+  MessageEmbed,
+  MessageActionRow,
+  MessageSelectMenu
 } = require("discord.js")
 var ee = require(`${process.cwd()}/botconfig/embed.json`)
 var config = require(`${process.cwd()}/botconfig/config.json`)
@@ -13,7 +15,7 @@ var {
 async function search(client, message, args, type, slashCommand) {
   let ls = client.settings.get(message.guild.id, "language")
   var search = args.join(" ");
-  if(!slashCommand){
+  if (!slashCommand) {
     await message.channel.sendTyping();
   }
   try {
@@ -52,17 +54,22 @@ async function search(client, message, args, type, slashCommand) {
       };
     } catch (e) {
       console.log(e.stack ? String(e.stack).grey : String(e).grey)
-      if(slashCommand && slashCommand.isCommand())
-      return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable1"]))
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable2"]))
-      ]}).catch(() => {})
-      return message.channel.send({embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable1"]))
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable2"]))
-      ]}).catch(() => {})
+      if (slashCommand && slashCommand.isCommand())
+        return slashCommand.reply({
+          ephemeral: true,
+          embeds: [new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable1"]))
+            .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable2"]))
+          ]
+        }).catch(() => {})
+      return message.channel.send({
+        embeds: [new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable1"]))
+          .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable2"]))
+        ]
+      }).catch(() => {})
     }
 
 
@@ -97,22 +104,22 @@ async function search(client, message, args, type, slashCommand) {
         }
       ];
       let Selection = new MessageSelectMenu()
-        .setCustomId('MenuSelection').setMaxValues(emojiarray.slice(0, max).length) 
+        .setCustomId('MenuSelection').setMaxValues(emojiarray.slice(0, max).length)
         .setPlaceholder('Select all Songs you want to add')
         .addOptions(songoptions)
       //send the menu msg
       let menumsg;
-      if(slashCommand && slashCommand.isCommand()){
+      if (slashCommand && slashCommand.isCommand()) {
         menumsg = await message.channel.send({
           embeds: [
             new MessageEmbed()
-              .setTitle(`Search-Result for: 🔎 **\`${search}`.substr(0, 256 - 3) + "`**")
-              .setColor(ee.color)
-              .setDescription(results)
-              .setFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
-                dynamic: true
-              }))
-          ], 
+            .setTitle(`Search-Result for: 🔎 **\`${search}`.substr(0, 256 - 3) + "`**")
+            .setColor(ee.color)
+            .setDescription(results)
+            .setFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
+              dynamic: true
+            }))
+          ],
           components: [
             new MessageActionRow().addComponents(Selection)
           ]
@@ -121,13 +128,13 @@ async function search(client, message, args, type, slashCommand) {
         menumsg = await message.channel.send({
           embeds: [
             new MessageEmbed()
-              .setTitle(`Search-Result for: 🔎 **\`${search}`.substr(0, 256 - 3) + "`**")
-              .setColor(ee.color)
-              .setDescription(results)
-              .setFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
-                dynamic: true
-              }))
-          ], 
+            .setTitle(`Search-Result for: 🔎 **\`${search}`.substr(0, 256 - 3) + "`**")
+            .setColor(ee.color)
+            .setDescription(results)
+            .setFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
+              dynamic: true
+            }))
+          ],
           components: [
             new MessageActionRow().addComponents(Selection)
           ]
@@ -143,21 +150,26 @@ async function search(client, message, args, type, slashCommand) {
         if (menu.user.id === cmduser.id) {
           collector.stop();
           menu.deferUpdate();
-          if(menu.values[0] == "Cancel"){
-            if(slashCommand && slashCommand.isCommand()) {
-              return slashCommand.reply({ephemeral: true,embeds: [new MessageEmbed()
+          if (menu.values[0] == "Cancel") {
+            if (slashCommand && slashCommand.isCommand()) {
+              return slashCommand.reply({
+                ephemeral: true,
+                embeds: [new MessageEmbed()
+                  .setColor(ee.wrongcolor)
+                  .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable4"]))
+                ]
+              }).catch(() => {});
+            }
+            return message.channel.send({
+              embeds: [new MessageEmbed()
                 .setColor(ee.wrongcolor)
                 .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable4"]))
-              ]}).catch(() => {});
-            } 
-            return message.channel.send({embeds: [new MessageEmbed()
-              .setColor(ee.wrongcolor)
-              .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable4"]))
-            ]}).catch(() => {});
+              ]
+            }).catch(() => {});
           }
           var picked_songs = [];
           let toAddTracks = [];
-          for(const value of menu.values){
+          for (const value of menu.values) {
             let songIndex = songoptions.findIndex(d => d.value == value);
             var track = res.tracks[songIndex]
             toAddTracks.push(track)
@@ -179,7 +191,7 @@ async function search(client, message, args, type, slashCommand) {
             //play track
             player.play();
             player.pause(false);
-      
+
           } else if (!player.queue || !player.queue.current) {
             //add track
             player.queue.add(toAddTracks);
@@ -197,39 +209,48 @@ async function search(client, message, args, type, slashCommand) {
               .addField("⌛ Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
               .addField("💯 Song By: ", `\`${track.author}\``, true)
               .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-            if(slashCommand && slashCommand.isCommand()){
-              await slashCommand.reply({ephemeral: true,embeds: [embed3]}).catch(() => {});
+            if (slashCommand && slashCommand.isCommand()) {
+              await slashCommand.reply({
+                ephemeral: true,
+                embeds: [embed3]
+              }).catch(() => {});
             } else {
-              await message.channel.send({embeds: [embed3]}).catch(() => {});
+              await message.channel.send({
+                embeds: [embed3]
+              }).catch(() => {});
             }
           }
           //Update the Music System Message - Embed
           client.updateMusicSystem(player);
-         
+
         } else menu.reply({
           content: `❌ You are not allowed to do that! Only: <@${cmduser.id}>`,
           ephemeral: true
         });
       });
       //Once the Collections ended edit the menu message
-      collector.on('end', collected => {
-      });
+      collector.on('end', collected => {});
     }
 
 
   } catch (e) {
     console.log(e.stack ? String(e.stack).grey : String(e).grey)
-    if(slashCommand && slashCommand.isCommand()){
-      return slashCommand.reply({ephemeral: true,embeds: [new MessageEmbed()
+    if (slashCommand && slashCommand.isCommand()) {
+      return slashCommand.reply({
+        ephemeral: true,
+        embeds: [new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+        ]
+      }).catch(() => {});
+    }
+    return message.channel.send({
+      embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-      ]}).catch(() => {});
-    }
-    return message.channel.send({embeds: [new MessageEmbed()
-      .setColor(ee.wrongcolor)
-      .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-    ]}).catch(() => {}).then(msg => {
-      setTimeout(()=> msg.delete().catch(() => {}), 3000)
+      ]
+    }).catch(() => {}).then(msg => {
+      setTimeout(() => msg.delete().catch(() => {}), 3000)
     })
   }
 }

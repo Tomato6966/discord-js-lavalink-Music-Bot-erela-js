@@ -47,19 +47,24 @@ async function request(client, message, args, type, slashCommand) {
   //function for calling the song
   async function song_() {
     //if no tracks found return info msg
-    if (!res.tracks[0]){
-      if(slashCommand && slashCommand.isCommand())
-      return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["request"]["variable1"]))
-      ]}).catch(() => {})
-      return message.channel.send({embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["request"]["variable1"]))
-      ]}).catch(() => {}).then(msg => {
-        setTimeout(()=>{
+    if (!res.tracks[0]) {
+      if (slashCommand && slashCommand.isCommand())
+        return slashCommand.reply({
+          ephemeral: true,
+          embeds: [new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+            .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["request"]["variable1"]))
+          ]
+        }).catch(() => {})
+      return message.channel.send({
+        embeds: [new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+          .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["request"]["variable1"]))
+        ]
+      }).catch(() => {}).then(msg => {
+        setTimeout(() => {
           msg.delete().catch(() => {})
         }, 3000)
       })
@@ -92,19 +97,24 @@ async function request(client, message, args, type, slashCommand) {
   }
   //function for playist
   async function playlist_() {
-    if (!res.tracks[0]){
-      if(slashCommand && slashCommand.isCommand())
-        return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
+    if (!res.tracks[0]) {
+      if (slashCommand && slashCommand.isCommand())
+        return slashCommand.reply({
+          ephemeral: true,
+          embeds: [new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+            .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["request"]["variable2"]))
+          ]
+        }).catch(() => {})
+      return message.channel.send({
+        embeds: [new MessageEmbed()
           .setColor(ee.wrongcolor)
           .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
           .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["request"]["variable2"]))
-        ]}).catch(() => {})
-      return message.channel.send({embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["request"]["variable2"]))
-      ]}).catch(() => {}).then(msg => {
-        setTimeout(()=>{
+        ]
+      }).catch(() => {}).then(msg => {
+        setTimeout(() => {
           msg.delete().catch(() => {})
         }, 3000)
       })

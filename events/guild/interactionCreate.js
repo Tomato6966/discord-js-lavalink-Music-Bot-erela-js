@@ -9,51 +9,51 @@ const {
 } = require(`${process.cwd()}/handlers/functions`);
 const Discord = require("discord.js");
 module.exports = async (client, interaction) => {
-  if (interaction.isCommand()) {
-    const {
-      member,
-      channelId,
-      guildId,
-      applicationId,
-      commandName,
-      deferred,
-      replied,
-      ephemeral,
-      options,
-      id,
-      createdTimestamp
-    } = interaction;
-    const {
-      guild
-    } = member;
-    if (!guild) {
-      return interaction.reply({
-        content: ":x: Interactions only Works inside of GUILDS!",
-        ephemeral: true
-      }).catch(() => {});
-    }
-    const CategoryName = interaction.commandName;
-    databasing(client, guild.id, member.id)
-    var not_allowed = false;
-    const guild_settings = client.settings.get(guild.id);
-    let es = guild_settings.embed;
-    let ls = guild_settings.language;
-    let {
-      prefix,
-      botchannel,
-      unkowncmdmessage
-    } = guild_settings;
-    let command = false;
-    try {
-      if (client.slashCommands.has(CategoryName + interaction.options.getSubcommand())) {
-        command = client.slashCommands.get(CategoryName + interaction.options.getSubcommand());
-      }
-    } catch {
-      if (client.slashCommands.has("normal" + CategoryName)) {
-        command = client.slashCommands.get("normal" + CategoryName);
-      }
-    }
-    if (command) {
+      if (interaction.isCommand()) {
+        const {
+          member,
+          channelId,
+          guildId,
+          applicationId,
+          commandName,
+          deferred,
+          replied,
+          ephemeral,
+          options,
+          id,
+          createdTimestamp
+        } = interaction;
+        const {
+          guild
+        } = member;
+        if (!guild) {
+          return interaction.reply({
+            content: ":x: Interactions only Works inside of GUILDS!",
+            ephemeral: true
+          }).catch(() => {});
+        }
+        const CategoryName = interaction.commandName;
+        databasing(client, guild.id, member.id)
+        var not_allowed = false;
+        const guild_settings = client.settings.get(guild.id);
+        let es = guild_settings.embed;
+        let ls = guild_settings.language;
+        let {
+          prefix,
+          botchannel,
+          unkowncmdmessage
+        } = guild_settings;
+        let command = false;
+        try {
+          if (client.slashCommands.has(CategoryName + interaction.options.getSubcommand())) {
+            command = client.slashCommands.get(CategoryName + interaction.options.getSubcommand());
+          }
+        } catch {
+          if (client.slashCommands.has("normal" + CategoryName)) {
+            command = client.slashCommands.get("normal" + CategoryName);
+          }
+        }
+        if (command) {
           if (botchannel.toString() !== "") {
             if (!botchannel.includes(channelId) && !member.permissions.has("ADMINISTRATOR")) {
               for (const channelId of botchannel) {
@@ -104,12 +104,12 @@ module.exports = async (client, interaction) => {
           //if Command has specific permission return error
           if (command.memberpermissions && command.memberpermissions.length > 0 && !interaction.member.permissions.has(command.memberpermissions)) {
             return interaction.reply({
-                  ephemeral: true,
-                  embeds: [new Discord.MessageEmbed()
-                      .setColor(es.wrongcolor)
-                      .setFooter(es.footertext, es.footericon)
-                      .setTitle(client.la[ls].common.permissions.title)
-                      .setDescription(`${client.la[ls].common.permissions.description}\n> \`${command.memberpermissions.join("`, ``")}\``)   
+                ephemeral: true,
+                embeds: [new Discord.MessageEmbed()
+                  .setColor(es.wrongcolor)
+                  .setFooter(es.footertext, es.footericon)
+                  .setTitle(client.la[ls].common.permissions.title)
+                  .setDescription(`${client.la[ls].common.permissions.description}\n> \`${command.memberpermissions.join("`, ``")}\``)   
           ]
           });
     }
@@ -153,9 +153,9 @@ module.exports = async (client, interaction) => {
               .setFooter(ee.footertext, ee.footericon)
               .setTitle(`❌ ** You are not a DJ and not the Song Requester! ** `)
               .setDescription(` ** DJ - ROLES: ** \n$ {
-                          check_if_dj(client, interaction.member, player.queue.current)
-                        }
-                        `)
+                      check_if_dj(client, interaction.member, player.queue.current)
+                    }
+                    `)
             ],
             ephemeral: true});
           }
@@ -195,9 +195,9 @@ module.exports = async (client, interaction) => {
             .setFooter(es.footertext, es.footericon)
             .setTitle(client.la[ls].common.wrong_vc)
             .setDescription(`
-                        Channel: < #$ {
-                          player.voiceChannel
-                        } > `)]});
+                    Channel: < #$ {
+                      player.voiceChannel
+                    } > `)]});
         }
         //if not in the same channel --> return
         if (mechannel && channel.id !== mechannel.id && !command.parameters.notsamechannel) {
@@ -206,9 +206,9 @@ module.exports = async (client, interaction) => {
             .setFooter(es.footertext, es.footericon)
             .setTitle(client.la[ls].common.wrong_vc)
             .setDescription(`
-                        Channel: < #$ {
-                          player.voiceChannel
-                        } > `)]});
+                    Channel: < #$ {
+                      player.voiceChannel
+                    } > `)]});
         }
       }
     }
@@ -247,26 +247,48 @@ module.exports = async (client, interaction) => {
     let requester = guild.members.cache.get(requesterId);
     if(!requester) requester = await guild.members.fetch(requesterId).catch(()=>{}) || false;
     if(requester){
-      requester.send(`${interaction.customId == "PREMIUM-ACCEPT" ? `✅ **Your Requested for: \`${guild.name}\` got accepted!**` : `❌ **Your Requested for: \`${guild.name}\` got declined!**` }`).catch(()=>{});
+      requester.send(`${interaction.customId == "PREMIUM-ACCEPT" ? `✅ **Your Requested for: \`${guild.name}\` got accepted!**` : `❌ **Your Requested for: \`${guild.name}\` got declined!**`}`).catch(()=>{});
     }
     if(interaction.customId == "PREMIUM-ACCEPT" && requester.id != guild.ownerId){
       guild.fetchOwner(owner => {
-        owner.send(`✅ **Your Guild: \`${guild.name}\` got accepted for PREMIUM!**`).catch(()=>{});
-      }).catch(()=>{});
+        owner.send(`✅ ** Your Guild: \`${guild.name}\` got accepted for PREMIUM!**`).catch(() => {});
+      }).catch(() => {});
     }
-    if(interaction.customId == "PREMIUM-ACCEPT"){
-      if(client.premium.get("global", "guilds").includes(guild.id)){
-        interaction.update({embeds: [interaction.message.embeds[0].setTitle(`✅ Guild is already a PREMIUM Member!`)], components: []})
+    if (interaction.customId == "PREMIUM-ACCEPT") {
+      if (client.premium.get("global", "guilds").includes(guild.id)) {
+        interaction.update({
+          embeds: [interaction.message.embeds[0].setTitle(`✅ Guild is already a PREMIUM Member!`)],
+          components: []
+        })
       } else {
         client.premium.push("global", guild.id, "guilds");
-        interaction.update({embeds: [interaction.message.embeds[0].setTitle(`✅ Accepted the Guild!`)], components: []})
+        interaction.update({
+          embeds: [interaction.message.embeds[0].setTitle(`✅ Accepted the Guild!`)],
+          components: []
+        })
       }
     } else {
-      if(client.premium.get("global", "guilds").includes(guild.id)){
-        interaction.update({embeds: [interaction.message.embeds[0].setTitle(`✅ Guild is already a PREMIUM Member!`)], components: []})
+      if (client.premium.get("global", "guilds").includes(guild.id)) {
+        interaction.update({
+          embeds: [interaction.message.embeds[0].setTitle(`✅ Guild is already a PREMIUM Member!`)],
+          components: []
+        })
       } else {
-        interaction.update({embeds: [interaction.message.embeds[0].setTitle(`❌ Denied the Guild!`)], components: []})
+        interaction.update({
+          embeds: [interaction.message.embeds[0].setTitle(`❌ Denied the Guild!`)],
+          components: []
+        })
       }
     }
   }
 }
+
+/**
+ * @INFO
+ * Bot Coded by Tomato#6966 | https://discord.gg/milrato
+ * @INFO
+ * Work for Milrato Development | https://milrato.dev
+ * @INFO
+ * Please mention him / Milrato Development, when using this Code!
+ * @INFO
+ */

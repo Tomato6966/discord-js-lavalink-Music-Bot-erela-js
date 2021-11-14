@@ -6,7 +6,8 @@ var config = require(`${process.cwd()}/botconfig/config.json`)
 var {
   format,
   delay,
-  arrayMove,isValidURL
+  arrayMove,
+  isValidURL
 } = require("../functions")
 
 //function for playling song + skipping
@@ -37,21 +38,20 @@ async function skiptrack(client, message, args, type, slashCommand) {
     player.stop();
   }
   try {
-      // Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
-      if (type.split(":")[1] === "youtube" || type.split(":")[1] === "soundcloud"){
-        if(isValidURL(search)){
-          res = await client.manager.search(search, message.author);
-        } else {
-          res = await client.manager.search({
-            query: search,
-            source: type.split(":")[1]
-          }, message.author);
-        }
-      }
-      else {
+    // Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
+    if (type.split(":")[1] === "youtube" || type.split(":")[1] === "soundcloud") {
+      if (isValidURL(search)) {
         res = await client.manager.search(search, message.author);
+      } else {
+        res = await client.manager.search({
+          query: search,
+          source: type.split(":")[1]
+        }, message.author);
       }
-      // Check the load type as this command is not that advanced for basics
+    } else {
+      res = await client.manager.search(search, message.author);
+    }
+    // Check the load type as this command is not that advanced for basics
     if (res.loadType === "LOAD_FAILED") throw res.exception;
     else if (res.loadType === "PLAYLIST_LOADED") {
       playlist_()
@@ -60,33 +60,43 @@ async function skiptrack(client, message, args, type, slashCommand) {
     }
   } catch (e) {
     console.log(e)
-    if(slashCommand && slashCommand.isCommand())
-      return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
+    if (slashCommand && slashCommand.isCommand())
+      return slashCommand.reply({
+        ephemeral: true,
+        embeds: [new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable1"]))
+          .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable2"]))
+        ]
+      });
+    return message.channel.send({
+      embeds: [new MessageEmbed()
         .setColor(ee.wrongcolor)
-        .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable1"]))
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable2"]))
-      ]});
-    return message.channel.send({embeds: [new MessageEmbed()
-      .setColor(ee.wrongcolor)
-      .setTitle(String("❌ **There was an Error while searching: `" + search).substr(0, 256 - 3) + "`**")
-      .setDescription(`\`\`\`${e}\`\`\``.substr(0, 2000))
-    ]});
+        .setTitle(String("❌ **There was an Error while searching: `" + search).substr(0, 256 - 3) + "`**")
+        .setDescription(`\`\`\`${e}\`\`\``.substr(0, 2000))
+      ]
+    });
   }
 
   async function song_() {
-    if (!res.tracks[0]){
-      if(slashCommand && slashCommand.isCommand()) 
-      return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable3"]))
-      ]})
-      return message.channel.send({embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable3"]))
-      ]}).then(msg => {
-        setTimeout(()=>{
+    if (!res.tracks[0]) {
+      if (slashCommand && slashCommand.isCommand())
+        return slashCommand.reply({
+          ephemeral: true,
+          embeds: [new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+            .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable3"]))
+          ]
+        })
+      return message.channel.send({
+        embeds: [new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+          .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable3"]))
+        ]
+      }).then(msg => {
+        setTimeout(() => {
           msg.delete().catch(() => {})
         }, 3000)
       })
@@ -126,19 +136,24 @@ async function skiptrack(client, message, args, type, slashCommand) {
   }
   //function ffor playist
   async function playlist_() {
-    if (!res.tracks[0]){
-      if(slashCommand && slashCommand.isCommand()) 
-      return slashCommand.reply({ephemeral: true, embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable5"]))
-      ]})
-      return message.channel.send({embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
-        .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable5"]))
-      ]}).then(msg => {
-        setTimeout(()=>{
+    if (!res.tracks[0]) {
+      if (slashCommand && slashCommand.isCommand())
+        return slashCommand.reply({
+          ephemeral: true,
+          embeds: [new MessageEmbed()
+            .setColor(ee.wrongcolor)
+            .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+            .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable5"]))
+          ]
+        })
+      return message.channel.send({
+        embeds: [new MessageEmbed()
+          .setColor(ee.wrongcolor)
+          .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
+          .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable5"]))
+        ]
+      }).then(msg => {
+        setTimeout(() => {
           msg.delete().catch(() => {})
         }, 3000)
       })
@@ -191,10 +206,15 @@ async function skiptrack(client, message, args, type, slashCommand) {
       .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
         dynamic: true
       }))
-      if(slashCommand && slashCommand.isCommand()) slashCommand.reply({ephemeral: true, embeds: [playlistembed]})
-      else message.channel.send({embeds: [playlistembed]})
-      //Update the Music System Message - Embed
-      client.updateMusicSystem(player);
+    if (slashCommand && slashCommand.isCommand()) slashCommand.reply({
+      ephemeral: true,
+      embeds: [playlistembed]
+    })
+    else message.channel.send({
+      embeds: [playlistembed]
+    })
+    //Update the Music System Message - Embed
+    client.updateMusicSystem(player);
   }
 
 }

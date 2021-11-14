@@ -3,12 +3,13 @@ const {
   Client,
   Collection,
   MessageEmbed,
-  MessageAttachment, 
-  MessageButton, 
+  MessageAttachment,
+  MessageButton,
   MessageActionRow
 } = require("discord.js");
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 const config = require(`${process.cwd()}/botconfig/config.json`);
+const settings = require(`${process.cwd()}/botconfig/settings.json`);
 const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const radios = require("../botconfig/radiostations.json");
 const ms = require("ms")
@@ -32,13 +33,14 @@ module.exports.autoplay = autoplay;
 module.exports.arrayMove = arrayMove;
 module.exports.isValidURL = isValidURL;
 module.exports.check_if_dj = check_if_dj;
+
 function check_if_dj(client, member, song) {
   //if no message added return
-  if(!client) return false;
+  if (!client) return false;
   var roleid = client.settings.get(member.guild.id, `djroles`)
   if (String(roleid) == "") return false;
   var isdj = false;
-  for(const djRole of roleid){
+  for (const djRole of roleid) {
     if (!member.guild.roles.cache.get(djRole)) {
       client.settings.remove(message.guild.id, djRole, `djroles`)
       continue;
@@ -46,23 +48,24 @@ function check_if_dj(client, member, song) {
     if (member.roles.cache.has(djRole)) isdj = true;
   }
   if (!isdj && !member.permissions.has("ADMINISTRATOR") && song?.requester?.id != member.id)
-      return roleid.map(i=>`<@&${i}>`).join(", ");
+    return roleid.map(i => `<@&${i}>`).join(", ");
   else
-      return false;
+    return false;
 }
 
 function handlemsg(txt, options) {
   let text = String(txt);
-  for(const option in options){ 
-    var toreplace = new RegExp(`{${option.toLowerCase()}}`,"ig");
+  for (const option in options) {
+    var toreplace = new RegExp(`{${option.toLowerCase()}}`, "ig");
     text = text.replace(toreplace, options[option]);
   }
   return text;
 }
+
 function isValidURL(string) {
   const args = string.split(" ");
   let url;
-  for(const arg of args){
+  for (const arg of args) {
     try {
       url = new URL(arg);
       url = url.protocol === "http:" || url.protocol === "https:";
@@ -91,62 +94,62 @@ function shuffle(a) {
 
 
 function duration(duration, useMilli = false) {
-    let remain = duration;
-    let days = Math.floor(remain / (1000 * 60 * 60 * 24));
-    remain = remain % (1000 * 60 * 60 * 24);
-    let hours = Math.floor(remain / (1000 * 60 * 60));
-    remain = remain % (1000 * 60 * 60);
-    let minutes = Math.floor(remain / (1000 * 60));
-    remain = remain % (1000 * 60);
-    let seconds = Math.floor(remain / (1000));
-    remain = remain % (1000);
-    let milliseconds = remain;
-    let time = {
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds
-    };
-    let parts = []
-    if (time.days) {
-      let ret = time.days + ' Day'
-      if (time.days !== 1) {
-        ret += 's'
-      }
-      parts.push(ret)
+  let remain = duration;
+  let days = Math.floor(remain / (1000 * 60 * 60 * 24));
+  remain = remain % (1000 * 60 * 60 * 24);
+  let hours = Math.floor(remain / (1000 * 60 * 60));
+  remain = remain % (1000 * 60 * 60);
+  let minutes = Math.floor(remain / (1000 * 60));
+  remain = remain % (1000 * 60);
+  let seconds = Math.floor(remain / (1000));
+  remain = remain % (1000);
+  let milliseconds = remain;
+  let time = {
+    days,
+    hours,
+    minutes,
+    seconds,
+    milliseconds
+  };
+  let parts = []
+  if (time.days) {
+    let ret = time.days + ' Day'
+    if (time.days !== 1) {
+      ret += 's'
     }
-    if (time.hours) {
-      let ret = time.hours + ' Hr'
-      if (time.hours !== 1) {
-        ret += 's'
-      }
-      parts.push(ret)
+    parts.push(ret)
+  }
+  if (time.hours) {
+    let ret = time.hours + ' Hr'
+    if (time.hours !== 1) {
+      ret += 's'
     }
-    if (time.minutes) {
-      let ret = time.minutes + ' Min'
-      if (time.minutes !== 1) {
-        ret += 's'
-      }
-      parts.push(ret)
-  
+    parts.push(ret)
+  }
+  if (time.minutes) {
+    let ret = time.minutes + ' Min'
+    if (time.minutes !== 1) {
+      ret += 's'
     }
-    if (time.seconds) {
-      let ret = time.seconds + ' Sec'
-      if (time.seconds !== 1) {
-        ret += 's'
-      }
-      parts.push(ret)
+    parts.push(ret)
+
+  }
+  if (time.seconds) {
+    let ret = time.seconds + ' Sec'
+    if (time.seconds !== 1) {
+      ret += 's'
     }
-    if (useMilli && time.milliseconds) {
-      let ret = time.milliseconds + ' ms'
-      parts.push(ret)
-    }
-    if (parts.length === 0) {
-      return ['instantly']
-    } else {
-      return parts
-    }
+    parts.push(ret)
+  }
+  if (useMilli && time.milliseconds) {
+    let ret = time.milliseconds + ' ms'
+    parts.push(ret)
+  }
+  if (parts.length === 0) {
+    return ['instantly']
+  } else {
+    return parts
+  }
 }
 
 function delay(delayInms) {
@@ -162,22 +165,41 @@ function delay(delayInms) {
 }
 
 function createBar(player) {
-  try {
-    let size = 25;
-    let line = "▬";
+  let { size, line, slider, leftindicator, rightindicator, style } = emoji.msg.progress_bar;
+  if(style == "simple") {
     //player.queue.current.duration == 0 ? player.position : player.queue.current.duration, player.position, 25, "▬", "🔷")
-    if (!player.queue.current) return `**[${"🔷"}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
+    if (!player.queue.current) return `**[${slider}${line.repeat(size - 1)}${rightindicator}**\n**00:00:00 / 00:00:00**`;
     let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
     let total = player.queue.current.duration;
 
-    let slider = "🔷";
     let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
-    if (!String(bar).includes("🔷")) return `**[${"🔷"}${line.repeat(size - 1)}]**\n**00:00:00 / 00:00:00**`;
-    return `**[${bar[0]}]**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
-  } catch (e) {
-    console.log(String(e.stack).grey.bgRed)
+    if (!String(bar).includes(slider)) return `**${leftindicator}${slider}${line.repeat(size - 1)}${rightindicator}**\n**00:00:00 / 00:00:00**`;
+    return `**${leftindicator}${bar[0]}${rightindicator}**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+  } else {
+    try {
+      if (!player.queue.current) return `**${emoji.msg.progress_bar.empty_left}${emoji.msg.progress_bar.filledframe}${emoji.msg.progress_bar.emptyframe.repeat(size - 1)}${emoji.msg.progress_bar.empty_right}**\n**00:00:00 / 00:00:00**`;
+      let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
+      let total = player.queue.current.duration;
+      size -= 10;
+      let rightside = size - Math.round(size * (current / total));
+      let leftside = Math.round(size * (current / total));
+      let bar;
+      if (leftside < 1) bar = String(emoji.msg.progress_bar.empty_left) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(emoji.msg.progress_bar.empty_right);
+      else bar = String(emoji.msg.progress_bar.filled_left) + String(emoji.msg.progress_bar.filledframe).repeat(leftside) + String(emoji.msg.progress_bar.emptyframe).repeat(rightside) + String(size - rightside !== 1 ? emoji.msg.progress_bar.empty_right : emoji.msg.progress_bar.filled_right);
+      return `**${bar}**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+    } catch (e) {
+      //if problem, then redo with the new size
+      if (!player.queue.current) return `**[${slider}${line.repeat(size - 1)}${rightindicator}**\n**00:00:00 / 00:00:00**`;
+      let current = player.queue.current.duration !== 0 ? player.position : player.queue.current.duration;
+      let total = player.queue.current.duration;
+
+      let bar = current > total ? [line.repeat(size / 2 * 2), (current / total) * 100] : [line.repeat(Math.round(size / 2 * (current / total))).replace(/.$/, slider) + line.repeat(size - Math.round(size * (current / total)) + 1), current / total];
+      if (!String(bar).includes(slider)) return `**${leftindicator}${slider}${line.repeat(size - 1)}${rightindicator}**\n**00:00:00 / 00:00:00**`;
+      return `**${leftindicator}${bar[0]}${rightindicator}**\n**${new Date(player.position).toISOString().substr(11, 8)+" / "+(player.queue.current.duration==0?" ◉ LIVE":new Date(player.queue.current.duration).toISOString().substr(11, 8))}**`;
+    }
   }
 }
+
 
 function format(millis) {
   try {
@@ -194,21 +216,21 @@ function format(millis) {
 function stations(client, prefix, message) {
   let es = client.settings.get(message.guild.id, "embed");
   let ls = client.settings.get(message.guild.id, "language");
-  
+
 
   try {
     let amount = 0;
     const stationsembed = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon : null).setFooter(es.footertext, es.footericon)
-    .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable4"]))
-    .setDescription(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable4_1"]))
+      .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable4"]))
+      .setDescription(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable4_1"]))
     const stationsembed2 = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-    .setFooter(es.footertext, es.footericon)
-    .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable5"]))
-    .setDescription(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable5_1"]))
+      .setFooter(es.footertext, es.footericon)
+      .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable5"]))
+      .setDescription(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable5_1"]))
     const stationsembed3 = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-    .setFooter(es.footertext, es.footericon)
-    .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable6"]))
-    .setDescription(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable6_1"]))
+      .setFooter(es.footertext, es.footericon)
+      .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable6"]))
+      .setDescription(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable6_1"]))
     let United_Kingdom = "";
     for (let i = 0; i < radios.EU.United_Kingdom.length; i++) {
       United_Kingdom += `**${i + 1 + 10 * amount}**[${radios.EU.United_Kingdom[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.United_Kingdom[i].split(" ")[1]})\n`;
@@ -317,9 +339,15 @@ function stations(client, prefix, message) {
       } catch {}
     }
     stationsembed3.addField("🧾 OTHERS", `>>> ${requests}`, true);
-    message.channel.send({embeds: [stationsembed]}).catch(e => console.log(e.stack ? String(e.stack).grey : String(e).grey))
-    message.channel.send({embeds: [stationsembed2]}).catch(e => console.log(e.stack ? String(e.stack).grey : String(e).grey))
-    message.channel.send({embeds: [stationsembed3]}).catch(e => console.log(e.stack ? String(e.stack).grey : String(e).grey))
+    message.channel.send({
+      embeds: [stationsembed]
+    }).catch(e => console.log(e.stack ? String(e.stack).grey : String(e).grey))
+    message.channel.send({
+      embeds: [stationsembed2]
+    }).catch(e => console.log(e.stack ? String(e.stack).grey : String(e).grey))
+    message.channel.send({
+      embeds: [stationsembed3]
+    }).catch(e => console.log(e.stack ? String(e.stack).grey : String(e).grey))
   } catch (e) {
     console.log(String(e.stack).grey.bgRed)
   }
@@ -334,21 +362,7 @@ function escapeRegex(str) {
 }
 
 async function autoplay(client, player, type) {
-  client.settings.ensure(player.guild, {
-    prefix: config.prefix,
-    embed: {
-      "color": ee.color,
-      "thumb": true,
-      "wrongcolor": ee.wrongcolor,
-      "footertext": client.guilds.cache.get(player.guild) ? client.guilds.cache.get(player.guild).name : ee.footertext,
-      "footericon": client.guilds.cache.get(player.guild) ? client.guilds.cache.get(player.guild).iconURL({
-        dynamic: true
-      }) : ee.footericon,
-    },
-    language: "en"
-  })
-  let es = client.settings.get(player.guild, "embed") 
-  if(!client.settings.has(player.guild, "language")) client.settings.ensure(player.guild, { language: "en" });
+  let es = client.settings.get(player.guild, "embed")
   let ls = client.settings.get(player.guild, "language")
   try {
     if (player.queue.length > 0) return;
@@ -361,10 +375,12 @@ async function autoplay(client, player, type) {
     if (!response || response.loadType === 'LOAD_FAILED' || response.loadType !== 'PLAYLIST_LOADED') {
       let embed = new MessageEmbed()
         .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable7"]))
-        .setDescription(config.settings.LeaveOnEmpty_Queue.enabled && type != "skip" ? `I'll leave the Channel: \`${client.channels.cache.get(player.voiceChannel).name}\` in: \`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\`, If the Queue stays Empty! ` : eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable9"]))
+        .setDescription(settings.LeaveOnEmpty_Queue.enabled && type != "skip" ? `I'll leave the Channel: \`${client.channels.cache.get(player.voiceChannel).name}\` in: \`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\`, If the Queue stays Empty! ` : eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable9"]))
         .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon);
-      client.channels.cache.get(player.textChannel).send({embeds: [embed]}).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
-      if (config.settings.LeaveOnEmpty_Queue.enabled && type != "skip") {
+      client.channels.cache.get(player.textChannel).send({
+        embeds: [embed]
+      }).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
+      if (settings.LeaveOnEmpty_Queue.enabled && type != "skip") {
         return setTimeout(() => {
           try {
             player = client.manager.players.get(player.guild);
@@ -384,7 +400,9 @@ async function autoplay(client, player, type) {
               } catch {}
               client.channels.cache
                 .get(player.textChannel)
-                .send({embeds: [embed]}).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
+                .send({
+                  embeds: [embed]
+                }).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
               try {
                 client.channels.cache
                   .get(player.textChannel)
@@ -404,7 +422,7 @@ async function autoplay(client, player, type) {
           } catch (e) {
             console.log(String(e.stack).grey.yellow);
           }
-        }, config.settings.LeaveOnEmpty_Queue.time_delay);
+        }, settings.LeaveOnEmpty_Queue.time_delay);
       } else {
         player.destroy();
       }
@@ -430,15 +448,36 @@ function arrayMove(array, from, to) {
     console.log(String(e.stack).grey.bgRed)
   }
 }
+
 function nFormatter(num, digits = 2) {
-  const lookup = [
-    { value: 1, symbol: "" },
-    { value: 1e3, symbol: "k" },
-    { value: 1e6, symbol: "M" },
-    { value: 1e9, symbol: "G" },
-    { value: 1e12, symbol: "T" },
-    { value: 1e15, symbol: "P" },
-    { value: 1e18, symbol: "E" }
+  const lookup = [{
+      value: 1,
+      symbol: ""
+    },
+    {
+      value: 1e3,
+      symbol: "k"
+    },
+    {
+      value: 1e6,
+      symbol: "M"
+    },
+    {
+      value: 1e9,
+      symbol: "G"
+    },
+    {
+      value: 1e12,
+      symbol: "T"
+    },
+    {
+      value: 1e15,
+      symbol: "P"
+    },
+    {
+      value: 1e18,
+      symbol: "E"
+    }
   ];
   const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
   var item = lookup.slice().reverse().find(function(item) {
@@ -448,31 +487,19 @@ function nFormatter(num, digits = 2) {
 }
 
 async function swap_pages(client, message, description, TITLE) {
-  client.settings.ensure(message.guild.id, {
-    prefix: config.prefix,
-    embed: {
-      "color": ee.color,
-      "thumb": true,
-      "wrongcolor": ee.wrongcolor,
-      "footertext": client.guilds.cache.get(message.guild.id) ? client.guilds.cache.get(message.guild.id).name : ee.footertext,
-      "footericon": client.guilds.cache.get(message.guild.id) ? client.guilds.cache.get(message.guild.id).iconURL({
-        dynamic: true
-      }) : ee.footericon,
-    }
-  })
   let es = client.settings.get(message.guild.id, "embed");
   let prefix = client.settings.get(message.guild.id, "prefix");
   let cmduser = message.author;
 
-/**
- * @INFO
- * Bot Coded by Tomato#6966 | https://discord.gg/milrato
- * @INFO
- * Work for Milrato Development | https://milrato.dev
- * @INFO
- * Please mention him / Milrato Development, when using this Code!
- * @INFO
- */
+  /**
+   * @INFO
+   * Bot Coded by Tomato#6966 | https://discord.gg/milrato
+   * @INFO
+   * Work for Milrato Development | https://milrato.dev
+   * @INFO
+   * Please mention him / Milrato Development, when using this Code!
+   * @INFO
+   */
 
   let currentPage = 0;
   //GET ALL EMBEDS
@@ -492,7 +519,9 @@ async function swap_pages(client, message, description, TITLE) {
         embeds.push(embed);
       }
       embeds;
-    } catch (e){console.log(e.stack ? String(e.stack).grey : String(e).grey)}
+    } catch (e) {
+      console.log(e.stack ? String(e.stack).grey : String(e).grey)
+    }
   } else {
     try {
       let k = 1000;
@@ -507,64 +536,92 @@ async function swap_pages(client, message, description, TITLE) {
         embeds.push(embed);
       }
       embeds;
-    } catch (e){console.log(e.stack ? String(e.stack).grey : String(e).grey)}
+    } catch (e) {
+      console.log(e.stack ? String(e.stack).grey : String(e).grey)
+    }
   }
-  if (embeds.length === 0) return message.channel.send({embeds: [new MessageEmbed()
-  .setTitle(`${emoji.msg.ERROR} No Content added to the SWAP PAGES Function`)
-  .setColor(es.wrongcolor).setThumbnail(es.thumb ? es.footericon : null)
-  .setFooter(es.footertext, es.footericon)]}).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
-  if (embeds.length === 1) return message.channel.send({embeds: [embeds[0]]}).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
+  if (embeds.length === 0) return message.channel.send({
+    embeds: [new MessageEmbed()
+      .setTitle(`${emoji.msg.ERROR} No Content added to the SWAP PAGES Function`)
+      .setColor(es.wrongcolor).setThumbnail(es.thumb ? es.footericon : null)
+      .setFooter(es.footertext, es.footericon)
+    ]
+  }).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
+  if (embeds.length === 1) return message.channel.send({
+    embeds: [embeds[0]]
+  }).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
 
   let button_back = new MessageButton().setStyle('SUCCESS').setCustomId('1').setEmoji("833802907509719130").setLabel("Back")
   let button_home = new MessageButton().setStyle('DANGER').setCustomId('2').setEmoji("🏠").setLabel("Home")
   let button_forward = new MessageButton().setStyle('SUCCESS').setCustomId('3').setEmoji('832598861813776394').setLabel("Forward")
   const allbuttons = [new MessageActionRow().addComponents([button_back, button_home, button_forward])]
   //Send message with buttons
-  let swapmsg = await message.channel.send({   
-      content: `***Click on the __Buttons__ to swap the Pages***`,
-      embeds: [embeds[0]], 
-      components: allbuttons
+  let swapmsg = await message.channel.send({
+    content: `***Click on the __Buttons__ to swap the Pages***`,
+    embeds: [embeds[0]],
+    components: allbuttons
   });
   //create a collector for the thinggy
-  const collector = swapmsg.createMessageComponentCollector({filter: (i) => i.isButton() && i.user && i.user.id == cmduser.id && i.message.author.id == client.user.id, time: 180e3 }); //collector for 5 seconds
+  const collector = swapmsg.createMessageComponentCollector({
+    filter: (i) => i.isButton() && i.user && i.user.id == cmduser.id && i.message.author.id == client.user.id,
+    time: 180e3
+  }); //collector for 5 seconds
   //array of all embeds, here simplified just 10 embeds with numbers 0 - 9
   collector.on('collect', async b => {
-      if(b.user.id !== message.author.id)
-        return b.reply({content: `❌ **Only the one who typed ${prefix}help is allowed to react!**`, ephemeral: true})
-        //page forward
-        if(b.customId == "1") {
-          //b.reply("***Swapping a PAGE FORWARD***, *please wait 2 Seconds for the next Input*", true)
-            if (currentPage !== 0) {
-              currentPage -= 1
-              await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
-              await b.deferUpdate();
-            } else {
-                currentPage = embeds.length - 1
-                await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
-                await b.deferUpdate();
-            }
-        }
-        //go home
-        else if(b.customId == "2"){
-          //b.reply("***Going Back home***, *please wait 2 Seconds for the next Input*", true)
-            currentPage = 0;
-            await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
-            await b.deferUpdate();
-        } 
-        //go forward
-        else if(b.customId == "3"){
-          //b.reply("***Swapping a PAGE BACK***, *please wait 2 Seconds for the next Input*", true)
-            if (currentPage < embeds.length - 1) {
-                currentPage++;
-                await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
-                await b.deferUpdate();
-            } else {
-                currentPage = 0
-                await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
-                await b.deferUpdate();
-            }
-        
+    if (b.user.id !== message.author.id)
+      return b.reply({
+        content: `❌ **Only the one who typed ${prefix}help is allowed to react!**`,
+        ephemeral: true
+      })
+    //page forward
+    if (b.customId == "1") {
+      //b.reply("***Swapping a PAGE FORWARD***, *please wait 2 Seconds for the next Input*", true)
+      if (currentPage !== 0) {
+        currentPage -= 1
+        await swapmsg.edit({
+          embeds: [embeds[currentPage]],
+          components: allbuttons
+        });
+        await b.deferUpdate();
+      } else {
+        currentPage = embeds.length - 1
+        await swapmsg.edit({
+          embeds: [embeds[currentPage]],
+          components: allbuttons
+        });
+        await b.deferUpdate();
       }
+    }
+    //go home
+    else if (b.customId == "2") {
+      //b.reply("***Going Back home***, *please wait 2 Seconds for the next Input*", true)
+      currentPage = 0;
+      await swapmsg.edit({
+        embeds: [embeds[currentPage]],
+        components: allbuttons
+      });
+      await b.deferUpdate();
+    }
+    //go forward
+    else if (b.customId == "3") {
+      //b.reply("***Swapping a PAGE BACK***, *please wait 2 Seconds for the next Input*", true)
+      if (currentPage < embeds.length - 1) {
+        currentPage++;
+        await swapmsg.edit({
+          embeds: [embeds[currentPage]],
+          components: allbuttons
+        });
+        await b.deferUpdate();
+      } else {
+        currentPage = 0
+        await swapmsg.edit({
+          embeds: [embeds[currentPage]],
+          components: allbuttons
+        });
+        await b.deferUpdate();
+      }
+
+    }
   });
 
 
@@ -572,128 +629,177 @@ async function swap_pages(client, message, description, TITLE) {
 async function swap_pages2(client, message, embeds) {
   let currentPage = 0;
   let cmduser = message.author;
-  if (embeds.length === 1) return message.channel.send({embeds: [embeds[0]]}).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
+  if (embeds.length === 1) return message.channel.send({
+    embeds: [embeds[0]]
+  }).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
   let button_back = new MessageButton().setStyle('SUCCESS').setCustomId('1').setEmoji("833802907509719130").setLabel("Back")
   let button_home = new MessageButton().setStyle('DANGER').setCustomId('2').setEmoji("🏠").setLabel("Home")
   let button_forward = new MessageButton().setStyle('SUCCESS').setCustomId('3').setEmoji('832598861813776394').setLabel("Forward")
   const allbuttons = [new MessageActionRow().addComponents([button_back, button_home, button_forward])]
   let prefix = client.settings.get(message.guild.id, "prefix");
   //Send message with buttons
-  let swapmsg = await message.channel.send({   
-      content: `***Click on the __Buttons__ to swap the Pages***`,
-      embeds: [embeds[0]], 
-      components: allbuttons
+  let swapmsg = await message.channel.send({
+    content: `***Click on the __Buttons__ to swap the Pages***`,
+    embeds: [embeds[0]],
+    components: allbuttons
   });
   //create a collector for the thinggy
-  const collector = swapmsg.createMessageComponentCollector({filter: (i) => i.isButton() && i.user && i.user.id == cmduser.id && i.message.author.id == client.user.id, time: 180e3 }); //collector for 5 seconds
+  const collector = swapmsg.createMessageComponentCollector({
+    filter: (i) => i.isButton() && i.user && i.user.id == cmduser.id && i.message.author.id == client.user.id,
+    time: 180e3
+  }); //collector for 5 seconds
   //array of all embeds, here simplified just 10 embeds with numbers 0 - 9
   collector.on('collect', async b => {
-      if(b.user.id !== message.author.id)
-        return b.reply({content: `❌ **Only the one who typed ${prefix}help is allowed to react!**`, ephemeral: true})
-        //page forward
-        if(b.customId == "1") {
-          //b.reply("***Swapping a PAGE FORWARD***, *please wait 2 Seconds for the next Input*", true)
-            if (currentPage !== 0) {
-              currentPage -= 1
-              await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
-              await b.deferUpdate();
-            } else {
-                currentPage = embeds.length - 1
-                await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
-                await b.deferUpdate();
-            }
-        }
-        //go home
-        else if(b.customId == "2"){
-          //b.reply("***Going Back home***, *please wait 2 Seconds for the next Input*", true)
-            currentPage = 0;
-            await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
-            await b.deferUpdate();
-        } 
-        //go forward
-        else if(b.customId == "3"){
-          //b.reply("***Swapping a PAGE BACK***, *please wait 2 Seconds for the next Input*", true)
-            if (currentPage < embeds.length - 1) {
-                currentPage++;
-                await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
-                await b.deferUpdate();
-            } else {
-                currentPage = 0
-                await swapmsg.edit({embeds: [embeds[currentPage]], components: allbuttons});
-                await b.deferUpdate();
-            }
-        
+    if (b.user.id !== message.author.id)
+      return b.reply({
+        content: `❌ **Only the one who typed ${prefix}help is allowed to react!**`,
+        ephemeral: true
+      })
+    //page forward
+    if (b.customId == "1") {
+      //b.reply("***Swapping a PAGE FORWARD***, *please wait 2 Seconds for the next Input*", true)
+      if (currentPage !== 0) {
+        currentPage -= 1
+        await swapmsg.edit({
+          embeds: [embeds[currentPage]],
+          components: allbuttons
+        });
+        await b.deferUpdate();
+      } else {
+        currentPage = embeds.length - 1
+        await swapmsg.edit({
+          embeds: [embeds[currentPage]],
+          components: allbuttons
+        });
+        await b.deferUpdate();
       }
+    }
+    //go home
+    else if (b.customId == "2") {
+      //b.reply("***Going Back home***, *please wait 2 Seconds for the next Input*", true)
+      currentPage = 0;
+      await swapmsg.edit({
+        embeds: [embeds[currentPage]],
+        components: allbuttons
+      });
+      await b.deferUpdate();
+    }
+    //go forward
+    else if (b.customId == "3") {
+      //b.reply("***Swapping a PAGE BACK***, *please wait 2 Seconds for the next Input*", true)
+      if (currentPage < embeds.length - 1) {
+        currentPage++;
+        await swapmsg.edit({
+          embeds: [embeds[currentPage]],
+          components: allbuttons
+        });
+        await b.deferUpdate();
+      } else {
+        currentPage = 0
+        await swapmsg.edit({
+          embeds: [embeds[currentPage]],
+          components: allbuttons
+        });
+        await b.deferUpdate();
+      }
+
+    }
   });
 
 }
 async function swap_pages2_interaction(client, interaction, embeds) {
   let currentPage = 0;
   let cmduser = interaction.member.user;
-  if (embeds.length === 1) return interaction.reply({ephemeral: true, embeds: [embeds[0]]}).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
+  if (embeds.length === 1) return interaction.reply({
+    ephemeral: true,
+    embeds: [embeds[0]]
+  }).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
   let button_back = new MessageButton().setStyle('SUCCESS').setCustomId('1').setEmoji("833802907509719130").setLabel("Back")
   let button_home = new MessageButton().setStyle('DANGER').setCustomId('2').setEmoji("🏠").setLabel("Home")
   let button_forward = new MessageButton().setStyle('SUCCESS').setCustomId('3').setEmoji('832598861813776394').setLabel("Forward")
   const allbuttons = [new MessageActionRow().addComponents([button_back, button_home, button_forward])]
   let prefix = client.settings.get(interaction.member.guild.id, "prefix");
   //Send message with buttons
-  let swapmsg = await interaction.reply({   
-      content: `***Click on the __Buttons__ to swap the Pages***`,
-      embeds: [embeds[0]], 
-      components: allbuttons,
-      ephemeral: true
+  let swapmsg = await interaction.reply({
+    content: `***Click on the __Buttons__ to swap the Pages***`,
+    embeds: [embeds[0]],
+    components: allbuttons,
+    ephemeral: true
   });
   //create a collector for the thinggy
-  const collector = swapmsg.createMessageComponentCollector({filter: (i) => i.isButton() && i.user && i.user.id == cmduser.id && i.message.author.id == client.user.id, time: 180e3 }); //collector for 5 seconds
+  const collector = swapmsg.createMessageComponentCollector({
+    filter: (i) => i.isButton() && i.user && i.user.id == cmduser.id && i.message.author.id == client.user.id,
+    time: 180e3
+  }); //collector for 5 seconds
   //array of all embeds, here simplified just 10 embeds with numbers 0 - 9
   collector.on('collect', async b => {
-      if(b.user.id !== cmduser.id)
-        return b.reply({content: `❌ **Only the one who typed ${prefix}help is allowed to react!**`, ephemeral: true})
-        //page forward
-        if(b.customId == "1") {
-          //b.reply("***Swapping a PAGE FORWARD***, *please wait 2 Seconds for the next Input*", true)
-            if (currentPage !== 0) {
-              currentPage -= 1
-              await swapmsg.edit({ephemeral: true,embeds: [embeds[currentPage]], components: allbuttons});
-              await b.deferUpdate();
-            } else {
-                currentPage = embeds.length - 1
-                await swapmsg.edit({ephemeral: true,embeds: [embeds[currentPage]], components: allbuttons});
-                await b.deferUpdate();
-            }
-        }
-        //go home
-        else if(b.customId == "2"){
-          //b.reply("***Going Back home***, *please wait 2 Seconds for the next Input*", true)
-            currentPage = 0;
-            await swapmsg.edit({ephemeral: true,embeds: [embeds[currentPage]], components: allbuttons});
-            await b.deferUpdate();
-        } 
-        //go forward
-        else if(b.customId == "3"){
-          //b.reply("***Swapping a PAGE BACK***, *please wait 2 Seconds for the next Input*", true)
-            if (currentPage < embeds.length - 1) {
-                currentPage++;
-                await swapmsg.edit({ephemeral: true,embeds: [embeds[currentPage]], components: allbuttons});
-                await b.deferUpdate();
-            } else {
-                currentPage = 0
-                await swapmsg.edit({ephemeral: true,embeds: [embeds[currentPage]], components: allbuttons});
-                await b.deferUpdate();
-            }
-        
+    if (b.user.id !== cmduser.id)
+      return b.reply({
+        content: `❌ **Only the one who typed ${prefix}help is allowed to react!**`,
+        ephemeral: true
+      })
+    //page forward
+    if (b.customId == "1") {
+      //b.reply("***Swapping a PAGE FORWARD***, *please wait 2 Seconds for the next Input*", true)
+      if (currentPage !== 0) {
+        currentPage -= 1
+        await swapmsg.edit({
+          ephemeral: true,
+          embeds: [embeds[currentPage]],
+          components: allbuttons
+        });
+        await b.deferUpdate();
+      } else {
+        currentPage = embeds.length - 1
+        await swapmsg.edit({
+          ephemeral: true,
+          embeds: [embeds[currentPage]],
+          components: allbuttons
+        });
+        await b.deferUpdate();
       }
+    }
+    //go home
+    else if (b.customId == "2") {
+      //b.reply("***Going Back home***, *please wait 2 Seconds for the next Input*", true)
+      currentPage = 0;
+      await swapmsg.edit({
+        ephemeral: true,
+        embeds: [embeds[currentPage]],
+        components: allbuttons
+      });
+      await b.deferUpdate();
+    }
+    //go forward
+    else if (b.customId == "3") {
+      //b.reply("***Swapping a PAGE BACK***, *please wait 2 Seconds for the next Input*", true)
+      if (currentPage < embeds.length - 1) {
+        currentPage++;
+        await swapmsg.edit({
+          ephemeral: true,
+          embeds: [embeds[currentPage]],
+          components: allbuttons
+        });
+        await b.deferUpdate();
+      } else {
+        currentPage = 0
+        await swapmsg.edit({
+          ephemeral: true,
+          embeds: [embeds[currentPage]],
+          components: allbuttons
+        });
+        await b.deferUpdate();
+      }
+
+    }
   });
 
 }
 
 function databasing(client, guildid, userid) {
-  if(!client || client == undefined || !client.user || client.user == undefined) return;
+  if (!client || client == undefined || !client.user || client.user == undefined) return;
   try {
-    if(userid){
-      client.settings.ensure(userid, {
-        dm: true,
-      })
+    if (userid) {
       client.queuesaves.ensure(userid, {
         "TEMPLATEQUEUEINFORMATION": ["queue", "sadasd"]
       });
@@ -709,12 +815,6 @@ function databasing(client, guildid, userid) {
       });
       client.settings.ensure(guildid, {
         prefix: config.prefix,
-        pruning: true,
-        requestonly: true,
-        unkowncmdmessage: false,
-        defaultvolume: 30,
-        channel: "",
-        language: "en",
         embed: {
           "color": ee.color,
           "thumb": true,
@@ -724,26 +824,18 @@ function databasing(client, guildid, userid) {
             dynamic: true
           }) : ee.footericon,
         },
-        volume: "69",
-        
-        showdisabled: true,
+        language: settings.default_db_data.language,
+        pruning: settings.default_db_data.pruning,
+        unkowncmdmessage: settings.default_db_data.unkowncmdmessage,
+        autoresume: settings.default_db_data.autoresume,
 
-        MUSIC: true,
-        FUN: true,
-        ANIME: true,
-        MINIGAMES: true,
-        ECONOMY: true,
-        SCHOOL: true,
-        NSFW: false,
-        VOICE: true,
-        RANKING: true,
-        PROGRAMMING: true,
-        CUSTOMQUEUE: true,
-        FILTER: true,
-        SOUNDBOARD: true,
+        defaultvolume: settings.default_db_data.defaultvolume,
+        defaulteq: settings.default_db_data.defaultequalizer,
+        defaultap: settings.default_db_data.defaultautoplay,
+
+        playmsg: settings.default_db_data.playmsg,
 
         djroles: [],
-        djonlycmds: ["autoplay", "clearqueue", "forward", "loop", "jump", "loopqueue", "loopsong", "move", "pause", "resume", "removetrack", "removedupe", "restart", "rewind", "seek", "shuffle", "skip", "stop", "volume"],
         botchannel: [],
       });
     }
@@ -763,5 +855,3 @@ function databasing(client, guildid, userid) {
  * Please mention him / Milrato Development, when using this Code!
  * @INFO
  */
-
-

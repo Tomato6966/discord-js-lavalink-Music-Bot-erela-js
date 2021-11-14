@@ -44,7 +44,7 @@ blues, oldgaming, pop, remixes, rock, strange-fruits-gaming
 
   run: async (client, interaction, cmduser, es, ls, prefix, player, message) => {
     
-    //let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
+    //
     if (!client.settings.get(message.guild.id, "MUSIC")) {
       return interaction.reply({ephemeral: true, embed : [new MessageEmbed()
         .setColor(es.wrongcolor)
