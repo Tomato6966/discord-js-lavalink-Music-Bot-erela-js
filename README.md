@@ -6,13 +6,21 @@
 
 ## Features:
 ✓ Auto resume
+
 ✓ Super fast & High Quality thanks to LAVALINK
+
 ✓ A ton of Music-based Commands
+
 ✓ Example Premium System 
+
 ✓ Everything is customicable / GUILD (`embeds`, `language` & default music values like: `volume`, `filter`, `equalizer`, `autoplay`, ...)
+
 ✓ Dj- System
+
 ✓ 10+ Filters
+
 ✓ Stable & Up to date with discord.js v13
+
 ✓ Suport 10 music sources + Stage & Thread Channels
 
 <br/>
