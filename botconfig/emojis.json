@@ -6,10 +6,22 @@
     "disabled" : "❌",
     "enabled" : "✅",
     "progress_bar": {
+      "style": "comlex",         "__comment__" : "styles: 'simple', 'comlex'",
+
       "leftindicator": "[",
       "rightindicator": "]",
-      "emptyframe": "⬜",
-      "filledframe": "🟧"
+
+      "slider": "🔷",
+      "size": 25,
+      "line": "▬",
+
+                 "___comment___" : "those are for the complex style",
+      "empty_left": "<:left_empty:909415753265086504>",
+      "filled_left": "<:left_filled:909415753692897300>",
+      "empty_right": "<:right_empty:909415753416056832>", 
+      "filled_right": "<:right_filled:909415753135042562>", 
+      "emptyframe": "<:middle_empty:909415753059545139>",
+      "filledframe": "<:middle_filled:909415753462218792>"
     },
     "playing": "🎶",
     "pruning": "💬",
@@ -51,9 +63,13 @@
   "react": {
     "COMMENT": "IF YOU DECIDE TO USE CUSTOM EMOJIS, USE JUST THE ID IN REACT, EXAMPLE: ⏪ --> 818558865268408341",
     "ERROR" : "❌",
-    "SUCCESS" : "✅",
+    "SUCCESS" : "👍",
     "disabled" : "❌",
     "enabled" : "✅",
+    "change_language": "✌️",
+    "reset_language": "✌️",
+    "cancel": "💢",
+    "settings": "📑",
     "rewind": "⏪",
     "forward": "⏩",
     "pause_resume": "⏯️",
@@ -73,6 +89,7 @@
     "show_queue": "📑",
     "show_current_track": "🩸",
     "queue_clear": "💥",
+
     "youtube": "840260133686870036",
     "soundcloud": "840260133686870036",
     "spotify": "846090652231663647"
