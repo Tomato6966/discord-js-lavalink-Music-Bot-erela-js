@@ -127,6 +127,6 @@ Well then skip step **` 5. `**
 
 ## TODO:
 
-> - `40% is Language able` ... finish the rest of it!
+> - `50% is Language able` ... finish the rest of it!
 > 
 > - Not all emojis are yet in the emojis.json file ... Fix those!
