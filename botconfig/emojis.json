@@ -6,7 +6,7 @@
     "disabled" : "❌",
     "enabled" : "✅",
     "progress_bar": {
-      "style": "comlex",         "__comment__" : "styles: 'simple', 'comlex'",
+      "style": "simple",         "__comment__" : "styles: 'simple', 'comlex'",
 
       "leftindicator": "[",
       "rightindicator": "]",
