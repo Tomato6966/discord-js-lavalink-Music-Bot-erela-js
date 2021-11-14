@@ -3,7 +3,10 @@ const {
   Util: {
     splitMessage
   },
-  MessageAttachment, MessageActionRow, MessageButton, Collection
+  MessageAttachment,
+  MessageActionRow,
+  MessageButton,
+  Collection
 } = require(`discord.js`);
 const Discord = require(`discord.js`);
 const moment = require("moment");
@@ -20,10 +23,7 @@ module.exports = {
   description: `eval Command`,
   usage: `eval <CODE>`,
   type: "bot",
-  run: async (client, message, args, cmduser, text, prefix) => {
-
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     if (!config.ownerIDS.includes(message.author.id))
       return message.channel.send({
         embeds: [new MessageEmbed()

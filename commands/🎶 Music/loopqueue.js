@@ -1,11 +1,8 @@
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `loopqueue`,
   category: `🎶 Music`,
   aliases: [`repeatqueue`, `lq`, `rq`, `loopqu`, `repeatqu`],
@@ -18,11 +15,7 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     "previoussong": false
   },
   type: "queue",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
-
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     //define the Embed
     const embed = new MessageEmbed()
       .setTitle(player.queueRepeat ? client.la[ls].cmds.music.loop.queue.disabled : client.la[ls].cmds.music.loop.queue.enabled)
@@ -36,7 +29,9 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     //change Queue Mode
     player.setQueueRepeat(!player.queueRepeat);
     //Send Success Message
-    return message.reply({embeds : [embed]});
+    return message.reply({
+      embeds: [embed]
+    });
   }
 };
 

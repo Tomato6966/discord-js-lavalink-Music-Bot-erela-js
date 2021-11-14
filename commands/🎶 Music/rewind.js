@@ -1,15 +1,11 @@
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 const {
-  createBar,
-  format
+  createBar
 } = require(`${process.cwd()}/handlers/functions`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `rewind`,
   category: `🎶 Music`,
   aliases: [`seekbackwards`, `rew`],
@@ -22,15 +18,14 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     "previoussong": false
   },
   type: "song",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     if (!args[0])
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(eval(client.la[ls]["cmds"]["music"]["rewind"]["variable1"]))
-      ]});
+      return message.reply({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["rewind"]["variable1"]))
+        ]
+      });
     let seektime = player.position - Number(args[0]) * 1000;
     if (seektime >= player.queue.current.duration - player.position || seektime < 0) {
       seektime = 0;
@@ -38,11 +33,13 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     //seek to the right time
     player.seek(Number(seektime));
     //send success message
-    return message.reply({embeds : [new MessageEmbed()
-      .setTitle(eval(client.la[ls]["cmds"]["music"]["rewind"]["variable2"]))
-      .addField(`${emoji.msg.time} Progress: `, createBar(player))
-      .setColor(es.color)
-    ]});
+    return message.reply({
+      embeds: [new MessageEmbed()
+        .setTitle(eval(client.la[ls]["cmds"]["music"]["rewind"]["variable2"]))
+        .addField(`${emoji.msg.time} Progress: `, createBar(player))
+        .setColor(es.color)
+      ]
+    });
   }
 };
 /**

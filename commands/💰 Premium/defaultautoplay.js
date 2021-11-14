@@ -13,20 +13,17 @@ module.exports = {
   description: "Toggles if it Autoplay should be enabled on default or not! [Default: true]",
   memberpermissions: ["ADMINISTRATOR"],
   type: "bot",
-  run: async (client, message, args, cmduser, text, prefix) => {
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
-      client.settings.ensure(message.guild.id, {
-        defaultap: true,
-      });
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
+    //change the default autoplay to "true"
+    client.settings.set(message.guild.id, !client.settings.get(message.guild.id, "defaultap"), "defaultap");
 
-      client.settings.set(message.guild.id, !client.settings.get(message.guild.id, "defaultap"), "defaultap");
-      
-      return message.reply({embeds : [new MessageEmbed()
+    return message.reply({
+      embeds: [new MessageEmbed()
         .setFooter(es.footertext, es.footericon).setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
         .setTitle(eval(client.la[ls]["cmds"]["settings"]["defaultautoplay"]["variable1"]))
         .setDescription(eval(client.la[ls]["cmds"]["settings"]["defaultautoplay"]["variable2"]))
-      ]});
+      ]
+    });
   }
 }
 /**

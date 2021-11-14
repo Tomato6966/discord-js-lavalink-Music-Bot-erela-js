@@ -1,13 +1,9 @@
-const Discord = require(`discord.js`);
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 const playermanager = require(`${process.cwd()}/handlers/playermanager`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `playprevious`,
   category: `🎶 Music`,
   aliases: [`pp`, `ppre`, `playprevius`, `playprevios`],
@@ -20,13 +16,13 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     "previoussong": true
   },
   type: "song",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
+
+
+
 
     //plays it
-    if(player.queue.previous.uri.includes("soundcloud")){
+    if (player.queue.previous.uri.includes("soundcloud")) {
       message.reply({
         embeds: [
           new MessageEmbed().setColor(es.color)
@@ -35,7 +31,7 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
         ]
       })
       playermanager(client, message, Array(player.queue.previous.uri), `song:soundcloud`);
-    } else if(player.queue.previous.uri.includes("spotify")){
+    } else if (player.queue.previous.uri.includes("spotify")) {
       message.reply({
         embeds: [
           new MessageEmbed().setColor(es.color)
@@ -44,7 +40,7 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
         ]
       })
       playermanager(client, message, Array(player.queue.previous.uri), `song:raw`);
-    } else if(player.queue.previous.uri.includes("apple")){
+    } else if (player.queue.previous.uri.includes("apple")) {
       message.reply({
         embeds: [
           new MessageEmbed().setColor(es.color)

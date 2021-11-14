@@ -1,53 +1,62 @@
-const { MessageEmbed, MessageActionRow, MessageButton } = require(`discord.js`);
+const {
+  MessageEmbed,
+  MessageActionRow,
+  MessageButton
+} = require(`discord.js`);
 const config = require(`${process.cwd()}/botconfig/config.json`);
-var ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 module.exports = {
-    name: `premium`,
-    category: `⚙️ Settings`,
-    description: `Requests Premium for this Server`,
-    usage: `premium`,
-    memberpermissions: [`ADMINISTRATOR`],
-    type: "bot",
-    run: async (client, message, args, cmduser, text, prefix) => {
-    
-      let es = client.settings.get(message.guild.id, "embed");
-      let ls = client.settings.get(message.guild.id, "language")
-      if(client.premium.get("global", "guilds").includes(message.guild.id)){
-        return message.reply(`❌ **This Guild is already a \`PREMIUM-GUILD\`**`)
-      }
-      let theowner = "NO OWNER DATA! ID: ";
-      await message.guild.fetchOwner().then(({ user }) => {
-        theowner = user;
-      }).catch(() => {})
-      let embed = new MessageEmbed()
-        .setColor("GREEN")
-        .setTitle(`✅ A new Server requests **PREMIUM**`)
-        .addField("Guild Info", `>>> \`\`\`${message.guild.name} (${message.guild.id})\`\`\``)
-        .addField("Owner Info", `>>> \`\`\`${theowner ? `${theowner.tag} (${theowner.id})` : `${theowner} (${message.guild.ownerId})`}\`\`\``)
-        .addField("Member Count", `>>> \`\`\`${message.guild.memberCount}\`\`\``)
-        .addField("Requested By:", `>>> \`\`\`${message.author.tag} (${message.author.id})\`\`\``)
-        .setThumbnail(message.guild.iconURL({dynamic: true}))
-        .setFooter(`${message.author.id}-${message.guild.id}`, message.author.displayAvatarURL({dynamic: true}))
-      for(const owner of config.ownerIDS){
-        client.users.fetch(owner).then(user => {
-          user.send({ embeds: [embed], components: [
+  name: `premium`,
+  category: `⚙️ Settings`,
+  description: `Requests Premium for this Server`,
+  usage: `premium`,
+  memberpermissions: [`ADMINISTRATOR`],
+  type: "bot",
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
+    if (client.premium.get("global", "guilds").includes(message.guild.id)) {
+      return message.reply(`❌ **This Guild is already a \`PREMIUM-GUILD\`**`)
+    }
+    let theowner = "NO OWNER DATA! ID: ";
+    await message.guild.fetchOwner().then(({
+      user
+    }) => {
+      theowner = user;
+    }).catch(() => {})
+    let embed = new MessageEmbed()
+      .setColor("GREEN")
+      .setTitle(`✅ A new Server requests **PREMIUM**`)
+      .addField("Guild Info", `>>> \`\`\`${message.guild.name} (${message.guild.id})\`\`\``)
+      .addField("Owner Info", `>>> \`\`\`${theowner ? `${theowner.tag} (${theowner.id})` : `${theowner} (${message.guild.ownerId})`}\`\`\``)
+      .addField("Member Count", `>>> \`\`\`${message.guild.memberCount}\`\`\``)
+      .addField("Requested By:", `>>> \`\`\`${message.author.tag} (${message.author.id})\`\`\``)
+      .setThumbnail(message.guild.iconURL({
+        dynamic: true
+      }))
+      .setFooter(`${message.author.id}-${message.guild.id}`, message.author.displayAvatarURL({
+        dynamic: true
+      }))
+    for (const owner of config.ownerIDS) {
+      client.users.fetch(owner).then(user => {
+        user.send({
+          embeds: [embed],
+          components: [
             new MessageActionRow().addComponents([
               new MessageButton().setStyle("SUCCESS").setEmoji("✅").setCustomId("PREMIUM-ACCEPT").setLabel("Accept"),
               new MessageButton().setStyle("DANGER").setEmoji("❌").setCustomId("PREMIUM-DENY").setLabel("Deny")
             ])
-          ] }).catch(() => {});
+          ]
         }).catch(() => {});
-      }
-      return message.reply(`✅ **APPLIED FOR PREMIUM**`)
+      }).catch(() => {});
+    }
+    return message.reply(`✅ **APPLIED FOR PREMIUM**`)
   }
 };
 /**
-  * @INFO
-  * Bot Coded by Tomato#6966 | https://discord.gg/milrato
-  * @INFO
-  * Work for Milrato Development | https://milrato.dev
-  * @INFO
-  * Please mention him / Milrato Development, when using this Code!
-  * @INFO
-*/
+ * @INFO
+ * Bot Coded by Tomato#6966 | https://discord.gg/milrato
+ * @INFO
+ * Work for Milrato Development | https://milrato.dev
+ * @INFO
+ * Please mention him / Milrato Development, when using this Code!
+ * @INFO
+ */

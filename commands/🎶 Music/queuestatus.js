@@ -1,16 +1,8 @@
-const Discord = require(`discord.js`);
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
-const playermanager = require(`${process.cwd()}/handlers/playermanager`);
-const {
-  createBar
-} = require(`${process.cwd()}/handlers/functions`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `queuestatus`,
   category: `🎶 Music`,
   aliases: [`qs`, `queueinfo`, `status`, `queuestat`, `queuestats`, `qus`],
@@ -22,13 +14,7 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     "previoussong": false
   },
   type: "queue",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    
-    client.settings.ensure(message.guild.id, {
-      playmsg: true
-    });
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     //toggle autoplay
     let embed = new MessageEmbed()
     embed.setTitle(eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variable1"]))
@@ -51,7 +37,9 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     if (player.queue && player.queue.current) {
       embed.addField(eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variablex_5"]), eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variable5"]))
     }
-    message.reply({embeds : [embed]});
+    message.reply({
+      embeds: [embed]
+    });
   }
 };
 

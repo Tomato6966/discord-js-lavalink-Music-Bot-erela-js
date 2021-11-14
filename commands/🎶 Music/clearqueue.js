@@ -1,11 +1,8 @@
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `clearqueue`,
   category: `🎶 Music`,
   aliases: [`clearqu`],
@@ -19,18 +16,18 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     "previoussong": false
   },
   type: "queue",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-  
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     //clear the QUEUE
     player.queue.clear();
+    //React with emojis
+    message.react(emoji.react.queue_clear).catch(() => {})
     //Send Success Message
-    message.reply({embeds : [new MessageEmbed()
-      .setTitle(client.la[ls].cmds.music.clearqueue.title)
-      .setColor(es.color)
-    ]});
-    message.react(emoji.react.queue_clear).catch(()=>{})
+    return message.reply({
+      embeds: [new MessageEmbed()
+        .setTitle(client.la[ls].cmds.music.clearqueue.title)
+        .setColor(es.color)
+      ]
+    });
   }
 };
 /**

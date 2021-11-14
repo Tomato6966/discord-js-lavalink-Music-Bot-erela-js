@@ -2,15 +2,13 @@ const {
   MessageEmbed
 } = require(`discord.js`);
 const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 const radios = require(`${process.cwd()}/botconfig/radiostations.json`);
 const playermanager = require(`${process.cwd()}/handlers/playermanager`);
 const {
   stations
 } = require(`${process.cwd()}/handlers/functions`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `radio`,
   category: `🎶 Music`,
   aliases: [`stream`],
@@ -22,28 +20,29 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     "previoussong": false
   },
   type: "song",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-    
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     //if no args send all stations
     if (!args[0]) return stations(client, config.prefix, message);
     //if not a number error
     if (isNaN(args[0])) {
-      return message.reply({embeds :[new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(eval(client.la[ls]["cmds"]["music"]["radio"]["variable1"]))
-        .setDescription(eval(client.la[ls]["cmds"]["music"]["radio"]["variable2"]))
-      ]});
+      return message.reply({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["radio"]["variable1"]))
+          .setDescription(eval(client.la[ls]["cmds"]["music"]["radio"]["variable2"]))
+        ]
+      });
     }
     //if the volume number is not valid
     if (Number(args[1]) > 150 || Number(args[1]) < 1)
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
+      return message.reply({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
 
-        .setTitle(eval(client.la[ls]["cmds"]["music"]["radio"]["variable3"]))
-        .setDescription(eval(client.la[ls]["cmds"]["music"]["radio"]["variable4"]))
-      ]});
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["radio"]["variable3"]))
+          .setDescription(eval(client.la[ls]["cmds"]["music"]["radio"]["variable4"]))
+        ]
+      });
     //define the volume
     let volume;
     //if its not a number for volume, set it to 50
@@ -75,12 +74,14 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     else if (Number([args[0]]) > 160 && Number(args[0]) <= 183) args2 = radios.OTHERS.request[Number(args[0]) - 160 - 1].split(` `);
     //if not found send an error
     else
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
+      return message.reply({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
 
-        .setTitle(eval(client.la[ls]["cmds"]["music"]["radio"]["variable5"]))
-        .setDescription(eval(client.la[ls]["cmds"]["music"]["radio"]["variable6"]))
-      ]});
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["radio"]["variable5"]))
+          .setDescription(eval(client.la[ls]["cmds"]["music"]["radio"]["variable6"]))
+        ]
+      });
     //get song information of it
     const song = {
       title: args2[0].replace(`-`, ` `),
@@ -95,7 +96,9 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
       embed.setURL(song.url)
     } catch {}
     //send the message of the searching
-    message.reply({embeds :[embed]})
+    message.reply({
+      embeds: [embed]
+    })
     //play the radio but make the URL to an array ;) like that: [ `urlhere` ]
     playermanager(client, message, Array(song.url), `song:radio`);
   }

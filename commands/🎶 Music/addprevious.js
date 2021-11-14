@@ -1,13 +1,5 @@
-const Discord = require(`discord.js`);
-const {
-  MessageEmbed
-} = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const playermanager = require(`${process.cwd()}/handlers/playermanager`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `addprevious`,
   category: `🎶 Music`,
   aliases: [`addp`, `addpre`, `addprevius`, `addprevios`],
@@ -19,15 +11,9 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     "previoussong": true
   },
   type: "queue",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
-    //define the type
-    let type = `song:youtube`;
-    //if the previous was from soundcloud, then use type soundcloud
-    if (player.queue.previous.uri.includes(`soundcloud`)) type = `song:soundcloud`
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     //adds/plays it
-    playermanager(client, message, Array(player.queue.previous.uri), type);
+    playermanager(client, message, Array(player.queue.previous.uri), player.queue.previous.uri.includes(`soundcloud`) ? `song:soundcloud` : `song:raw`);
   }
 };
 /**

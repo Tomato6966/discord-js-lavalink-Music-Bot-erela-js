@@ -10,28 +10,36 @@ module.exports = {
   aliases: [`serverleave`, "kickbot"],
   description: `Make the Bot Leave a specific Server`,
   usage: `leaveserver <GUILDID>`,
-  run: async (client, message, args, cmduser, text, prefix) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     if (!config.ownerIDS.includes(message.author.id))
-      return message.channel.send({embeds :[new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(client.user.username, es.footericon)
-        .setTitle(eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable1"]))
-      ]});
+      return message.channel.send({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setFooter(client.user.username, es.footericon)
+          .setTitle(eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable1"]))
+        ]
+      });
     if (!args[0])
-      return message.channel.send({embeds :[new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setFooter(client.user.username, es.footericon)
-        .setTitle(eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable2"]))
-        .setDescription(eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable3"]))
-      ]});
+      return message.channel.send({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setFooter(client.user.username, es.footericon)
+          .setTitle(eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable2"]))
+          .setDescription(eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable3"]))
+        ]
+      });
     let guild = client.guilds.cache.get(args[0]);
-    if(!guild) return message.reply({content : eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable4"])})
-    guild.leave().then(g=>{
-      message.channel.send({content : eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable5"])})
-    }).catch(e=>{
-      message.reply(`${e.message ? e.message : e}`, {code: "js"})
+    if (!guild) return message.reply({
+      content: eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable4"])
+    })
+    guild.leave().then(g => {
+      message.channel.send({
+        content: eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable5"])
+      })
+    }).catch(e => {
+      message.reply(`${e.message ? e.message : e}`, {
+        code: "js"
+      })
     })
   },
 };

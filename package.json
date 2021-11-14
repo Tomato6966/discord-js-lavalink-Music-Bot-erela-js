@@ -1,8 +1,8 @@
 {
   "dependencies": {
     "@discordjs/builders": "^0.8.2",
-    "@discordjs/opus": "^0.6.0",
-    "@discordjs/voice": "^0.7.3",
+    "@discordjs/opus": "^0.7.0",
+    "@discordjs/voice": "^0.7.5",
     "colors": "^1.4.0",
     "cpu-stat": "^2.0.1",
     "discord.js": "^13.3.1",

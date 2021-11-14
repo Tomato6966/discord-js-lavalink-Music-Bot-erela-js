@@ -1,11 +1,8 @@
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `loopsong`,
   category: `🎶 Music`,
   aliases: [`repeatsong`, `ls`, `rs`, `repeattrack`, `looptrack`, `lt`, `rt`],
@@ -18,11 +15,7 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     "previoussong": false
   },
   type: "song",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
-
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     //define the Embed
     const embed = new MessageEmbed()
       .setTitle(player.trackRepeat ? client.la[ls].cmds.music.loop.track.disabled : client.la[ls].cmds.music.loop.track.enabled)
@@ -36,8 +29,10 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     //set track repeat to revers of old track repeat
     player.setTrackRepeat(!player.trackRepeat);
     //send informational message
-    return message.reply({embeds :[embed]});
-  
+    return message.reply({
+      embeds: [embed]
+    });
+
   }
 };
 /**

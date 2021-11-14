@@ -1,15 +1,14 @@
 const {
   MessageEmbed
 } = require(`discord.js`)
-const config = require(`${process.cwd()}/botconfig/config.json`)
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
-const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 const {
   createBar,
   format
 } = require(`${process.cwd()}/handlers/functions`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+const {
+  handlemsg
+} = require(`${process.cwd()}/handlers/functions`);
+module.exports = {
   name: `forward`,
   category: `🎶 Music`,
   aliases: [`seekforwards`, `fwd`],
@@ -22,15 +21,17 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     "previoussong": false
   },
   type: "song",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     //if no args available, return error
     if (!args[0])
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(handlemsg(client.la[ls].cmds.music.forward.allowed, {duration: player.queue.current.duration}))
-      ]});
+      return message.reply({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(handlemsg(client.la[ls].cmds.music.forward.allowed, {
+            duration: player.queue.current.duration
+          }))
+        ]
+      });
     //get the seektime variable of the user input
     let seektime = Number(player.position) + Number(args[0]) * 1000;
     //if the userinput is smaller then 0, then set the seektime to just the player.position
@@ -40,12 +41,17 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     //seek to the new Seek position
     player.seek(Number(seektime));
     //Send Success Message
-    return message.reply({embeds : [new MessageEmbed()
-      .setTitle(client.la[ls].cmds.music.forward.title)
-      .setDescription(handlemsg(client.la[ls].cmds.music.forward.description, {amount: args[0], time: format(Number(player.position))}))
-      .addField(client.la[ls].cmds.music.forward.field, createBar(player))
-      .setColor(es.color)
-    ]});
+    return message.reply({
+      embeds: [new MessageEmbed()
+        .setTitle(client.la[ls].cmds.music.forward.title)
+        .setDescription(handlemsg(client.la[ls].cmds.music.forward.description, {
+          amount: args[0],
+          time: format(Number(player.position))
+        }))
+        .addField(client.la[ls].cmds.music.forward.field, createBar(player))
+        .setColor(es.color)
+      ]
+    });
   }
 };
 /**

@@ -1,13 +1,8 @@
-const Discord = require(`discord.js`);
 const {
   MessageEmbed
 } = require(`discord.js`);
 const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
-const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
-const playermanager = require(`${process.cwd()}/handlers/playermanager`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `join`,
   category: `🎶 Music`,
   aliases: [`summon`, `create`],
@@ -19,29 +14,30 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     "previoussong": false
   },
   type: "bot",
-  run: async (client, message, args, cmduser, text, prefix) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
-
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     var {
       channel
     } = message.member.voice;
     if (!channel)
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.join_vc)
-      ]});
+      return message.reply({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(client.la[ls].common.join_vc)
+        ]
+      });
     //if no args return error
     var player = client.manager.players.get(message.guild.id);
     if (player) {
+      
       var vc = player.voiceChannel;
       var voiceChannel = message.guild.channels.cache.get(player.voiceChannel);
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.wrong_vc)
-        .setDescription(eval(client.la[ls]["cmds"]["music"]["join"]["variable1"]))
-      ]});
+      return message.reply({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(client.la[ls].common.wrong_vc)
+          .setDescription(eval(client.la[ls]["cmds"]["music"]["join"]["variable1"]))
+        ]
+      });
     }
     //create the player
     player = await client.manager.create({
@@ -55,17 +51,21 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
       await player.connect();
       await message.react("🎙").catch(e => {});
       await player.stop();
-      return message.reply({embeds: [new MessageEmbed()
-        .setColor(es.color)
-        .setTitle(client.la[ls].cmds.music.join.title)
-        .setDescription(eval(client.la[ls]["cmds"]["music"]["join"]["variable2"]))]
+      return message.reply({
+        embeds: [new MessageEmbed()
+          .setColor(es.color)
+          .setTitle(client.la[ls].cmds.music.join.title)
+          .setDescription(eval(client.la[ls]["cmds"]["music"]["join"]["variable2"]))
+        ]
       });
     } else {
-      return message.reply({embeds: [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(client.la[ls].common.wrong_vc)
-        .setDescription(eval(client.la[ls]["cmds"]["music"]["join"]["variable3"]))
-      ]});
+      return message.reply({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(client.la[ls].common.wrong_vc)
+          .setDescription(eval(client.la[ls]["cmds"]["music"]["join"]["variable3"]))
+        ]
+      });
     }
   }
 };

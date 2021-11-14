@@ -1,12 +1,8 @@
-const Discord = require(`discord.js`);
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 const playermanager = require(`${process.cwd()}/handlers/playermanager`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
 module.exports = {
   name: `playmusicmix`,
   category: `🎶 Music`,
@@ -19,10 +15,7 @@ module.exports = {
     "previoussong": false
   },
   type: "queuesong",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     let link = "https://open.spotify.com/playlist/37i9dQZF1DXc6IFF23C9jj";
     if (args[0]) {
       //ncs | no copyrighted music
@@ -40,9 +33,9 @@ module.exports = {
       //gaming
       if (args[0].toLowerCase().startsWith("g")) link = "https://open.spotify.com/playlist/4a54P2VHy30WTi7gix0KW6";
       //Charts
-      if(args[0].toLowerCase().startsWith("cha")) link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKvYin_USF1qoJQnIyMAfRxl"
+      if (args[0].toLowerCase().startsWith("cha")) link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKvYin_USF1qoJQnIyMAfRxl"
       //Chill
-      if(args[0].toLowerCase().startsWith("chi")) link = "https://open.spotify.com/playlist/37i9dQZF1DX4WYpdgoIcn6";
+      if (args[0].toLowerCase().startsWith("chi")) link = "https://open.spotify.com/playlist/37i9dQZF1DX4WYpdgoIcn6";
       //Jazz
       if (args[0].toLowerCase().startsWith("j")) link = "https://open.spotify.com/playlist/37i9dQZF1DXbITWG1ZJKYt";
       //blues
@@ -50,23 +43,24 @@ module.exports = {
       //strange-fruits
       if (args[0].toLowerCase().startsWith("s")) link = "https://open.spotify.com/playlist/6xGLprv9fmlMgeAMpW0x51";
       //magic-release
-      if (args[0].toLowerCase().startsWith("ma"))  link = "https://www.youtube.com/watch?v=WvMc5_RbQNc&list=PLYUn4Yaogdagvwe69dczceHTNm0K_ZG3P"
+      if (args[0].toLowerCase().startsWith("ma")) link = "https://www.youtube.com/watch?v=WvMc5_RbQNc&list=PLYUn4Yaogdagvwe69dczceHTNm0K_ZG3P"
       //metal
       if (args[0].toLowerCase().startsWith("me")) link = "https://open.spotify.com/playlist/37i9dQZF1DX9qNs32fujYe";
       //heavy metal
       if (args[0].toLowerCase().startsWith("h")) link = "https://open.spotify.com/playlist/37i9dQZF1DX9qNs32fujYe";
     }
     message.reply({
-      embeds:  [new MessageEmbed()
+      embeds: [new MessageEmbed()
         .setColor(es.color)
         .setAuthor(`Loading '${args[0] ? args[0] : "Default"}' Music Mix`, "https://imgur.com/xutrSuq.gif", link)
         .setTitle(eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variable1"]))
         .setDescription(eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variable2"]))
         .addField(eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variablex_3"]), eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variable3"]))
         .setFooter(es.footertext, es.footericon)
-      ]})
+      ]
+    })
     //play the SONG from YOUTUBE
-    playermanager(client, message, Array(link), `song:youtube`, "songoftheday");
+    playermanager(client, message, Array(link), `song:youtube`, false, "songoftheday");
   }
 };
 /**

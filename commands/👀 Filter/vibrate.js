@@ -1,50 +1,49 @@
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `vibrato`,
   category: `👀 Filter`,
   aliases: [``],
   description: `Applies a Vibrato Filter`,
   usage: `vibrato`,
-  parameters: {"type":"music", "activeplayer": true, "previoussong": false},
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
-    
+  parameters: {
+    "type": "music",
+    "activeplayer": true,
+    "previoussong": false
+  },
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     player.node.send({
       op: "filters",
       guildId: message.guild.id,
       equalizer: player.bands.map((gain, index) => {
-          var Obj = {
-            "band": 0,
-            "gain": 0,
-          };
-          Obj.band = Number(index);
-          Obj.gain = Number(gain)
-          return Obj;
-        }),
-        vibrato: {
-          "frequency": 4.0, // 0 < x
-          "depth": 0.75      // 0 < x ≤ 1
-        },
-        tremolo: {
-          "frequency": 4.0, // 0 < x
-          "depth": 0.75      // 0 < x ≤ 1
-        },
+        var Obj = {
+          "band": 0,
+          "gain": 0,
+        };
+        Obj.band = Number(index);
+        Obj.gain = Number(gain)
+        return Obj;
+      }),
+      vibrato: {
+        "frequency": 4.0, // 0 < x
+        "depth": 0.75 // 0 < x ≤ 1
+      },
+      tremolo: {
+        "frequency": 4.0, // 0 < x
+        "depth": 0.75 // 0 < x ≤ 1
+      },
     });
     player.set("filter", "💢 Vibrate");
-    return message.channel.send({embeds :[new MessageEmbed()
-      .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-      
-      .setTitle(eval(client.la[ls]["cmds"]["filter"]["vibrate"]["variable1"]))
-      .setDescription(eval(client.la[ls]["cmds"]["filter"]["vibrate"]["variable2"]))
-    ]});
+    if (!message.channel) return;
+    return message.channel.send({
+      embeds: [new MessageEmbed()
+        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+        .setTitle(eval(client.la[ls]["cmds"]["filter"]["vibrate"]["variable1"]))
+        .setDescription(eval(client.la[ls]["cmds"]["filter"]["vibrate"]["variable2"]))
+      ]
+    });
   }
 };
 /**

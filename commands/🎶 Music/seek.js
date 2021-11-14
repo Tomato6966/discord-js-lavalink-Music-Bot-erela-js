@@ -1,15 +1,11 @@
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 const {
-  createBar,
-  format
+  createBar
 } = require(`${process.cwd()}/handlers/functions`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `seek`,
   category: `🎶 Music`,
   aliases: [`vol`],
@@ -22,27 +18,25 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     "previoussong": false
   },
   type: "song",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
-    
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     //if number is out of range return error
     if (Number(args[0]) < 0 || Number(args[0]) >= player.queue.current.duration / 1000)
-      return message.reply({embeds :[new MessageEmbed()
-
-        .setColor(es.wrongcolor)
-        .setTitle(eval(client.la[ls]["cmds"]["music"]["seek"]["variable1"]))
-      ]});
+      return message.reply({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["seek"]["variable1"]))
+        ]
+      });
     //seek to the position
     player.seek(Number(args[0]) * 1000);
     //send success message
-    return message.reply({embeds :[new MessageEmbed()
-      .setTitle(eval(client.la[ls]["cmds"]["music"]["seek"]["variable2"]))
-      .addField(`${emoji.msg.time} Progress: `, createBar(player))
-      .setColor(es.color)
-
-    ]});
+    return message.reply({
+      embeds: [new MessageEmbed()
+        .setTitle(eval(client.la[ls]["cmds"]["music"]["seek"]["variable2"]))
+        .addField(`${emoji.msg.time} Progress: `, createBar(player))
+        .setColor(es.color)
+      ]
+    });
   }
 };
 /**

@@ -1,10 +1,7 @@
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
 module.exports = {
   name: `stoploop`,
   category: `🎶 Music`,
@@ -18,20 +15,20 @@ module.exports = {
     "previoussong": false
   },
   type: "queuesong",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
-  
-    //Create the Embed
-    let embed = new MessageEmbed()
-      .setTitle(client.la[ls].cmds.music.loop.queue.disabled)
-      .setColor(es.color)
-      .setDescription(client.la[ls].cmds.music.loop.andsong);
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
+    //stop both loops
     player.setTrackRepeat(false);
     player.setQueueRepeat(false);
-    return message.reply({embeds : [embed]})
-  
+    //send info
+    return message.reply({
+      embeds: [
+        new MessageEmbed()
+        .setTitle(client.la[ls].cmds.music.loop.queue.disabled)
+        .setColor(es.color)
+        .setDescription(client.la[ls].cmds.music.loop.andsong)
+      ]
+    })
+
   }
 };
 /**

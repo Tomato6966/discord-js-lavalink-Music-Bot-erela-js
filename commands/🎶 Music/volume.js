@@ -1,11 +1,8 @@
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `volume`,
   category: `🎶 Music`,
   aliases: [`vol`],
@@ -18,34 +15,36 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     "previoussong": false
   },
   type: "queuesong",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
-    
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     //if the Volume Number is out of Range return error msg
     if (Number(args[0]) <= 0 || Number(args[0]) > 150)
-      return message.reply({embeds:  [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(eval(client.la[ls]["cmds"]["music"]["volume"]["variable1"]))
-        .setDescription(eval(client.la[ls]["cmds"]["music"]["volume"]["variable2"]))
-      ]});
+      return message.reply({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["volume"]["variable1"]))
+          .setDescription(eval(client.la[ls]["cmds"]["music"]["volume"]["variable2"]))
+        ]
+      });
     //if its not a Number return error msg
     if (isNaN(args[0]))
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(eval(client.la[ls]["cmds"]["music"]["volume"]["variable3"]))
-        .setDescription(eval(client.la[ls]["cmds"]["music"]["volume"]["variable4"]))
-      ]});
+      return message.reply({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["volume"]["variable3"]))
+          .setDescription(eval(client.la[ls]["cmds"]["music"]["volume"]["variable4"]))
+        ]
+      });
     //change the volume
     player.setVolume(Number(args[0]));
     //send success message
-    return message.reply({embeds : [new MessageEmbed()
-      .setTitle(eval(client.la[ls]["cmds"]["music"]["volume"]["variable5"]))
-      .setDescription(eval(client.la[ls]["cmds"]["music"]["volume"]["variable6"]))
-      .setColor(es.color)
-    ]});
-  
+    return message.reply({
+      embeds: [new MessageEmbed()
+        .setTitle(eval(client.la[ls]["cmds"]["music"]["volume"]["variable5"]))
+        .setDescription(eval(client.la[ls]["cmds"]["music"]["volume"]["variable6"]))
+        .setColor(es.color)
+      ]
+    });
+
   }
 };
 /**

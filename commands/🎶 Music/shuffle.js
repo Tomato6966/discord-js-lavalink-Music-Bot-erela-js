@@ -1,11 +1,5 @@
-const {
-  MessageEmbed
-} = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `shuffle`,
   category: `🎶 Music`,
   aliases: [`mix`],
@@ -18,11 +12,7 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     "previoussong": false
   },
   type: "queue",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
-    
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     //set into the player instance an old Queue, before the shuffle...
     player.set(`beforeshuffle`, player.queue.map(track => track));
     //shuffle the Queue

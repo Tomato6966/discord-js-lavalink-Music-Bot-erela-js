@@ -1,16 +1,12 @@
 const {
-  MessageEmbed,
-  MessageAttachment
+  MessageEmbed
 } = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 const {
   createBar,
   format
 } = require(`${process.cwd()}/handlers/functions`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `nowplaying`,
   category: `🎶 Music`,
   aliases: [`np`, "trackinfo"],
@@ -22,21 +18,19 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     "previoussong": false
   },
   type: "song",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
-
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     //if no current song return error
     if (!player.queue.current)
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(eval(client.la[ls]["cmds"]["music"]["nowplaying"]["variable1"]))
-      ]});
-      const embed = new MessageEmbed()
-        .setAuthor(`Current song playing:`, message.guild.iconURL({
-          dynamic: true
-        }))
+      return message.reply({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["nowplaying"]["variable1"]))
+        ]
+      });
+    const embed = new MessageEmbed()
+      .setAuthor(`Current song playing:`, message.guild.iconURL({
+        dynamic: true
+      }))
       .setThumbnail(`https://img.youtube.com/vi/${player.queue.current.identifier}/mqdefault.jpg`)
       .setURL(player.queue.current.uri)
       .setColor(es.color)
@@ -49,7 +43,9 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
         dynamic: true
       }))
     //Send Now playing Message
-    return message.reply({embeds :[embed]});
+    return message.reply({
+      embeds: [embed]
+    });
   }
 };
 /**

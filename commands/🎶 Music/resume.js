@@ -1,15 +1,8 @@
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
-const {
-  createBar,
-  format
-} = require(`${process.cwd()}/handlers/functions`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `resume`,
   category: `🎶 Music`,
   aliases: [`r`],
@@ -22,22 +15,20 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     "previoussong": false
   },
   type: "song",
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
-    
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     //if its playing then return error
     if (player.playing)
-      return message.reply({embeds : [new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(eval(client.la[ls]["cmds"]["music"]["resume"]["variable1"]))
-        .setDescription(eval(client.la[ls]["cmds"]["music"]["resume"]["variable2"]))
-      ]});
+      return message.reply({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(eval(client.la[ls]["cmds"]["music"]["resume"]["variable1"]))
+          .setDescription(eval(client.la[ls]["cmds"]["music"]["resume"]["variable2"]))
+        ]
+      });
     //pause the player
     player.pause(false);
     //send success message
-    message.react(emoji.react.resume).catch(()=>{})
+    message.react(emoji.react.resume).catch(() => {})
   }
 };
 /**

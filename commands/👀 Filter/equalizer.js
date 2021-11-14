@@ -1,28 +1,28 @@
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `equalizer`,
   category: `👀 Filter`,
   aliases: [`eq`, "eqs", "seteq", "setequalizer"],
   description: `Changes the Equalizer`,
   usage: `bassboost <music/bassboost/earrape>`,
-  parameters: {"type":"music", "activeplayer": true, "previoussong": false},
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");let ls = client.settings.get(message.guild.id, "language")
-
+  parameters: {
+    "type": "music",
+    "activeplayer": true,
+    "previoussong": false
+  },
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     let level = `none`;
     if (!args.length || (!client.eqs[args[0].toLowerCase()] && args[0].toLowerCase() != `none`))
-      return message.channel.send({embeds :[new MessageEmbed()
-        .setColor(es.wrongcolor)
-        .setTitle(eval(client.la[ls]["cmds"]["filter"]["equalizer"]["variable1"]))
-        .setDescription(eval(client.la[ls]["cmds"]["filter"]["equalizer"]["variable2"]))
-      ]});
+      return message.channel.send({
+        embeds: [new MessageEmbed()
+          .setColor(es.wrongcolor)
+          .setTitle(eval(client.la[ls]["cmds"]["filter"]["equalizer"]["variable1"]))
+          .setDescription(eval(client.la[ls]["cmds"]["filter"]["equalizer"]["variable2"]))
+        ]
+      });
     level = args[0].toLowerCase();
     switch (level) {
       case `music`:
@@ -79,11 +79,13 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
         player.setEQ(client.eqs.earrape);
         break;
     }
-    return message.channel.send({embeds :[new MessageEmbed()
-      .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-      .setTitle(eval(client.la[ls]["cmds"]["filter"]["equalizer"]["variable3"]))
-      .setDescription(eval(client.la[ls]["cmds"]["filter"]["equalizer"]["variable4"]))
-    ]});
+    return message.channel.send({
+      embeds: [new MessageEmbed()
+        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+        .setTitle(eval(client.la[ls]["cmds"]["filter"]["equalizer"]["variable3"]))
+        .setDescription(eval(client.la[ls]["cmds"]["filter"]["equalizer"]["variable4"]))
+      ]
+    });
   }
 };
 /**

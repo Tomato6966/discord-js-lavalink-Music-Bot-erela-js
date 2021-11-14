@@ -1,48 +1,48 @@
 const {
   MessageEmbed
 } = require(`discord.js`);
-const config = require(`${process.cwd()}/botconfig/config.json`);
-const ee = require(`${process.cwd()}/botconfig/embed.json`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
-const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
-    module.exports = {
+module.exports = {
   name: `darthvader`,
   category: `👀 Filter`,
   aliases: [`dv`],
   description: `Applies a Darthvader Filter`,
   usage: `darthvader`,
-  parameters: {"type":"music", "activeplayer": true, "previoussong": false},
-  run: async (client, message, args, cmduser, text, prefix, player) => {
-    
-    let es = client.settings.get(message.guild.id, "embed");
-    let ls = client.settings.get(message.guild.id, "language")
-  
+  parameters: {
+    "type": "music",
+    "activeplayer": true,
+    "previoussong": false
+  },
+  run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
     player.node.send({
       op: "filters",
       guildId: message.guild.id,
       equalizer: player.bands.map((gain, index) => {
-          var Obj = {
-            "band": 0,
-            "gain": 0,
-          };
-          Obj.band = Number(index);
-          Obj.gain = Number(gain)
-          return Obj;
-        }),
+        var Obj = {
+          "band": 0,
+          "gain": 0,
+        };
+        Obj.band = Number(index);
+        Obj.gain = Number(gain)
+        return Obj;
+      }),
       timescale: {
-            "speed": 0.975,
-            "pitch": 0.5,
-            "rate": 0.8
-        },
+        "speed": 0.975,
+        "pitch": 0.5,
+        "rate": 0.8
+      },
     });
     player.set("filter", "👾 Darth Vader");
-    return message.channel.send({embeds : [new MessageEmbed()
-      .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-      
-      .setTitle(eval(client.la[ls]["cmds"]["filter"]["darthvader"]["variable1"]))
-      .setDescription(eval(client.la[ls]["cmds"]["filter"]["darthvader"]["variable2"]))
-    ]});
-  
+    if (!message.channel) return;
+    return message.channel.send({
+      embeds: [new MessageEmbed()
+        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+
+        .setTitle(eval(client.la[ls]["cmds"]["filter"]["darthvader"]["variable1"]))
+        .setDescription(eval(client.la[ls]["cmds"]["filter"]["darthvader"]["variable2"]))
+      ]
+    });
+
   }
 };
 /**
