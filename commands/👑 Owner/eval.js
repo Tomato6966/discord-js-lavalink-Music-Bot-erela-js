@@ -40,12 +40,16 @@ module.exports = {
           .setTitle(eval(client.la[ls]["cmds"]["owner"]["eval"]["variable2"]))
         ]
       });
-    let evaled;
-    if (args.join(` `).includes(`token`)) return console.log(`ERROR NO TOKEN GRABBING ;)`.dim);
-
-    evaled = await eval(args.join(` `));
+    const token = client.token.split("").join("[^]{0,2}");
+    const rev = client.token.split("").reverse().join("[^]{0,2}");
+    const filter = new RegExp(`${token}|${rev}`, "g");
+    let output = await eval(args.join(` `));
+    if (output instanceof Promise || (Boolean(output) && typeof output.then === "function" && typeof output.catch === "function")) output = await output;
     //make string out of the evaluation
-    let string = inspect(evaled);
+    output = inspect(output, { depth: 0, maxArrayLength: null });
+    //replace with the token
+    output = output.replace(filter, "**\\*\\*\\*\\*\\*\\*\\*\\*T\\*O\\*K\\*E\\*N\\*\\*\\*\\*\\*\\*\\*\\***");
+    let string = output;
     //if the token is included return error
     //if (string.includes(client.token)) return console.log(`ERROR NO TOKEN GRABBING ;)`.dim);
     //define queueembed
