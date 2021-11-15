@@ -554,7 +554,7 @@
                 "variable36": "`\\u200b`"
             },
             "setup-language": {
-                "variable1": "`***Select what you need in the `Selection` down Below!***`",
+                "variable1": "`***Select what you need in the \\`Selection\\` down Below!***`",
                 "variable2": "`<:no:833101993668771842> ABGEBROCHEN the Setup!`",
                 "variable3": "`Select your new Language`",
                 "variable4": "`Current language is: **${languages[ls]}**\\n\\n***Note that this System is not finished yet!***\\n**Only partly working Languages are:**\\n> \\`English\\`, \\`India (Hindi)\\``",
