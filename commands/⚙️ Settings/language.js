@@ -22,13 +22,13 @@ module.exports = {
       "en": "🇬🇧 English",
       "de": "🇩🇪 German",
       /*
-      "fr": "🇫🇷 French",
-      "it": "🇮🇹 Italian",
-      "sp": "🇪🇸 Spanish",
-      "in": "🇮🇳 India (Hindi)",
-      "nl": "🇳🇱 Dutch",
-      "tr": "🇹🇷 Turkish",
-      "ir": "🇮🇷 Iran"
+        "fr": "🇫🇷 French",
+        "it": "🇮🇹 Italian",
+        "sp": "🇪🇸 Spanish",
+        "in": "🇮🇳 India (Hindi)",
+        "nl": "🇳🇱 Dutch",
+        "tr": "🇹🇷 Turkish",
+        "ir": "🇮🇷 Iran"
       */
     }
     //call the first layer
@@ -153,7 +153,7 @@ module.exports = {
               edited = true;
               helpmsg.edit({
                 content: `Time has ended type ${prefix}setup-language again!`,
-                embeds: helpmsg.embeds[0],
+                embeds: [helpmsg.embeds[0]],
                 components: []
               })
             }
@@ -163,7 +163,7 @@ module.exports = {
               edited = true;
               helpmsg.edit({
                 content: `Time has ended type ${prefix}setup-language again!`,
-                embeds: helpmsg.embeds[0],
+                embeds: [helpmsg.embeds[0]],
                 components: []
               })
             }
@@ -173,7 +173,7 @@ module.exports = {
               edited = true;
               helpmsg.edit({
                 content: `Time has ended type ${prefix}setup-language again!`,
-                embeds: helpmsg.embeds[0],
+                embeds: [helpmsg.embeds[0]],
                 components: []
               })
             }
