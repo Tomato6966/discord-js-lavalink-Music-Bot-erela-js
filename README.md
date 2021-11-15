@@ -23,6 +23,8 @@
 
 ✓ Suport 10 music sources + Stage & Thread Channels
 
+✓ Works on Replit.com and any vps, with public & private Lavalink Nodes
+
 <br/>
 
 ***
