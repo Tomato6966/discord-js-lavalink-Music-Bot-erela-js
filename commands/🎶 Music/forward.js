@@ -3,9 +3,7 @@ const {
 } = require(`discord.js`)
 const {
   createBar,
-  format
-} = require(`${process.cwd()}/handlers/functions`);
-const {
+  format,
   handlemsg
 } = require(`${process.cwd()}/handlers/functions`);
 module.exports = {

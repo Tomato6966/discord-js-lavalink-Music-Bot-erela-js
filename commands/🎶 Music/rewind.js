@@ -3,7 +3,9 @@ const {
 } = require(`discord.js`);
 const emoji = require(`${process.cwd()}/botconfig/emojis.json`);
 const {
-  createBar
+  createBar,
+  format,
+  handlemsg
 } = require(`${process.cwd()}/handlers/functions`);
 module.exports = {
   name: `rewind`,
