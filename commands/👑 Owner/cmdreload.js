@@ -33,9 +33,9 @@ module.exports = {
       for (let i = 0; i < client.categories.length; i += 1) {
         let dir = client.categories[i];
         try {
-          delete require.cache[require.resolve(`${process.cwd()}commands/${dir}/${thecmd.name}.js`)] // usage !reload <name>
+          delete require.cache[require.resolve(`${process.cwd()}/commands/${dir}/${thecmd.name}.js`)] // usage !reload <name>
           client.commands.delete(thecmd.name)
-          const pull = require(`${process.cwd()}commands/${dir}/${thecmd.name}.js`)
+          const pull = require(`${process.cwd()}/commands/${dir}/${thecmd.name}.js`)
           client.commands.set(thecmd.name, pull)
           reload = true;
         } catch {}
