@@ -13,7 +13,7 @@ module.exports = {
     "activeplayer": true,
     "previoussong": false
   },
-  run: async (client, message, args, cmduser, text, preprefix, playerfix) => {
+  run: async (client, message, args, cmduser, text, prefix, player) => {
     if (!args.length)
       return message.channel.send({
         embeds: [new MessageEmbed()
