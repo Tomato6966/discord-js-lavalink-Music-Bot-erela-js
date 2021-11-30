@@ -73,7 +73,7 @@ Well then skip step **` 5. `**
 "clientsettings": {
       "nodes": [
          {
-            "host": "lavalinknl.ml",
+            "host": "lavalink.eu",
             "port": 2333,
             "password": "Raccoon"
          }
