@@ -1,0 +1,984 @@
+{
+    "cmds": {
+        "info": {
+            "botinfo": {
+                "loading": "Obtient les données d'information du bot",
+                "field1": {
+                    "title": "💿 Général -- Stats",
+                    "value": "```yml\nServeurs: {totalGuilds}\nMembres: {totalMembers}\nConnecté(e)(s): {connectedchannelsamount}```"
+                },
+                "field2": {
+                    "title": "💿 Bot -- Stats"
+                },
+                "field3": {
+                    "title": "💿 Système -- Stats",
+                    "value": "```yml\nOS: Linux | Debian\nCPU: {cpu} %\nRAM: {ram} MB```"
+                },
+                "field4": {
+                    "title": "💿 Développeur"
+                },
+                "field5": {
+                    "title": "💿 Lien important",
+                    "value": "**[lien d'invite]({invitelink})・[Serveur Support](https://discord.gg/milrato)・[Site](https://milrato.dev)**\n**[Bots gratuits](https://discord.gg/milrato)・[Version Publique](https://discord.com/api/oauth2/authorize?client_id=734513783338434591&permissions=8&scope=bot)**"
+                },
+                "variable1": "`\\`\\`\\`yml\\nNom: ${client.user.tag} [${client.user.id}]\\nBot latence: ${Math.round(Date.now() - message.createdTimestamp)}ms\\nApi latence: ${Math.round(client.ws.ping)}ms\\nUptime: ${duration(client.uptime).join(`︲`)}\\`\\`\\``",
+                "variable2": "``"
+            },
+            "commandcount": {
+                "tempmsg": "OBTIENT DES DONNÉES SUR LES BOTS",
+                "title": ":gear: **[`{cmdcount}`] Commandes**",
+                "description": ":gear: **[`{catcount}`] Catégories**\n:gear: **[`{lines}`] ligne du code**\n<a:Valid_Code_Developer:858405056238714930> **[`{letters}`] Lettre du code**",
+                "variable1": "``"
+            },
+            "developer": {
+                "buttons": {
+                    "invite": "Inviter la version publique",
+                    "dc": "Obtenez votre propre robot",
+                    "botlist": "Site du Bot public"
+                },
+                "title": "Tomato#6966 | Dev de 4 Orgs | Développer de 1200+ BOTS",
+                "description": "💿 Bonjour, je suis **Tomato** <@442355791412854784> *(`Tomato#6966`)*, et j'ai créé plus de 1200 Discord Bots différents : [My Bot List](https://botlist.milrato.dev)\n\n💿 Je suis très fier de tous mes Discord Bots vérifiés et non vérifiés, mais le Bot dont je suis le plus fier est : [**LAVA MUSIC** | `2021's Best Music Bot`](https://lava.milrato.dev) <@742672021422342165>\n\n💿 J'ai fait ce Bot, et vous pouvez obtenir un Bot gratuit aussi ! Il suffit d'aller sur : [Mon service](https://dc.milrato)\n\n💿 Je suis également un **Site Web** Développeur et **Plugin** dev. J'ai fait des **Modules** comme un **Module SPEECH** [Regarder](https://cdn.discordapp.com/attachments/778714123785076768/801606374105546782/2021-01-21_01-15-50.mp4)\n\n💿 Ouais j'espère que vous aimez mes trucs :v : <3",
+                "variable1": "``"
+            },
+            "help": {
+                "error1": "PAS DE COMMANDE PERSONNALISÉE DÉFINIE POUR l'instant, faites-le avec: `setup-customcommands`",
+                "nocustom": "Aucune information personnalisée pour les commandes personnalisées ;(",
+                "noinfo": "Aucune information trouvée pour la commande **{command}**",
+                "footer": "Pour voir les descriptions et informations des commandes, faites: {prefix}help [Commande]",
+                "detail": {
+                    "name": "**💿 Commande**",
+                    "desc": "**💿 Description**",
+                    "aliases": "**💿 Aliases**",
+                    "about": "💿 Informations détaillées sur: `{cmdname}`",
+                    "cooldown": "**💿 Cooldown**",
+                    "usage": "**💿 Usage**",
+                    "syntax": "Syntaxe: <> = obligatoire, [] = optionnel"
+                },
+                "buttons": {
+                    "home": "Home",
+                    "back": "Arrière",
+                    "forward": "Avant"
+                },
+                "overview": {
+                    "title": ":gear: **__Aperçu des catégories de commandes__**",
+                    "desc": "> 👍 ... **Aperçu**\n\n> 🔰 ... **Information**\n> 🎶 ... **Musique**\n> ⚙ ... **Paramètres & 👑 Propriétaire & ⌨️Programmation**\n> 🎤 ... **Vocal & 📈 Classement**\n> 🎮 ... **MiniJeux & 🕹️ Fun**\n> 🚫 ... **Administration & 💪 Setup**\n> 🔞 ... **NSFW**\n> 🦾 ... **Commandes personnalisées**\n\n> *Cliquez sur les émojis des boutons pour accéder à la catégorie des commandes.*\n> *Utilisez les flèches pour changer les pages en avant/en arrière/home.*"
+                },
+                "buttonerror": "❌ **Seul celui qui a tapé {prefix}help est autorisé à réagir !**",
+                "timeended": "Le temps est écoulé tapez {prefix}help !",
+                "variable1": "`🦾 **Commandes Personnalisé [${cuc[0].includes(`NO`) ? 0 : items.length}]**`",
+                "variable2": "`HELP-MENU 🔰 **${category.toUpperCase()} [${items.length}]**`",
+                "variable3": "`**${category.toUpperCase()} [${items.length}]**`, `> \\`${items[0]}\\`\\n\\n**Usage:**\\n> \\`${cmd.usage}\\``",
+                "variable4": "`${items.join(`︲`)}`",
+                "variable5": "`Information sur: __**${client.user.username}**__`"
+               },
+            "invite": {
+                "title": "Cliquer ici pour m’inviter",
+                "buttons": {
+                    "public": "Invite Publique Bot",
+                    "server": "Support Serveur",
+                    "bot": "Invite Bot"
+                },
+                "variable1": "``"
+            },
+            "ping": {
+                "m1": ":heartbeat: Test de la vitesse de connexion ...",
+                "m2": ":robot: Bot Ping: `{botping}ms`\n\n:stopwatch: Hôte Ping: `{ping}`\n\n:hourglass: Api Latence: `{wsping}ms`",
+                "variable1": "``"
+            },
+            "sponsor": {
+                "variable1": "`BERO HOST | Notre principal sponsor`",
+                "variable2": "`Troisième sponsor de ce Bot est:\\n**BERO-HOST** LE MEILLEUR HEBERGEUR\\n<:arrow:832598861813776394> BERO-HOST.de les sponsorise avec des méthodes d'hébergement gratuites/réduction,\\n<:arrow:832598861813776394> Grâce à eux, nous sommes en mesure d'héberger notre site Web, nos Bots et nos SERVEURS DE JEUX\n<:arrow:832598861813776394> Notre suggestion est que, si vous voulez héberger des Bots/Jeux/Sites Web, alors allez sur [BERO-HOST.de](http://bero-host.de/?utm_source=bot&utm_medium=cpc&utm_id=milrato)\n\\n**Ce qu'ils proposent:**\n<:arrow:832598861813776394> **>>** Hébergement Minecraft, CounterStrike : Global Offensive, Garry's Mod, ARK, ARMA 3... \\n<:arrow:832598861813776394> **>>** Domaines rapides et bon marché\\n<:arrow:832598861813776394> **>>** Hébergement web\\n<:arrow:832598861813776394> **>>** SERVEURS TEAMSPEAK\\n<:arrow:832598861813776394> **>> Serveurs Linux & Windows\\n\\n[**Serveur Discord:**](https://discord.bero-host.de)\\n[**Site web:**](http://bero-host.de/?utm_source=bot&utm_medium=cpc&utm_id=milrato)\\n[**__LIEN DU SPONSOR !__**](https://milrato.dev/img/paysafecard.png)\\n`",
+                "variable3": "`NEXTNODE | Notre Deuxième Sponsor`",
+                "variable4": "`<:arrow:832598861813776394> Nextnode nous fournit, comme BERO-HOST avec des technologies gratuites d'hébergement de Bot Discord\\n\\n <:arrow:832598861813776394> Si vous utilisez le code : **\\`x10\\`**, alors vous obtiendrez 5% de réduction sur tout leur site !\\n\\n<:arrow:832598861813776394> Jetez un coup d'oeil à leur [Site](https://Nextnode.de) et leur [Discord](https://discord.gg/GgjJZCyYKD) pour obtenir votre propre Bot aussi !`"
+            },
+            "stats": {
+                "title": "💿 Les Stats de {botname}",
+                "field1": {
+                    "title": "⚙️ Commandes GLOBAL utilisées:",
+                    "value": ">>> `{allcommands} Commandes` utilisées sur\n **tous** Les Serveurs"
+                },
+                "field2": {
+                    "title": "🎵 Musiques GLOBAL jouées:",
+                    "value": ">>> `{allsongs} Musiques` jouées sur\n**tous** Les Serveurs"
+                },
+                "field3": {
+                    "title": "⚙️ Commandes SERVEUR utilisées:",
+                    "value": ">>> `{guildcommands} Commandes` utilisées sur\n**ce** Serveur"
+                },
+                "field4": {
+                    "title": "🎵 Musiques SERVER jouées:",
+                    "value": ">>> `{guildsongs} Musiques` jouées sur\n**ce** Serveur"
+                },
+                "variablex_1": "`\\u200b`", "variable1": "`\\u200b`",
+                "variable2": "``"
+            },
+            "support": {
+                "title": ":tickets: Vous avez besoin d’aide ? **REJOIGNEZ LE SERVEUR SUPPORT**",
+                "variable1": "`**[Invite Publique Bot](https://discord.com/api/oauth2/authorize?client_id=784364932149280778&permissions=8&scope=bot)  •  [SITE](https://milrato.dev)  •  [Support Serveur/Avoir votre bot](https://discord.com/invite/milrato)**`",
+                "variable2": "-",
+                "variable3": "``"
+            },
+            "uptime": {
+                "TEMPS NON NÉCESSAIRE": "",
+                "variable1": "`:white_check_mark: **${client.user.username}** Uptime`",
+                "variable2": "`\\`\\`\\`css\\n${duration(client.uptime).map(i=> `${i}`).join(`︲`)}\\`\\`\\``",
+                "variablex_3": "`**Date de lancement**`", "variable3":"moment(timestamp).format(`LLLL`)",
+                "variable4": "``"
+            }
+        },
+        "music": {
+            "autoplay": {
+                "enabled": {
+                    "title": "**AUTOPLAY MODE __Activé__ avec succès**",
+                    "description": "**Je vais maintenant ajouter automatiquement une chanson lorsque la file d'attente est vide (en écrasant le mode afk) !**"
+                },
+                "disabled": {
+                    "title": "**AUTOPLAY MODE __Désactivée__ avec succès**",
+                    "description": "**Je n'ajouterai plus automatiquement une chanson lorsque la file d'attente est vide (en écrasant le mode afk) !**"
+                },
+                "variable1": "`${player.get(`autoplay`) ? client.la[ls].cmds.music.autoplay.enabled.title : client.la[ls].cmds.music.autoplay.disabled.title}`",
+                "variable2": "`${player.get(`autoplay`) ? client.la[ls].cmds.music.autoplay.enabled.description : client.la[ls].cmds.music.autoplay.disabled.description}`",
+                "variable3": "``"
+            },
+            "clearqueue": {
+                "title": "🗑 **La queue a était vidée !**",
+                "variable1": "``"
+            },
+            "forceskip": {
+                "title": "⏹️ **Musique arrêtée et salon quitté !**",
+                "title2": "⏭ **Musique sautée !**",
+                "variable1": "`Salon: <#${player.voiceChannel}>`",
+                "variable2": "``"
+            },
+            "forward": {
+                "allowed": "❌ **La musique peut avancer entre `1` - `{duration}` Secondes!**",
+                "title": "👍 **Musique avancée !**",
+                "description": "**Avancée de `{amount} Secondes` à: `{time}`**",
+                "field": "⌛ **En cours:**",
+                "variable1": "``"
+            },
+            "grab": {
+                "author": "Musique sauvegarder:",
+                "field1": "⌛ **Durer:**",
+                "field2": "💯 **Musique par:**",
+                "field3": "🔄 **Longueur de la file d'attente:**",
+                "field4": "🎶 **Joue:**",
+                "field5": "🔎 **Sauvegarder dans:**",
+                "footer": "Demandé par: {usertag} ・ sur: {guild}",
+                "variable1": "`${player.playing ? `▶` : `⏸`} **${player.queue.current.title}**`",
+                "variable2": "``"
+            },
+            "join": {
+                "title": "👍 **Rejoint et connecté à votre Vocal !**",
+                "variable1": "`Salon: <#${player.voiceChannel}>`",
+                "variable2": "`Salon: <#${player.voiceChannel}>`",
+                "variable3": "`Salon: <#${player.voiceChannel}>`",
+                "variable4": "``"
+            },
+            "jump": {
+                "error1": "❌ **Veuillez indiquer quel musique vous voulez sauter.**",
+                "error2": "❌ **Il doit s'agir d'un `Numéro De La Queue`**",
+                "error3": "❌ **Cette musique n'est pas dans la file d'attente**!",
+                "title": "👍 **Sauté à la: `{number}.` Musique**",
+                "description": "⏭ **Sauté `{number}` Musique !**",
+                "variable1": "`${client.la[ls].common.example}: \\`${prefix}jump ${player.queue.size - 2 <= 0 ? player.queue.size : player.queue.size - 2 }\\``",
+                "variable2": "``"
+            },
+            "loop": {
+                "errortitle": "❌ **Veuillez ajouter votre méthode de bouclage !**",
+                "errordescription": "`loop song` / `loop queue` / `loop off`",
+                "track": {
+                    "disabled": "❌ **Mode répétition des pistes désactiver !**",
+                    "enabled": "👍 **Mode répétition des pistes désactiver !**"
+                },
+                "queue": {
+                    "disabled": "❌ **Mode bouclage désactivé !**",
+                    "enabled": "👍 **Mode bouclage activé !**"
+                },
+                "andsong": "❌ **Et Mode Répétition de Musique désactivé !**",
+                "andqueue": "❌ **Et Mode Répétition de la Queue désactivé !**",
+                "variable1": "``"
+            },
+            "lyrics": {
+                "nolyrics": "❌ **Aucun lyrics trouvé !**",
+                "searching": "🔎 **Recherche de Lyrics pour: `{title}`**",
+                "found": "📃 **Lyrics pour:** `{title}`",
+                "variable1": "`\\u200b`",
+                "variable2": "``"
+            },
+            "move": {
+                "variable1": "`${emoji.msg.ERROR} | Mauvaise utilisation de la commande !`",
+                "variable2": "`utilisation: \\`${prefix}move <de> <à>\\`\\nExemple: \\`${prefix}move ${player.queue.size - 2 <= 0 ? player.queue.size : player.queue.size - 2 } 1\\``",
+                "variable3": "`${emoji.msg.ERROR} | Mauvaise utilisation de la commande !`",
+                "variable4": "`Usage: \\`${prefix}move <de> <à>\\`\\nExemple: \\`${prefix}move ${player.queue.size - 2 <= 0 ? player.queue.size : player.queue.size - 2 } 1\\``",
+                "variable5": "`${emoji.msg.ERROR} | Erreur Votre entrée doit être un nombre supérieur à \\`1\\` et plus petit que \\`${player.queue.length}\\``",
+                "variable6": "`Déplacement de la musique dans la queue de la position\\`${args[0]}\\` à la Position: \\`${args[1]}\\``",
+                "variable7": "`[${song.title}](${song.uri}) - \\`${format(song.duration)}\\` - demandé par **${song.requester.tag}**`",
+                "variable8": "``"
+            },
+            "moveme": {
+                "variable1": "`${emoji.msg.ERROR} Je ne suis connecté nulle part`",
+                "variable2": "`${emoji.msg.ERROR} S’il vous plaît connectez-vous d’abord à un Salon`",
+                "variable3": "`${emoji.msg.ERROR} Le salon est plein, je ne peut pas vous déplacer`",
+                "variable4": "`${emoji.msg.ERROR} Vous êtes déjà dans mon salon `",
+                "variable5": "``"
+            },
+            "nowplaying": {
+                "variable1": "`${emoji.msg.ERROR} Rien n’est actuellement joué`",
+                "variable2": "`${player.playing ? `${emoji.msg.resume}` : `${emoji.msg.pause}`} **${player.queue.current.title}**`",
+                "variable3": "``"
+            },
+            "pause": {
+                "variable1": "`${emoji.msg.ERROR} La musique est déjà en pause`",
+                "variable2": "`Vous pouvez reprendre la musique avec: \\`${prefix}resume\\``",
+                "variable3": "``"
+            },
+            "play": {
+                "variable1": "`${emoji.msg.ERROR} Vous devez me donner une URL ou un terme de recherche.`",
+                "variable2": "``"
+            },
+            "playlist": {
+                "variable1": "`${emoji.msg.ERROR} Vous devez me donner une URL ou un terme de recherche.`",
+                "variable2": "``"
+            },
+            "playmusicmix": {
+                "variable1": "`:notes: __**D'autres options pourraient être:**__`",
+                "variable2": "`>>> \\`\\`\\`blues, charts, chill, default, heavymetal, gaming, jazz, metal, magic-release, ncs, nocopyright, oldgaming, pop, remixes, rock, strange-fruits-gaming\\`\\`\\``",
+                "variablex_3": "`:muscle: **Pour jouer un type différent:**`", "variable3": "`> \\`${prefix}playmusicmix <NOM>\\`\\n💡 **Exemple:**\\n> \\`${prefix}playmusicmix pop\\``",
+                "variable4": "``"
+            },
+            "playsc": {
+                "variable1": "`${emoji.msg.ERROR} Vous devez me donner une URL ou un terme de recherche.`",
+                "variable2": "``"
+            },
+            "playskip": {
+                "variable1": "`${emoji.msg.ERROR} Vous devez me donner une URL ou un terme de recherche.`",
+                "variable2": "``"
+            },
+            "playskipsc": {
+                "variable1": "`${emoji.msg.ERROR} Vous devez me donner une URL ou un terme de recherche.`",
+                "variable2": "``"
+            },
+            "playsongoftheday": {
+                "variable1": "``"
+            },
+            "playtop": {
+                "variable1": "`${emoji.msg.ERROR} Vous devez me donner une URL ou un terme de recherche.`"
+            },
+            "queue": {
+                "variablex_1": "`**0) PISTE ACTUELLE**`", "variable1": "`**${player.queue.current.title.substr(0, 60)}** - \\`${player.queue.current.isStream ? `LIVE STREAM` : format(player.queue.current.duration).split(` | `)[0]}\\`\\n*demandée par: ${player.queue.current.requester.tag}*`",
+                "variable2": "`${emoji.msg.ERROR} Aucune piste dans la file d'attente`",
+                "variablex_3": "`**0) PISTE ACTUELLE**`", "variable3": "`**${player.queue.current.title.substr(0, 60)}** - \\`${player.queue.current.isStream ? `LIVE STREAM` : format(player.queue.current.duration).split(` | `)[0]}\\`\\n*demandée par: ${player.queue.current.requester.tag}*`",
+                "variablex_4": "`**0) PISTE ACTUELLE**`", "variable4": "`**${player.queue.current.title.substr(0, 60)}** - \\`${player.queue.current.isStream ? `LIVE STREAM` : format(player.queue.current.duration).split(` | `)[0]}\\`\\n*demandée par: ${player.queue.current.requester.tag}*`",
+                "variable5": "``"
+            },
+            "queuestatus": {
+                "variable1": "`Informations sur la file d'attente de **${message.guild.name}**`",
+                "variable2": "`**Connecté a:** <#${player.voiceChannel}> **et lié à:** <#${player.textChannel}>`",
+                "variablex_3": "`${emoji.msg.autoplay_mode} Autoplay`", "variable3": "`\\`\\`\\`${player.get(`autoplay`) ? `✅ Activée` : `${emoji.msg.ERROR} Désactivée`}\\`\\`\\``",
+                "variablex_4": "`${emoji.msg.disk} Piste actuelle: `", "variable4": "`${player.queue && player.queue.current ? `${player.playing ? `${emoji.msg.resume}` : `${emoji.msg.pause}`} [**${player.queue.current.title}**](${player.queue.current.uri})` : `\\`\\`\\`${emoji.msg.ERROR} Rien n’est joué\\`\\`\\``}`",
+                "variablex_5": "`${emoji.msg.time} Progresse: `", "variable5": "player.queue && player.queue.current ? createBar(player) : `\\`\\`\\`${emoji.msg.ERROR} Rien n’est joué\\`\\`\\``",
+                "variable6": "``"
+            },
+            "radio": {
+                "variable1": "`${emoji.msg.ERROR} Pas une station de radio valide`",
+                "variable2": "`S’il vous plait choisissez un numéro entre \\`1\\` et \\`183\\``",
+                "variable3": "`${emoji.msg.ERROR} Numéro de volume hors de la gamme`",
+                "variable4": "`S’il vous plait choisissez un numéro entre \\`1\\` and \\`150\\``",
+                "variable5": "`${emoji.msg.ERROR} Station Radio introuvable",
+                "variable6": "`S’il vous plait choisissez une station entre\\`1\\` and \\`183\\``",
+                "variable7": "``"
+            },
+            "reconnect": {
+                "variable1": "`Aucune installation n'a encore été faite ? Essayez avec \\`${prefix}setup-radio\\``",
+                "variable2": "`Aucune installation n'a encore été faite ? Essayez avec \\`${prefix}setup-radio\\``",
+                "variable3": "``"
+            },
+            "removedupes": {
+                "variable1": "`${emoji.msg.cleared} J'ai retiré la piste à la position: \\`${Number(args[0])}\\``",
+                "variable2": "``"
+            },
+            "removetrack": {
+                "variable1": "`${emoji.msg.ERROR} Veuillez ajouter la musique que vous souhaitez supprimer !`",
+                "variable2": "`Exemple: \\`removetrack ${player.queue.size - 2 <= 0 ? player.queue.size : player.queue.size - 2 }\\``",
+                "variable3": "`${emoji.msg.ERROR} Il doit s'agir d'un numéro de file d'attente valide !`",
+                "variable4": "`Exemple: \\`removetrack ${player.queue.size - 2 <= 0 ? player.queue.size : player.queue.size - 2 }\\``",
+                "variable5": "`${emoji.msg.ERROR} Votre musique doit être dans la file d'attente !`",
+                "variable6": "`Exemple: \\`removetrack ${player.queue.size - 2 <= 0 ? player.queue.size : player.queue.size - 2 }\\``",
+                "variable7": "`${emoji.msg.cleared} J'ai retiré la musique à la position: \\`${Number(args[0])}\\``",
+                "variable8": "``"
+            },
+            "removevoteskip": {
+                "variable1": "`Suppression de votre vote !`",
+                "variable2": "`Il y a maintenant: \\`${player.get(`votes`)}\\` sur \\`${voteamount}\\` Votes Obligatoire`",
+                "variable3": "`${emoji.msg.ERROR} Vous n'avez pas encore voté !!`",
+                "variable4": "`Il y a: \\`${player.get(`votes`)}\\` sur \\`${voteamount}\\` Votes Obligatoire`",
+                "variable5": "`${emoji.msg.ERROR} Impossible de supprimer votre vote !`",
+                "variable6": "`Parce qu'il n'y a pas encore de configuration du rôle DJ, créez-la en tapant \\`${prefix}adddj @DJ-Setup\\``",
+                "variable7": "``"
+            },
+            "restart": {
+                "variable1": "``"
+            },
+            "resume": {
+                "variable1": "`${emoji.msg.ERROR} La musique a déjà repris !`",
+                "variable2": "`Vous pouvez la mettre en pause avec: \\`${prefix}pause\\``",
+                "variable3": "``"
+            },
+            "rewind": {
+                "variable1": "`${emoji.msg.ERROR} Vous pouvez rembobiner entre \\`1\\` - \\`${player.queue.current.duration}\\``",
+                "variable2": "`${emoji.msg.rewind} Rembobiner la musique de \\`${args[0]} Secondes\\` à: ${format(Number(player.position))}`",
+                "variable3": "``"
+            },
+            "search": {
+                "variable1": "`${emoji.msg.ERROR} Vous devez me donner une URL ou un terme de recherche.`",
+                "variable2": "``"
+            },
+            "searchplaylist": {
+                "variable1": "`LA COMMANDE N’EST PAS ENCORE SORTIE`",
+                "variable2": "``"
+            },
+            "searchradio": {
+                "variable1": "`${emoji.msg.ERROR} Quel devrait être le type de recherche ?`",
+                "variable2": "`Usage: \\`${prefix}searchradio <TYPE> <Requête de Recherche>\\`\\nValide Types: \\`pays\\`, \\`ville\\`, \\`nom\\`, \\`genre\\`\\nExemple: \\`${prefix}searchradio tag jazz\\`\\nExemple: \\`${prefix}searchradio state Austria\\``",
+                "variable3": "`${emoji.msg.ERROR} Que dois-je rechercher ?`",
+                "variable4": "`Usage: \\`${prefix}searchradio <TYPE> <Requête de Recherche>\\`\\nValide Types: \\`pays\\`, \\`ville\\`, \\`nom\\`, \\`genre\\`\\nExemple: \\`${prefix}searchradio tag jazz\\`\\nExemple: \\`${prefix}searchradio state Austria\\``",
+                "variable5": "`${emoji.msg.ERROR} Quel devrait être le type de recherche ?`",
+                "variable6": "`Usage: \\`${prefix}searchradio <TYPE> <Requête de Recherche>\\`\\nValide Types: \\`pays\\`, \\`ville\\`, \\`nom\\`, \\`genre\\`\\nExemple: \\`${prefix}searchradio tag jazz\\`\\nExemple: \\`${prefix}searchradio state Austria\\``",
+                "variable7": "`Choisissez votre radio avec le `numéro d'INDEX`.`",
+                "variable8": "`${emoji.msg.ERROR} Vous n'avez pas fourni de sélection`",
+                "variable9": "'${emoji.msg.ERROR} sélection annulée.'",
+                "variable10": "`${emoji.msg.ERROR} Le numéro que vous avez fourni n'est pas un numéro entre. (1-${counter}).`",
+                "variable11": "`${emoji.msg.ERROR} Le nombre que vous avez fourni est trop petit ou trop grand (1-${counter}).`",
+                "variable12": "``",
+                "variable13": "``"
+            },
+            "searchsc": {
+                "variable1": "`${emoji.msg.ERROR} Vous devez me donner une URL ou un terme de recherche.`",
+                "variable2": "``"
+            },
+            "searchsimilar": {
+                "variable1": "``"
+            },
+            "seek": {
+                "variable1": "`${emoji.msg.ERROR} Vous pouvez chercher de \\`0\\` - \\`${player.queue.current.duration}\\``",
+                "variable2": "`Chanson recherchée pour: ${format(Number(args[0]) * 1000)}`",
+                "variable3": "``"
+            },
+            "shuffle": {
+                "variable1": "``"
+            },
+            "skip": {
+                "title": "⏹️ **Musique arrêtée et j’ai quitté votre salon !**",
+                "title2": "⏭ **Musique actuelle sautée !**",
+                "variable1": "`salon: <#${player.voiceChannel}>`",
+                "variable2": "``"
+            },
+            "stop": {
+                "variable1": "`${emoji.msg.stop} Musique arrêtée et j’ai quitté votre salon !`",
+                "variable2": "`${emoji.msg.ERROR} **Aucune musique n'est actuellement jouée sur ce serveur.**`",
+                "variable3": "`${emoji.msg.ERROR} **Aucune musique n'est actuellement jouée sur ce serveur.**`",
+                "variable4": "``"
+            },
+            "unshuffle": {
+                "variable1": "`${emoji.msg.ERROR} Vous n'avez pas encore mélangé cette file d'attente !`",
+                "variable2": "`To shuffle it type: \\`${prefix}shuffle\\``",
+                "variable3": "`${emoji.msg.shuffle} La queue **n'est pas** mélangée.`",
+                "variable4": "``"
+            },
+            "volume": {
+                "variable1": "`${emoji.msg.ERROR} Vous pouvez régler le volume entre \\`1\\` - \\`150\\``",
+                "variable2": "`**Volume actuel: \\`${player.volume}%\\`**`",
+                "variable3": "`${emoji.msg.ERROR} Vous pouvez régler le volume entre \\`1\\` - \\`150\\``",
+                "variable4": "`**Volume actuel: \\`${player.volume}%\\`**`",
+                "variable5": "`${emoji.msg.raise_volume} Volume réglé sur : \\`${player.volume} %\\``",
+                "variable6": "`**Volume actuel: \\`${player.volume}%\\`**`",
+                "variable7": "``"
+            },
+            "voteskip": {
+                "variable1": "`${emoji.msg.SUCCESS} Votre vote a été ajouté !`",
+                "variable2": "`Il y a maintenant: \\`${player.get(`votes`)}\\` sur \\`${voteamount}\\` Votes nécessaires\\n\\n> Montant atteint ! Musique sauté ⏭`",
+                "variable3": "`${emoji.msg.SUCCESS} Votre vote a été ajouté !`",
+                "variable4": "`Il y a maintenant: \\`${player.get(`votes`)}\\` sur \\`${voteamount}\\` Votes nécessaires.`",
+                "variable5": "`${emoji.msg.ERROR} Vous avez déjà voté !!`",
+                "variable6": "`Il y a: \\`${player.get(`votes`)}\\` sur \\`${voteamount}\\` Votes nécessaires.`",
+                "variable7": "`${emoji.msg.SUCCESS} ${emoji.msg.stop} Musique a été stoppé et j’ai quitté le salon.`",
+                "variable8": "`${emoji.msg.SUCCESS} ${emoji.msg.skip_track} Musique sautée.`",
+                "variable9": "``"
+            },
+            "addprevious": {
+                "variable1": "``"
+            },
+            "addsimilar": {
+                "variable1": "``"
+            },
+            "loopqueue": {
+                "variable1": "``"
+            },
+            "loopsong": {
+                "variable1": "``"
+            },
+            "playprevious": {
+                "variable1": "``"
+            }
+        },
+        "settings": {
+            "addbotchat": {
+                "variable1": "`${emoji.msg.ERROR} Veuillez ajouter un salon en le pingant, par exemple: #salon !`",
+                "variable2": "`${emoji.msg.ERROR} Il semble que le salon n'existe pas qur ce serveur !`",
+                "variable3": "`${emoji.msg.ERROR} Ce salon est déjà dans la liste !`",
+                "variable4": "`${emoji.msg.SUCCESS} Le Bot-Chat a été ajouté \\`${channel.name}\\``",
+                "variable5": "`Tous Les Bot Chats:\\n> ${leftb}`",
+                "variable6": "``"
+            },
+            "adddj": {
+                "variable1": "`${emoji.msg.ERROR} Veuillez ajouter un rôle en le pingant, @rôle !`",
+                "variable2": "`${emoji.msg.ERROR} Il semble que le rôle n'existe pas dans ce serveur !`",
+                "variable3": "`${emoji.msg.ERROR} Ce rôle est déjà dans la liste !`",
+                "variable4": "`${emoji.msg.SUCCESS} RÔLE DJ ajouté: \\`${role.name}\\``",
+                "variable5": "`Tous les Dj Rôles:\\n> ${leftb}`",
+                "variable6": "``"
+            },
+            "afk": {
+                "variable1": "`**Le mode AFK a été __${player.get(`afk`) ? `Activé` : `Désactivé`}__ avec succès !**`",
+                "variable2": "`**Je vais maintenant ${player.get(`afk`) ? `` : ` pas`} restez afk dans la Manche quand il n'y a rien à jouer !**`",
+                "variable3": "``"
+            },
+            "defaultautoplay": {
+                "variable1": "`**L'autoplay a été __${client.settings.get(message.guild.id, `defaultap`) ? `Activé` : `Désactivé`}__ autoplay = ON avec succès !**`",
+                "variable2": "`**Je vais maintenant ${client.settings.get(message.guild.id, `defaultap`) ? `` : ` pas`} utiliser l'autoplay = ON sur 1. Début de la musique !**`",
+                "variable3": "``"
+            },
+            "autoresume": {
+                "variable1": "`**L'auto-reprise a été __${client.settings.get(message.guild.id, `autoresume`) ? `Activé` : `Désactivé`}__ l'Auto-reprise = ON !**`",
+                "variable2": "`**Je vais maintenant ${client.settings.get(message.guild.id, `autoresume`) ? `` : ` pas`} récupérer la file d'attente - après mon redémarrage !**`",
+                "variable3": "``"
+            },
+            "defaultequalizer": {
+                "variable1": "`**L'égaliseur par défaut a été (musique) __${client.settings.get(message.guild.id, `defaulteq`) ? `Activé` : `Désactivé`}__ avec succès !**`",
+                "variable2": "`**Je vais maintenant ${client.settings.get(message.guild.id, `defaulteq`) ? `` : ` pas`} utiliser l'égaliseur par défaut `Musique` sur 1. Début de la musique !**`",
+                "variable3": "``"
+            },
+            "defaultvolume": {
+                "variable1": "`${emoji.msg.ERROR} Vous n'avez pas ajouté un nouveau volume par défaut`",
+                "variable2": "`**Le volume par défaut actuel est: \\`${client.settings.get(message.guild.id, `defaultvolume`)}%\\`**`",
+                "variable3": "`${emoji.msg.ERROR} Vous n'avez pas ajouté un nouveau volume par défaut valide.`",
+                "variable4": "`*Il doit s'agir d'un **Numéro***\\n**Le volume par défaut actuel est: \\`${client.settings.get(message.guild.id, `defaultvolume`)}%\\`**`",
+                "variable5": "`${emoji.msg.ERROR} Vous n'avez pas ajouté un nouveau volume par défaut valide.`",
+                "variable6": "`*Il doit se situer entre \\`150\\` et \\`1\\`*\\n**Le volume par défaut actuel est: \\`${client.settings.get(message.guild.id, `defaultvolume`)}%\\`**`",
+                "variable7": "`**Le nouveau volume par défaut a été réglé avec succès sur: \\`${client.settings.get(message.guild.id, `defaultvolume`)}%\\`**`",
+                "variable8": "``"
+            },
+            "prefix": {
+                "variable1": "`${emoji.msg.ERROR} Veuillez fournir un nouveau préfixe !`",
+                "variable2": "`Prefix actuel: \\`${prefix}\\``",
+                "variable3": "`${emoji.msg.ERROR} Le préfixe ne peut pas comporter deux espaces`",
+                "variable4": "`${emoji.msg.ERROR} Le préfixe ne peut pas être plus long que \\`5\\``",
+                "variable5": "`${emoji.msg.SUCCESS} Le nouveau préfix est **\\`${args[0]}\\`**`",
+                "variable6": "``"
+            },
+            "removebotchat": {
+                "variable1": "`${emoji.msg.ERROR} Veuillez ajouter un salon en le pingant, par exemple : #salon !`",
+                "variable2": "`${emoji.msg.ERROR} Il semble que ce salon n'existe pas sur ce serveur !`",
+                "variable3": "`${emoji.msg.ERROR} Ce salon n'est pas dans les paramètres du Bot-Chat !`",
+                "variable4": "`${emoji.msg.SUCCESS} Le Bot-chat a été enlevé \\`${channel.name}\\``",
+                "variable5": "`Tous les Chats-Bot:\\n> ${leftb}`",
+                "variable6": "``"
+            },
+            "removedj": {
+                "variable1": "`${emoji.msg.ERROR} Veuillez ajouter un rôle en le pingant, @rôle !`",
+                "variable2": "`${emoji.msg.ERROR} Il semble que ce rôle n'existe pas sur ce serveur !`",
+                "variable3": "`${emoji.msg.ERROR} Ce rôle n'est pas déjà un DJ-ROLE !`",
+                "variable4": "`${emoji.msg.SUCCESS} Le DJ RÔLE a été enlevé \\`${role.name}\\``",
+                "variable5": "`Tous les Dj Rôles:\\n> ${leftb}`",
+                "variable6": "``"
+            },
+            "reset": {
+                "variable1": "`${emoji.msg.ERROR} Vous n'avez pas la permission d'utiliser cette commande ! *Uniquement le propriétaire du serveur*`",
+                "variable2": "`Voulez-vous vraiment réinitialiser tous les PARAMÈTRES ?`",
+                "variable3": "`*Répondez par:* **__\\`yes\\`__**`",
+                "variable4": "`${emoji.msg.SUCCESS} J'ai tout réinitialisé !`",
+                "variable5": "`Le préfixe est maintenant de nouveau: \\`${config.prefix}\\`\\nPlus de rôles de DJ, plus de configuration, plus de salon Chat-Bot.`",
+                "variable6": "`${emoji.msg.ERROR} ANNULÉE CAR CE N'EST PAS LE BON MOT / LE TEMPS S'EST ÉCOULÉ !`",
+                "variable7": "``"
+            },
+            "togglepruning": {
+                "variable1": "`**l'envoi de messages de lecture a été __${client.settings.get(message.guild.id, `playmsg`) ? `Activé` : `Désactivé`}__ avec succès !**`",
+                "variable2": "`**Je vais maintenant ${client.settings.get(message.guild.id, `playmsg`) ? `` : ` pas`} envoyer des messages avec des boutons quand une musique commence**`",
+                "variable3": "``"
+            },
+            "toggleunknowncommandinfo": {
+                "variable1": "`${emoji.msg.SUCCESS} ${client.settings.get(message.guild.id, `unkowncmdmessage`) ? `Activé`: `Désactivé`} Informations de commande inconnues.`",
+                "variable2": "``"
+            },
+            "setup-embed": {
+                "variable1": "`Que voulez-vous faire ?`",
+                "variable2": "`1️⃣ **==** Changer la **Couleur** des Embeds\\n\\n2️⃣ **==** Changer l'**Image** des Zmbeds\\n\\n3️⃣ **==** Changer le **Texte du Footer** des Embeds\\n\\n4️⃣ **==** ${es.thumb ? `**Désactivé** l'Thumbnail pour les Embeds` : `**Activé** l'Thumbnail pour les Embeds`}\\n\\n\\n\\n*Réagisez avec le bon emoji pour la bonne actionn*`",
+                "variable3": "`<:no:833101993668771842> Je n'ai pas l'autorisation d'ajouter des réactions !`",
+                "variable4": "`<:no:833101993668771842> Le temps est écoulé.`",
+                "variable5": "`Quel couleur voulez-vous ?`",
+                "variable6": "`Envoyez-le maintenant !\\n\\nAssurez-vous d'utiliser un **CODE HEX** par exemple: **\\`#ffee22\\`** __avec__ \\`#\\``",
+                "variable7": "`<:no:833101993668771842> Veuillez ajouter une COULEUR valide`",
+                "variable8": "`Notez qu'un CODE HEX ressemble à ceci: \\`#ffee22\\``",
+                "variable9": "`<:no:833101993668771842> Veuillez ajouter une COULEUR valide`",
+                "variable10": "`Notez qu'un CODE HEX ressemble à ceci: \\`#ffee22\\``",
+                "variable11": "`${emoji.msg.SUCCESS} La nouvelle couleur d'intégration est: \\`${es.color}\\``",
+                "variable12": "`<:no:833101993668771842> Une erreur s'est produite, veuillez contacter: `Tomato#6966``",
+                "variable13": "``",
+                "variable14": "`<:no:833101993668771842> Le temps est écoulé`",
+                "variable15": "`Quelle image voulez-vous utiliser ?`",
+                "variable16": "`Notez que vous ne pouvez pas supprimer cette image d'où qu'elle provienne ! Un lien est apprécié`",
+                "variable17": "`${emoji.msg.SUCCESS} La nouvelle image des embeds est: \\`${es.link}\\``",
+                "variable18": "`<:no:833101993668771842> Une erreur s'est produite, veuillez contacter: `Tomato#6966``",
+                "variable19": "``",
+                "variable20": "`<:no:833101993668771842> Veuillez ajouter un LIEN D'IMAGE valide !`",
+                "variable21": "`<:no:833101993668771842> Veuillez ajouter un LIEN D'IMAGE valide !`",
+                "variable22": "`${emoji.msg.SUCCESS} La nouvelle image des embeds est: \\`${es.link}\\``",
+                "variable23": "`<:no:833101993668771842> Une erreur s'est produite, veuillez contacter: `Tomato#6966``",
+                "variable24": "``",
+                "variable25": "`<:no:833101993668771842> Le temps est écoulé`",
+                "variable26": "`Quel devrait être votre nouveau Texte du Footer ?`",
+                "variable27": "`Notez que c'est le texte qui est très petit et qui se trouve au bas d'un Embed.\\n\\nEntrez le texte maintenant !`",
+                "variable28": "`<:no:833101993668771842> Une erreur s'est produite, veuillez contacter: `Tomato#6966``",
+                "variable29": "``",
+                "variable30": "`<:no:833101993668771842> Le temps est écoulé`",
+                "variable31": "`${emoji.msg.SUCCESS} L'Thumbnail est maintenant ${es.thumb ? `activé`: `désactivé`}`",
+                "variable32": "`${es.thumb ? `Je ne peux pas ajouter l'Thumbnail à chaque embeds.`: `Je ne peux **pas** ajouter l'Thumbnail aux embeds.`}`",
+                "variable33": "`<:no:833101993668771842> Une erreur s'est produite, veuillez contacter: `Tomato#6966``",
+                "variable34": "``",
+                "variable35": "`<:no:833101993668771842> Veuillez contacter `Tomato#6966``",
+                "variable36": "``"
+            },
+            "setup-language": {
+                "variable1": "`***Sélectionnez ce dont vous avez besoin dans la \\`Sélection\\` ci-dessous !***`",
+                "variable2": "`<:no:833101993668771842> ANNULÉ la mise en place !`",
+                "variable3": "`Sélectionnez votre nouvelle langue`",
+                "variable4": "`La langue actuelle est: **${languages[ls]}**\\n\\n***Notez que ce système n'est pas encore terminé !***\\n**Les langues ne fonctionnent que partiellement:**\\n> \\`Anglais\\`, \\`Allemand\\`, \\`Français\\``",
+                "variable5": "`${emoji.msg.SUCCESS} La nouvelle langue est **${languages[lang]}** (\\`${lang})\\``",
+                "variable6": "`${emoji.msg.SUCCESS} Réinitialisation de la langue | La nouvelle langue est **🇫🇷 Français** (fr)`",
+                "variable7": "`📑 La langue actuelle est ${thesettings}`",
+                "variable8": "`\\`\\`\\` ${e.message ? e.message : e.stack ? String(e.stack).substr(0, 2000) : String(e).substr(0, 2000)}\\`\\`\\``"
+            }
+        },
+        "customqueues": {
+            "savedqueue": {
+                "variable1": "`${emoji.msg.ERROR} Vous n'avez pas saisi de TYPE`",
+                "variable2": "`Usage: \\`${prefix}savedqueue <Type> <nom> [Options]\\`\\nTypes disponibles:\\n\\`create\\`, \\`addcurrenttrack\\`, \\`addcurrentqueue\\`, \\`removetrack\\`, \\`removedupes\\`, \\`showall\\`, \\`createsave\\`, \\`delete\\`, \\`showdetails\\`, \\`play\\`, \\`shuffle\\``",
+                "variable3": "`${emoji.msg.ERROR} Vous n'avez pas saisi de nom de file d'attente enregistré.`",
+                "variable4": "`Usage: \\`${prefix}savedqueue <Type> <nom>\\`\\nInformations sur le nom:\\n\\`Peut être n'importe quoi avec un maximum de 10 lettres\\``",
+                "variable5": "`${emoji.msg.ERROR} Le nom de votre Queue Sauvagarger est trop long !`",
+                "variable6": "`La longueur maximale est de \\`10\\``",
+                "variable7": "`${emoji.msg.ERROR} Votre file d'attente existe déjà !`",
+                "variable8": "`Supprimez-la: \\`${prefix}savedqueue delete ${Name}\\`\\nMontrer son contenu: \\`${prefix}savedqueue showdetails ${Name}`",
+                "variable9": "`${emoji.msg.SUCCESS} Crée ${Name}`",
+                "variable10": "`Ajouter l'actuel **Queue** sur elle: \\`${prefix}savedqueue addcurrentqueue ${Name}\\`\\nAjouter l'actuel **Musique** sur elle: \\`${prefix}savedqueue addcurrenttrack ${Name}\\``",
+                "variable11": "`${emoji.msg.ERROR} Vous n'avez pas saisi de nom de file d'attente enregistré.`",
+                "variable12": "`Usage: \\`${prefix}savedqueue <Type> <Nom>\\`\\nInformation:\\n\\`Il peut être constituer d'un maximum de 10 lettres\\``",
+                "variable13": "`${emoji.msg.ERROR} Le nom de votre Queue Sauvagarger est trop long !`",
+                "variable14": "`Maximum Length is \\`10\\``",
+                "variable15": "`${emoji.msg.ERROR} Your Queue does not exists yet!`",
+                "variable16": "`Create it with: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable17": "`${emoji.msg.ERROR} Il n'y a rien à jouer`",
+                "variable18": "`${emoji.msg.ERROR} Il n'y a rien à jouer`",
+                "variable19": "`There are now: \\`${client.queuesaves.get(message.author.id, `${Name}`).length} Tracks\\`\\n\\nPlay it with: \\`${prefix}savedqueue play ${Name}\\``",
+                "variable20": "`${emoji.msg.ERROR} Vous n'avez pas saisi de nom de file d'attente enregistré.`",
+                "variable21": "`Usage: \\`${prefix}savedqueue <Type> <Name>\\`\\nInformation:\\n\\`Il peut être constituer d'un maximum de 10 lettres\\``",
+                "variable22": "`${emoji.msg.ERROR} Le nom de votre Queue Sauvagarger est trop long !`",
+                "variable23": "`Maximum Length is \\`10\\``",
+                "variable24": "`${emoji.msg.ERROR} Votre queue n'existe pas encore !`",
+                "variable25": "`Create it with: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable26": "`${emoji.msg.ERROR} Il n'y a rien qui joue`",
+                "variable27": "`${emoji.msg.ERROR} La queue est vide !`",
+                "variable28": "`${emoji.msg.SUCCESS} Ajoutée ${tracks.length} Musique dans la file d'attente \\`${Name}\\``",
+                "variable29": "`Il y a maintenant: \\`${newqueue.length} Musique\\`\\n\\nFaites les jouer avec: \\`${prefix}savedqueue play ${Name}\\``",
+                "variable30": "`${emoji.msg.ERROR} Vous n'avez pas saisi le nom de la queue enregistré.`",
+                "variable31": "`Usage: \\`${prefix}savedqueue removetrack <Nom> [Options]\\`\\nInformation:\\n\\`Il peut être constituer d'un maximum de 10 lettres\\``",
+                "variable32": "`${emoji.msg.ERROR} Le nom de votre Queue Sauvagarger est trop long !`",
+                "variable33": "`La longueur maximale est de \\`10\\``",
+                "variable34": "`${emoji.msg.ERROR} Vous n'avez pas saisi d'option (la voie que vous voulez supprimer (ID ou IT)).`",
+                "variable35": "`Voir toutes vos musiques: \\`${prefix}savedqueue showdetails ${Name}\\`Usage: \\`${prefix}savedqueue removetrack ${Name} <Numéro de la Musique>\\``",
+                "variable36": "`${emoji.msg.ERROR} Votre queue n'existe pas !`",
+                "variable37": "`Crée le avec: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable38": "`${emoji.msg.ERROR} Votre option fournie est hors de portée (\\`0\\` - \\`${tracks.length-1}\\`)`",
+                "variable39": "`Voir toutes vos musiques: \\`${prefix}savedqueue showdetails ${Name}\\`Usage: \\`${prefix}savedqueue removetrack ${Name} <Numéro de la Musique>\\``",
+                "variable40": "`Il y a maintenant: \\`${client.queuesaves.get(message.author.id, `${Name}`).length} Musique\\`\\n\\nFaites le jouer avec: \\`${prefix}savedqueue play ${Name}\\``",
+                "variable41": "`${emoji.msg.ERROR} Vous n'avez pas saisi de nom de file d'attente enregistré.`",
+                "variable42": "`Usage: \\`${prefix}savedqueue <Type> <Nom>\\`\\nInformation:\\n\\`Il peut être constituer d'un maximum de 10 lettres\\``",
+                "variable43": "`${emoji.msg.ERROR} Le nom de votre Queue Sauvagarger est trop long !`",
+                "variable44": "`La longueur maximale est de \\`10\\``",
+                "variable45": "`${emoji.msg.ERROR} Votre queue n'existe pas !`",
+                "variable46": "`Crée le avec: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable47": "`${emoji.msg.ERROR} Vos liste queue sauvegarder ${Name} est vide !`",
+                "variable48": "`Add the current **Queue** onto it: \\`${prefix}savedqueue addcurrentqueue ${Name}\\`\\nAdd the current **Track** onto it: \\`${prefix}savedqueue addcurrenttrack ${Name}\\``",
+                "variable49": "`There are now: \\`${client.queuesaves.get(message.author.id, `${Name}`).length} Tracks\\`\\n\\nPlay it with: \\`${prefix}savedqueue play ${Name}\\``",
+                "variable50": "`${emoji.msg.ERROR} Vous n'avez pas saisi de nom de file d'attente enregistré.`",
+                "variable51": "`Usage: \\`${prefix}savedqueue <Type> <Name>\\`\\nInformation:\\n\\`Il peut être constituer d'un maximum de 10 lettres\\``",
+                "variable52": "`${emoji.msg.ERROR} Le nom de votre Queue Sauvagarger est trop long !`",
+                "variable53": "`La longueur maximale est de \\`10\\``",
+                "variable54": "`${emoji.msg.ERROR} Your Queue is not existing!`",
+                "variable55": "`Create it with: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable56": "`${emoji.msg.ERROR} Your Saved-Queue ${Name} is Empty!`",
+                "variable57": "`Ajouter l'actuel **Queue** sur elle: \\`${prefix}savedqueue addcurrentqueue ${Name}\\`\\nAjouter l'actuel **Musique** sur elle: \\`${prefix}savedqueue addcurrenttrack ${Name}\\``",
+                "variable58": "`Il y a maintenant: \\`${client.queuesaves.get(message.author.id, `${Name}`).length} Musique\\`\\n\\nFaites le jouer avec: \\`${prefix}savedqueue play ${Name}\\``",
+                "variable59": "`${emoji.msg.ERROR} Vous n'avez pas encore enregistré de queue.`",
+                "variable60": "`Crée-en un avec: \\`${prefix}savedqueue create <Nom de la Queue sauvgarder>\\``",
+                "variable61": "`${emoji.msg.ERROR} Vous n'avez pas saisi de nom de file d'attente enregistré.`",
+                "variable62": "`Usage: \\`${prefix}savedqueue <Type> <Nom>\\`\\nInformation:\\n\\`Il peut être constituer d'un maximum de 10 lettres\\``",
+                "variable63": "`${emoji.msg.ERROR} Le nom de votre Queue Sauvagarger est trop long !`",
+                "variable64": "`La longueur maximale est de \\`10\\``",
+                "variable65": "`${emoji.msg.ERROR} Cette queue existe déjà !`",
+                "variable66": "`Supprimer-le: \\`${prefix}savedqueue delete ${Name}\\`\\nMontrer son contenu: \\`${prefix}savedqueue showdetails ${Name}`",
+                "variable67": "`${emoji.msg.ERROR} Il n'y a rien a jouer`",
+                "variable68": "`${emoji.msg.ERROR} La queue est vide !`",
+                "variable69": "`${emoji.msg.SUCCESS} Créé ${Name} et Ajoutée ${tracks.length} Musique dessus.`",
+                "variable70": "`Faites le jouer avec: \\`${prefix}savedqueue play ${Name}\\`\\nAjouter l'actuel **Queue** sur elle: \\`${prefix}savedqueue addcurrentqueue ${Name}\\`\\nAjouter l'actuel **Musique** sur elle: \\`${prefix}savedqueue addcurrenttrack ${Name}\\``",
+                "variable71": "`${emoji.msg.ERROR} Vous n'avez pas saisi de nom de file d'attente enregistré.`",
+                "variable72": "`Usage: \\`${prefix}savedqueue <Type> <Nom>\\`\\nInformation:\\n\\`Il peut être constituer d'un maximum de 10 lettres\\``",
+                "variable73": "`${emoji.msg.ERROR} Le nom de votre Queue Sauvagarger est trop long !`",
+                "variable74": "`La longueur maximale est de \\`10\\``",
+                "variable75": "`${emoji.msg.ERROR} Votre queue n'existe pas encore !`",
+                "variable76": "`Créé le avec: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable77": "`${emoji.msg.SUCCESS} La queue \\`${Name}\\` a été supprimé !`",
+                "variable78": "`${emoji.msg.ERROR} Vous n'avez pas saisi de nom de file d'attente enregistré.`",
+                "variable79": "`Usage: \\`${prefix}savedqueue <Type> <Nom>\\`\\nInformation:\\n\\`Il peut être constituer d'un maximum de 10 lettres\\``",
+                "variable80": "`${emoji.msg.ERROR} Le nom de votre Queue Sauvagarger est trop long !`",
+                "variable81": "`La longueur maximale est de \\`10\\``",
+                "variable82": "`${emoji.msg.ERROR} Vous devez rejoindre un salon vocal.`",
+                "variable83": "`${emoji.msg.ERROR} Vous devez rejoindre un salon vocal pour utiliser cette commande !`",
+                "variable84": "`Nom du Salon: \\`${message.guild.channels.cache.get(player.voiceChannel).name}\\``",
+                "variable85": "`${emoji.msg.ERROR} Vous devez être dans le même salon vocal que moi !`",
+                "variable86": "`Nom du Salon: \\`🔈 ${mechannel.name}\\``",
+                "variable87": "`${emoji.msg.ERROR} Votre queue n'existe pas encore !`",
+                "variable88": "`Crée le avec: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable89": "`Tentative de chargement de ${client.queuesaves.get(message.author.id, `${Name}`).length} Musiques`",
+                "variable90": "`Cela peut prendre environ \\`${Math.ceil(client.queuesaves.get(message.author.id, `${Name}`).length / 2)} Secondes\\``",
+                "variable91": "`${emoji.msg.SUCCESS} Chargée ${client.queuesaves.get(message.author.id, `${Name}`).length} Musique sur la queue actuelle`",
+                "variable92": "`${emoji.msg.ERROR} Vous n'avez pas saisi de nom de file d'attente enregistré.`",
+                "variable93": "`Usage: \\`${prefix}savedqueue <Type> <Nom>\\`\\nInformation:\\n\\`Il peut être constituer d'un maximum de 10 lettres\\``",
+                "variable94": "`${emoji.msg.ERROR} Le nom de votre Queue Sauvagarger est trop long !`",
+                "variable95": "`La longueur maximale est de \\`10\\``",
+                "variable96": "`${emoji.msg.ERROR} Votre queue n'existe pas !`",
+                "variable97": "`Crée le avec: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable98": "`${emoji.msg.ERROR} Vous n'avez pas saisi un TYPE **valide**.`",
+                "variable99": "`Usage: \\`${prefix}savedqueue <Type> <Nom>\\`\\nValide Types:\\n\\`create\\`, \\`addcurrenttrack\\`, \\`addcurrentqueue\\`, \\`removetrack\\`, \\`removedupes\\`, \\`showall\\`, \\`createsave\\`, \\`delete\\`, \\`showdetails\\`, \\`play\\`, \\`shuffle\\``",
+                "variable100": "``"
+            }
+        },
+        "filter": {
+            "3d": {
+                "variable1": "`${emoji.msg.SUCCESS} Application du Filtre \\`8D\\``",
+                "variable2": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le filtre.*`",
+                "variable3": "``"
+            },
+            "bassboost": {
+                "variable1": "`${emoji.msg.ERROR} Le niveau d'amplification des basses doit être l'un des suivants: \\`none\\`, \\`low\\`, \\`medium\\`, \\`high\\`, \\`earrape\\``",
+                "variable2": "`Usage: \\`${prefix}bassboost <Niveau>\\`\\n\\nExemple: \\`${prefix}bassboost low\\``",
+                "variable3": "`${emoji.msg.SUCCESS} Bassboost a réglé le sur \\`${level}\\``",
+                "variable4": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le nouvel égaliseur.*`",
+                "variable5": "``"
+            },
+            "china": {
+                "variable1": "`${emoji.msg.SUCCESS} Application du Filtre \\`CHINA\\``",
+                "variable2": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le filtre.*`",
+                "variable3": "``"
+            },
+            "chipmunk": {
+                "variable1": "`${emoji.msg.SUCCESS} Application du Filtre \\`CHIPMUNK\\``",
+                "variable2": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le filtre.*`",
+                "variable3": "``"
+            },
+            "cleareq": {
+                "variable1": "`${emoji.msg.SUCCESS} Réinitialisation de l'égaliseur`",
+                "variablex_2": "`${emoji.msg.equalizer} FILTRE: `", "variable2": "`${emoji.msg.ERROR} Rien`",
+                "variablex_3": "`${emoji.msg.equalizer} EQALISEUR: `", "variable3": "`${player.get(`eq`)}`",
+                "variable4": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le nouvel égaliseur.*`",
+                "variable5": "``"
+            },
+            "clearfilter": {
+                "variable1": "`${emoji.msg.SUCCESS} Réinitialisation de l'égaliseur`",
+                "variablex_2": "`${emoji.msg.equalizer} FILTRE: `", "variable2": "`${emoji.msg.ERROR} Rien`",
+                "variablex_3": "`${emoji.msg.equalizer} EQALISEUR: `", "variable3": "`${player.get(`eq`)}`",
+                "variable4": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le nouvel égaliseur.*`",
+                "variable5": "``"
+            },
+            "darthvader": {
+                "variable1": "`${emoji.msg.SUCCESS} Réinitialisation de l'égaliseur \\`DARTHVADER\\``",
+                "variable2": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le filtre.*`",
+                "variable3": "``"
+            },
+            "equalizer": {
+                "variable1": "`${emoji.msg.ERROR} Le niveau de l'égaliseur doit être l'un des suivants`",
+                "variable2": "`Égaliseurs valides:\\n\\`music\\`, \\`pop\\`, \\`electronic\\`, \\`classical\\`, \\`rock\\`, \\`full\\`, \\`light\\`, \\`gaming\\`, \\`bassboost\\`, \\`earrape\\`\\n\\nUsage: \\`${prefix}equalizer <Equalizer>\\`\\n\\nExemple: \\`${prefix}equalizer music\\``",
+                "variable3": "`${emoji.msg.SUCCESS} Réglez l'égaliseur sur \\`${level}\\``",
+                "variable4": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le nouvel égaliseur.*`",
+                "variable5": "``"
+            },
+            "nightcore": {
+                "variable1": "`${emoji.msg.SUCCESS} Application du Filtre \\`NIGHTCORE\\``",
+                "variable2": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le filtre.*`",
+                "variable3": "``"
+            },
+            "pitch": {
+                "variable1": "`${emoji.msg.ERROR} Veuillez inclure le multiplicateur`",
+                "variable2": "`Usage: \\`${prefix}pitch <Multiplicateur>\\`\\n\\nExemple: \\`${prefix}pitch 1.2\\``",
+                "variable3": "`${emoji.msg.ERROR} Le multiplicateur doit être un nombre`",
+                "variable4": "`Usage: \\`${prefix}pitch <Multiplicateur>\\`\\n\\nExemple: \\`${prefix}pitch 1.2\\``",
+                "variable5": "`${emoji.msg.ERROR} Multiplicateur hors de portée | Entre 0 et 3`",
+                "variable6": "`Usage: \\`${prefix}pitch <Multiplicateur>\\`\\n\\nExemple: \\`${prefix}pitch 1.2\\``",
+                "variable7": "`${emoji.msg.SUCCESS} Pitch réglé sur \\`${args[0]}\\``",
+                "variable8": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le filtre.*`",
+                "variable9": "``"
+            },
+            "rate": {
+                "variable1": "`${emoji.msg.ERROR} Veuillez inclure le multiplicateur`",
+                "variable2": "`Usage: \\`${prefix}speed <Multiplicateur>\\`\\n\\nExemple: \\`${prefix}speed 1.5\\``",
+                "variable3": "`${emoji.msg.ERROR} Le multiplicateur doit être un nombre`",
+                "variable4": "`Usage: \\`${prefix}speed <Multiplicator>\\`\\n\\nExemple: \\`${prefix}speed 1.5\\``",
+                "variable5": "`${emoji.msg.ERROR} Multiplicateur hors de portée | Entre 0 et 3`",
+                "variable6": "`Usage: \\`${prefix}speed <Multiplicateur>\\`\\n\\nExemple: \\`${prefix}speed 1.5\\``",
+                "variable7": "`${emoji.msg.SUCCESS} Vitesse réglée sur \\`${args[0]}\\``",
+                "variable8": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le filtre.*`",
+                "variable9": "``"
+            },
+            "slowmo": {
+                "variable1": "`${emoji.msg.SUCCESS} Application du Filtre \\`SLOWMO\\``",
+                "variable2": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le filtre.*`",
+                "variable3": "``"
+            },
+            "speed": {
+                "variable1": "`${emoji.msg.ERROR} Veuillez inclure le multiplicateur`",
+                "variable2": "`Usage: \\`${prefix}rate <Multiplicateur>\\`\\n\\nExemple: \\`${prefix}rate 1.5\\``",
+                "variable3": "`${emoji.msg.ERROR} Le multiplicateur doit être un nombre`",
+                "variable4": "`Usage: \\`${prefix}rate <Multiplicateur>\\`\\n\\nExemple: \\`${prefix}rate 1.5\\``",
+                "variable5": "`${emoji.msg.ERROR} Multiplicateur hors de portée | Entre 0 et 3`",
+                "variable6": "`Usage: \\`${prefix}rate <Multiplicateur>\\`\\n\\nExemple: \\`${prefix}rate 1.5\\``",
+                "variable7": "`${emoji.msg.SUCCESS} Taux fixé à \\`${args[0]}\\``",
+                "variable8": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le filtre.*`",
+                "variable9": "``"
+            },
+            "tremolo": {
+                "variable1": "`${emoji.msg.SUCCESS} Application du Filtre \\`TREMOLO\\``",
+                "variable2": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le filtre.*`",
+                "variable3": "``"
+            },
+            "vibrate": {
+                "variable1": "`${emoji.msg.SUCCESS} Application du Filtre \\`VIBRATO\\``",
+                "variable2": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le filtre.*`",
+                "variable3": "``"
+            },
+            "vibrato": {
+                "variable1": "`${emoji.msg.SUCCESS} Application du Filtre \\`VIBRATE\\``",
+                "variable2": "`Note: *Cela peut prendre jusqu'à 5 secondes avant que vous entendiez le filtre.*`",
+                "variable3": "``"
+            }
+        },
+        "owner": {
+            "changeavatar": {
+                "variable1": "`${emoji.msg.ERROR} Vous n'êtes pas autorisé à exécuter cette commande`",
+                "variable2": "`Tu dois être l'un de mes owner: ${config.ownerIDS.map(id => `<@${id}>`)}`",
+                "variable3": "`${emoji.msg.SUCCESS} J'ai réussi à changer mon avatar !`",
+                "variable4": "``",
+                "variable5": "`${emoji.msg.ERROR} ERREUR | Impossible d'utiliser votre image comme avatar, assurez-vous que c'est un \\`png\\` / \\`jpg\\``",
+                "variable6": "`${emoji.msg.SUCCESS} J'ai réussi à changer mon avatar !`",
+                "variable7": "``",
+                "variable8": "`${emoji.msg.ERROR} ERREUR | Impossible d'utiliser votre image comme avatar, assurez-vous que c'est un \\`png\\` / \\`jpg\\` / \\`webp\\``",
+                "variable9": "`Usage: \\`${prefix}changeavatar <AVATARLIEN/IMAGE>\\``",
+                "variable10": "``"
+            },
+            "changename": {
+                "variable1": "`${emoji.msg.ERROR} Vous n'êtes pas autorisé à exécuter cette commande`",
+                "variable2": "`Tu dois être l'un de mes owner: ${config.ownerIDS.map(id => `<@${id}>`)}`",
+                "variable3": "`${emoji.msg.ERROR} Vous devez m'ajouter un nouveau nom.`",
+                "variable4": "`Usage: \\`${prefix}changename <Nouveau nom>\\``",
+                "variable5": "`${emoji.msg.ERROR} Le nom du robot est trop long, il ne peut pas avoir plus de 32 caractère !`",
+                "variable6": "`${emoji.msg.SUCCESS} J'ai changé mon nom en: \\`${user.username}\\``",
+                "variable7": "``",
+                "variable8": "``"
+            },
+            "changestatus": {
+                "variable1": "`${emoji.msg.ERROR} Vous n'êtes pas autorisé à exécuter cette commande`",
+                "variable2": "`Tu dois être l'un de mes owner: ${config.ownerIDS.map(id => `<@${id}>`)}`",
+                "variable3": "`Que voulez-vous faire ?`",
+                "variable4": "`1️⃣ **== Change** Statut **TEXTE**\\n\\n2️⃣ **== Change** Statut **TYPE**\\n\\n3️⃣ **== Change** Statut **URL**\\n\\n🟢 **==** Change le mode En ligne/AFK/Ne pas déranger\\n\\n\\n\\n*Réagir avec le bon Emoji en fonction de la bonne action*`",
+                "variable5": "`${emoji.msg.ERROR} ERREUR | Permissions manquantes pour ajouter des Réactions`",
+                "variable6": "`${emoji.msg.ERROR} ERREUR | Le temps est écoulé`",
+                "variable7": "`Quel texte dois-je afficher dans l'état ?`",
+                "variable8": "`${emoji.msg.ERROR}  ERREUR d'écriture du fichier`",
+                "variable9": "``",
+                "variable10": "`${emoji.msg.SUCCESS}  Le nouveau statut a été défini avec succès`",
+                "variable11": "`${emoji.msg.ERROR} ERREUR | Le temps est écoulét`",
+                "variable12": "`Quel type voulez-vous utiliser ?`",
+                "variable13": "`${emoji.msg.ERROR} ERREUR | Le temps est écoulé`",
+                "variable14": "`${emoji.msg.ERROR}  ERREUR d'écriture du fichier`",
+                "variable15": "``",
+                "variable16": "`${emoji.msg.SUCCESS}  Le nouveau statut a été défini avec succès`",
+                "variable17": "`Quel type voulez-vous utiliser ?`",
+                "variable18": "`${emoji.msg.SUCCESS}  Le nouveau statut a été défini avec succès`",
+                "variable19": "`${emoji.msg.SUCCESS}  Le nouveau statut a été défini avec succès`",
+                "variable20": "`${emoji.msg.SUCCESS}  Le nouveau statut a été défini avec succès`",
+                "variable21": "`${emoji.msg.ERROR} ERREUR | Le temps est écoulé`",
+                "variable22": "`Quelle URL dois-je afficher dans le statut, si je fais du streaming ?`",
+                "variable23": "`${emoji.msg.ERROR} URL n'est pas valide`",
+                "variable24": "`${emoji.msg.ERROR} URL Twitch n'est pas valide`",
+                "variable25": "`${emoji.msg.ERROR}  ERREUR d'écriture du fichier`",
+                "variable26": "``",
+                "variable27": "`${emoji.msg.SUCCESS}  Le nouveau statut a été défini avec succès`",
+                "variable28": "`${emoji.msg.ERROR} ERREUR | Le temps est écoulé`",
+                "variable29": "`${emoji.msg.ERROR} ERREUR | CONTACTEZ S'IL VOUS PLAÎT `Tomato#6966``",
+                "variable30": "``"
+            },
+            "cmdreload": {
+                "variable1": "`${emoji.msg.ERROR} Vous n'êtes pas autorisé à exécuter cette commande ! Seul le propriétaire est autorisé à exécuter cette commande.`",
+                "variable2": "`${emoji.msg.ERROR} Veuillez inclure un argument`",
+                "variable3": "`${emoji.msg.ERROR} Impossible de trouver: \\`${args[0]}\\``",
+                "variable4": "`${emoji.msg.SUCCESS} Rechargée \\`${args[0]}\\``",
+                "variable5": "`${emoji.msg.ERROR} Impossible de recharger: \\`${args[0]}\\``",
+                "variable6": "``"
+            },
+            "eval": {
+                "variable1": "`${emoji.msg.ERROR}  Erreur | Vous n'êtes pas autorisé à exécuter cette commande ! Seul le **\\`Tomato#6966\\`** est autorisé à exécuter cette commande`",
+                "variable2": "`${emoji.msg.ERROR}  Erreur | Vous devez inclure au moins un argument d'évaluation`",
+                "variable3": "`Développement de Milrato | Évaluation`",
+                "variable4": "`\\`\\`\\`` + splitDescription[0] + `\\`\\`\\``",
+                "variable5": "`${emoji.msg.ERROR}  ERREUR | Une erreur s'est produite !`",
+                "variable6": "``"
+            },
+            "leaveserver": {
+                "variable1": "`${emoji.msg.ERROR} Vous n'êtes pas autorisé à exécuter cette commande ! Seul le propriétaire est autorisé à exécuter cette commande.`",
+                "variable2": "`${emoji.msg.ERROR} Vous devez ajouter un serveur que je dois quitter.`",
+                "variable3": "`Usage: \\`${prefix}leaveserver <SERVEURID>\\``",
+                "variable4": "`${emoji.msg.ERROR} Impossible de trouver le serveur à quitter`",
+                "variable5": "`${emoji.msg.SUCCESS} Quitté ${g.name} | ${g.id}`",
+                "variable6": "``"
+            }
+        }
+    },
+    "common": {
+        "deaf": "❌ Vous ne pouvez pas exécuter cette commande lorsque vous êtes `DEAF` / `SERVEURDEAF`",
+        "usernotfound": "❌ Impossible de trouver l'UTILISATEUR",
+        "rolenotfound": "❌ Impossible de trouver le RÔLE",
+        "erroroccur": "❌ Une erreur s'est produite",
+        "disabled": {
+            "title": "❌ **Cette commande est actuellement désactivée.**",
+            "description": "**Un administrateur peut l'activer avec: `{prefix}setup-commands`**"
+        },
+        "nothing_playing": "❌ **Je ne joue pas rien actuellement !**",
+        "join_vc": "❌ **Vous devez d'abord rejoindre un salon vocal !**",
+        "wrong_vc": "❌ **Vous devez être dans mon salon vocal pour utiliser cette commande !**",
+        "not_connected": "❌ **Je ne suis plus connecté à un salon vocal !**",
+        "dms_disabled": "❌ **Vos MP sont BLOQUÉS !**",
+        "example": "Par exemple",
+        "botchat": {
+            "title": "❌ **Erreur | Pas dans le Bot Chat !**",
+            "description": "**Il y a une configuration de chat Bot sur ce serveur ! Essayez d'utiliser les commandes du Bot ici :**"
+        },
+        "ping": "👍 **Pour voir toutes les Commandes, tapez: `{prefix}help`!**",
+        "unknowncmd": {
+            "title": "❌ **Commande inconnue, essayez: `{prefix}help`!**",
+            "description": "**Le préfixe pour ce Serveur est: `{prefix}`**\n\n*Vous pouvez aussi me **ping**, à la place d'utiliser le prefix.*\n\n**Pour voir toutes les commandes, tapez `{prefix}help [Cmd]`!**\n\n**Pour voir toutes les configurations disponibles, tapez `{prefix}setup`!**"
+        },
+        "cooldown": "❌ Veuillez attendre {time} seconde(s) de plus avant de réutiliser la commande `{commandname}`.",
+        "premium": {
+            "title": "❌ **Ce commandement est uniquement Premium !** 💰",
+            "description": "Un Administrateur peut demander ce serveur en tant que SERVEUR-PREMIUM en tapant: `{prefix}premium`"
+        },
+        "permissions": {
+            "title": "❌ **Vous n'êtes pas autorisé à exécuter cette commande !**",
+            "description": "**Vous avez besoin de ces permissions :**"
+        },
+        "missingroles": {
+            "title": "❌ **Vous n'êtes pas autorisé à exécuter cette commande !**",
+            "description": "**Vous avez besoin de ces rôles :**",
+            "description2": "**Vous devez être le demandeur de la musique en cours de lecture !**\nOU: **Vous avez besoin de ces rôles :**"
+        },
+        "nodjs": "Aucun rôle de DJ n'est imposé ! Tout le monde peut utiliser les commandes musicales.",
+        "nobotchannels": "Aucun canal de bot n'est configuré ! Les commandes sont utilisables dans tous les salons.",
+        "somethingwentwrong": "❌ **Une erreur s'est produite lors de l'exécution de cette commande !**"
+    },
+    "handlers": {
+        "erelaevents": {
+            "client_events": {
+                "variable3": "`${emoji.msg.ERROR} La file d'attente est terminée | Salon vide`",
+                "variable4": "`J'ai quitté le salon: ${client.channels.cache.get(player.voiceChannel).name} parce que le salon s'est vidé`"
+            },
+            "events": {
+                "variable1": "`${player.get(`autoplay`) ? `Activé` : `Désactivé`} la fonction Autoplay`"
+            }
+        },
+        "functionsjs": {
+            "functions": {
+                "variable1": "`J'ai quitté le salon: \\`${client.channels.cache.get(player.voiceChannel).name}\\` parce que la queue était vide pour: \\`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\\``",
+                "variablex_2": "`AUCUN RÔLE AJOUTÉ`","variable2": "`Ajoutez-les avec: \\`${client.settings.get(guild.id, `prefix`)} setup-roster\\``",
+                "variablex_3": "`**__${role.name.toUpperCase()} [${[...role.members.values()].length}]__**`","variable3": "[...role.members.values()].length === 0 ? `> Personne n'a ce rôle` : role.members.map(member => `${the_roster_db.get(guild.id, `rosteremoji`)} <@${member.user.id}> | \\`${member.user.tag}\\``).join(`\\n`).substr(0, leftnum <= 1024 ? leftnum : 1024), the_roster_db.get(guild.id, `inline`)",
+                "variable4": "`Choisissez votre station, en tapant le bon numéro `INDEX` !`",
+                "variable4_1": "`Exemple: `?radio 11``",
+                "variable5": "`Choisissez votre station, en tapant le bon numéro `INDEX` !`",
+                "variable5_1": "`Exemple: `?radio 69``",
+                "variable6": "`Choisissez votre station, en tapant le bon numéro `INDEX` !`",
+                "variable6_1": "`Exemple: `?radio 180``",
+                "variable7": "`${emoji.msg.ERROR} Je n'ai rien trouvé en rapport avec la dernière musique !`",
+                "variable8": "`${emoji.msg.ERROR} La queue est terminée.`",
+                "variable9": "`J'ai quitté le salon: \\`${client.channels.cache.get(player.voiceChannel).name}\\` parce que la queue était vide pour: \\`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\\``",
+                "variable10": "`${user.member.user} | ${emoji.msg.ERROR} S'il vous plaît, donnez-moi la permission, `GÉRÉ LES SALONS` --> J'ai besoin de pouvoir créer des salons...`",
+                "variable11": "`${user.member.user} | ${emoji.msg.ERROR} S'il vous plaît, donnez-moi la permission, \\`MANGE CHANNELS\\` --> J'ai besoin de pouvoir créer des salons ...`",
+                "variable12": "-"
+            }
+        },
+        "playermanagerjs": {
+            "playermanager": {
+                "variable1": "`${emoji.msg.ERROR} J'ai besoin de permissions pour rejoindre votre salon`",
+                "variable2": "`${emoji.msg.ERROR} J'ai besoin de permissions pour parler dans votre canal`",
+                "variable3": "`${emoji.msg.ERROR} Aucun terme de recherche valide ? ... Veuillez contacter: `Tomato#6966``"
+            }
+        },
+        "playermanagers": {
+            "playlist": {
+                "variable1": "`${emoji.msg.ERROR} Erreur | Une erreur s'est produite lors de la recherche :`",
+                "variable2": "``",
+                "variable3": "`Veuillez réessayer !`",
+                "variable4": "`:thumbsup: **Playlist Ajoutée🩸 [${res.playlist.name}](${res.playlist.uri})**`"
+            },
+            "playtop": {
+                "variable1": "`Veuillez réessayer !`",
+                "variable2": "`:thumbsup: **Mis en Queue :notes: [${res.tracks[0].title}](${res.tracks[0].uri})**`",
+                "variable3": "`Veuillez réessayer !`",
+                "variable4": "`**`+res.playlist.name+`**`",
+                "variablex_5": "`Temps estimé avant le début de la musique`","variable5": "time > 10 ? format(time).split(` | `)[0] : `MAINTENANT`",
+                "variable6": "`Ajoutée: \\`${res.tracks[0].title}\\` - à la Queue\\n**Channel:** ${res.tracks[0].author}\\n**Durée de la Musique:** ${res.tracks[0].isStream ? `LIVE STREAM` : format(res.tracks[0].duration).split(` | `)[0]}\\n**Temps estimé avant le début de la musique :** ${time}\\n**Position dans la queue :** ${player.queue.length}\\n${res.tracks[0].uri}`"
+            },
+            "request": {
+                "variable1": "`Veuillez réessayer !`",
+                "variable2": "`Veuillez réessayer !`"
+            },
+            "search": {
+                "variable1": "`${emoji.msg.ERROR} Erreur | Une erreur s'est produite lors de la recherche :`",
+                "variable2": "``",
+                "variable3": "`${emoji.msg.ERROR} Erreur | Vous n'avez pas fourni de sélection`",
+                "variable4": "'${emoji.msg.ERROR} Erreur | Sélection annulée.'",
+                "variable5": "`:thumbsup: **Mis en Queue :notes: [${track.title}](${track.uri})**`"
+            },
+            "similar": {
+                "variable1": "`${emoji.msg.ERROR} Erreur | Je n'ai rien trouvé concernant la dernière musique`",
+                "variable2": "`:thumbsup: **Mis en Queue :notes: [${res.tracks[0].title}](${res.tracks[0].uri})**`",
+                "variable3": "`${emoji.msg.SUCCESS} Choisissez votre chanson avec le numéro `INDEX`.`",
+                "variable4": "`${emoji.msg.ERROR} Erreur | You didn't provide a selection`",
+                "variable5": "'${emoji.msg.ERROR} Erreur | Sélection annulée.'",
+                "variable6": "`${emoji.msg.ERROR} Erreur | Le nombre que vous avez fourni est trop petit ou trop grand (1-${max}).`",
+                "variable7": "`Veuillez réessayer !`",
+                "variable8": "`:thumbsup: **Mis en Queue :notes: [${track.title}](${track.uri})**`"
+            },
+            "skiptrack": {
+                "variable1": "`${emoji.msg.ERROR} Erreur | Il y a eu une erreur lors de la recherche :`",
+                "variable2": "``",
+                "variable3": "`Veuillez réessayer !`"
+            },
+            "song": {
+                "variable1": "`${emoji.msg.ERROR} Erreur | Il y a eu une erreur lors de la recherche :`",
+                "variable2": "``",
+                "variable3": "`Veuillez réessayer !`",
+                "variable4": "`:thumbsup: **Mis en Queue :notes: [${res.tracks[0].title}](${res.tracks[0].uri})**`",
+                "variable5": "`Veuillez réessayer !`"
+            }
+        }
+    }
+}
