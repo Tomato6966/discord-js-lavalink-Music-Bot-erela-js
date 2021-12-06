@@ -21,8 +21,8 @@ module.exports = {
     let languages = {
       "en": "🇬🇧 English",
       "de": "🇩🇪 German",
+      "fr": "🇫🇷 French",
       /*
-        "fr": "🇫🇷 French",
         "it": "🇮🇹 Italian",
         "sp": "🇪🇸 Spanish",
         "in": "🇮🇳 India (Hindi)",
@@ -114,9 +114,10 @@ module.exports = {
         case 0: {
           let button_en = new MessageButton().setStyle('PRIMARY').setCustomId('language_en').setEmoji("🇬🇧").setLabel("English").setDisabled(false)
           let button_de = new MessageButton().setStyle('PRIMARY').setCustomId('language_de').setEmoji("🇩🇪").setLabel("German").setDisabled(false)
+          let button_fr = new MessageButton().setStyle('PRIMARY').setCustomId('language_fr').setEmoji("🇫🇷").setLabel("French").setDisabled(false)
 
           let buttonRow1 = new MessageActionRow()
-            .addComponents(button_en, button_de)
+            .addComponents(button_en, button_de, button_fr)
           let allbuttons = [buttonRow1]
           //Send message with buttons
           let helpmsg = await message.reply({
