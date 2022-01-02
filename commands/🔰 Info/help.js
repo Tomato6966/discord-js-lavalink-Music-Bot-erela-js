@@ -268,9 +268,7 @@ but you can also do \`${prefix}play <SONGNAME/SONGLINK>\` without setting it up!
         }
       });
 
-      //array of all disabled buttons
-      let d_buttonRow = new MessageActionRow().addComponents([button_back.setDisabled(true), button_home.setDisabled(true), button_forward.setDisabled(true), button_tutorial])
-      const alldisabledbuttons = [d_buttonRow]
+      
       collector.on('end', collected => {
         if (!edited) {
           edited = true;
