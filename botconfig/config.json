@@ -11,15 +11,19 @@
       "type": "PLAYING",
       "url": "https://twitch.tv/#"
    },
-   "clientsettings": {
-      "nodes": [
-         {
-            "host": "localhost",
-            "port": 2333,
-            "password": "youshallnotpass"
-         }
-      ]
-   },
+  "clientsettings": {
+    "nodes": [
+      {
+        "host": "localhost",
+        "port": 2333,
+        "password": "youshallnotpass"
+      }
+    ]
+  },
+
+  "settings": {
+    "selfDeaf": true
+  },
 
    "spotify": {
       "clientID": "",
