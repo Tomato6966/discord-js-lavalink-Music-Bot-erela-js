@@ -1,28 +1,30 @@
 {
-   "token": "Bot Token",
-   "prefix": "?",
-   "ownerIDS": [
-      "442355791412854784"
-   ],
-   
-   "status": {
-      "text": "{prefix}help | played {songsplayed} Songs on {guildcount} Guilds | Support: discord.gg/milrato",
-      "text2": "By: milrato.dev",
-      "type": "PLAYING",
-      "url": "https://twitch.tv/#"
-   },
-   "clientsettings": {
-      "nodes": [
-         {
-            "host": "localhost",
-            "port": 2333,
-            "password": "youshallnotpass"
-         }
-      ]
-   },
+  "token": "Bot Token",
+  "prefix": "?",
+  "ownerIDS": [
+    "442355791412854784"
+  ],
 
-   "spotify": {
-      "clientID": "",
-      "clientSecret": ""
-   }
+  "status": {
+    "text": "{prefix}help | played {songsplayed} Songs on {guildcount} Guilds | Support: discord.gg/milrato",
+    "text2": "By: milrato.dev",
+    "type": "PLAYING",
+    "url": "https://twitch.tv/#"
+  },
+  "clientsettings": {
+    "nodes": [
+      {
+        "host": "localhost",
+        "port": 2333,
+        "password": "youshallnotpass"
+      }
+    ]
+  },
+  "settings": {
+    "selfDeaf": true
+  },
+  "spotify": {
+    "clientID": "",
+    "clientSecret": ""
+  }
 }
