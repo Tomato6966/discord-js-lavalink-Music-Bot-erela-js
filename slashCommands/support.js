@@ -22,7 +22,7 @@ module.exports = {
       const allbuttons = [new MessageActionRow().addComponents([button_public_invite, button_support_dc, button_invite])]
       interaction.reply({ephemeral: true, 
         embeds: [new MessageEmbed()
-          .setColor(ee.color)
+          .setColor(es.color)
           .setTitle(client.la[ls].cmds.info.support.title)
           .setDescription(eval(client.la[ls]["cmds"]["info"]["support"]["variable1"]))
           .setFooter(client.user.username  + ' | powered by milrato.dev', 'https://imgur.com/jPItIw0.gif')

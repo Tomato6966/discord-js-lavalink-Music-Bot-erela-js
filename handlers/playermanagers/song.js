@@ -12,6 +12,7 @@ var {
 
 //function for playling song
 async function song(client, message, args, type, slashCommand, extras) {
+  let es = client.settings.get(message.guild.id, "embed");
   let ls = client.settings.get(message.guild.id, "language")
   var search = args.join(" ");
   var res;
@@ -65,14 +66,14 @@ async function song(client, message, args, type, slashCommand, extras) {
       return slashCommand.reply({
         ephemeral: true,
         embeds: [new MessageEmbed()
-          .setColor(ee.wrongcolor)
+          .setColor(es.wrongcolor)
           .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable1"]))
           .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable2"]))
         ]
       });
     return message.channel.send({
       embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
+        .setColor(es.wrongcolor)
         .setTitle(String("❌ **There was an Error while searching: `" + search).substr(0, 256 - 3) + "`**")
         .setDescription(`\`\`\`${e}\`\`\``.substr(0, 2000))
       ]
@@ -85,14 +86,14 @@ async function song(client, message, args, type, slashCommand, extras) {
         return slashCommand.reply({
           ephemeral: true,
           embeds: [new MessageEmbed()
-            .setColor(ee.wrongcolor)
+            .setColor(es.wrongcolor)
             .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
             .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable3"]))
           ]
         })
       return message.channel.send({
         embeds: [new MessageEmbed()
-          .setColor(ee.wrongcolor)
+          .setColor(es.wrongcolor)
           .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
           .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable3"]))
         ]
@@ -126,7 +127,7 @@ async function song(client, message, args, type, slashCommand, extras) {
       //send track information
       var playembed = new MessageEmbed()
         .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable4"]))
-        .setColor(ee.color)
+        .setColor(es.color)
         .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
         .addField("⌛ Duration: ", `\`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
         .addField("💯 Song By: ", `\`${res.tracks[0].author}\``, true)
@@ -149,14 +150,14 @@ async function song(client, message, args, type, slashCommand, extras) {
         return slashCommand.reply({
           ephemeral: true,
           embeds: [new MessageEmbed()
-            .setColor(ee.wrongcolor)
+            .setColor(es.wrongcolor)
             .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
             .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable5"]))
           ]
         })
       return message.channel.send({
         embeds: [new MessageEmbed()
-          .setColor(ee.wrongcolor)
+          .setColor(es.wrongcolor)
           .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
           .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable5"]))
         ]
@@ -199,7 +200,7 @@ async function song(client, message, args, type, slashCommand, extras) {
     //send information
     var playlistembed = new MessageEmbed()
       .setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256 - 3) + "`**")
-      .setURL(res.playlist.uri).setColor(ee.color)
+      .setURL(res.playlist.uri).setColor(es.color)
       .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
       .addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
       .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)

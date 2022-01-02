@@ -56,7 +56,7 @@ module.exports = {
           return message.reply({
             embeds: [new MessageEmbed()
               .setColor(es.wrongcolor)
-              .setFooter(client.user.username, ee.footericon)
+              .setFooter(client.user.username, es.footericon)
               .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable13"]))
               .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable14"]))
             ]
@@ -78,7 +78,7 @@ module.exports = {
           return message.reply({
             embeds: [new MessageEmbed()
               .setColor(es.wrongcolor)
-              .setFooter(client.user.username, ee.footericon)
+              .setFooter(client.user.username, es.footericon)
               .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable17"]))
             ]
           });
@@ -127,7 +127,7 @@ module.exports = {
         return message.reply({
           embeds: [new MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(client.user.username, ee.footericon)
+            .setFooter(client.user.username, es.footericon)
             .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable22"]))
             .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable23"]))
           ]
@@ -149,7 +149,7 @@ module.exports = {
         return message.reply({
           embeds: [new MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(client.user.username, ee.footericon)
+            .setFooter(client.user.username, es.footericon)
             .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable26"]))
           ]
         });
@@ -209,7 +209,7 @@ module.exports = {
         return message.reply({
           embeds: [new MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(client.user.username, ee.footericon)
+            .setFooter(client.user.username, es.footericon)
             .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable32"]))
             .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable33"]))
           ]
@@ -278,7 +278,7 @@ module.exports = {
         return message.reply({
           embeds: [new MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(client.user.username, ee.footericon)
+            .setFooter(client.user.username, es.footericon)
             .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable43"]))
             .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable44"]))
           ]
@@ -332,7 +332,7 @@ module.exports = {
         return message.reply({
           embeds: [new MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(client.user.username, ee.footericon)
+            .setFooter(client.user.username, es.footericon)
             .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable52"]))
             .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable53"]))
           ]
@@ -427,7 +427,7 @@ module.exports = {
         return message.reply({
           embeds: [new MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(client.user.username, ee.footericon)
+            .setFooter(client.user.username, es.footericon)
             .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable63"]))
             .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable64"]))
           ]
@@ -448,7 +448,7 @@ module.exports = {
         return message.reply({
           embeds: [new MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(client.user.username, ee.footericon)
+            .setFooter(client.user.username, es.footericon)
             .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable67"]))
           ]
         });
@@ -510,7 +510,7 @@ module.exports = {
         return message.reply({
           embeds: [new MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(client.user.username, ee.footericon)
+            .setFooter(client.user.username, es.footericon)
             .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable73"]))
             .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable74"]))
           ]
@@ -555,7 +555,7 @@ module.exports = {
         return message.reply({
           embeds: [new MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(client.user.username, ee.footericon)
+            .setFooter(client.user.username, es.footericon)
             .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable80"]))
             .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable81"]))
           ]
@@ -569,7 +569,7 @@ module.exports = {
         return message.reply({
           embeds: [new MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(client.user.username, ee.footericon)
+            .setFooter(client.user.username, es.footericon)
             .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable82"]))
           ]
         });
@@ -696,7 +696,7 @@ module.exports = {
         return message.reply({
           embeds: [new MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(client.user.username, ee.footericon)
+            .setFooter(client.user.username, es.footericon)
             .setTitle(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable94"]))
             .setDescription(eval(client.la[ls]["cmds"]["customqueues"]["savedqueue"]["variable95"]))
           ]

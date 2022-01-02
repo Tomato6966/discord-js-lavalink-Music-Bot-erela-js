@@ -797,6 +797,7 @@ async function swap_pages2_interaction(client, interaction, embeds) {
 }
 
 function databasing(client, guildid, userid) {
+    let es = client.settings.get(message.guild.id, "embed");
   if (!client || client == undefined || !client.user || client.user == undefined) return;
   try {
     if (userid) {
@@ -816,13 +817,13 @@ function databasing(client, guildid, userid) {
       client.settings.ensure(guildid, {
         prefix: config.prefix,
         embed: {
-          "color": ee.color,
+          "color": es.color,
           "thumb": true,
-          "wrongcolor": ee.wrongcolor,
-          "footertext": client.guilds.cache.get(guildid) ? client.guilds.cache.get(guildid).name : ee.footertext,
+          "wrongcolor": es.wrongcolor,
+          "footertext": client.guilds.cache.get(guildid) ? client.guilds.cache.get(guildid).name : es.footertext,
           "footericon": client.guilds.cache.get(guildid) ? client.guilds.cache.get(guildid).iconURL({
             dynamic: true
-          }) : ee.footericon,
+          }) : es.footericon,
         },
         language: settings.default_db_data.language,
         pruning: settings.default_db_data.pruning,

@@ -241,8 +241,8 @@ module.exports = async (client, message) => {
               if(player && player.queue && player.queue.current && command.parameters.check_dj){
                 if(check_if_dj(client, message.member, player.queue.current)) {
                   return message.reply({embeds: [new MessageEmbed()
-                    .setColor(ee.wrongcolor)
-                    .setFooter(ee.footertext, ee.footericon)
+                    .setColor(es.wrongcolor)
+                    .setFooter(es.footertext, es.footericon)
                     .setTitle(`❌**You are not a DJ and not the Song Requester!** `)
                     .setDescription(`**DJ - ROLES:** \n${check_if_dj(client, message.member, player.queue.current)}`)
                   ],}).catch(()=>{})

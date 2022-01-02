@@ -11,6 +11,7 @@ var {
 
 //function for playling song
 async function similar(client, message, args, type, slashCommand) {
+  let es = client.settings.get(message.guild.id, "embed");
   let ls = client.settings.get(message.guild.id, "language")
   try {
     //get a playlist out of it
@@ -25,7 +26,7 @@ async function similar(client, message, args, type, slashCommand) {
     if (!res || res.loadType === 'LOAD_FAILED' || res.loadType !== 'PLAYLIST_LOADED') {
       return client.channels.cache.get(player.textChannel).send(new MessageEmbed()
         .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable1"]))
-        .setColor(ee.wrongcolor)
+        .setColor(es.wrongcolor)
 
       );
     }
@@ -36,7 +37,7 @@ async function similar(client, message, args, type, slashCommand) {
       //send information message
       var embed2 = new MessageEmbed()
         .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable2"]))
-        .setColor(ee.color)
+        .setColor(es.color)
         .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
         .addField("⌛ Duration: ", `\`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
         .addField("💯 Song By: ", `\`${res.tracks[0].author}\``, true)
@@ -61,7 +62,7 @@ async function similar(client, message, args, type, slashCommand) {
         .join('\n');
       var searchembed = new MessageEmbed()
         .setTitle(`Search result for: 🔎 **\`${player.queue.current.title}`.substr(0, 256 - 3) + "`**")
-        .setColor(ee.color)
+        .setColor(es.color)
         .setDescription(results)
         .setFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
           dynamic: true
@@ -71,7 +72,7 @@ async function similar(client, message, args, type, slashCommand) {
       })
       await message.channel.send({
         embeds: [new MessageEmbed()
-          .setColor(ee.color)
+          .setColor(es.color)
           .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable3"]))
         ]
       })
@@ -87,7 +88,7 @@ async function similar(client, message, args, type, slashCommand) {
         return message.channel.send({
           embeds: [new MessageEmbed()
             .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable4"]))
-            .setColor(ee.wrongcolor)
+            .setColor(es.wrongcolor)
           ]
         });
       }
@@ -96,7 +97,7 @@ async function similar(client, message, args, type, slashCommand) {
         if (!player.queue.current) player.destroy();
         return message.channel.send({
           embeds: [new MessageEmbed()
-            .setColor(ee.wrongcolor)
+            .setColor(es.wrongcolor)
             .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable5"]))
           ]
         });
@@ -105,7 +106,7 @@ async function similar(client, message, args, type, slashCommand) {
       if (index < 0 || index > max - 1)
         return message.channel.send({
           embeds: [new MessageEmbed()
-            .setColor(ee.wrongcolor)
+            .setColor(es.wrongcolor)
             .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable6"]))
           ]
         });
@@ -113,7 +114,7 @@ async function similar(client, message, args, type, slashCommand) {
       if (!track)
         return message.channel.send({
           embeds: [new MessageEmbed()
-            .setColor(ee.wrongcolor)
+            .setColor(es.wrongcolor)
             .setTitle(String("❌ Error | Found nothing for: **`" + player.queue.current.title).substr(0, 256 - 3) + "`**")
             .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable7"]))
           ]
@@ -136,7 +137,7 @@ async function similar(client, message, args, type, slashCommand) {
         player.queue.add(track);
         var embed = new MessageEmbed()
           .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable8"]))
-          .setColor(ee.color)
+          .setColor(es.color)
           .setThumbnail(`https://img.youtube.com/vi/${track.identifier}/mqdefault.jpg`)
           .addField("⌛ Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
           .addField("💯 Song By: ", `\`${track.author}\``, true)
@@ -152,7 +153,7 @@ async function similar(client, message, args, type, slashCommand) {
     console.log(e.stack ? String(e.stack).grey : String(e).grey)
     return message.channel.send({
       embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
+        .setColor(es.wrongcolor)
         .setTitle(String("❌ Error | Found nothing for: **`" + player.queue.current.title).substr(0, 256 - 3) + "`**")
       ]
     }).then(msg => {

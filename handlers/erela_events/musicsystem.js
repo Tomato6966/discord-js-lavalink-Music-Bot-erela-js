@@ -80,8 +80,8 @@ module.exports = client => {
       if (player && interaction.customId != `Lyrics` && check_if_dj(client, member, player.queue.current)) {
         return interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.wrongcolor)
-            .setFooter(ee.footertext, ee.footericon)
+            .setColor(es.wrongcolor)
+            .setFooter(es.footertext, es.footericon)
             .setTitle(`<:no:833101993668771842> **You are not a DJ and not the Song Requester!**`)
             .setDescription(`**DJ-ROLES:**\n${check_if_dj(client, interaction.member, player.queue.current)}`)
           ],
@@ -96,7 +96,7 @@ module.exports = client => {
             if (player.get("autoplay")) return autoplay(client, player, "skip");
             interaction.reply({
               embeds: [new MessageEmbed()
-                .setColor(ee.color)
+                .setColor(es.color)
                 .setTimestamp()
                 .setTitle(`⏹ **Stopped playing and left the Channel**`)
                 .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -116,7 +116,7 @@ module.exports = client => {
           await player.stop();
           interaction.reply({
             embeds: [new MessageEmbed()
-              .setColor(ee.color)
+              .setColor(es.color)
               .setTimestamp()
               .setTitle(`⏭ **Skipped to the next Song!**`)
               .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -135,7 +135,7 @@ module.exports = client => {
         //Stop the player
         interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTimestamp()
             .setTitle(`⏹ **Stopped playing and left the Channel**`)
             .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -164,7 +164,7 @@ module.exports = client => {
           player.pause(false);
           interaction.reply({
             embeds: [new MessageEmbed()
-              .setColor(ee.color)
+              .setColor(es.color)
               .setTimestamp()
               .setTitle(`▶️ **Resumed!**`)
               .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -178,7 +178,7 @@ module.exports = client => {
 
           interaction.reply({
             embeds: [new MessageEmbed()
-              .setColor(ee.color)
+              .setColor(es.color)
               .setTimestamp()
               .setTitle(`⏸ **Paused!**`)
               .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -199,7 +199,7 @@ module.exports = client => {
         player.set(`autoplay`, !player.get(`autoplay`))
         interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTimestamp()
             .setTitle(`${player.get(`autoplay`) ? `<a:yes:833101995723194437> **Enabled Autoplay**`: `<:no:833101993668771842> **Disabled Autoplay**`}`)
             .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -222,7 +222,7 @@ module.exports = client => {
         //Send Success Message
         interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTimestamp()
             .setTitle(`🔀 **Shuffled ${player.queue.length} Songs!**`)
             .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -246,7 +246,7 @@ module.exports = client => {
         player.setTrackRepeat(!player.trackRepeat);
         interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTimestamp()
             .setTitle(`${player.trackRepeat ? `<a:yes:833101995723194437> **Enabled Song Loop**`: `<:no:833101993668771842> **Disabled Song Loop**`}`)
             .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -270,7 +270,7 @@ module.exports = client => {
         player.setQueueRepeat(!player.queueRepeat);
         interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTimestamp()
             .setTitle(`${player.queueRepeat ? `<a:yes:833101995723194437> **Enabled Queue Loop**`: `<:no:833101993668771842> **Disabled Queue Loop**`}`)
             .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -296,7 +296,7 @@ module.exports = client => {
         await player.seek(Number(seektime));
         interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTimestamp()
             .setTitle(`⏩ **Forwarded the song for \`10 Seconds\`!**`)
             .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -320,7 +320,7 @@ module.exports = client => {
         await player.seek(Number(seektime));
         interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTimestamp()
             .setTitle(`⏪ **Rewinded the song for \`10 Seconds\`!**`)
             .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({

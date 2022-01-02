@@ -25,7 +25,7 @@ module.exports = {
     if (isNaN(args[0]))
       return message.channel.send({
         embeds: [new MessageEmbed()
-          .setColor(ee.wrongcolor)
+          .setColor(es.wrongcolor)
           .setTitle(eval(client.la[ls]["cmds"]["filter"]["speed"]["variable3"]))
           .setDescription(eval(client.la[ls]["cmds"]["filter"]["speed"]["variable4"]))
         ]
@@ -33,7 +33,7 @@ module.exports = {
     if (Number(args[0]) >= 3 || Number(args[0]) <= 0)
       return message.channel.send({
         embeds: [new MessageEmbed()
-          .setColor(ee.wrongcolor)
+          .setColor(es.wrongcolor)
           .setTitle(eval(client.la[ls]["cmds"]["filter"]["speed"]["variable5"]))
           .setDescription(eval(client.la[ls]["cmds"]["filter"]["speed"]["variable6"]))
         ]

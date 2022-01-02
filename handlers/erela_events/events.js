@@ -574,8 +574,8 @@ module.exports = (client) => {
             if (i.customId != `10` && check_if_dj(client, i.member, player.queue.current)) {
               return i.reply({
                 embeds: [new MessageEmbed()
-                  .setColor(ee.wrongcolor)
-                  .setFooter(ee.footertext, ee.footericon)
+                  .setColor(es.wrongcolor)
+                  .setFooter(es.footertext, es.footericon)
                   .setTitle(`❌ **You are not a DJ and not the Song Requester!**`)
                   .setDescription(`**DJ-ROLES:**\n${check_if_dj(client, i.member, player.queue.current)}`)
                 ],
@@ -592,7 +592,7 @@ module.exports = (client) => {
                 if (player.get(`autoplay`)) return autoplay(client, player, `skip`);
                 i.reply({
                   embeds: [new MessageEmbed()
-                    .setColor(ee.color)
+                    .setColor(es.color)
                     .setTimestamp()
                     .setTitle(`⏹ **Stopped playing and left the Channel**`)
                     .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -608,7 +608,7 @@ module.exports = (client) => {
               player.stop();
               return i.reply({
                 embeds: [new MessageEmbed()
-                  .setColor(ee.color)
+                  .setColor(es.color)
                   .setTimestamp()
                   .setTitle(`⏭ **Skipped to the next Song!**`)
                   .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -625,7 +625,7 @@ module.exports = (client) => {
               //Stop the player
               i.reply({
                 embeds: [new MessageEmbed()
-                  .setColor(ee.color)
+                  .setColor(es.color)
                   .setTimestamp()
                   .setTitle(`⏹ **Stopped playing and left the Channel**`)
                   .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -645,7 +645,7 @@ module.exports = (client) => {
                 player.pause(false);
                 i.reply({
                   embeds: [new MessageEmbed()
-                    .setColor(ee.color)
+                    .setColor(es.color)
                     .setTimestamp()
                     .setTitle(`▶️ **Resumed!**`)
                     .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -659,7 +659,7 @@ module.exports = (client) => {
 
                 i.reply({
                   embeds: [new MessageEmbed()
-                    .setColor(ee.color)
+                    .setColor(es.color)
                     .setTimestamp()
                     .setTitle(`⏸ **Paused!**`)
                     .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -686,7 +686,7 @@ module.exports = (client) => {
               })
               i.reply({
                 embeds: [new MessageEmbed()
-                  .setColor(ee.color)
+                  .setColor(es.color)
                   .setTimestamp()
                   .setTitle(`${player.get(`autoplay`) ? `<a:yes:833101995723194437> **Enabled Autoplay**`: `❌ **Disabled Autoplay**`}`)
                   .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -705,8 +705,8 @@ module.exports = (client) => {
               player.queue.shuffle();
               //Send Success Message
               i.reply({
-                embeds: [new MessageEmbed()
-                  .setColor(ee.color)
+                embeds: [new es()
+                  .setColor(es.color)
                   .setTimestamp()
                   .setTitle(`🔀 **Shuffled ${player.queue.length} Songs!**`)
                   .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -727,7 +727,7 @@ module.exports = (client) => {
               player.setTrackRepeat(!player.trackRepeat);
               i.reply({
                 embeds: [new MessageEmbed()
-                  .setColor(ee.color)
+                  .setColor(es.color)
                   .setTimestamp()
                   .setTitle(`${player.trackRepeat ? `<a:yes:833101995723194437> **Enabled Song Loop**`: `❌ **Disabled Song Loop**`}`)
                   .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -752,7 +752,7 @@ module.exports = (client) => {
               player.setQueueRepeat(!player.queueRepeat);
               i.reply({
                 embeds: [new MessageEmbed()
-                  .setColor(ee.color)
+                  .setColor(es.color)
                   .setTimestamp()
                   .setTitle(`${player.queueRepeat ? `<a:yes:833101995723194437> **Enabled Queue Loop**`: `❌ **Disabled Queue Loop**`}`)
                   .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -782,7 +782,7 @@ module.exports = (client) => {
               })
               i.reply({
                 embeds: [new MessageEmbed()
-                  .setColor(ee.color)
+                  .setColor(es.color)
                   .setTimestamp()
                   .setTitle(`⏩ **Forwarded the song for \`10 Seconds\`!**`)
                   .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -806,7 +806,7 @@ module.exports = (client) => {
               })
               i.reply({
                 embeds: [new MessageEmbed()
-                  .setColor(ee.color)
+                  .setColor(es.color)
                   .setTimestamp()
                   .setTitle(`⏪ **Rewinded the song for \`10 Seconds\`!**`)
                   .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
@@ -889,8 +889,8 @@ module.exports = (client) => {
  */
 
 
-function generateQueueEmbed(client, player, track) {
-  var embed = new MessageEmbed().setColor(ee.color)
+function generateQueueEmbed(client, player, track, es) {
+  var embed = new MessageEmbed().setColor(es.color)
   embed.setAuthor(`${track.title}`, `https://images-ext-1.discordapp.net/external/DkPCBVBHBDJC8xHHCF2G7-rJXnTwj_qs78udThL8Cy0/%3Fv%3D1/https/cdn.discordapp.com/emojis/859459305152708630.gif`, track.uri)
   embed.setThumbnail(`https://img.youtube.com/vi/${track.identifier}/mqdefault.jpg`)
   embed.setFooter(`Requested by: ${track.requester.tag}`, track.requester.displayAvatarURL({

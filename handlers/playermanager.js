@@ -6,7 +6,9 @@ const config = require(`${process.cwd()}/botconfig/config.json`)
 const settings = require(`${process.cwd()}/botconfig/settings.json`);
 const ee = require(`${process.cwd()}/botconfig/embed.json`)
 module.exports = async (client, message, args, type, slashCommand = false, extras = false) => {
-  let method = type.includes(":") ? type.split(":") : Array(type)
+    let method = type.includes(":") ? type.split(":") : Array(type)
+    let es = client.settings.get(message.guild.id, "embed");
+    let ls = client.settings.get(message.guild.id, "language");
   if (!message.guild) return;
   //start typing
   //just visual for the console
@@ -24,16 +26,16 @@ module.exports = async (client, message, args, type, slashCommand = false, extra
       return slashCommand.reply({
         ephemeral: true,
         embeds: [new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
+          .setColor(es.wrongcolor)
+          .setFooter(es.footertext, es.footericon)
           .setTitle(eval(client.la[ls]["handlers"]["playermanagerjs"]["playermanager"]["variable1"]))
         ]
       }).catch((e) => console.log(String(e).grey));
     }
     return message.reply({
       embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
+        .setColor(es.wrongcolor)
+        .setFooter(es.footertext, es.footericon)
         .setTitle(eval(client.la[ls]["handlers"]["playermanagerjs"]["playermanager"]["variable1"]))
       ]
     }).catch((e) => console.log(String(e).grey));
@@ -44,16 +46,16 @@ module.exports = async (client, message, args, type, slashCommand = false, extra
       return slashCommand.reply({
         ephemeral: true,
         embeds: [new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
+          .setColor(es.wrongcolor)
+          .setFooter(es.footertext, es.footericon)
           .setTitle(eval(client.la[ls]["handlers"]["playermanagerjs"]["playermanager"]["variable2"]))
         ]
       }).catch((e) => console.log(String(e).grey));
     }
     return message.reply({
       embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
+        .setColor(es.wrongcolor)
+        .setFooter(es.footertext, es.footericon)
         .setTitle(eval(client.la[ls]["handlers"]["playermanagerjs"]["playermanager"]["variable2"]))
       ]
     }).catch((e) => console.log(String(e).grey));
@@ -78,16 +80,16 @@ module.exports = async (client, message, args, type, slashCommand = false, extra
       return slashCommand.reply({
         ephemeral: true,
         embeds: [new MessageEmbed()
-          .setColor(ee.wrongcolor)
-          .setFooter(ee.footertext, ee.footericon)
+          .setColor(es.wrongcolor)
+          .setFooter(es.footertext, es.footericon)
           .setTitle(eval(client.la[ls]["handlers"]["playermanagerjs"]["playermanager"]["variable3"]))
         ]
       }).catch((e) => console.log(String(e).grey));
     }
     return message.reply({
       embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
+        .setColor(es.wrongcolor)
+        .setFooter(es.footertext, es.footericon)
         .setTitle(eval(client.la[ls]["handlers"]["playermanagerjs"]["playermanager"]["variable3"]))
       ]
     }).catch((e) => console.log(String(e).grey));

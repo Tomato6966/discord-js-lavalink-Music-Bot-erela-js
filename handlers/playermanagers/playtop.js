@@ -11,6 +11,7 @@ var {
 
 module.exports = playtop;
 async function playtop(client, message, args, type, slashCommand) {
+  let es = client.settings.get(message.guild.id, "embed");
   let ls = client.settings.get(message.guild.id, "language")
   const search = args.join(" ");
   var player = client.manager.players.get(message.guild.id);
@@ -55,14 +56,14 @@ async function playtop(client, message, args, type, slashCommand) {
         return slashCommand.reply({
           ephemeral: true,
           embeds: [new MessageEmbed()
-            .setColor(ee.wrongcolor)
+            .setColor(es.wrongcolor)
             .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
             .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable1"]))
           ]
         }).catch(() => {})
       return message.channel.send({
         embeds: [new MessageEmbed()
-          .setColor(ee.wrongcolor)
+          .setColor(es.wrongcolor)
           .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
           .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable1"]))
         ]
@@ -109,7 +110,7 @@ async function playtop(client, message, args, type, slashCommand) {
     //send track information
     var playembed = new MessageEmbed()
       .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable2"]))
-      .setColor(ee.color)
+      .setColor(es.color)
       .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
       .addField("⌛ Duration: ", `\`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
       .addField("💯 Song By: ", `\`${res.tracks[0].author}\``, true)
@@ -132,14 +133,14 @@ async function playtop(client, message, args, type, slashCommand) {
         return slashCommand.reply({
           ephemeral: true,
           embeds: [new MessageEmbed()
-            .setColor(ee.wrongcolor)
+            .setColor(es.wrongcolor)
             .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
             .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable3"]))
           ]
         }).catch(() => {})
       return message.channel.send({
         embeds: [new MessageEmbed()
-          .setColor(ee.wrongcolor)
+          .setColor(es.wrongcolor)
           .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
           .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable3"]))
         ]
@@ -181,7 +182,7 @@ async function playtop(client, message, args, type, slashCommand) {
       .setAuthor(`Playlist added to Queue`, message.author.displayAvatarURL({
         dynamic: true
       }), "https://milrato.eu")
-      .setColor(ee.color)
+      .setColor(es.color)
       .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable4"]))
       .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
     //timing for estimated time creation

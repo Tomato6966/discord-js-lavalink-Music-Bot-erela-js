@@ -36,7 +36,7 @@ module.exports = {
         const allbuttons = [new MessageActionRow().addComponents([button_public_invite, button_support_dc, button_invite])]
         interaction.reply({ephemeral: true, 
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTitle(`Invite: ${user.tag}`)
             .setDescription(`[*Click here for an Invitelink without Slash Commands*](https://discord.com/api/oauth2/authorize?client_id=${user.id}&permissions=8&scope=bot)`)
             .setURL(`https://discord.com/api/oauth2/authorize?client_id=${user.id}&permissions=8&scope=bot%20applications.commands`)
@@ -51,7 +51,7 @@ module.exports = {
         const allbuttons = [new MessageActionRow().addComponents([button_public_invite, button_support_dc, button_invite])]
         interaction.reply({ephemeral: true, 
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTitle(handlemsg(client.la[ls].cmds.info.invite.title))
             .setDescription(`[*Click here for an Invitelink without Slash Commands*](https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot)`)
             .setURL(`https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands`)

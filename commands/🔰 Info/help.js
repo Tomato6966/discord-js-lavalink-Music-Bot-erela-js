@@ -80,7 +80,7 @@ module.exports = {
       else embed.addField("**💿 Default-Cooldown**", `\`\`\`1 Second\`\`\``);
       if (cmd.usage) {
         embed.addField("**💿 Usage**", `\`\`\`${prefix}${cmd.usage}\`\`\``);
-        embed.setFooter("Syntax: <> = required, [] = optional", ee.footericon);
+        embed.setFooter("Syntax: <> = required, [] = optional", es.footericon);
       }
       return message.reply({
         embeds: [embed]

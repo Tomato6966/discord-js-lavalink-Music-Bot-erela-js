@@ -13,6 +13,7 @@ var {
 
 //function for searching songs
 async function search(client, message, args, type, slashCommand) {
+  let es = client.settings.get(message.guild.id, "embed");
   let ls = client.settings.get(message.guild.id, "language")
   var search = args.join(" ");
   if (!slashCommand) {
@@ -58,14 +59,14 @@ async function search(client, message, args, type, slashCommand) {
         return slashCommand.reply({
           ephemeral: true,
           embeds: [new MessageEmbed()
-            .setColor(ee.wrongcolor)
+            .setColor(es.wrongcolor)
             .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable1"]))
             .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable2"]))
           ]
         }).catch(() => {})
       return message.channel.send({
         embeds: [new MessageEmbed()
-          .setColor(ee.wrongcolor)
+          .setColor(es.wrongcolor)
           .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable1"]))
           .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable2"]))
         ]
@@ -114,7 +115,7 @@ async function search(client, message, args, type, slashCommand) {
           embeds: [
             new MessageEmbed()
             .setTitle(`Search-Result for: 🔎 **\`${search}`.substr(0, 256 - 3) + "`**")
-            .setColor(ee.color)
+            .setColor(es.color)
             .setDescription(results)
             .setFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
               dynamic: true
@@ -129,7 +130,7 @@ async function search(client, message, args, type, slashCommand) {
           embeds: [
             new MessageEmbed()
             .setTitle(`Search-Result for: 🔎 **\`${search}`.substr(0, 256 - 3) + "`**")
-            .setColor(ee.color)
+            .setColor(es.color)
             .setDescription(results)
             .setFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
               dynamic: true
@@ -155,14 +156,14 @@ async function search(client, message, args, type, slashCommand) {
               return slashCommand.reply({
                 ephemeral: true,
                 embeds: [new MessageEmbed()
-                  .setColor(ee.wrongcolor)
+                  .setColor(es.wrongcolor)
                   .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable4"]))
                 ]
               }).catch(() => {});
             }
             return message.channel.send({
               embeds: [new MessageEmbed()
-                .setColor(ee.wrongcolor)
+                .setColor(es.wrongcolor)
                 .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable4"]))
               ]
             }).catch(() => {});
@@ -204,7 +205,7 @@ async function search(client, message, args, type, slashCommand) {
             var embed3 = new MessageEmbed()
               .setTitle(`Added ${toAddTracks.length > 1 ? `${toAddTracks.length} Tracks, with the first one beeing: `: ``}${track.title}`)
               .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable5"]))
-              .setColor(ee.color)
+              .setColor(es.color)
               .setThumbnail(`https://img.youtube.com/vi/${track.identifier}/mqdefault.jpg`)
               .addField("⌛ Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
               .addField("💯 Song By: ", `\`${track.author}\``, true)
@@ -239,14 +240,14 @@ async function search(client, message, args, type, slashCommand) {
       return slashCommand.reply({
         ephemeral: true,
         embeds: [new MessageEmbed()
-          .setColor(ee.wrongcolor)
+          .setColor(es.wrongcolor)
           .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
         ]
       }).catch(() => {});
     }
     return message.channel.send({
       embeds: [new MessageEmbed()
-        .setColor(ee.wrongcolor)
+        .setColor(es.wrongcolor)
         .setTitle(String("❌ Error | Found nothing for: **`" + search).substr(0, 256 - 3) + "`**")
       ]
     }).catch(() => {}).then(msg => {
