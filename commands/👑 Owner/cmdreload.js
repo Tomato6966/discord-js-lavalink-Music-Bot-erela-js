@@ -15,7 +15,7 @@ module.exports = {
       return message.channel.send({
         embeds: [new MessageEmbed()
           .setColor(es.wrongcolor)
-          .setFooter(client.user.username, es.footericon)
+          .setFooter(client.user.username, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
           .setTitle(eval(client.la[ls]["cmds"]["owner"]["cmdreload"]["variable1"]))
         ]
       });
@@ -23,11 +23,12 @@ module.exports = {
       return message.channel.send({
         embeds: [new MessageEmbed()
           .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
           .setTitle(eval(client.la[ls]["cmds"]["owner"]["cmdreload"]["variable2"]))
         ]
       });
     let reload = false;
+    let err = null;
     let thecmd = client.commands.get(args[0].toLowerCase()) || client.commands.get(client.aliases.get(args[0].toLowerCase()));
     if (thecmd) {
       for (let i = 0; i < client.categories.length; i += 1) {
@@ -38,13 +39,15 @@ module.exports = {
           const pull = require(`${process.cwd()}/commands/${dir}/${thecmd.name}.js`)
           client.commands.set(thecmd.name, pull)
           reload = true;
-        } catch {}
+        } catch (e){
+          err = e;
+        }
       }
     } else {
       return message.channel.send({
         embeds: [new MessageEmbed()
           .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
           .setTitle(eval(client.la[ls]["cmds"]["owner"]["cmdreload"]["variable3"]))
         ]
       });
@@ -53,16 +56,16 @@ module.exports = {
       return message.channel.send({
         embeds: [new MessageEmbed()
           .setColor(es.color)
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
           .setTitle(eval(client.la[ls]["cmds"]["owner"]["cmdreload"]["variable4"]))
         ]
       });
     return message.channel.send({
       embeds: [new MessageEmbed()
         .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
+        .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
         .setTitle(eval(client.la[ls]["cmds"]["owner"]["cmdreload"]["variable5"]))
-        .setDescription(`Cmd is now removed from the BOT COMMANDS!`)
+        .setDescription(`Cmd is now removed from the BOT COMMANDS!\n\`\`\`${String(err.message ? err.message : e).substr(0, 1900)}\`\`\``)
       ]
     });
   },
