@@ -32,7 +32,7 @@ module.exports = {
       msg.edit({
         embeds: [new MessageEmbed()
           .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
-          .setFooter("It Takes longer, because i am getting my host ping!", es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
+          .setFooter(client.getFooter("It Takes longer, because i am getting my host ping!", es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL()))
           .setTitle(handlemsg(client.la[ls].cmds.info.ping.m2, {
             botping: Math.floor(client.ws.ping + new Date().getMilliseconds() - oldate),
             ping: Math.floor(new Date().getMilliseconds() - oldate) + "ms",

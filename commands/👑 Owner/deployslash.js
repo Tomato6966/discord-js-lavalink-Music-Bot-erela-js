@@ -7,7 +7,7 @@ module.exports = {
   name: `deployslash`,
   type: "info",
   category: `👑 Owner`,
-  aliases: [`deployslash`, "deploy", "loadslash", "deployslashcommands", "deployslashcmds", "loadslashcommands", "loadslashcmds"],
+  aliases: ["deploy", "loadslash", "deployslashcommands", "deployslashcmds", "loadslashcommands", "loadslashcmds"],
   description: `Deploy and Enable the Slash Commands of this Bot! Either GLOBALLY or for ONE GUILD ONLY`,
   usage: `deployslash [GUILDID]`,
   cooldown: 360,

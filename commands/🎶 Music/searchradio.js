@@ -89,9 +89,9 @@ module.exports = {
         let embed = new MessageEmbed()
           .setTitle(`Search result for: 🔎 **\`${filter.searchterm}`.substr(0, 256 - 3) + "`**")
           .setColor(es.color)
-          .setFooter(`Search-Request by: ${message.author.tag}`, message.author.displayAvatarURL({
+          .setFooter(client.getFooter(`Search-Request by: ${message.author.tag}`, message.author.displayAvatarURL({
             dynamic: true
-          }))
+          })))
 
         for (const item of array) embed.addField("\u200b", item, true)
 

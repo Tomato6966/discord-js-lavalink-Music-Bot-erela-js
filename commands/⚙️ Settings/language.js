@@ -74,9 +74,7 @@ module.exports = {
       //define the embed
       let MenuEmbed = new Discord.MessageEmbed()
         .setColor(es.color)
-        .setAuthor("Language System Setup",
-          "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/282/flag-united-kingdom_1f1ec-1f1e7.png",
-          "https://discord.gg/milrato")
+        .setAuthor(client.getFooter("Language System Setup","https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/282/flag-united-kingdom_1f1ec-1f1e7.png","https://discord.gg/milrato"))
         .setDescription(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable1"]))
       let used1 = false;
       //send the menu msg

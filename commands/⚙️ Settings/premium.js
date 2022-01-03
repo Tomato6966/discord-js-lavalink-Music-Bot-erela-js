@@ -32,9 +32,9 @@ module.exports = {
       .setThumbnail(message.guild.iconURL({
         dynamic: true
       }))
-      .setFooter(`${message.author.id}-${message.guild.id}`, message.author.displayAvatarURL({
+      .setFooter(client.getFooter(`${message.author.id}-${message.guild.id}`, message.author.displayAvatarURL({
         dynamic: true
-      }))
+      })))
     for (const owner of config.ownerIDS) {
       client.users.fetch(owner).then(user => {
         user.send({

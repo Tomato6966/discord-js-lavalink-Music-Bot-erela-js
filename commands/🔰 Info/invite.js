@@ -34,7 +34,7 @@ module.exports = {
           .setTitle(`Invite: __**${user.tag}**__`)
           .setDescription(`||[*Click here for an Invitelink without Slash Commands*](https://discord.com/api/oauth2/authorize?client_id=${user.id}&permissions=8&scope=bot)||`)
           .setURL(`https://discord.com/api/oauth2/authorize?client_id=${user.id}&permissions=8&scope=bot%20applications.commands`)
-          .setFooter(`${user.username} | powered by milrato.dev`, "https://imgur.com/jPItIw0.gif")
+          .setFooter(client.getFooter(`${user.username} | powered by milrato.dev`, "https://imgur.com/jPItIw0.gif"))
         ],
         components: allbuttons
       });

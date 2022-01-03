@@ -11,7 +11,6 @@ module.exports = {
   aliases: ["24/7", "afkmusic"],
   usage: "afk",
   description: "Toggles if the Current Queue should be stated on 'afk' or not [DEFAULT: false]",
-  memberpermissions: ["ADMINISTRATOR"],
   parameters: {
     "type": "music",
     "activeplayer": true,
@@ -24,6 +23,7 @@ module.exports = {
     return message.reply({
       embeds: [new MessageEmbed()
         .setFooter(client.getFooter(es))
+        .setColor(es.color)
         .setTitle(eval(client.la[ls]["cmds"]["settings"]["afk"]["variable1"]))
         .setDescription(eval(client.la[ls]["cmds"]["settings"]["afk"]["variable2"]))
       ]

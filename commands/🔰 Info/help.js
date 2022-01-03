@@ -39,7 +39,7 @@ module.exports = {
           .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
           .setThumbnail(client.user.displayAvatarURL())
           .setTitle(`💿 Detailed Information about: \`${cat.name}\``)
-          .setFooter("No Custom Information for ", client.user.displayAvatarURL());
+          .setFooter(client.getFooter("No Custom Information for ", client.user.displayAvatarURL()));
         let embeds = allotherembeds_eachcategory();
         if (cat == "🔰 Info")
           return message.reply({
@@ -80,7 +80,7 @@ module.exports = {
       else embed.addField("**💿 Default-Cooldown**", `\`\`\`1 Second\`\`\``);
       if (cmd.usage) {
         embed.addField("**💿 Usage**", `\`\`\`${prefix}${cmd.usage}\`\`\``);
-        embed.setFooter("Syntax: <> = required, [] = optional", es.footericon);
+        embed.setFooter(client.getFooter("Syntax: <> = required, [] = optional", es.footericon));
       }
       return message.reply({
         embeds: [embed]
@@ -145,7 +145,7 @@ module.exports = {
       //define default embed
       let OverviewEmbed = new MessageEmbed()
         .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
-        .setFooter("Page Overview\n" + client.user.username, client.user.displayAvatarURL())
+        .setFooter(client.getFooter("Page Overview\n" + client.user.username, client.user.displayAvatarURL()))
         .setTitle(`Information about __${client.user.username}__`)
         .addField(":muscle: **__My Features__**",
           `>>> :notes: An advanced <:Spotify:846090652231663647> **Music System** with **Audio Filtering**
@@ -346,7 +346,7 @@ but you can also do \`${prefix}play <SONGNAME/SONGLINK>\` without setting it up!
         return embed
           .setColor(es.color)
           .setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
-          .setFooter(`Page ${index + 1} / ${embeds.length}\nTo see command Descriptions and Information, type: ${config.prefix}help [CMD NAME]`, client.user.displayAvatarURL());
+          .setFooter(client.getFooter(`Page ${index + 1} / ${embeds.length}\nTo see command Descriptions and Information, type: ${config.prefix}help [CMD NAME]`, client.user.displayAvatarURL()));
       })
     }
 

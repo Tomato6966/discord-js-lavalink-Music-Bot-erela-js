@@ -20,6 +20,7 @@ module.exports = {
     return message.reply({
       embeds: [new MessageEmbed()
         .setFooter(client.getFooter(es))
+        .setColor(es.color)
         .setTitle(eval(client.la[ls]["cmds"]["settings"]["defaultautoplay"]["variable1"]))
         .setDescription(eval(client.la[ls]["cmds"]["settings"]["defaultautoplay"]["variable2"]))
       ]
