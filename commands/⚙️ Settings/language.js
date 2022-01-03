@@ -22,6 +22,8 @@ module.exports = {
       "en": "🇬🇧 English",
       "de": "🇩🇪 German",
       "fr": "🇫🇷 French",
+      "ir": "🇮🇷 Persian (ir)",
+      
       /*
         "it": "🇮🇹 Italian",
         "sp": "🇪🇸 Spanish",
@@ -115,9 +117,10 @@ module.exports = {
           let button_en = new MessageButton().setStyle('PRIMARY').setCustomId('language_en').setEmoji("🇬🇧").setLabel("English").setDisabled(false)
           let button_de = new MessageButton().setStyle('PRIMARY').setCustomId('language_de').setEmoji("🇩🇪").setLabel("German").setDisabled(false)
           let button_fr = new MessageButton().setStyle('PRIMARY').setCustomId('language_fr').setEmoji("🇫🇷").setLabel("French").setDisabled(false)
+          let button_ir = new MessageButton().setStyle('PRIMARY').setCustomId('language_ir').setEmoji("🇮🇷").setLabel("Persian (ir)").setDisabled(false)
 
           let buttonRow1 = new MessageActionRow()
-            .addComponents(button_en, button_de, button_fr)
+            .addComponents(button_en, button_de, button_fr, button_ir)
           let allbuttons = [buttonRow1]
           //Send message with buttons
           let helpmsg = await message.reply({
@@ -126,7 +129,7 @@ module.exports = {
               .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable3"]))
               .setDescription(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable4"]))
               .setColor(es.color)
-              .setFooter(es.footertext, es.footericon)
+              .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
             ],
             components: allbuttons
           });
@@ -144,11 +147,12 @@ module.exports = {
               b.deferUpdate();
               let lang = b.customId.replace("language_", "")
               client.settings.set(message.guild.id, lang, "language");
+              ls = lang;
               message.reply({
                 embeds: [new Discord.MessageEmbed()
                   .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable5"]))
                   .setColor(es.color)
-                  .setFooter(es.footertext, es.footericon)
+                  .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
                 ]
               });
               edited = true;
@@ -183,11 +187,12 @@ module.exports = {
         }
         case 1: {
           client.settings.set(message.guild.id, "en", "language");
+          ls = "en";
           return message.reply({
             embeds: [new Discord.MessageEmbed()
               .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable6"]))
               .setColor(es.color)
-              .setFooter(es.footertext, es.footericon)
+              .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
             ]
           });
         }
@@ -197,7 +202,7 @@ module.exports = {
             embeds: [new Discord.MessageEmbed()
               .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable7"]))
               .setColor(es.color)
-              .setFooter(es.footertext, es.footericon)
+              .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
             ]
           });
         }
