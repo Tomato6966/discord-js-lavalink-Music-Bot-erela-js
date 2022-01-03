@@ -4,7 +4,6 @@
    "ownerIDS": [
       "442355791412854784"
    ],
-   
    "status": {
       "text": "{prefix}help | played {songsplayed} Songs on {guildcount} Guilds | Support: discord.gg/milrato",
       "text2": "By: milrato.dev",
@@ -20,7 +19,6 @@
          }
       ]
    },
-
    "spotify": {
       "clientID": "",
       "clientSecret": ""
