@@ -89,9 +89,10 @@ Well then skip step **` 5. `**
 
 > <kbd>1.</kbd> Start the Bot!
 > 
-> <kbd>2.</kbd> type: `?deploy` or `@BOT deploy`, for GLOBAL Slash Commands (for all Servers and all new Servers)
-> OR: Type: `?deply [SERVER_ID]` for GUILD SLASH COMMANDS (just for this Server)
+> <kbd>2.</kbd> type: `?deployslash` or `@BOT deployslash`, for GLOBAL Slash Commands (for all Servers and all new Servers)
+> OR: Type: `?deployslash [SERVER_ID]` for GUILD SLASH COMMANDS (just for this Server)
 
+![image](https://imgur.com/MA53Oo3 "Slash Commands do work")
 <br/>
 
 ***
