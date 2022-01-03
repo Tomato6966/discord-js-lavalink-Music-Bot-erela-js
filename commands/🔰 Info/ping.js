@@ -21,8 +21,8 @@ module.exports = {
     let oldate = new Date().getMilliseconds()
     message.reply({
       embeds: [new MessageEmbed()
-        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-        .setFooter(es.footertext, es.footericon)
+        .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
+        .setFooter(client.getFooter(es))
         .setTitle(handlemsg(client.la[ls].cmds.info.ping.m1))
       ]
     }).then(msg => {
@@ -31,8 +31,8 @@ module.exports = {
       if (newtime > 10) newtime = Math.floor(newtime / 10);
       msg.edit({
         embeds: [new MessageEmbed()
-          .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-          .setFooter("It Takes longer, because i am getting my host ping!", es.footericon)
+          .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
+          .setFooter("It Takes longer, because i am getting my host ping!", es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
           .setTitle(handlemsg(client.la[ls].cmds.info.ping.m2, {
             botping: Math.floor(client.ws.ping + new Date().getMilliseconds() - oldate),
             ping: Math.floor(new Date().getMilliseconds() - oldate) + "ms",

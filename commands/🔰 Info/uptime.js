@@ -20,8 +20,8 @@ module.exports = {
     let timestamp = date.getTime() - Math.floor(client.uptime);
     message.reply({
       embeds: [new MessageEmbed()
-        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-        .setFooter(es.footertext, es.footericon)
+        .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
+        .setFooter(client.getFooter(es))
         .setTitle(eval(client.la[ls]["cmds"]["info"]["uptime"]["variable1"]))
         .setDescription(eval(client.la[ls]["cmds"]["info"]["uptime"]["variable2"]))
         .addField(eval(client.la[ls]["cmds"]["info"]["uptime"]["variablex_3"]), eval(client.la[ls]["cmds"]["info"]["uptime"]["variable3"]))

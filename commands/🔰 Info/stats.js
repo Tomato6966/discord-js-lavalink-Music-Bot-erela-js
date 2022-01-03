@@ -20,7 +20,7 @@ module.exports = {
     let global = client.stats.get("global");
     let guild = client.stats.get(message.guild.id);
     message.reply({
-      embeds: [new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon : null).setFooter(es.footertext, es.footericon)
+      embeds: [new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(client.getFooter(es))
         .addField(client.la[ls].cmds.info.stats.field1.title, handlemsg(client.la[ls].cmds.info.stats.field1.value, {
           allcommands: Math.ceil(global.commands * [...client.guilds.cache.values()].length / 10)
         }), true)

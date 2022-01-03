@@ -18,7 +18,7 @@ module.exports = {
       return message.channel.send({
         embeds: [new MessageEmbed()
           .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(client.getFooter(es))
           .setTitle(eval(client.la[ls]["cmds"]["owner"]["changeavatar"]["variable1"]))
           .setDescription(eval(client.la[ls]["cmds"]["owner"]["changeavatar"]["variable2"]))
         ]
@@ -36,7 +36,7 @@ module.exports = {
               embeds: [new MessageEmbed()
                 .setTitle(eval(client.la[ls]["cmds"]["owner"]["changeavatar"]["variable3"]))
                 .setColor(es.color)
-                .setFooter(es.footertext, es.footericon)
+                .setFooter(client.getFooter(es))
               ]
             });
           })
@@ -44,7 +44,7 @@ module.exports = {
             return message.channel.send({
               embeds: [new MessageEmbed()
                 .setColor(es.wrongcolor)
-                .setFooter(es.footertext, es.footericon)
+                .setFooter(client.getFooter(es))
                 .setTitle(client.la[ls].common.erroroccur)
                 .setDescription(eval(client.la[ls]["cmds"]["owner"]["changeavatar"]["variable4"]))
               ]
@@ -55,7 +55,7 @@ module.exports = {
           embeds: [new MessageEmbed()
             .setTitle(eval(client.la[ls]["cmds"]["owner"]["changeavatar"]["variable5"]))
             .setColor(es.wrongcolor)
-            .setFooter(es.footertext, es.footericon)
+            .setFooter(client.getFooter(es))
           ]
         });
       }
@@ -76,7 +76,7 @@ module.exports = {
             embeds: [new MessageEmbed()
               .setTitle(eval(client.la[ls]["cmds"]["owner"]["changeavatar"]["variable6"]))
               .setColor(es.color)
-              .setFooter(es.footertext, es.footericon)
+              .setFooter(client.getFooter(es))
             ]
           });
         })
@@ -84,7 +84,7 @@ module.exports = {
           return message.channel.send({
             embeds: [new MessageEmbed()
               .setColor(es.wrongcolor)
-              .setFooter(es.footertext, es.footericon)
+              .setFooter(client.getFooter(es))
               .setTitle(client.la[ls].common.erroroccur)
               .setDescription(eval(client.la[ls]["cmds"]["owner"]["changeavatar"]["variable7"]))
             ]
@@ -97,7 +97,7 @@ module.exports = {
           .setTitle(eval(client.la[ls]["cmds"]["owner"]["changeavatar"]["variable8"]))
           .setDescription(eval(client.la[ls]["cmds"]["owner"]["changeavatar"]["variable9"]))
           .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(client.getFooter(es))
         ]
       });
     }

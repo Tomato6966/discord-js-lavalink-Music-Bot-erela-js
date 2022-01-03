@@ -14,7 +14,7 @@ module.exports = {
     if (!args[0])
       return message.reply({
         embeds: [new MessageEmbed()
-          .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
+          .setColor(es.wrongcolor).setFooter(client.getFooter(es))
           .setTitle(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable1"]))
           .setDescription(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable2"]))
         ]
@@ -23,7 +23,7 @@ module.exports = {
     if (args[1])
       return message.reply({
         embeds: [new MessageEmbed()
-          .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
+          .setColor(es.wrongcolor).setFooter(client.getFooter(es))
           .setTitle(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable3"]))
         ]
       });
@@ -31,7 +31,7 @@ module.exports = {
     if (args[0].length > 5)
       return message.reply({
         embeds: [new MessageEmbed()
-          .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
+          .setColor(es.wrongcolor).setFooter(client.getFooter(es))
           .setTitle(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable4"]))
         ]
       });
@@ -40,8 +40,8 @@ module.exports = {
     //return success embed
     return message.reply({
       embeds: [new MessageEmbed()
-        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-        .setFooter(es.footertext, es.footericon)
+        .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
+        .setFooter(client.getFooter(es))
         .setTitle(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable5"]))
       ]
     });

@@ -28,6 +28,7 @@ module.exports = {
           .setTitle(eval(client.la[ls]["cmds"]["music"]["rewind"]["variable1"]))
         ]
       });
+      
     let seektime = player.position - Number(args[0]) * 1000;
     if (seektime >= player.queue.current.duration - player.position || seektime < 0) {
       seektime = 0;

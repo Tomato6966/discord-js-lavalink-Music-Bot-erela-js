@@ -16,7 +16,7 @@ module.exports = {
       return message.channel.send({
         embeds: [new MessageEmbed()
           .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(client.getFooter(es))
           .setTitle(eval(client.la[ls]["cmds"]["owner"]["changename"]["variable1"]))
           .setDescription(eval(client.la[ls]["cmds"]["owner"]["changename"]["variable2"]) + `\n\nIf you want to change the Settings for **this Server** then type use the \`${prefix}prefix <newprefix>\` Command`)
         ]
@@ -25,7 +25,7 @@ module.exports = {
     if (!args[0])
       return message.reply({
         embeds: [new MessageEmbed()
-          .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
+          .setColor(es.wrongcolor).setFooter(client.getFooter(es))
           .setTitle(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable1"]))
           .setDescription(`Current global Prefix: \`${config.prefix}\``)
         ]
@@ -34,7 +34,7 @@ module.exports = {
     if (args[1])
       return message.reply({
         embeds: [new MessageEmbed()
-          .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
+          .setColor(es.wrongcolor).setFooter(client.getFooter(es))
           .setTitle(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable3"]))
         ]
       });
@@ -42,7 +42,7 @@ module.exports = {
     if (args[0].length > 5)
       return message.reply({
         embeds: [new MessageEmbed()
-          .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
+          .setColor(es.wrongcolor).setFooter(client.getFooter(es))
           .setTitle(eval(client.la[ls]["cmds"]["settings"]["prefix"]["variable4"]))
         ]
       });
@@ -53,7 +53,7 @@ module.exports = {
         console.log(e.stack ? String(e.stack).dim : String(e).dim);
         return message.channel.send({
           embeds: [new MessageEmbed()
-            .setFooter(es.footertext, es.footericon)
+            .setFooter(client.getFooter(es))
             .setColor(es.wrongcolor)
             .setTitle(client.la[ls].common.erroroccur)
             .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
@@ -62,7 +62,7 @@ module.exports = {
       }
       return message.channel.send({
         embeds: [new MessageEmbed()
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(client.getFooter(es))
           .setColor(es.color)
           .setTitle(`👍 Successfully changed the Prefix`)
           .setDescription(`**To change it in this Server use the: \`${prefix}prefix <newprefix>\` Command!**`)

@@ -18,7 +18,7 @@ module.exports = {
       return message.reply({
         embeds: [new MessageEmbed()
           .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(client.getFooter(es))
           .setTitle(eval(client.la[ls]["cmds"]["settings"]["removedj"]["variable1"]))
         ]
       });
@@ -29,7 +29,7 @@ module.exports = {
       return message.reply({
         embeds: [new MessageEmbed()
           .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(client.getFooter(es))
           .setTitle(eval(client.la[ls]["cmds"]["settings"]["removedj"]["variable2"]))
         ]
       });
@@ -39,7 +39,7 @@ module.exports = {
       return message.reply({
         embeds: [new MessageEmbed()
           .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(client.getFooter(es))
           .setTitle(`<:no:833101993668771842> **This Role is not a DJ-Role!**`)
         ]
       });
@@ -52,8 +52,8 @@ module.exports = {
     //send the success message
     return message.reply({
       embeds: [new MessageEmbed()
-        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-        .setFooter(es.footertext, es.footericon)
+        .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
+        .setFooter(client.getFooter(es))
         .setTitle(eval(client.la[ls]["cmds"]["settings"]["removedj"]["variable4"]))
         .setDescription(eval(client.la[ls]["cmds"]["settings"]["removedj"]["variable5"]))
       ]

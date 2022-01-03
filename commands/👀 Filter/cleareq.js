@@ -18,7 +18,7 @@ module.exports = {
     player.set("eq", "💣 None");
     return message.channel.send({
       embeds: [new MessageEmbed()
-        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+        .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
         .setTitle(eval(client.la[ls]["cmds"]["filter"]["cleareq"]["variable1"]))
         .addField(eval(client.la[ls]["cmds"]["filter"]["cleareq"]["variablex_2"]), eval(client.la[ls]["cmds"]["filter"]["cleareq"]["variable2"]))
         .addField(eval(client.la[ls]["cmds"]["filter"]["cleareq"]["variablex_3"]), eval(client.la[ls]["cmds"]["filter"]["cleareq"]["variable2"]))

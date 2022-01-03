@@ -16,7 +16,7 @@ module.exports = {
       return message.channel.send({
         embeds: [new MessageEmbed()
           .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(client.getFooter(es))
           .setTitle(eval(client.la[ls]["cmds"]["owner"]["changename"]["variable1"]))
           .setDescription(eval(client.la[ls]["cmds"]["owner"]["changename"]["variable2"]))
         ]
@@ -25,7 +25,7 @@ module.exports = {
       return message.channel.send({
         embeds: [new MessageEmbed()
           .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(client.getFooter(es))
           .setTitle(eval(client.la[ls]["cmds"]["owner"]["changename"]["variable3"]))
           .setDescription(eval(client.la[ls]["cmds"]["owner"]["changename"]["variable4"]))
         ]
@@ -35,7 +35,7 @@ module.exports = {
       return message.channel.send({
         embeds: [new MessageEmbed()
           .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(client.getFooter(es))
           .setTitle(eval(client.la[ls]["cmds"]["owner"]["changename"]["variable5"]))
         ]
       });
@@ -44,7 +44,7 @@ module.exports = {
         return message.channel.send({
           embeds: [new MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(es.footertext, es.footericon)
+            .setFooter(client.getFooter(es))
             .setTitle(eval(client.la[ls]["cmds"]["owner"]["changename"]["variable6"]))
           ]
         });
@@ -52,7 +52,7 @@ module.exports = {
       .catch(e => {
         return message.channel.send({
           embeds: [new MessageEmbed()
-            .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon)
+            .setColor(es.wrongcolor).setFooter(client.getFooter(es))
             .setTitle(client.la[ls].common.erroroccur)
             .setDescription(eval(client.la[ls]["cmds"]["owner"]["changename"]["variable7"]))
           ]

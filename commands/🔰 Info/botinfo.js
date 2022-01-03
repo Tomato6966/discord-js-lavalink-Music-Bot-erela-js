@@ -38,9 +38,9 @@ module.exports = {
       const totalMembers = client.users.cache.size;
       countertest = 0;
       const botinfo = new Discord.MessageEmbed()
-        .setAuthor(client.user.tag + " Information", es.footericon, `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands`)
+        .setAuthor(client.user.tag + " Information", es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL(), `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands`)
         .setDescription(eval(client.la[ls]["cmds"]["info"]["botinfo"]["variable1"]))
-        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+        .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
         .addField(client.la[ls].cmds.info.botinfo.field1.title, handlemsg(client.la[ls].cmds.info.botinfo.field1.value, {
           totalGuilds: totalGuilds,
           totalMembers: totalMembers,
@@ -56,7 +56,7 @@ module.exports = {
         .addField(client.la[ls].cmds.info.botinfo.field5.title, handlemsg(client.la[ls].cmds.info.botinfo.field5.value, {
           invitelink: `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands`
         }))
-        .setFooter(es.footertext, es.footericon);
+        .setFooter(client.getFooter(es));
       tempmsg.edit({
         embeds: [botinfo]
       });

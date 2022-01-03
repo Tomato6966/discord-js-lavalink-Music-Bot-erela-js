@@ -17,7 +17,7 @@ module.exports = {
     if (!args[0]) {
       return message.reply({
         embeds: [new MessageEmbed()
-          .setFooter(es.footertext, es.footericon).setColor(es.wrongcolor)
+          .setFooter(client.getFooter(es)).setColor(es.wrongcolor)
           .setTitle(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable1"]))
           .setDescription(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable2"]))
         ]
@@ -27,7 +27,7 @@ module.exports = {
     if (isNaN(volume)) {
       return message.reply({
         embeds: [new MessageEmbed()
-          .setFooter(es.footertext, es.footericon).setColor(es.wrongcolor)
+          .setFooter(client.getFooter(es)).setColor(es.wrongcolor)
           .setTitle(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable3"]))
           .setDescription(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable4"]))
         ]
@@ -36,7 +36,7 @@ module.exports = {
     if (Number(volume) > 150 || Number(volume) < 1) {
       return message.reply({
         embeds: [new MessageEmbed()
-          .setFooter(es.footertext, es.footericon).setColor(es.wrongcolor)
+          .setFooter(client.getFooter(es)).setColor(es.wrongcolor)
           .setTitle(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable5"]))
           .setDescription(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable6"]))
         ]
@@ -47,7 +47,7 @@ module.exports = {
     //send an information message
     return message.reply({
       embeds: [new MessageEmbed()
-        .setFooter(es.footertext, es.footericon).setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+        .setFooter(client.getFooter(es))
         .setTitle(eval(client.la[ls]["cmds"]["settings"]["defaultvolume"]["variable7"]))
       ]
     });

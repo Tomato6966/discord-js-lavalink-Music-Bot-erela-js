@@ -15,7 +15,7 @@ module.exports = {
       return message.channel.send({
         embeds: [new MessageEmbed()
           .setColor(es.wrongcolor)
-          .setFooter(client.user.username, es.footericon)
+          .setFooter(client.user.username, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
           .setTitle(eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable1"]))
         ]
       });
@@ -23,7 +23,7 @@ module.exports = {
       return message.channel.send({
         embeds: [new MessageEmbed()
           .setColor(es.wrongcolor)
-          .setFooter(client.user.username, es.footericon)
+          .setFooter(client.user.username, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
           .setTitle(eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable2"]))
           .setDescription(eval(client.la[ls]["cmds"]["owner"]["leaveserver"]["variable3"]))
         ]

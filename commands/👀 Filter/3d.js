@@ -34,7 +34,7 @@ module.exports = {
     if (!message.channel) return;
     return message.channel.send({
       embeds: [new MessageEmbed()
-        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+        .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
 
         .setTitle(eval(client.la[ls]["cmds"]["filter"]["3d"]["variable1"]))
         .setDescription(eval(client.la[ls]["cmds"]["filter"]["3d"]["variable2"]))

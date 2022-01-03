@@ -16,14 +16,14 @@ module.exports = {
   },
   type: "queuesong",
   run: async (client, message, args, cmduser, text, prefix, player, es, ls) => {
-    let link = "https://open.spotify.com/playlist/37i9dQZF1DXc6IFF23C9jj";
+    let link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj";
     if (args[0]) {
       //ncs | no copyrighted music
       if (args[0].toLowerCase().startsWith("n")) link = "https://open.spotify.com/playlist/7sZbq8QGyMnhKPcLJvCUFD";
       //pop
-      if (args[0].toLowerCase().startsWith("p")) link = "https://open.spotify.com/playlist/37i9dQZF1DXc6IFF23C9jj";
+      if (args[0].toLowerCase().startsWith("p")) link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj";
       //default
-      if (args[0].toLowerCase().startsWith("d")) link = "https://open.spotify.com/playlist/37i9dQZF1DXc6IFF23C9jj";
+      if (args[0].toLowerCase().startsWith("d")) link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj";
       //remixes from Magic Release
       if (args[0].toLowerCase().startsWith("re")) link = "https://www.youtube.com/watch?v=NX7BqdQ1KeU&list=PLYUn4YaogdahwfEkuu5V14gYtTqODx7R2"
       //rock
@@ -52,11 +52,11 @@ module.exports = {
     message.reply({
       embeds: [new MessageEmbed()
         .setColor(es.color)
-        .setAuthor(`Loading '${args[0] ? args[0] : "Default"}' Music Mix`, "https://imgur.com/xutrSuq.gif", link)
+        .setAuthor(client.getAuthor(`Loading '${args[0] ? args[0] : "Default"}' Music Mix`, "https://imgur.com/xutrSuq.gif", link))
         .setTitle(eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variable1"]))
         .setDescription(eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variable2"]))
         .addField(eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variablex_3"]), eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variable3"]))
-        .setFooter(es.footertext, es.footericon)
+        .setFooter(client.getFooter(es))
       ]
     })
     //play the SONG from YOUTUBE

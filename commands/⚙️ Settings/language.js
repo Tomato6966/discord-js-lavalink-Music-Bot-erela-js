@@ -129,7 +129,7 @@ module.exports = {
               .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable3"]))
               .setDescription(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable4"]))
               .setColor(es.color)
-              .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
+              .setFooter(client.getFooter(es))
             ],
             components: allbuttons
           });
@@ -152,7 +152,7 @@ module.exports = {
                 embeds: [new Discord.MessageEmbed()
                   .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable5"]))
                   .setColor(es.color)
-                  .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
+                  .setFooter(client.getFooter(es))
                 ]
               });
               edited = true;
@@ -192,7 +192,7 @@ module.exports = {
             embeds: [new Discord.MessageEmbed()
               .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable6"]))
               .setColor(es.color)
-              .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
+              .setFooter(client.getFooter(es))
             ]
           });
         }
@@ -202,7 +202,7 @@ module.exports = {
             embeds: [new Discord.MessageEmbed()
               .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-language"]["variable7"]))
               .setColor(es.color)
-              .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
+              .setFooter(client.getFooter(es))
             ]
           });
         }

@@ -29,8 +29,8 @@ module.exports = {
       components: [row],
       embeds: [new Discord.MessageEmbed()
         .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable1"]))
-        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-        .setDescription(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable2"])).setFooter(es.footertext, es.footericon)
+        .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
+        .setDescription(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable2"])).setFooter(client.getFooter(es))
       ]
     })
     //Create the collector
@@ -48,9 +48,9 @@ module.exports = {
           tempmsg = await tempmsg.edit({
             embeds: [new Discord.MessageEmbed()
               .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable5"]))
-              .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+              .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
               .setDescription(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable6"]))
-              .setFooter(es.footertext, es.footericon)
+              .setFooter(client.getFooter(es))
             ]
           })
           await tempmsg.channel.awaitMessages({
@@ -66,7 +66,7 @@ module.exports = {
                   .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable7"]))
                   .setColor(es.wrongcolor)
                   .setDescription(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable8"]))
-                  .setFooter(es.footertext, es.footericon)
+                  .setFooter(client.getFooter(es))
                 ]
               });
               if (color.length != 7 && !color.includes("#")) return message.reply({
@@ -74,7 +74,7 @@ module.exports = {
                   .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable9"]))
                   .setColor(es.wrongcolor)
                   .setDescription(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable10"]))
-                  .setFooter(es.footertext, es.footericon)
+                  .setFooter(client.getFooter(es))
                 ]
               });
               try {
@@ -83,8 +83,8 @@ module.exports = {
                 return message.reply({
                   embeds: [new Discord.MessageEmbed()
                     .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable11"]))
-                    .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-                    .setFooter(es.footertext, es.footericon)
+                    .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
+                    .setFooter(client.getFooter(es))
                   ]
                 });
               } catch (e) {
@@ -93,7 +93,7 @@ module.exports = {
                     .setColor(es.wrongcolor)
                     .setTitle(client.la[ls].common.erroroccur)
                     .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-                    .setFooter(es.footertext, es.footericon)
+                    .setFooter(client.getFooter(es))
                   ]
                 });
               }
@@ -107,7 +107,7 @@ module.exports = {
                 .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable14"]))
                 .setColor(es.wrongcolor)
                 .setDescription(`Cancelled the Operation!`.substr(0, 2000))
-                .setFooter(es.footertext, es.footericon)
+                .setFooter(client.getFooter(es))
               ]
             });
 
@@ -115,9 +115,9 @@ module.exports = {
           tempmsg = await tempmsg.edit({
             embeds: [new Discord.MessageEmbed()
               .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable15"]))
-              .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+              .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
               .setDescription(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable16"]))
-              .setFooter(es.footertext, es.footericon)
+              .setFooter(client.getFooter(es))
             ]
           })
           await tempmsg.channel.awaitMessages({
@@ -145,8 +145,8 @@ module.exports = {
                     return message.reply({
                       embeds: [new Discord.MessageEmbed()
                         .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable17"]))
-                        .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-                        .setFooter(es.footertext, es.footericon)
+                        .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
+                        .setFooter(client.getFooter(es))
                       ]
                     });
                   } catch (e) {
@@ -155,7 +155,7 @@ module.exports = {
                         .setColor(es.wrongcolor)
                         .setTitle(client.la[ls].common.erroroccur)
                         .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-                        .setFooter(es.footertext, es.footericon)
+                        .setFooter(client.getFooter(es))
                       ]
                     });
                   }
@@ -164,7 +164,7 @@ module.exports = {
                     embeds: [new Discord.MessageEmbed()
                       .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable20"]))
                       .setColor(es.wrongcolor)
-                      .setFooter(es.footertext, es.footericon)
+                      .setFooter(client.getFooter(es))
                     ]
                   });
                 }
@@ -173,7 +173,7 @@ module.exports = {
                   embeds: [new Discord.MessageEmbed()
                     .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable21"]))
                     .setColor(es.wrongcolor)
-                    .setFooter(es.footertext, es.footericon)
+                    .setFooter(client.getFooter(es))
                   ]
                 });
               } else {
@@ -183,8 +183,8 @@ module.exports = {
                   return message.reply({
                     embeds: [new Discord.MessageEmbed()
                       .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable22"]))
-                      .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-                      .setFooter(es.footertext, es.footericon)
+                      .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
+                      .setFooter(client.getFooter(es))
                     ]
                   });
                 } catch (e) {
@@ -193,7 +193,7 @@ module.exports = {
                       .setColor(es.wrongcolor)
                       .setTitle(client.la[ls].common.erroroccur)
                       .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-                      .setFooter(es.footertext, es.footericon)
+                      .setFooter(client.getFooter(es))
                     ]
                   });
                 }
@@ -208,16 +208,16 @@ module.exports = {
                 .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable25"]))
                 .setColor(es.wrongcolor)
                 .setDescription(`Cancelled the Operation!`.substr(0, 2000))
-                .setFooter(es.footertext, es.footericon)
+                .setFooter(client.getFooter(es))
               ]
             });
         } else if (button.customId == "3") {
           tempmsg = await tempmsg.edit({
             embeds: [new Discord.MessageEmbed()
               .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable26"]))
-              .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+              .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
               .setDescription(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable27"]))
-              .setFooter(es.footertext, es.footericon)
+              .setFooter(client.getFooter(es))
             ]
           })
           await tempmsg.channel.awaitMessages({
@@ -234,9 +234,9 @@ module.exports = {
                 return message.reply({
                   embeds: [new Discord.MessageEmbed()
                     .setTitle(`<a:yes:833101995723194437> The new Embed Footer Text is:`.substr(0, 256))
-                    .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
+                    .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
                     .setDescription(es.footertext)
-                    .setFooter(es.footertext, es.footericon)
+                    .setFooter(client.getFooter(es))
                   ]
                 });
               } catch (e) {
@@ -245,7 +245,7 @@ module.exports = {
                     .setColor(es.wrongcolor)
                     .setTitle(client.la[ls].common.erroroccur)
                     .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-                    .setFooter(es.footertext, es.footericon)
+                    .setFooter(client.getFooter(es))
                   ]
                 });
               }
@@ -259,7 +259,7 @@ module.exports = {
                 .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable30"]))
                 .setColor(es.wrongcolor)
                 .setDescription(`Cancelled the Operation!`.substr(0, 2000))
-                .setFooter(es.footertext, es.footericon)
+                .setFooter(client.getFooter(es))
               ]
             });
         } else if (button.customId == "4") {
@@ -270,8 +270,8 @@ module.exports = {
               embeds: [new Discord.MessageEmbed()
                 .setTitle(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable31"]))
                 .setDescription(eval(client.la[ls]["cmds"]["settings"]["setup-embed"]["variable32"]))
-                .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-                .setFooter(es.footertext, es.footericon)
+                .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
+                .setFooter(client.getFooter(es))
               ]
             });
           } catch (e) {
@@ -280,7 +280,7 @@ module.exports = {
                 .setColor(es.wrongcolor)
                 .setTitle(client.la[ls].common.erroroccur)
                 .setDescription(`\`\`\`${String(e.message ? e.message : e).substr(0, 2000)}\`\`\``)
-                .setFooter(es.footertext, es.footericon)
+                .setFooter(client.getFooter(es))
               ]
             });
           }

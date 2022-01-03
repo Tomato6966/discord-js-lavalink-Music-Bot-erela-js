@@ -26,7 +26,7 @@ module.exports = {
     message.reply({
       embeds: [new MessageEmbed()
         .setColor(es.color)
-        .setFooter(es.footertext + " | Sponsor: Bittmax.de | Code  'x10'  == -5%", es.footericon)
+        .setFooter(es.footertext + " | Sponsor: Bittmax.de | Code  'x10'  == -5%", es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
         .setTimestamp()
         .setThumbnail("https://cdn.discordapp.com/avatars/442355791412854784/df7b527a701d9a1ab6d73213576fe295.webp?size=1024")
         .setTitle(client.la[ls].cmds.info.developer.title)
