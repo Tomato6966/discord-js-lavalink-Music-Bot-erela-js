@@ -499,7 +499,7 @@ module.exports = (client) => {
                 new MessageEmbed().setColor(es.color)
                 .setDescription(`> 👍 **Joined** <#${player.voiceChannel}>\n\n> 📃 **And bound to** <#${player.textChannel}>`)
                 .setTimestamp()
-                .setFooter(es.footertext, es.footericon)
+                .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
               ]
             })
           }
@@ -541,9 +541,10 @@ module.exports = (client) => {
             return msg;
           })
           //create a collector for the thinggy
+          var defaulttime = 1 * 60 * 60 * 1000; //set a default time (1 hour in this case)
           collector = swapmsg.createMessageComponentCollector({
             filter: (i) => i.isButton() && i.user && i.message.author.id == client.user.id,
-            time: track.duration > 0 ? track.duration : 600000
+            time: track.duration > 0 ? track.duration < Number.MAX_VALUE ? track.duration : defaulttime : defaulttime
           }); //collector for 5 seconds
           //array of all embeds, here simplified just 10 embeds with numbers 0 - 9
           collector.on('collect', async i => {

@@ -91,7 +91,7 @@ module.exports = client => {
       switch (interaction.customId) {
         case "Skip": {
           //if ther is nothing more to skip then stop music and leave the Channel
-          if (player.queue.size == 0) {
+          if (!player.queue || !player.queue.size || player.queue.size === 0) {
             //if its on autoplay mode, then do autoplay before leaving...
             if (player.get("autoplay")) return autoplay(client, player, "skip");
             interaction.reply({
@@ -342,14 +342,14 @@ module.exports = client => {
       }
     }
     if (interaction.isSelectMenu()) {
-      let link = "https://open.spotify.com/playlist/37i9dQZF1DXc6IFF23C9jj";
+      let link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj";
       if (interaction.values[0]) {
         //ncs | no copyrighted music
         if (interaction.values[0].toLowerCase().startsWith("n")) link = "https://open.spotify.com/playlist/7sZbq8QGyMnhKPcLJvCUFD";
         //pop
-        if (interaction.values[0].toLowerCase().startsWith("p")) link = "https://open.spotify.com/playlist/37i9dQZF1DXc6IFF23C9jj";
+        if (interaction.values[0].toLowerCase().startsWith("p")) link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj";
         //default
-        if (interaction.values[0].toLowerCase().startsWith("d")) link = "https://open.spotify.com/playlist/37i9dQZF1DXc6IFF23C9jj";
+        if (interaction.values[0].toLowerCase().startsWith("d")) link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj";
         //remixes from Magic Release
         if (interaction.values[0].toLowerCase().startsWith("re")) link = "https://www.youtube.com/watch?v=NX7BqdQ1KeU&list=PLYUn4YaogdahwfEkuu5V14gYtTqODx7R2"
         //rock
@@ -382,7 +382,7 @@ module.exports = client => {
           .setTitle(eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variable1"]))
           .setDescription(eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variable2"]))
           .addField(eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variablex_3"]), eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variable3"]))
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
         ]
       })
       //play the SONG from YOUTUBE
@@ -463,8 +463,6 @@ module.exports = client => {
         } catch (e) {}
       }, 3000)
     })
-
-
     else {
       return playermanager(client, message, message.content.trim().split(/ +/), "request:song");
     }
@@ -501,7 +499,7 @@ function generateQueueEmbed(client, guildId, leave) {
     }))
     .setImage(guild.banner ? guild.bannerURL({
       size: 4096
-    }) : "https://cdn.discordapp.com/banners/773668217163218944/35b7971da6ede8f1ee91e805e422c62a.webp?size=4096")
+    }) : "https://imgur.com/jLvYdb4.png")
     .setTitle(`Start Listening to Music, by connecting to a Voice Channel and sending either the **SONG LINK** or **SONG NAME** in this Channel!`)
     .setDescription(`> *I support <:Youtube:840260133686870036> Youtube, <:Spotify:846090652231663647> Spotify, <:soundcloud:825095625884434462> Soundcloud and direct MP3 Links!*`)
   ]
@@ -523,13 +521,12 @@ function generateQueueEmbed(client, guildId, leave) {
     //get an array of quelist where 10 tracks is one index in the array
     var songs = tracks.slice(0, maxTracks);
     embeds[0] = new MessageEmbed()
-      .setTitle(`📃 Queue of __${guild.name}__  -  [ ${player.queue.length} Tracks ]`)
-      .setColor(es.color)
-      .setDescription(String(songs.map((track, index) => `**\` ${++index}. \` [${track.title.substr(0, 60).replace(/\[/igu, "\\[").replace(/\]/igu, "\\]")}](${track.uri})** - \`${track.isStream ? `LIVE STREAM` : format(track.duration).split(` | `)[0]}\`\n> *Requested by: __${track.requester.tag}__*`).join(`\n`)).substr(0, 2048));
-    if (player.queue.length > 10)
+    .setTitle(`📃 Queue of __${guild.name}__  -  [ ${player.queue.length} Tracks ]`)
+    .setColor(es.color)
+    .setDescription(String(songs.map((track, index) => `**\` ${++index}. \` ${track.uri ? `[${track.title.substr(0, 60).replace(/\[/igu, "\\[").replace(/\]/igu, "\\]")}](${track.uri})` : track.title}** - \`${track.isStream ? `LIVE STREAM` : format(track.duration).split(` | `)[0]}\`\n> *Requested by: __${track.requester.tag}__*`).join(`\n`)).substr(0, 2048));
+    if(player.queue.length > 10)
       embeds[0].addField(`**\` N. \` *${player.queue.length > maxTracks ? player.queue.length - maxTracks : player.queue.length} other Tracks ...***`, `\u200b`)
-    embeds[0].addField(`**\` 0. \` __CURRENT TRACK__**`, `**[${player.queue.current.title.substr(0, 60).replace(/\[/igu, "\\[").replace(/\]/igu, "\\]")}](${player.queue.current.uri})** - \`${player.queue.current.isStream ? `LIVE STREAM` : format(player.queue.current.duration).split(` | `)[0]}\`\n> *Requested by: __${player.queue.current.requester.tag}__*`)
-
+    embeds[0].addField(`**\` 0. \` __CURRENT TRACK__**`, `**${player.queue.current.uri ? `[${player.queue.current.title.substr(0, 60).replace(/\[/igu, "\\[").replace(/\]/igu, "\\]")}](${player.queue.current.uri})` : player.queue.current.title}** - \`${player.queue.current.isStream ? `LIVE STREAM` : format(player.queue.current.duration).split(` | `)[0]}\`\n> *Requested by: __${player.queue.current.requester.tag}__*`)
   }
   var Emojis = [
     "0️⃣",
