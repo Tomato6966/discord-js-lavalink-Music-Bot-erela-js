@@ -42,7 +42,7 @@ function check_if_dj(client, member, song) {
   var isdj = false;
   for (const djRole of roleid) {
     if (!member.guild.roles.cache.get(djRole)) {
-      client.settings.remove(message.guild.id, djRole, `djroles`)
+      client.settings.remove(member.guild.id, djRole, `djroles`)
       continue;
     }
     if (member.roles.cache.has(djRole)) isdj = true;
@@ -203,11 +203,13 @@ function createBar(player) {
 
 function format(millis) {
   try {
-    var h = Math.floor(millis / 3600000),
-      m = Math.floor(millis / 60000),
-      s = ((millis % 60000) / 1000).toFixed(0);
-    if (h < 1) return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
-    else return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s + " | " + (Math.floor(millis / 1000)) + " Seconds";
+    var s = Math.floor((millis / 1000) % 60);
+    var m = Math.floor((millis / (1000 * 60)) % 60);
+    var h = Math.floor((millis / (1000 * 60* 60)) % 24); 
+    h = h < 10 ? "0" + h : h;
+    m = m < 10 ? "0" + m : m;
+    s = s < 10 ? "0" + s : s;
+    return h + ":" + m + ":" + s + " | " +  Math.floor((millis / 1000)) + " Seconds"
   } catch (e) {
     console.log(String(e.stack).grey.bgRed)
   }
@@ -216,138 +218,168 @@ function format(millis) {
 function stations(client, prefix, message) {
   let es = client.settings.get(message.guild.id, "embed");
   let ls = client.settings.get(message.guild.id, "language");
-
+  
 
   try {
-    let amount = 0;
-    const stationsembed = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon : null).setFooter(es.footertext, es.footericon)
-      .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable4"]))
-      .setDescription(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable4_1"]))
-    const stationsembed2 = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-      .setFooter(es.footertext, es.footericon)
-      .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable5"]))
-      .setDescription(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable5_1"]))
-    const stationsembed3 = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-      .setFooter(es.footertext, es.footericon)
-      .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable6"]))
-      .setDescription(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable6_1"]))
+    const reyfm_iloveradio_embed = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL()).setTitle("Pick your Station, by typing in the right `INDEX` Number!").setDescription(`Example: \`${prefix}radio 11\``);
+    const stationsembed = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL()).setTitle("Pick your Station, by typing in the right `INDEX` Number!").setDescription(`Example: \`${prefix}radio 44\``);
+    const stationsembed2 = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL()).setTitle("Pick your Station, by typing in the right `INDEX` Number!").setDescription(`Example: \`${prefix}radio 69\``);
+    const stationsembed3 = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL()).setTitle("Pick your Station, by typing in the right `INDEX` Number!").setDescription(`Example: \`${prefix}radio 120\``);
+    const stationsembed4 = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL()).setTitle("CUSTOM REQUESTS | Pick your Station, by typing in the right `INDEX` Number!");
+    
+    let beforeindex = 1;
+    let REYFM = "";
+    for (let i = 0; i < radios.REYFM.length; i++) {
+      REYFM += `**${i + beforeindex}** [${radios.REYFM[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.REYFM[i].split(" ")[1]})\n`;
+    }
+    beforeindex+=radios.REYFM.length;
+    let ILOVERADIO = "";
+    for (let i = 0; i < radios.ILOVERADIO.length; i++) {
+      ILOVERADIO += `**${i + beforeindex}** [${radios.ILOVERADIO[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.ILOVERADIO[i].split(" ")[1]})\n`;
+    }
+    beforeindex+=radios.ILOVERADIO.length;
+    reyfm_iloveradio_embed.addField("**REYFM-STATIONS:**", `${REYFM}`.substr(0, 1024), true)
+    reyfm_iloveradio_embed.addField("**ILOVEMUSIC-STATIONS:**", `${ILOVERADIO}`.substr(0, 1024), true)
+    reyfm_iloveradio_embed.addField("**INFORMATIONS:**", "> *On the next pages, are country specific Radiostations*\n> *Some of those might not work, because they might be offline, this is because of either ping, timezone or because that they are not maintained!*")
+
     let United_Kingdom = "";
     for (let i = 0; i < radios.EU.United_Kingdom.length; i++) {
-      United_Kingdom += `**${i + 1 + 10 * amount}**[${radios.EU.United_Kingdom[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.United_Kingdom[i].split(" ")[1]})\n`;
+      United_Kingdom += `**${i + beforeindex}** [${radios.EU.United_Kingdom[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.United_Kingdom[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.United_Kingdom.length;
     stationsembed.addField("🇬🇧 United Kingdom", `>>> ${United_Kingdom}`, true);
-    amount++;
+
     let austria = "";
     for (let i = 0; i < radios.EU.Austria.length; i++) {
-      austria += `**${i + 1 + 10 * amount}**[${radios.EU.Austria[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Austria[i].split(" ")[1]})\n`;
+      austria += `**${i + beforeindex}** [${radios.EU.Austria[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Austria[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.Austria.length;
     stationsembed.addField("🇦🇹 Austria", `>>> ${austria}`, true);
-    amount++;
+    
     let Belgium = "";
     for (let i = 0; i < radios.EU.Belgium.length; i++) {
-      Belgium += `**${i + 1 + 10 * amount}**[${radios.EU.Belgium[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Belgium[i].split(" ")[1]})\n`;
+      Belgium += `**${i + beforeindex}** [${radios.EU.Belgium[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Belgium[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.Belgium.length;
     stationsembed.addField("🇧🇪 Belgium", `>>> ${Belgium}`, true);
-    amount++;
+    
     let Bosnia = "";
     for (let i = 0; i < radios.EU.Bosnia.length; i++) {
-      Bosnia += `**${i + 1 + 10 * amount}**[${radios.EU.Bosnia[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Bosnia[i].split(" ")[1]})\n`;
+      Bosnia += `**${i + beforeindex}** [${radios.EU.Bosnia[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Bosnia[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.Bosnia.length;
     stationsembed.addField("🇧🇦 Bosnia", `>>> ${Bosnia}`, true);
-    amount++;
+    
     let Czech = "";
     for (let i = 0; i < radios.EU.Czech.length; i++) {
-      Czech += `**${i + 1 + 10 * amount}**[${radios.EU.Czech[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Czech[i].split(" ")[1]})\n`;
+      Czech += `**${i + beforeindex}** [${radios.EU.Czech[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Czech[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.Czech.length;
     stationsembed.addField("🇨🇿 Czech", `>>> ${Czech}`, true);
-    amount++;
+    
     let Denmark = "";
     for (let i = 0; i < radios.EU.Denmark.length; i++) {
-      Denmark += `**${i + 1 + 10 * amount}**[${radios.EU.Denmark[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Denmark[i].split(" ")[1]})\n`;
+      Denmark += `**${i + beforeindex}** [${radios.EU.Denmark[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Denmark[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.Denmark.length;
     stationsembed.addField("🇩🇰 Denmark", `>>> ${Denmark}`, true);
-    amount++;
+    
     let germany = "";
     for (let i = 0; i < radios.EU.Germany.length; i++) {
-      germany += `**${i + 1 + 10 * amount}**[${radios.EU.Germany[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Germany[i].split(" ")[1]})\n`;
+      germany += `**${i + beforeindex}** [${radios.EU.Germany[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Germany[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.Germany.length;
     stationsembed2.addField("🇩🇪 Germany", `>>> ${germany}`, true);
-    amount++;
+    
     let Hungary = "";
     for (let i = 0; i < radios.EU.Hungary.length; i++) {
-      Hungary += `**${i + 1 + 10 * amount}**[${radios.EU.Hungary[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Hungary[i].split(" ")[1]})\n`;
+      Hungary += `**${i + beforeindex}** [${radios.EU.Hungary[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Hungary[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.Hungary.length;
     stationsembed2.addField("🇭🇺 Hungary", `>>> ${Hungary}`, true);
-    amount++;
+    
     let Ireland = "";
     for (let i = 0; i < radios.EU.Ireland.length; i++) {
-      Ireland += `**${i + 1 + 10 * amount}**[${radios.EU.Ireland[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Ireland[i].split(" ")[1]})\n`;
+      Ireland += `**${i + beforeindex}** [${radios.EU.Ireland[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Ireland[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.Ireland.length;
     stationsembed2.addField("🇮🇪 Ireland", `>>> ${Ireland}`, true);
-    amount++;
+    
     let Italy = "";
     for (let i = 0; i < radios.EU.Italy.length; i++) {
-      Italy += `**${i + 1 + 10 * amount}**[${radios.EU.Italy[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Italy[i].split(" ")[1]})\n`;
+      Italy += `**${i + beforeindex}** [${radios.EU.Italy[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Italy[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.Italy.length;
     stationsembed2.addField("🇮🇹 Italy", `>>> ${Italy}`, true);
-    amount++;
+    
     let Luxembourg = "";
     for (let i = 0; i < radios.EU.Luxembourg.length; i++) {
-      Luxembourg += `**${i + 1 + 10 * amount}**[${radios.EU.Luxembourg[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Luxembourg[i].split(" ")[1]})\n`;
+      Luxembourg += `**${i + beforeindex}** [${radios.EU.Luxembourg[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Luxembourg[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.Luxembourg.length;
     stationsembed2.addField("🇱🇺 Luxembourg", `>>> ${Luxembourg}`, true);
-    amount++;
+    
     let Romania = "";
     for (let i = 0; i < radios.EU.Romania.length; i++) {
-      Romania += `**${i + 1 + 10 * amount}**[${radios.EU.Romania[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Romania[i].split(" ")[1]})\n`;
+      Romania += `**${i + beforeindex}** [${radios.EU.Romania[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Romania[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.Romania.length;
     stationsembed2.addField("🇷🇴 Romania", `>>> ${Romania}`, true);
-    amount++;
+    
     let Serbia = "";
     for (let i = 0; i < radios.EU.Serbia.length; i++) {
-      Serbia += `**${i + 1 + 10 * amount}**[${radios.EU.Serbia[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Serbia[i].split(" ")[1]})\n`;
+      Serbia += `**${i + beforeindex}** [${radios.EU.Serbia[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Serbia[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.Serbia.length;
     stationsembed3.addField("🇷🇸 Serbia", `>>> ${Serbia}`, true);
-    amount++;
+    
     let Spain = "";
     for (let i = 0; i < radios.EU.Spain.length; i++) {
-      Spain += `**${i + 1 + 10 * amount}**[${radios.EU.Spain[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Spain[i].split(" ")[1]})\n`;
+      Spain += `**${i + beforeindex}** [${radios.EU.Spain[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Spain[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.Spain.length;
     stationsembed3.addField("🇪🇸 Spain", `>>> ${Spain}`, true);
-    amount++;
+    
     let Sweden = "";
     for (let i = 0; i < radios.EU.Sweden.length; i++) {
-      Sweden += `**${i + 1 + 10 * amount}**[${radios.EU.Sweden[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Sweden[i].split(" ")[1]})\n`;
+      Sweden += `**${i + beforeindex}** [${radios.EU.Sweden[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Sweden[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.Sweden.length;
     stationsembed3.addField("🇸🇪 Sweden", `>>> ${Sweden}`, true);
-    amount++;
+    
+    let TURKEY = "";
+    for (let i = 0; i < radios.EU.TURKEY.length; i++) {
+      TURKEY += `**${i + beforeindex}** [${radios.EU.TURKEY[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.TURKEY[i].split(" ")[1]})\n`;
+    }
+    beforeindex+=radios.EU.TURKEY.length;
+    stationsembed3.addField("🇹🇷 TURKEY", `>>> ${TURKEY}`, true);
     let Ukraine = "";
     for (let i = 0; i < radios.EU.Ukraine.length; i++) {
-      Ukraine += `**${i + 1 + 10 * amount}**[${radios.EU.Ukraine[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Ukraine[i].split(" ")[1]})\n`;
+      Ukraine += `**${i + beforeindex}** [${radios.EU.Ukraine[i].split(" ")[0].replace("-", " ").substr(0, 16)}](${radios.EU.Ukraine[i].split(" ")[1]})\n`;
     }
+    beforeindex+=radios.EU.Ukraine.length;
     stationsembed3.addField("🇺🇦 Ukraine", `>>> ${Ukraine}`, true);
-    amount++;
+
+    let embeds = []
+    embeds.push(reyfm_iloveradio_embed)
+    embeds.push(stationsembed)
+    embeds.push(stationsembed2)
+    embeds.push(stationsembed3)
     let requests = "";
-    for (let i = 0; i < 10; i++) {
-      requests += `**${i + 1 + 10 * amount}**[${radios.OTHERS.request[i].split(" ")[0].replace("-", " ").substr(0, 15)}](${radios.OTHERS.request[i].split(" ")[1]})\n`;
+    for (let i = 0; i < radios.OTHERS.request.length; i++) {
+      requests += `**${i + beforeindex}** [${radios.OTHERS.request[i].split(" ")[0].replace("-", " ").substr(0, 20)}](${radios.OTHERS.request[i].split(" ")[1]})\n`;
+      if(requests.length > 1900){
+        embeds.push(new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL()).setTitle("CUSTOM REQUESTS | Pick your Station, by typing in the right `INDEX` Number!").setDescription(`${requests}`))
+        requests = "";
+      }
     }
-    stationsembed3.addField("🧾 OTHERS", `>>> ${requests}`, true);
-    requests = "";
-    for (let i = 10; i < 20; i++) {
-      try {
-        requests += `**${i + 1 + 10 * amount}**[${radios.OTHERS.request[i].split(" ")[0].replace("-", " ").substr(0, 15)}](${radios.OTHERS.request[i].split(" ")[1]})\n`;
-      } catch {}
-    }
-    stationsembed3.addField("🧾 OTHERS", `>>> ${requests}`, true);
-    message.channel.send({
-      embeds: [stationsembed]
-    }).catch(e => console.log(e.stack ? String(e.stack).grey : String(e).grey))
-    message.channel.send({
-      embeds: [stationsembed2]
-    }).catch(e => console.log(e.stack ? String(e.stack).grey : String(e).grey))
-    message.channel.send({
-      embeds: [stationsembed3]
-    }).catch(e => console.log(e.stack ? String(e.stack).grey : String(e).grey))
+    beforeindex+=radios.OTHERS.request.length;
+    stationsembed4.setDescription(`${requests}`);
+    embeds.push(stationsembed4)
+    require("./functions").swap_pages2(client, message, embeds);
+    let amount = 0;
+    
+
   } catch (e) {
     console.log(String(e.stack).grey.bgRed)
   }
@@ -366,7 +398,7 @@ async function autoplay(client, player, type) {
   let ls = client.settings.get(player.guild, "language")
   try {
     if (player.queue.length > 0) return;
-    const previoustrack = player.get("previoustrack");
+    const previoustrack = player.get("previoustrack") || player.queue.current;
     if (!previoustrack) return;
 
     const mixURL = `https://www.youtube.com/watch?v=${previoustrack.identifier}&list=RD${previoustrack.identifier}`;
@@ -376,7 +408,7 @@ async function autoplay(client, player, type) {
       let embed = new MessageEmbed()
         .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable7"]))
         .setDescription(settings.LeaveOnEmpty_Queue.enabled && type != "skip" ? `I'll leave the Channel: \`${client.channels.cache.get(player.voiceChannel).name}\` in: \`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\`, If the Queue stays Empty! ` : eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable9"]))
-        .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon);
+        .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL());
       client.channels.cache.get(player.textChannel).send({
         embeds: [embed]
       }).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
@@ -396,7 +428,7 @@ async function autoplay(client, player, type) {
                 embed.setColor(es.wrongcolor)
               } catch {}
               try {
-                embed.setFooter(es.footertext, es.footericon);
+                embed.setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL());
               } catch {}
               client.channels.cache
                 .get(player.textChannel)
@@ -514,8 +546,8 @@ async function swap_pages(client, message, description, TITLE) {
         const embed = new MessageEmbed()
           .setDescription(current.join("\n"))
           .setTitle(TITLE)
-          .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-          .setFooter(es.footertext, es.footericon)
+          .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
+          .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
         embeds.push(embed);
       }
       embeds;
@@ -531,8 +563,8 @@ async function swap_pages(client, message, description, TITLE) {
         const embed = new MessageEmbed()
           .setDescription(current)
           .setTitle(TITLE)
-          .setColor(es.color).setThumbnail(es.thumb ? es.footericon : null)
-          .setFooter(es.footertext, es.footericon)
+          .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
+          .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
         embeds.push(embed);
       }
       embeds;
@@ -543,8 +575,8 @@ async function swap_pages(client, message, description, TITLE) {
   if (embeds.length === 0) return message.channel.send({
     embeds: [new MessageEmbed()
       .setTitle(`${emoji.msg.ERROR} No Content added to the SWAP PAGES Function`)
-      .setColor(es.wrongcolor).setThumbnail(es.thumb ? es.footericon : null)
-      .setFooter(es.footertext, es.footericon)
+      .setColor(es.wrongcolor).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
+      .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
     ]
   }).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
   if (embeds.length === 1) return message.channel.send({
