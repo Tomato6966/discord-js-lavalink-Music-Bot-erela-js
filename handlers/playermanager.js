@@ -3,6 +3,7 @@ const {
   MessageEmbed
 } = require("discord.js")
 const config = require(`${process.cwd()}/botconfig/config.json`)
+const emoji = require(`${process.cwd()}/botconfig/emojis.json`)
 const settings = require(`${process.cwd()}/botconfig/settings.json`);
 const ee = require(`${process.cwd()}/botconfig/embed.json`)
 module.exports = async (client, message, args, type, slashCommand = false, extras = false) => {
