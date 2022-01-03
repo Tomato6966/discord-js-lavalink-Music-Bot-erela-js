@@ -38,9 +38,9 @@ module.exports = {
       //if there are no other tracks, information
       if (!tracks.length)
         return interaction.reply({ephemeral: true, embeds : [new MessageEmbed()
-          .setAuthor(`Queue for ${message.guild.name}  -  [ ${tracks.length} Tracks ]`, message.guild.iconURL({
+          .setAuthor(client.getFooter(`Queue for ${message.guild.name}  -  [ ${tracks.length} Tracks ]`, message.guild.iconURL({
             dynamic: true
-          }))
+          })))
           .setColor(es.color)
           .addField(eval(client.la[ls]["cmds"]["music"]["queue"]["variablex_1"]), eval(client.la[ls]["cmds"]["music"]["queue"]["variable1"]))
           .setDescription(eval(client.la[ls]["cmds"]["music"]["queue"]["variable2"]))
@@ -54,9 +54,9 @@ module.exports = {
       //if not too big send queue in channel
       if (tracks.length < 15)
         return interaction.reply({ephemeral: true, embeds :[new MessageEmbed()
-          .setAuthor(`Queue for ${message.guild.name}  -  [ ${player.queue.length} Tracks ]`, message.guild.iconURL({
+          .setAuthor(client.getFooter(`Queue for ${message.guild.name}  -  [ ${player.queue.length} Tracks ]`, message.guild.iconURL({
             dynamic: true
-          }))
+          })))
           .addField(eval(client.la[ls]["cmds"]["music"]["queue"]["variablex_3"]), eval(client.la[ls]["cmds"]["music"]["queue"]["variable3"]))
           .setColor(es.color).setDescription(tracks.map((track, i) => `**${++i})** **${track.title.substr(0, 60)}** - \`${track.isStream ? `LIVE STREAM` : format(track.duration).split(` | `)[0]}\`\n*requested by: ${track.requester.tag}*`).join(`\n`))
         ]}).then(msg => {
@@ -77,9 +77,9 @@ module.exports = {
       for (let i = 0; i < limit; i++) {
         let desc = String(quelist[i]).substr(0, 2048)
         await embeds.push(new MessageEmbed()
-          .setAuthor(`Queue for ${guild.name}  -  [ ${player.queue.length} Tracks ]`, guild.iconURL({
+          .setAuthor(client.getFooter(`Queue for ${guild.name}  -  [ ${player.queue.length} Tracks ]`, guild.iconURL({
             dynamic: true
-          }))
+          })))
           .setColor(es.color)
           .addField(eval(client.la[ls]["cmds"]["music"]["queue"]["variablex_4"]), eval(client.la[ls]["cmds"]["music"]["queue"]["variable4"]))
           .setDescription(desc));

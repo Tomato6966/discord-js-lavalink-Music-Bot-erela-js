@@ -82,7 +82,7 @@ module.exports = client => {
       if (!beforemessage) message = await channel.messages.fetch(player.get("beforemessage")).catch(() => {}) || false;
       if (!beforemessage) return client.logger("Editing the Last Message - Before - Message not found!")
       //if not able to 
-      if (beforemessage.deleted) return client.logger("Editing the Last Message - Before - Message already deleted");
+      if (!beforemessage) return client.logger("Editing the Last Message - Before - Message already deleted");
       if (!beforemessage.deletable) return client.logger("Editing the Last Message - Before - Message not delete able");
       //delete the message
       beforemessage.delete().catch(() => {})

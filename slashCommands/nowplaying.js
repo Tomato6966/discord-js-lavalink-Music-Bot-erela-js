@@ -37,9 +37,9 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
           .setTitle(eval(client.la[ls]["cmds"]["music"]["nowplaying"]["variable1"]))
         ]});
         const embed = new MessageEmbed()
-          .setAuthor(`Current song playing:`, message.guild.iconURL({
+          .setAuthor(client.getAuthor(`Current song playing:`, message.guild.iconURL({
             dynamic: true
-          }))
+          })))
         .setThumbnail(`https://img.youtube.com/vi/${player.queue.current.identifier}/mqdefault.jpg`)
         .setURL(player.queue.current.uri)
         .setColor(es.color)
@@ -48,9 +48,9 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
         .addField(`${emoji.msg.time} Duration: `, `\`${format(player.queue.current.duration).split(" | ")[0]}\` | \`${format(player.queue.current.duration).split(" | ")[1]}\``, true)
         .addField(`${emoji.msg.song_by} Song By: `, `\`${player.queue.current.author}\``, true)
         .addField(`${emoji.msg.repeat_mode} Queue length: `, `\`${player.queue.length} Songs\``, true)
-        .setFooter(`Requested by: ${player.queue.current.requester.tag}`, player.queue.current.requester.displayAvatarURL({
+        .setFooter(client.getFooter(`Requested by: ${player.queue.current.requester.tag}`, player.queue.current.requester.displayAvatarURL({
           dynamic: true
-        }))
+        })))
       //Send Now playing Message
       return interaction.reply({embeds :[embed]});
     } catch (e) {

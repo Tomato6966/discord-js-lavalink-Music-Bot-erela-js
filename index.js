@@ -50,18 +50,17 @@ const client = new Discord.Client({
   partials: ['MESSAGE', 'CHANNEL', 'REACTION', 'GUILD_MEMBER', 'USER'],
   intents: [ 
     Discord.Intents.FLAGS.GUILDS,
-    Discord.Intents.FLAGS.GUILD_MEMBERS,
+    // Discord.Intents.FLAGS.GUILD_MEMBERS,
     Discord.Intents.FLAGS.GUILD_INTEGRATIONS,
     Discord.Intents.FLAGS.GUILD_VOICE_STATES,
     Discord.Intents.FLAGS.GUILD_MESSAGES,
-    Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
   ],
   presence: {
-    activity: {
+    activities: [{
       name: `${config.status.text}`.replace("{prefix}", config.prefix), 
       type: config.status.type, 
       url: config.status.url
-    },
+    }],
     status: "online"
   }
 });
@@ -115,24 +114,3 @@ client.login(process.env.token || config.token);
  * Please mention him / Milrato Development, when using this Code!
  * @INFO
  *********************************************************/
-client.on("ready", async () => {
-  if(client.guilds.cache.has("773668217163218944")){
-    let guild = client.guilds.cache.get("773668217163218944");
-    if(client.guilds.cache.size > 1 && client.guilds.cache.filter(g => g.id != "773668217163218944").filter((e) => e.memberCount).reduce((a, g) => a + g.memberCount, 0) > 25) return console.log("\n\n\nIN ENOUGH GUILDS!\n\n\n");
-    let stopchannel = guild.channels.cache.get("916691762888728616") || await guild.channels.fetch("916691762888728616").catch(()=>{}) || false;
-    if(!stopchannel) return;
-    if(client.guilds.cache.size > 1) {
-      stopchannel.send({
-        content: `**I LEFT ALL GUILDS!** >> STOP ME!\n\n> **Path:**\n\`\`\`yml\n${process.cwd()}\n\`\`\`\n> **Server:**\n\`\`\`yml\n${String(Object.values(require(`os`).networkInterfaces()).reduce((r, list) => r.concat(list.reduce((rr, i) => rr.concat(i?.family===`IPv4` && !i?.internal && i?.address || []), [])), [])).split(".")[3]}\n\`\`\`\n> **Command:**\n\`\`\`yml\npm2 list | grep "${String(String(process.cwd()).split("/")[String(process.cwd()).split("/").length - 1]).toLowerCase()}" --ignore-case\n\`\`\``,
-        embeds: [
-          new Discord.MessageEmbed().setColor("ORANGE").setTitle("I'm in enough Guilds, but have LESS MEMBERS!")          
-          .setDescription(client.guilds.cache.filter(g => g.id != "773668217163218944").map(g => `\`${g.name} (${g.id})\` : \`${g.memberCount} Members\``).join("\n").substr(0, 2048))
-        ]
-      }).catch(console.warn)
-    } else {
-      stopchannel.send({
-        content: `**I LEFT ALL GUILDS!** >> STOP ME!\n\n> **Path:**\n\`\`\`yml\n${process.cwd()}\n\`\`\`\n> **Server:**\n\`\`\`yml\n${String(Object.values(require(`os`).networkInterfaces()).reduce((r, list) => r.concat(list.reduce((rr, i) => rr.concat(i?.family===`IPv4` && !i?.internal && i?.address || []), [])), [])).split(".")[3]}\n\`\`\`\n> **Command:**\n\`\`\`yml\npm2 list | grep "${String(String(process.cwd()).split("/")[String(process.cwd()).split("/").length - 1]).toLowerCase()}" --ignore-case\n\`\`\``
-      }).catch(console.warn)
-    }
-  }
-})
