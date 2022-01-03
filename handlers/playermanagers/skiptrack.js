@@ -201,11 +201,11 @@ async function skiptrack(client, message, args, type, slashCommand) {
       .setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256 - 3) + "`**")
       .setURL(res.playlist.uri).setColor(ee.color)
       .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
-      .addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
-      .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-      .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
+      .addField("⌛ Duration: ", `> \`${format(res.playlist.duration)}\``, true)
+      .addField("🔂 Queue length: ", `> \`${player.queue.length} Songs\``, true)
+      .setFooter(client.getFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
         dynamic: true
-      }))
+      })))
     if (slashCommand && slashCommand.isCommand()) slashCommand.reply({
       ephemeral: true,
       embeds: [playlistembed]

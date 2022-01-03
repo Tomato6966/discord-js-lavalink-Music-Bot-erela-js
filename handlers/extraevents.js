@@ -10,35 +10,6 @@ const {
 } = require(`${process.cwd()}/handlers/functions`);
 module.exports = client => {
 
-  process.on('unhandledRejection', (reason, p) => {
-    console.log('\n\n\n\n\n=== unhandled Rejection ==='.toUpperCase().yellow.dim);
-    console.log('Reason: ', reason.stack ? String(reason.stack).gray : String(reason).gray);
-    console.log('=== unhandled Rejection ===\n\n\n\n\n'.toUpperCase().yellow.dim);
-  });
-  process.on("uncaughtException", (err, origin) => {
-    console.log('\n\n\n\n\n\n=== uncaught Exception ==='.toUpperCase().yellow.dim);
-    console.log('Exception: ', err.stack ? err.stack : err)
-    console.log('=== uncaught Exception ===\n\n\n\n\n'.toUpperCase().yellow.dim);
-  })
-  process.on('uncaughtExceptionMonitor', (err, origin) => {
-    console.log('=== uncaught Exception Monitor ==='.toUpperCase().yellow.dim);
-  });
-  process.on('beforeExit', (code) => {
-    console.log('\n\n\n\n\n=== before Exit ==='.toUpperCase().yellow.dim);
-    console.log('Code: ', code);
-    console.log('=== before Exit ===\n\n\n\n\n'.toUpperCase().yellow.dim);
-  });
-  process.on('exit', (code) => {
-    console.log('\n\n\n\n\n=== exit ==='.toUpperCase().yellow.dim);
-    console.log('Code: ', code);
-    console.log('=== exit ===\n\n\n\n\n'.toUpperCase().yellow.dim);
-  });
-  process.on('multipleResolves', (type, promise, reason) => {
-    console.log('\n\n\n\n\n=== multiple Resolves ==='.toUpperCase().yellow.dim);
-    console.log(type, promise, reason);
-    console.log('=== multiple Resolves ===\n\n\n\n\n'.toUpperCase().yellow.dim);
-  });
-
   client.logger = (data) => {
     if (!settings[`debug-logs`]) return;
     let logstring = `${String(`L`+`a`+`v`+`a`+`-`+`M`+`u`+`s`+`i`+`c`+ ` Logs`).brightGreen}${` | `.grey}${`${moment().format("ddd DD-MM-YYYY HH:mm:ss.SSSS")}`.cyan}${` [::] `.magenta}`
@@ -119,4 +90,70 @@ module.exports = client => {
       player.set("beforemessage", message.id);
     }
   }
+
+  client.getFooter = (es, stringurl = null) => {
+    //allow inputs: ({footericon, footerurl}) and (footericon, footerurl);
+    let embedData = { };
+    if(typeof es !== "object") embedData = { footertext: es, footericon: stringurl };
+    else embedData = es;
+
+    let text = embedData.footertext;
+    let iconURL = embedData.footericon;
+    if(!text || text.length < 1) text = `${client.user.username} | By: Tomato#6966`;
+    if(!iconURL || iconURL.length < 1) iconURL = `${client.user.displayAvatarURL()}`;
+    
+    //Change the lengths
+    iconURL = iconURL.trim();
+    text = text.trim().substring(0, 2048);
+    
+    //verify the iconURL
+    if(!iconURL.startsWith("https://") && !iconURL.startsWith("http://")) iconURL = client.user.displayAvatarURL();
+    if(![".png", ".jpg", ".wpeg", ".webm", ".gif"].some(d => iconURL.toLowerCase().endsWith(d))) iconURL = client.user.displayAvatarURL();
+    //return the footerobject
+    return { text, iconURL }
+  }
+
+  client.getAuthor = (authorname = null, authoricon = null, authorurl = null) => {
+    //allow inputs: ({footericon, footerurl}) and (footericon, footerurl);
+    let name = authorname;
+    let iconURL = authoricon;
+    let url = authorurl;
+
+    if(!name || name.length < 1) name = `${client.user.username} | By: Tomato#6966`;
+    if(!iconURL || iconURL.length < 1) iconURL = `${client.user.displayAvatarURL()}`;
+    if(!url || url.length < 1) url = `https://discord.gg/milrato`;
+
+    //Change the lengths
+    iconURL = iconURL.trim();
+    name = name.trim().substring(0, 2048);
+    
+    //verify the iconURL
+    if(!url.startsWith("https://") && !url.startsWith("http://")) url = `https://discord.gg/milrato`;
+    if(!iconURL.startsWith("https://") && !iconURL.startsWith("http://")) iconURL = client.user.displayAvatarURL();
+    if(![".png", ".jpg", ".wpeg", ".webm", ".gif"].some(d => iconURL.toLowerCase().endsWith(d))) iconURL = client.user.displayAvatarURL();
+    //return the footerobject
+    return { name, iconURL, url }
+  }
+  
+  process.on('unhandledRejection', (reason, p) => {
+    console.log('\n\n\n\n\n=== unhandled Rejection ==='.toUpperCase().yellow.dim);
+    console.log('Reason: ', reason.stack ? String(reason.stack).gray : String(reason).gray);
+    console.log('=== unhandled Rejection ===\n\n\n\n\n'.toUpperCase().yellow.dim);
+  });
+  process.on("uncaughtException", (err, origin) => {
+    console.log('\n\n\n\n\n\n=== uncaught Exception ==='.toUpperCase().yellow.dim);
+    console.log('Exception: ', err.stack ? err.stack : err)
+    console.log('=== uncaught Exception ===\n\n\n\n\n'.toUpperCase().yellow.dim);
+  })
+  process.on('uncaughtExceptionMonitor', (err, origin) => {
+    console.log('=== uncaught Exception Monitor ==='.toUpperCase().yellow.dim);
+  });
+  process.on('multipleResolves', (type, promise, reason) => {
+    /*
+      console.log('\n\n\n\n\n=== multiple Resolves ==='.toUpperCase().yellow.dim);
+      console.log(type, promise, reason);
+      console.log('=== multiple Resolves ===\n\n\n\n\n'.toUpperCase().yellow.dim);
+    */
+  });
+
 }

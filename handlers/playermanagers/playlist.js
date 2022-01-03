@@ -117,8 +117,8 @@ async function playlist(client, message, args, type, slashCommand = false) {
       .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playlist"]["variable4"]))
       .setColor(ee.color)
       .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
-      .addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
-      .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
+      .addField("⌛ Duration: ", `> \`${format(res.playlist.duration)}\``, true)
+      .addField("🔂 Queue length: ", `> \`${player.queue.length} Songs\``, true)
 
     if (slashCommand && slashCommand.isCommand()) slashCommand.reply({
       ephemeral: true,

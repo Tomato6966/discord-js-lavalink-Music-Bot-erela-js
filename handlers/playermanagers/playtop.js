@@ -111,9 +111,9 @@ async function playtop(client, message, args, type, slashCommand) {
       .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable2"]))
       .setColor(ee.color)
       .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
-      .addField("⌛ Duration: ", `\`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
-      .addField("💯 Song By: ", `\`${res.tracks[0].author}\``, true)
-      .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
+      .addField("⌛ Duration: ", `> \`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
+      .addField("💯 Song By: ", `> \`${res.tracks[0].author}\``, true)
+      .addField("🔂 Queue length: ", `> \`${player.queue.length} Songs\``, true)
     if (slashCommand && slashCommand.isCommand()) slashCommand.reply({
       ephemeral: true,
       embeds: [playembed]
@@ -177,10 +177,10 @@ async function playtop(client, message, args, type, slashCommand) {
         player.queue.add(track);
     }
     var time = 0;
-    let playlistembed = new Discord.MessageEmbed()
-      .setAuthor(`Playlist added to Queue`, message.author.displayAvatarURL({
+    let playlistembed = new MessageEmbed()
+      .setAuthor(client.getAuthor(`Playlist added to Queue`, message.author.displayAvatarURL({
         dynamic: true
-      }), "https://milrato.eu")
+      })))
       .setColor(ee.color)
       .setTitle(eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable4"]))
       .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
@@ -190,9 +190,9 @@ async function playtop(client, message, args, type, slashCommand) {
     for (const track of res.tracks)
       time -= track.duration;
 
-    playlistembed.addField(eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variablex_5"]), eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable5"]))
-      .addField("Position in queue", `${player.queue.length - res.tracks.length + 1 === 0 ? "NOW" : player.queue.length - res.tracks.length + 1}`, true)
-      .addField("Enqueued", `\`${res.tracks.length}\``, true)
+    playlistembed.addField(eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variablex_5"]), `> \`${eval(client.la[ls]["handlers"]["playermanagers"]["playtop"]["variable5"])}\``)
+      .addField("Position in queue", `> \`${player.queue.length - res.tracks.length + 1 === 0 ? "NOW" : player.queue.length - res.tracks.length + 1}\``, true)
+      .addField("Enqueued", `> \`${res.tracks.length}\``, true)
     //if bot allowed to send embed, do it otherwise pure txt msg
     if (message.guild.me.permissionsIn(message.channel).has("EMBED_LINKS")) {
       if (slashCommand && slashCommand.isCommand())

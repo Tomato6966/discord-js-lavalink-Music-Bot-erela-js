@@ -38,9 +38,9 @@ async function similar(client, message, args, type, slashCommand) {
         .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable2"]))
         .setColor(ee.color)
         .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
-        .addField("⌛ Duration: ", `\`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
-        .addField("💯 Song By: ", `\`${res.tracks[0].author}\``, true)
-        .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
+        .addField("⌛ Duration: ", `> \`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
+        .addField("💯 Song By: ", `> \`${res.tracks[0].author}\``, true)
+        .addField("🔂 Queue length: ", `> \`${player.queue.length} Songs\``, true)
       message.channel.send({
         embeds: [embed2]
       })
@@ -63,9 +63,9 @@ async function similar(client, message, args, type, slashCommand) {
         .setTitle(`Search result for: 🔎 **\`${player.queue.current.title}`.substr(0, 256 - 3) + "`**")
         .setColor(ee.color)
         .setDescription(results)
-        .setFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
+        .setFooter(client.getFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
           dynamic: true
-        }))
+        })))
       message.channel.send({
         embeds: [searchembed]
       })
@@ -138,9 +138,9 @@ async function similar(client, message, args, type, slashCommand) {
           .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["similar"]["variable8"]))
           .setColor(ee.color)
           .setThumbnail(`https://img.youtube.com/vi/${track.identifier}/mqdefault.jpg`)
-          .addField("⌛ Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
-          .addField("💯 Song By: ", `\`${track.author}\``, true)
-          .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
+          .addField("⌛ Duration: ", `> \`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
+          .addField("💯 Song By: ", `> \`${track.author}\``, true)
+          .addField("🔂 Queue length: ", `> \`${player.queue.length} Songs\``, true)
         message.channel.send({
           embeds: [embed]
         })

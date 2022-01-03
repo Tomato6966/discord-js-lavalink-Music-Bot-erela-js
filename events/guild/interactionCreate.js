@@ -67,7 +67,7 @@ module.exports = async (client, interaction) => {
                 ephmerla: true,
                 embeds: [new Discord.MessageEmbed()
                   .setColor(es.wrongcolor)
-                  .setFooter(es.footertext, es.footericon)
+                  .setFooter(client.getFooter(es))
                   .setTitle(client.la[ls].common.botchat.title)
                   .setDescription(`${client.la[ls].common.botchat.description}\n> ${botchannel.map(c=>`<#${c}>`).join(", ")}`)
                 ]
@@ -107,7 +107,7 @@ module.exports = async (client, interaction) => {
                 ephemeral: true,
                 embeds: [new Discord.MessageEmbed()
                   .setColor(es.wrongcolor)
-                  .setFooter(es.footertext, es.footericon)
+                  .setFooter(client.getFooter(es))
                   .setTitle(client.la[ls].common.permissions.title)
                   .setDescription(`${client.la[ls].common.permissions.description}\n> \`${command.memberpermissions.join("`, ``")}\``)   
           ]
@@ -138,7 +138,7 @@ module.exports = async (client, interaction) => {
           not_allowed = true;
           return interaction.reply({ephemeral: true, embeds: [new Discord.MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(es.footertext, es.footericon)
+            .setFooter(client.getFooter(es))
             .setTitle(client.la[ls].common.join_vc)]});
         }
         //If there is no player, then kick the bot out of the channel, if connected to
@@ -166,7 +166,7 @@ module.exports = async (client, interaction) => {
             not_allowed = true;
             return interaction.reply({ephemeral: true, embeds: [new Discord.MessageEmbed()
               .setColor(es.wrongcolor)
-              .setFooter(es.footertext, es.footericon)
+              .setFooter(client.getFooter(es))
               .setTitle(client.la[ls].common.nothing_playing)]});
           }
           if (!mechannel){
@@ -174,7 +174,7 @@ module.exports = async (client, interaction) => {
             not_allowed = true;
             return interaction.reply({ephemeral: true, embeds: [new Discord.MessageEmbed()
               .setColor(es.wrongcolor)
-              .setFooter(es.footertext, es.footericon)
+              .setFooter(client.getFooter(es))
               .setTitle(client.la[ls].common.not_connected)]});
           }
         }
@@ -184,7 +184,7 @@ module.exports = async (client, interaction) => {
             not_allowed = true;
             return interaction.reply({ephemeral: true, embeds: [new Discord.MessageEmbed()
               .setColor(es.wrongcolor)
-              .setFooter(es.footertext, es.footericon)
+              .setFooter(client.getFooter(es))
               .setTitle(client.la[ls].common.nothing_playing)]});
           }
         }
@@ -192,7 +192,7 @@ module.exports = async (client, interaction) => {
         if (player && channel.id !== player.voiceChannel && !command.parameters.notsamechannel){
           return interaction.reply({ephemeral: true, embeds: [new Discord.MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(es.footertext, es.footericon)
+            .setFooter(client.getFooter(es))
             .setTitle(client.la[ls].common.wrong_vc)
             .setDescription(`
                     Channel: < #$ {
@@ -203,7 +203,7 @@ module.exports = async (client, interaction) => {
         if (mechannel && channel.id !== mechannel.id && !command.parameters.notsamechannel) {
           return interaction.reply({ephemeral: true, embeds: [new Discord.MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(es.footertext, es.footericon)
+            .setFooter(client.getFooter(es))
             .setTitle(client.la[ls].common.wrong_vc)
             .setDescription(`
                     Channel: < #$ {

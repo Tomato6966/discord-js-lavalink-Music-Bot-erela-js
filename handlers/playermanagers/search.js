@@ -116,9 +116,9 @@ async function search(client, message, args, type, slashCommand) {
             .setTitle(`Search-Result for: 🔎 **\`${search}`.substr(0, 256 - 3) + "`**")
             .setColor(ee.color)
             .setDescription(results)
-            .setFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
+            .setFooter(client.getFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
               dynamic: true
-            }))
+            })))
           ],
           components: [
             new MessageActionRow().addComponents(Selection)
@@ -131,9 +131,9 @@ async function search(client, message, args, type, slashCommand) {
             .setTitle(`Search-Result for: 🔎 **\`${search}`.substr(0, 256 - 3) + "`**")
             .setColor(ee.color)
             .setDescription(results)
-            .setFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
+            .setFooter(client.getFooter(`Search-Request by: ${track.requester.tag}`, track.requester.displayAvatarURL({
               dynamic: true
-            }))
+            })))
           ],
           components: [
             new MessageActionRow().addComponents(Selection)
@@ -206,9 +206,9 @@ async function search(client, message, args, type, slashCommand) {
               .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["search"]["variable5"]))
               .setColor(ee.color)
               .setThumbnail(`https://img.youtube.com/vi/${track.identifier}/mqdefault.jpg`)
-              .addField("⌛ Duration: ", `\`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
-              .addField("💯 Song By: ", `\`${track.author}\``, true)
-              .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
+              .addField("⌛ Duration: ", `> \`${track.isStream ? "LIVE STREAM" : format(track.duration)}\``, true)
+              .addField("💯 Song By: ", `> \`${track.author}\``, true)
+              .addField("🔂 Queue length: ", `> \`${player.queue.length} Songs\``, true)
             if (slashCommand && slashCommand.isCommand()) {
               await slashCommand.reply({
                 ephemeral: true,

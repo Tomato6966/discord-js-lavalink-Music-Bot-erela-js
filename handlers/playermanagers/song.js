@@ -128,9 +128,9 @@ async function song(client, message, args, type, slashCommand, extras) {
         .setDescription(eval(client.la[ls]["handlers"]["playermanagers"]["song"]["variable4"]))
         .setColor(ee.color)
         .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
-        .addField("⌛ Duration: ", `\`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
-        .addField("💯 Song By: ", `\`${res.tracks[0].author}\``, true)
-        .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
+        .addField("⌛ Duration: ", `> \`${res.tracks[0].isStream ? "LIVE STREAM" : format(res.tracks[0].duration)}\``, true)
+        .addField("💯 Song By: ", `> \`${res.tracks[0].author}\``, true)
+        .addField("🔂 Queue length: ", `> \`${player.queue.length} Songs\``, true)
       if (slashCommand && slashCommand.isCommand()) slashCommand.reply({
         ephemeral: true,
         embeds: [playembed]
@@ -201,11 +201,11 @@ async function song(client, message, args, type, slashCommand, extras) {
       .setTitle(`Added Playlist 🩸 **\`${res.playlist.name}`.substr(0, 256 - 3) + "`**")
       .setURL(res.playlist.uri).setColor(ee.color)
       .setThumbnail(`https://img.youtube.com/vi/${res.tracks[0].identifier}/mqdefault.jpg`)
-      .addField("⌛ Duration: ", `\`${format(res.playlist.duration)}\``, true)
-      .addField("🔂 Queue length: ", `\`${player.queue.length} Songs\``, true)
-      .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
+      .addField("⌛ Duration: ", `> \`${format(res.playlist.duration)}\``, true)
+      .addField("🔂 Queue length: ", `> \`${player.queue.length} Songs\``, true)
+      .setFooter(client.getFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({
         dynamic: true
-      }))
+      })))
     if (slashCommand && slashCommand.isCommand()) {
       try {
         slashCommand.reply({

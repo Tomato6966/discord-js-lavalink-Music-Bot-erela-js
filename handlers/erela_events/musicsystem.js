@@ -30,10 +30,12 @@ module.exports = client => {
     } = interaction;
     if (!guild) guild = client.guilds.cache.get(interaction.guildId);
     if (!guild) return;
-    var prefix = client.settings.get(guild.id);
+    const es = client.settings.get(guild.id, "embed")
+    const ls = client.settings.get(guild.id, "language")
+    const prefix = client.settings.get(guild.id, "prefix");
     var data = client.musicsettings.get(guild.id);
-    var musicChannelId = data.channel;
-    var musicChannelMessage = data.message;
+    const musicChannelId = data.channel;
+    const musicChannelMessage = data.message;
     //if not setupped yet, return
     if (!musicChannelId || musicChannelId.length < 5) return;
     if (!musicChannelMessage || musicChannelMessage.length < 5) return;
@@ -67,8 +69,6 @@ module.exports = client => {
         content: `<:no:833101993668771842> **Please join __my__ Voice Channel first! <#${player.voiceChannel}>**`,
         ephemeral: true
       })
-    let es = client.settings.get(guild.id, "embed")
-    let ls = client.settings.get(guild.id, "language")
     if (interaction.isButton()) {
       if (!player || !player.queue || !player.queue.current) {
         return interaction.reply({
@@ -80,8 +80,8 @@ module.exports = client => {
       if (player && interaction.customId != `Lyrics` && check_if_dj(client, member, player.queue.current)) {
         return interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.wrongcolor)
-            .setFooter(ee.footertext, ee.footericon)
+            .setColor(es.wrongcolor)
+            .setFooter(client.getFooter(es))
             .setTitle(`<:no:833101993668771842> **You are not a DJ and not the Song Requester!**`)
             .setDescription(`**DJ-ROLES:**\n${check_if_dj(client, interaction.member, player.queue.current)}`)
           ],
@@ -96,12 +96,12 @@ module.exports = client => {
             if (player.get("autoplay")) return autoplay(client, player, "skip");
             interaction.reply({
               embeds: [new MessageEmbed()
-                .setColor(ee.color)
+                .setColor(es.color)
                 .setTimestamp()
                 .setTitle(`⏹ **Stopped playing and left the Channel**`)
-                .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+                .setFooter(client.getFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
                   dynamic: true
-                }))
+                })))
               ]
             })
             await player.destroy()
@@ -116,12 +116,12 @@ module.exports = client => {
           await player.stop();
           interaction.reply({
             embeds: [new MessageEmbed()
-              .setColor(ee.color)
+              .setColor(es.color)
               .setTimestamp()
               .setTitle(`⏭ **Skipped to the next Song!**`)
-              .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+              .setFooter(client.getFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
                 dynamic: true
-              }))
+              })))
             ]
           })
           //edit the message so that it's right!
@@ -135,12 +135,12 @@ module.exports = client => {
         //Stop the player
         interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTimestamp()
             .setTitle(`⏹ **Stopped playing and left the Channel**`)
-            .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+            .setFooter(client.getFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
               dynamic: true
-            }))
+            })))
           ]
         })
         if (player) {
@@ -164,12 +164,12 @@ module.exports = client => {
           player.pause(false);
           interaction.reply({
             embeds: [new MessageEmbed()
-              .setColor(ee.color)
+              .setColor(es.color)
               .setTimestamp()
               .setTitle(`▶️ **Resumed!**`)
-              .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+              .setFooter(client.getFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
                 dynamic: true
-              }))
+              })))
             ]
           })
         } else {
@@ -178,12 +178,12 @@ module.exports = client => {
 
           interaction.reply({
             embeds: [new MessageEmbed()
-              .setColor(ee.color)
+              .setColor(es.color)
               .setTimestamp()
               .setTitle(`⏸ **Paused!**`)
-              .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+              .setFooter(client.getFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
                 dynamic: true
-              }))
+              })))
             ]
           })
         }
@@ -199,12 +199,12 @@ module.exports = client => {
         player.set(`autoplay`, !player.get(`autoplay`))
         interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTimestamp()
             .setTitle(`${player.get(`autoplay`) ? `<a:yes:833101995723194437> **Enabled Autoplay**`: `<:no:833101993668771842> **Disabled Autoplay**`}`)
-            .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+            .setFooter(client.getFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
               dynamic: true
-            }))
+            })))
           ]
         })
         //edit the message so that it's right!
@@ -222,12 +222,12 @@ module.exports = client => {
         //Send Success Message
         interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTimestamp()
             .setTitle(`🔀 **Shuffled ${player.queue.length} Songs!**`)
-            .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+            .setFooter(client.getFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
               dynamic: true
-            }))
+            })))
           ]
         })
         //edit the message so that it's right!
@@ -246,12 +246,12 @@ module.exports = client => {
         player.setTrackRepeat(!player.trackRepeat);
         interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTimestamp()
             .setTitle(`${player.trackRepeat ? `<a:yes:833101995723194437> **Enabled Song Loop**`: `<:no:833101993668771842> **Disabled Song Loop**`}`)
-            .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+            .setFooter(client.getFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
               dynamic: true
-            }))
+            })))
           ]
         })
         //edit the message so that it's right!
@@ -270,12 +270,12 @@ module.exports = client => {
         player.setQueueRepeat(!player.queueRepeat);
         interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTimestamp()
             .setTitle(`${player.queueRepeat ? `<a:yes:833101995723194437> **Enabled Queue Loop**`: `<:no:833101993668771842> **Disabled Queue Loop**`}`)
-            .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+            .setFooter(client.getFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
               dynamic: true
-            }))
+            })))
           ]
         })
         //edit the message so that it's right!
@@ -296,12 +296,12 @@ module.exports = client => {
         await player.seek(Number(seektime));
         interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTimestamp()
             .setTitle(`⏩ **Forwarded the song for \`10 Seconds\`!**`)
-            .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+            .setFooter(client.getFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
               dynamic: true
-            }))
+            })))
           ]
         })
         //edit the message so that it's right!
@@ -320,12 +320,12 @@ module.exports = client => {
         await player.seek(Number(seektime));
         interaction.reply({
           embeds: [new MessageEmbed()
-            .setColor(ee.color)
+            .setColor(es.color)
             .setTimestamp()
             .setTitle(`⏪ **Rewinded the song for \`10 Seconds\`!**`)
-            .setFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
+            .setFooter(client.getFooter(`💢 Action by: ${member.user.tag}`, member.user.displayAvatarURL({
               dynamic: true
-            }))
+            })))
           ]
         })
         //edit the message so that it's right!
@@ -378,11 +378,11 @@ module.exports = client => {
       interaction.reply({
         embeds: [new MessageEmbed()
           .setColor(es.color)
-          .setAuthor(`Loading '${interaction.values[0] ? interaction.values[0] : "Default"}' Music Mix`, "https://imgur.com/xutrSuq.gif", link)
+          .setAuthor(client.getAuthor(`Loading '${interaction.values[0] ? interaction.values[0] : "Default"}' Music Mix`, "https://imgur.com/xutrSuq.gif", link))
           .setTitle(eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variable1"]))
           .setDescription(eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variable2"]))
           .addField(eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variablex_3"]), eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variable3"]))
-          .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
+          .setFooter(client.getFooter(es))
         ]
       })
       //play the SONG from YOUTUBE
@@ -401,7 +401,7 @@ module.exports = client => {
   client.on("messageCreate", async message => {
     if (!message.guild) return;
     var data = client.musicsettings.get(message.guild.id);
-    var musicChannelId = data.channel;
+    const musicChannelId = data.channel;
     //if not setupped yet, return
     if (!musicChannelId || musicChannelId.length < 5) return;
     //if not the right channel return
@@ -422,7 +422,7 @@ module.exports = client => {
       }
     }
     if (message.author.bot) return; // if the message  author is a bot, return aka ignore the inputs
-    var prefix = client.settings.get(message.guild.id, "prefix")
+    const prefix = client.settings.get(message.guild.id, "prefix")
     //get the prefix regex system
     const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`); //the prefix can be a Mention of the Bot / The defined Prefix of the Bot
     var args;
@@ -480,10 +480,10 @@ module.exports = client => {
  * @INFO
  */
 function generateQueueEmbed(client, guildId, leave) {
-  let guild = client.guilds.cache.get(guildId)
+  const guild = client.guilds.cache.get(guildId)
   if (!guild) return;
-  let es = client.settings.get(guild.id, "embed")
-  let ls = client.settings.get(guild.id, "language")
+  const es = client.settings.get(guild.id, "embed")
+  const ls = client.settings.get(guild.id, "language")
   var embeds = [
     new MessageEmbed()
     .setColor(es.color)
@@ -494,9 +494,7 @@ function generateQueueEmbed(client, guildId, leave) {
     })),
     new MessageEmbed()
     .setColor(es.color)
-    .setFooter(es.footertext, guild.iconURL({
-      dynamic: true
-    }))
+    .setFooter(client.getFooter(es))
     .setImage(guild.banner ? guild.bannerURL({
       size: 4096
     }) : "https://imgur.com/jLvYdb4.png")
@@ -506,13 +504,13 @@ function generateQueueEmbed(client, guildId, leave) {
   const player = client.manager.players.get(guild.id);
   if (!leave && player && player.queue && player.queue.current) {
     embeds[1].setImage(`https://img.youtube.com/vi/${player.queue.current.identifier}/mqdefault.jpg`)
-      .setFooter(`Requested by: ${player.queue.current.requester.tag}`, player.queue.current.requester.displayAvatarURL({
+      .setFooter(client.getFooter(`Requested by: ${player.queue.current.requester.tag}`, player.queue.current.requester.displayAvatarURL({
         dynamic: true
-      }))
+      })))
       .addField(`${emoji.msg.time} Duration: `, `\`${format(player.queue.current.duration).split(" | ")[0]}\` | \`${format(player.queue.current.duration).split(" | ")[1]}\``, true)
       .addField(`${emoji.msg.song_by} Song By: `, `\`${player.queue.current.author}\``, true)
       .addField(`${emoji.msg.repeat_mode} Queue length: `, `\`${player.queue.length} Songs\``, true)
-      .setAuthor(`${player.queue.current.title}`, "https://images-ext-1.discordapp.net/external/DkPCBVBHBDJC8xHHCF2G7-rJXnTwj_qs78udThL8Cy0/%3Fv%3D1/https/cdn.discordapp.com/emojis/859459305152708630.gif", player.queue.current.uri)
+      .setAuthor(client.getAuthor(`${player.queue.current.title}`, "https://images-ext-1.discordapp.net/external/DkPCBVBHBDJC8xHHCF2G7-rJXnTwj_qs78udThL8Cy0/%3Fv%3D1/https/cdn.discordapp.com/emojis/859459305152708630.gif", player.queue.current.uri))
     delete embeds[1].description;
     delete embeds[1].title;
     //get the right tracks of the current tracks

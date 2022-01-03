@@ -48,7 +48,7 @@ blues, oldgaming, pop, remixes, rock, strange-fruits-gaming
     if (!client.settings.get(message.guild.id, "MUSIC")) {
       return interaction.reply({ephemeral: true, embed : [new MessageEmbed()
         .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
+        .setFooter(client.getFooter(es))
         .setTitle(client.la[ls].common.disabled.title)
         .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
       ]});
@@ -91,11 +91,11 @@ blues, oldgaming, pop, remixes, rock, strange-fruits-gaming
       interaction.reply({
         embeds:  [new MessageEmbed()
           .setColor(es.color)
-          .setAuthor(`Loading '${args[0] ? args[0] : "Default"}' Music Mix`, "https://imgur.com/xutrSuq.gif", link)
+          .setAuthor(client.getAuthor(`Loading '${args[0] ? args[0] : "Default"}' Music Mix`, "https://imgur.com/xutrSuq.gif", link))
           .setTitle(eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variable1"]))
           .setDescription(eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variable2"]))
           .addField(eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variablex_3"]), eval(client.la[ls]["cmds"]["music"]["playmusicmix"]["variable3"]))
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(client.getFooter(es))
         ]})
       //play the SONG from YOUTUBE
       playermanager(client, message, Array(link), `song:youtube`, interaction, "songoftheday");

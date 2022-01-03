@@ -1,5 +1,5 @@
 //here the event starts
-const config = require(`${process.cwd()}/botconfig/config.json`)
+let config = require(`${process.cwd()}/botconfig/config.json`)
 const settings = require(`${process.cwd()}/botconfig/settings.json`);
 const Discord = require("discord.js")
 const moment = require("moment")
@@ -34,10 +34,8 @@ module.exports = client => {
 var state = false;
 
 function change_status(client) {
+  config = require(`${process.cwd()}/botconfig/config.json`)
   if (!state) {
-    state = !state;
-    client.stats.get("global", "songs")
-    client.stats.get("global", "setups")
     client.user.setActivity(`${config.status.text}`
       .replace("{prefix}", config.prefix)
       .replace("{guildcount}", client.guilds.cache.size)
@@ -68,6 +66,7 @@ function change_status(client) {
         type: config.status.type,
         url: config.status.url
       });
+    state = !state;
     client.logger("Set the Second Status Text")
   }
 }

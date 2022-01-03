@@ -221,11 +221,11 @@ function stations(client, prefix, message) {
   
 
   try {
-    const reyfm_iloveradio_embed = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL()).setTitle("Pick your Station, by typing in the right `INDEX` Number!").setDescription(`Example: \`${prefix}radio 11\``);
-    const stationsembed = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL()).setTitle("Pick your Station, by typing in the right `INDEX` Number!").setDescription(`Example: \`${prefix}radio 44\``);
-    const stationsembed2 = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL()).setTitle("Pick your Station, by typing in the right `INDEX` Number!").setDescription(`Example: \`${prefix}radio 69\``);
-    const stationsembed3 = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL()).setTitle("Pick your Station, by typing in the right `INDEX` Number!").setDescription(`Example: \`${prefix}radio 120\``);
-    const stationsembed4 = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL()).setTitle("CUSTOM REQUESTS | Pick your Station, by typing in the right `INDEX` Number!");
+    const reyfm_iloveradio_embed = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(client.getFooter(es)).setTitle("Pick your Station, by typing in the right `INDEX` Number!").setDescription(`Example: \`${prefix}radio 11\``);
+    const stationsembed = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(client.getFooter(es)).setTitle("Pick your Station, by typing in the right `INDEX` Number!").setDescription(`Example: \`${prefix}radio 44\``);
+    const stationsembed2 = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(client.getFooter(es)).setTitle("Pick your Station, by typing in the right `INDEX` Number!").setDescription(`Example: \`${prefix}radio 69\``);
+    const stationsembed3 = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(client.getFooter(es)).setTitle("Pick your Station, by typing in the right `INDEX` Number!").setDescription(`Example: \`${prefix}radio 120\``);
+    const stationsembed4 = new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(client.getFooter(es)).setTitle("CUSTOM REQUESTS | Pick your Station, by typing in the right `INDEX` Number!");
     
     let beforeindex = 1;
     let REYFM = "";
@@ -369,7 +369,7 @@ function stations(client, prefix, message) {
     for (let i = 0; i < radios.OTHERS.request.length; i++) {
       requests += `**${i + beforeindex}** [${radios.OTHERS.request[i].split(" ")[0].replace("-", " ").substr(0, 20)}](${radios.OTHERS.request[i].split(" ")[1]})\n`;
       if(requests.length > 1900){
-        embeds.push(new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL()).setTitle("CUSTOM REQUESTS | Pick your Station, by typing in the right `INDEX` Number!").setDescription(`${requests}`))
+        embeds.push(new MessageEmbed().setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null).setFooter(client.getFooter(es)).setTitle("CUSTOM REQUESTS | Pick your Station, by typing in the right `INDEX` Number!").setDescription(`${requests}`))
         requests = "";
       }
     }
@@ -408,7 +408,7 @@ async function autoplay(client, player, type) {
       let embed = new MessageEmbed()
         .setTitle(eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable7"]))
         .setDescription(settings.LeaveOnEmpty_Queue.enabled && type != "skip" ? `I'll leave the Channel: \`${client.channels.cache.get(player.voiceChannel).name}\` in: \`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\`, If the Queue stays Empty! ` : eval(client.la[ls]["handlers"]["functionsjs"]["functions"]["variable9"]))
-        .setColor(es.wrongcolor).setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL());
+        .setColor(es.wrongcolor).setFooter(client.getFooter(es));
       client.channels.cache.get(player.textChannel).send({
         embeds: [embed]
       }).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
@@ -428,7 +428,7 @@ async function autoplay(client, player, type) {
                 embed.setColor(es.wrongcolor)
               } catch {}
               try {
-                embed.setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL());
+                embed.setFooter(client.getFooter(es));
               } catch {}
               client.channels.cache
                 .get(player.textChannel)
@@ -547,7 +547,7 @@ async function swap_pages(client, message, description, TITLE) {
           .setDescription(current.join("\n"))
           .setTitle(TITLE)
           .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
-          .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
+          .setFooter(client.getFooter(es))
         embeds.push(embed);
       }
       embeds;
@@ -564,7 +564,7 @@ async function swap_pages(client, message, description, TITLE) {
           .setDescription(current)
           .setTitle(TITLE)
           .setColor(es.color).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
-          .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
+          .setFooter(client.getFooter(es))
         embeds.push(embed);
       }
       embeds;
@@ -576,7 +576,7 @@ async function swap_pages(client, message, description, TITLE) {
     embeds: [new MessageEmbed()
       .setTitle(`${emoji.msg.ERROR} No Content added to the SWAP PAGES Function`)
       .setColor(es.wrongcolor).setThumbnail(es.thumb ? es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL() : null)
-      .setFooter(es.footertext, es.footericon && (es.footericon.includes("http://") || es.footericon.includes("https://")) ? es.footericon : client.user.displayAvatarURL())
+      .setFooter(client.getFooter(es))
     ]
   }).catch(e => console.log("THIS IS TO PREVENT A CRASH"))
   if (embeds.length === 1) return message.channel.send({

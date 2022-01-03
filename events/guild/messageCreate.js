@@ -74,7 +74,7 @@ module.exports = async (client, message) => {
             return message.reply({
               embeds: [new Discord.MessageEmbed()
                 .setColor(es.wrongcolor)
-                .setFooter(es.footertext, es.footericon)
+                .setFooter(client.getFooter(es))
                 .setTitle(client.la[ls].common.botchat.title)
                 .setDescription(`${client.la[ls].common.botchat.description}\n> ${botchannel.map(c=>`<#${c}>`).join(", ")}`)
               ]
@@ -139,7 +139,7 @@ module.exports = async (client, message) => {
                 embeds: [
                   new Discord.MessageEmbed()
                   .setColor(es.wrongcolor)
-                  .setFooter(es.footertext, es.footericon)
+                  .setFooter(client.getFooter(es))
                   .setTitle(handlemsg(client.la[ls].common.unknowncmd.title, {
                     prefix: prefix
                   }))
@@ -196,7 +196,7 @@ module.exports = async (client, message) => {
                 message.reply({
                   embeds: [new Discord.MessageEmbed()
                     .setColor(es.wrongcolor)
-                    .setFooter(es.footertext, es.footericon)
+                    .setFooter(client.getFooter(es))
                     .setTitle(client.la[ls].common.permissions.title)
                     .setDescription(`${client.la[ls].common.permissions.description}\n> \`${command.memberpermissions.join("`, ``")}\``)]}
             ).then(async msg => {
@@ -225,7 +225,7 @@ module.exports = async (client, message) => {
                 not_allowed = true;
                 return message.reply({embeds: [new MessageEmbed()
                   .setColor(es.wrongcolor)
-                  .setFooter(es.footertext, es.footericon)
+                  .setFooter(client.getFooter(es))
                   .setTitle(client.la[ls].common.join_vc)]}).catch(()=>{})
               }
               if(message.member.voice.selfDeaf || message.member.voice.deaf)
@@ -255,7 +255,7 @@ module.exports = async (client, message) => {
                   not_allowed = true;
                   return message.reply({embeds: [new MessageEmbed()
                     .setColor(es.wrongcolor)
-                    .setFooter(es.footertext, es.footericon)
+                    .setFooter(client.getFooter(es))
                     .setTitle(client.la[ls].common.nothing_playing)]}).catch(()=>{})
                 }
                 if (!mechannel){
@@ -263,7 +263,7 @@ module.exports = async (client, message) => {
                   not_allowed = true;
                   return message.reply({embeds: [new MessageEmbed()
                     .setColor(es.wrongcolor)
-                    .setFooter(es.footertext, es.footericon)
+                    .setFooter(client.getFooter(es))
                     .setTitle(client.la[ls].common.not_connected)]}).catch(()=>{})
                 }
                 if(!player.queue || !player.queue.current){
@@ -279,7 +279,7 @@ module.exports = async (client, message) => {
                   not_allowed = true;
                   return message.reply({embeds: [new MessageEmbed()
                     .setColor(es.wrongcolor)
-                    .setFooter(es.footertext, es.footericon)
+                    .setFooter(client.getFooter(es))
                     .setTitle(client.la[ls].common.nothing_playing)]}).catch(()=>{})
                 }
               }
@@ -287,7 +287,7 @@ module.exports = async (client, message) => {
               if (player && channel.id !== player.voiceChannel && !command.parameters.notsamechannel){
                 return message.reply({embeds: [new MessageEmbed()
                   .setColor(es.wrongcolor)
-                  .setFooter(es.footertext, es.footericon)
+                  .setFooter(client.getFooter(es))
                   .setTitle(client.la[ls].common.wrong_vc)
                   .setDescription(`Channel: <#${player.voiceChannel}> `)
                 ]}).catch(()=>{})
@@ -296,7 +296,7 @@ module.exports = async (client, message) => {
             if (mechannel && channel.id !== mechannel.id && !command.parameters.notsamechannel) {
               return message.reply({embeds: [new MessageEmbed()
                 .setColor(es.wrongcolor)
-                .setFooter(es.footertext, es.footericon)
+                .setFooter(client.getFooter(es))
                 .setTitle(client.la[ls].common.wrong_vc)
                 .setDescription(`Channel: <#${mechannel.id}>`)
               ]}).catch(()=>{})
@@ -312,7 +312,7 @@ module.exports = async (client, message) => {
         return message.reply({embeds: [
           new Discord.MessageEmbed()
           .setColor(es.wrongcolor)
-          .setFooter(es.footertext, es.footericon)
+          .setFooter(client.getFooter(es))
           .setTitle(client.la[ls].common.somethingwentwrong)
           .setDescription(`\`\`\`${e.message ? e.message : e.stack ? String(e.stack).grey.substr(0, 2000) : String(e).grey.substr(0, 2000)}\`\`\``)
         ]}).then(async msg => {
@@ -324,7 +324,7 @@ module.exports = async (client, message) => {
         message.reply({
           embeds: [new Discord.MessageEmbed()
             .setColor(es.wrongcolor)
-            .setFooter(es.footertext, es.footericon)
+            .setFooter(client.getFooter(es))
             .setTitle(handlemsg(client.la[ls].common.unknowncmd.title, {
               prefix: prefix
             }))

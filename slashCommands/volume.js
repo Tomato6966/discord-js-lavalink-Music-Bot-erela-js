@@ -26,7 +26,7 @@ const { handlemsg } = require(`${process.cwd()}/handlers/functions`);
     if (!client.settings.get(message.guild.id, "MUSIC")) {
       return interaction.reply({ephemeral: true, embeds : [new MessageEmbed()
         .setColor(es.wrongcolor)
-        .setFooter(es.footertext, es.footericon)
+        .setFooter(client.getFooter(es))
         .setTitle(client.la[ls].common.disabled.title)
         .setDescription(handlemsg(client.la[ls].common.disabled.description, {prefix: prefix}))
       ]});
