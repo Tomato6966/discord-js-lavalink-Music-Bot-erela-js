@@ -1,0 +1,984 @@
+{
+    "cmds": {
+        "info": {
+            "botinfo": {
+                "loading": "봇 정보 가져오기-데이터",
+                "field1": {
+                    "title": "💿 일반 - 통계",
+                    "value": "```yml\n서버들: {totalGuilds}\n유저들: {totalMembers}\n연결된 채널들: {connectedchannelsamount}```"
+                },
+                "field2": {
+                    "title": "💿 봇 - 정보"
+                },
+                "field3": {
+                    "title": "💿 시스템 - 정보",
+                    "value": "```yml\nOS: Linux | Debian\nCPU Usage: {cpu} %\nRAM Usage: {ram} MB```"
+                },
+                "field4": {
+                    "title": "💿 개발자"
+                },
+                "field5": {
+                    "title": "💿 중요 링크",
+                    "value": "**[초대링크]({invitelink})・[지원 서버](https://discord.gg/283ssvcF2D)・[Website](https://milrato.dev)**\n**[Invite Public Version](https://discord.com/api/oauth2/authorize?client_id=826400818995134465&permissions=8&scope=bot)**"
+                },
+                "variable1": "`\\`\\`\\`yml\\n닉네임: ${client.user.tag} [${client.user.id}]\\n봇 대기 시간: ${Math.round(Date.now() - message.createdTimestamp)}ms\\nAPI 대기 시간: ${Math.round(client.ws.ping)}ms\\n런타임: ${duration(client.uptime).join(`︲`)}\\`\\`\\``",
+                "variable2": "``"
+            },
+            "commandcount": {
+                "tempmsg": "BOT 정보 데이터 가져오기",
+                "title": ":gear: **[`{cmdcount}`] 명령어들**",
+                "description": ":gear: **[`{catcount}`] 목록들**\n:gear: **[`{lines}`] 코드 줄**\n<a:Valid_Code_Developer:858405056238714930> **[`{letters}`] 코드 문자**",
+                "variable1": "``"
+            },
+            "developer": {
+                "buttons": {
+                    "invite": "공개 버전 초대",
+                    "dc": "나만의 봇을 가지세요.",
+                    "botlist": "공개 봇 목록-웹 사이트"
+                },
+                "title": "Tomato#6966  나를위한소녀#1793",
+                "description": "개발자 Tomato#6966 님의 코드를 수정 및 개발 했습니다.",
+                "variable1": "``"
+            },
+            "help": {
+                "error1": "사용자 지정 명령이 아직 정의되지 않았습니다. 다음을 사용하십시오.`setup-customcommands`",
+                "nocustom": "사용자 지정 명령에 대한 사용자 지정 정보 없음 ;(",
+                "noinfo": "명령에 대한 정보를 찾을 수 없습니다. **{command}**",
+                "footer": "명령 설명 및 정보, 명령어: {prefix}help [CMD NAME]",
+                "detail": {
+                    "name": "**💿 명령어 이름**",
+                    "desc": "**💿 설명**",
+                    "aliases": "**💿 별칭(보조 명령어)**",
+                    "about": "💿 자세한 정보: `{cmdname}`",
+                    "cooldown": "**💿 재사용 대기 시간**",
+                    "usage": "**💿 용도**",
+                    "syntax": "Syntax: <> = required, [] = optional"
+                },
+                "buttons": {
+                    "home": "Home",
+                    "back": "Back",
+                    "forward": "Forward"
+                },
+                "overview": {
+                    "title": ":gear: **__명령 범주 개요__**",
+                    "desc": "> 👍 ... **개요**\n\n> 🔰 ... **정보**\n> 🎶 ... **Music Related**\n> ⚙ ... **설정들 & 👑 Owner & ⌨️Programming**\n> 🎤 ... **Voice & 📈 Ranking**\n> 🎮 ... **Mini Games & 🕹️ Fun**\n> 🚫 ... **Administration & 💪 Setup**\n> 🔞 ... **NSFW**\n> 🦾 ... **Custom Commands**\n\n> *Click on the Button Emojis to jump to the Command Category*\n> *Use the Arrows to swap the Pages forward/backward/jump-back-home*"
+                },
+                "buttonerror": "❌ **{prefix}help 를 입력한 사용자만 응답할 수 있습니다!**",
+                "timeended": "시간이 종료되었습니다. {prefix}help 를 다시입력해주세요!",
+                "variable1": "`🦾 **사용자 지정 명령 [${cuc[0].includes(`NO`) ? 0 : items.length}]**`",
+                "variable2": "`도움말-메뉴 🔰 **${category.toUpperCase()} [${items.length}]**`",
+                "variable3": "`**${category.toUpperCase()} [${items.length}]**`, `> \\`${items[0]}\\`\\n\\n**Usage:**\\n> \\`${cmd.usage}\\``",
+                "variable4": "`${items.join(`︲`)}`",
+                "variable5": "`__**${client.user.username}**__에 대한 정보`"
+               },
+            "invite": {
+                "title": "초대하려면 여기를 클릭하십시오.",
+                "buttons": {
+                    "public": "공개 봇 초대",
+                    "server": "지원 서버",
+                    "bot": "이 봇 초대"
+                },
+                "variable1": "``"
+            },
+            "ping": {
+                "m1": ":heartbeat: 연결 속도 테스트 ...",
+                "m2": ":robot: 봇 핑: `{botping}ms`\n\n:stopwatch: 호스트 핑: `{ping}`\n\n:hourglass: API 지연 시간: `{wsping}ms`",
+                "variable1": "``"
+            },
+            "sponsor": {
+                "variable1": "`BERO HOST | Our Primary Sponsor`",
+                "variable2": "`Third Sponsor of This Bot is:\\n**BERO-HOST** THE BEST HOSTER\\n<:arrow:832598861813776394> BERO-HOST.de is sponsoring them with some free / cheaper Hosting Methods,\\n<:arrow:832598861813776394> Thanks to them, we are able to host our Website, Bots and GAME SERVERS\\n<:arrow:832598861813776394> Our suggestion is, if you want to host Bots / Games / Websites, then go to [BERO-HOST.de](http://bero-host.de/?utm_source=bot&utm_medium=cpc&utm_id=milrato)\\n\\n**What they are offering:**\\n<:arrow:832598861813776394> **>>** Minecraft Hosting, CounterStrike: Global Offensive, Garry's Mod, ARK, ARMA 3, ...\\n<:arrow:832598861813776394> **>>** Cheap and fast Domains\\n<:arrow:832598861813776394> **>>** WEBHOSTING\\n<:arrow:832598861813776394> **>>** TEAMSPEAK SERVERS\\n<:arrow:832598861813776394> **>>** Linux & Windows Root Servers\\n\\n[**Discord Server:**](https://discord.bero-host.de)\\n[**Website:**](http://bero-host.de/?utm_source=bot&utm_medium=cpc&utm_id=milrato)\\n[**__SPONSOR LINK!__**](https://milrato.dev/img/paysafecard.png)\\n`",
+                "variable3": "`NEXTNODE | Our Secondary Sponsor`",
+                "variable4": "`<:arrow:832598861813776394> Nextnode is providing us, like BERO-HOST with free Discord Bot-Hosting technologies\\n\\n<:arrow:832598861813776394> If you use the code: **\\`x10\\`** their, then you'll get at least 5% off everything!\\n\\n<:arrow:832598861813776394> Check out their [Website](https://Nextnode.de) and their [Discord](https://discord.gg/GgjJZCyYKD) to get your own Bot too!`"
+            },
+            "stats": {
+                "title": "💿 The Stats of {botname}",
+                "field1": {
+                    "title": "⚙️ GLOBAL Commands used:",
+                    "value": ">>> `{allcommands} Commands` used\nin **all** Servers"
+                },
+                "field2": {
+                    "title": "🎵 GLOBAL Songs played:",
+                    "value": ">>> `{allsongs} Songs` played in\n**all** Servers"
+                },
+                "field3": {
+                    "title": "⚙️ SERVER Commands used:",
+                    "value": ">>> `{guildcommands} Commands` used in\n**this** Server"
+                },
+                "field4": {
+                    "title": "🎵 SERVER Songs played:",
+                    "value": ">>> `{guildsongs} Songs` played in\n**this** Server"
+                },
+                "variablex_1": "`\\u200b`", "variable1": "`\\u200b`",
+                "variable2": "``"
+            },
+            "support": {
+                "title": ":tickets: You need help? **JOIN OUR SUPPORT SERVER**",
+                "variable1": "`**[Invite Public Bot](https://discord.com/api/oauth2/authorize?client_id=784364932149280778&permissions=8&scope=bot)  •  [WEBSITE](https://milrato.dev)  •  [Support Server/Get your Own Bot](https://discord.com/invite/milrato)**`",
+                "variable2": "-",
+                "variable3": "``"
+            },
+            "uptime": {
+                "TIME NOT NEEDED": "",
+                "variable1": "`:white_check_mark: **${client.user.username}** Uptime`",
+                "variable2": "`\\`\\`\\`css\\n${duration(client.uptime).map(i=> `${i}`).join(`︲`)}\\`\\`\\``",
+                "variablex_3": "`**Date Launched**`", "variable3":"moment(timestamp).format(`LLLL`)",
+                "variable4": "``"
+            }
+        },
+        "music": {
+            "autoplay": {
+                "enabled": {
+                    "title": "**__Enabled_ 변경 했습니다.**",
+                    "description": "**이제 대기열이 비어 있을 때 노래를 자동으로 추가합니다.**"
+                },
+                "disabled": {
+                    "title": "**__Disabled__  변경 했습니다.**",
+                    "description": "**이제 대기열이 비어 있을 때 노래를 자동으로 추가하지 않습니다.**"
+                },
+                "variable1": "`${player.get(`autoplay`) ? client.la[ls].cmds.music.autoplay.enabled.title : client.la[ls].cmds.music.autoplay.disabled.title}`",
+                "variable2": "`${player.get(`autoplay`) ? client.la[ls].cmds.music.autoplay.enabled.description : client.la[ls].cmds.music.autoplay.disabled.description}`",
+                "variable3": "``"
+            },
+            "clearqueue": {
+                "title": "🗑 **노래 목록을 제거 했습니다.!**",
+                "variable1": "``"
+            },
+            "forceskip": {
+                "title": "⏹️ **재생을 중지하고 채널을 떠났습니다!**",
+                "title2": "⏭ **현재 노래를 건너뛰었습니다!**",
+                "variable1": "`Channel: <#${player.voiceChannel}>`",
+                "variable2": "``"
+            },
+            "forward": {
+                "allowed": "❌ **'1' ~ '{duration}초 동안 전진할 수 있습니다!**",
+                "title": "👍 **노래 시간을 점프했습니다.**",
+                "description": "**`{amount} 초` 점프: `{time}`**",
+                "field": "⌛ **진보:**",
+                "variable1": "``"
+            },
+            "grab": {
+                "author": "저장된 노래:",
+                "field1": "⌛ **길이:**",
+                "field2": "💯 **작곡가:**",
+                "field3": "🔄 **Queue length:**",
+                "field4": "🎶 **Play it:**",
+                "field5": "🔎 **Saved in:**",
+                "footer": "요청자: {usertag} ・ 서버: {guild}",
+                "variable1": "`${player.playing ? `▶` : `⏸`} **${player.queue.current.title}**`",
+                "variable2": "``"
+            },
+            "join": {
+                "title": "👍 **음성채널에 연결되었습니다.**",
+                "variable1": "`채널: <#${player.voiceChannel}>`",
+                "variable2": "`채널: <#${player.voiceChannel}>`",
+                "variable3": "`채널: <#${player.voiceChannel}>`",
+                "variable4": "``"
+            },
+            "jump": {
+                "error1": "❌ **점프할 노래를 포함하십시오.**",
+                "error2": "❌ **`Queue Number`여야 합니다.**",
+                "error3": "❌ **그 노래는 대기열에 없습니다**!",
+                "title": "👍 **현제 곡: `{number}.` 노래**",
+                "description": "⏭ **`{number}`번 노래로 점프했습니다.!**",
+                "variable1": "`${client.la[ls].common.example}: \\`${prefix}jump ${player.queue.size - 2 <= 0 ? player.queue.size : player.queue.size - 2 }\\``",
+                "variable2": "``"
+            },
+            "loop": {
+                "errortitle": "❌ **loop 방법을 추가하십시오!**",
+                "errordescription": "`loop song` / `loop queue` / `loop off`",
+                "track": {
+                    "disabled": "❌ **반복 추적 모드를 비활성화했습니다!**",
+                    "enabled": "👍 **반복 추적 모드를 활성화했습니다!**"
+                },
+                "queue": {
+                    "disabled": "❌ **노래 목록 반복 모드를 사용할 수 없습니다!**",
+                    "enabled": "👍 **노래 목록 반복 모드를 활성화했습니다!**"
+                },
+                "andsong": "❌ **노래 반복 모드를 비활성화했습니다!**",
+                "andqueue": "❌ **노래 목록 반복 모드를 비활성화했습니다!**",
+                "variable1": "``"
+            },
+            "lyrics": {
+                "nolyrics": "❌ **가사를 찾을 수 없습니다!**",
+                "searching": "🔎 **가사 검색 중: `{title}`**",
+                "found": "📃 **가사::** `{title}`",
+                "variable1": "`\\u200b`",
+                "variable2": "``"
+            },
+            "move": {
+                "variable1": "`${emoji.msg.ERROR} | 잘못된 명령 사용!`",
+                "variable2": "`사용법: \\`${prefix}move <곡 번호> <이동할 위치 번호>\\`\\n예시: \\`${prefix}move ${player.queue.size - 2 <= 0 ? player.queue.size : player.queue.size - 2 } 1\\``",
+                "variable3": "`${emoji.msg.ERROR} | 잘못된 명령 사용!`",
+                "variable4": "`사용법: \\`${prefix} <곡 번호> <이동할 위치 번호>\\`\\n예시: \\`${prefix}move ${player.queue.size - 2 <= 0 ? player.queue.size : player.queue.size - 2 } 1\\``",
+                "variable5": "`${emoji.msg.ERROR} | UsageError 입력은 다음보다 큰 숫자여야 합니다. \\`1\\` ~ \\`${player.queue.length}\\``",
+                "variable6": "`노래 목록에서 위치 이동 \\`${args[0]}\\` 에서 위치 \\`${args[1]}\\`로 이동`",
+                "variable7": "`[${song.title}](${song.uri}) - \\`${format(song.duration)}\\` - 요청자: **${song.requester.tag}**`",
+                "variable8": "``"
+            },
+            "moveme": {
+                "variable1": "`${emoji.msg.ERROR} 아무 데도 연결되어 있지 않습니다.`",
+                "variable2": "`${emoji.msg.ERROR} 제발 먼저 연결하십시오.`",
+                "variable3": "`${emoji.msg.ERROR} 채널이 꽉 차 옮길 수 없습니다.`",
+                "variable4": "`${emoji.msg.ERROR} 당신은 이미 내 채널에 있다. `",
+                "variable5": "``"
+            },
+            "nowplaying": {
+                "variable1": "`${emoji.msg.ERROR} 현재 재생 중인 음악이 없습니다.`",
+                "variable2": "`${player.playing ? `${emoji.msg.resume}` : `${emoji.msg.pause}`} **${player.queue.current.title}**`",
+                "variable3": "``"
+            },
+            "pause": {
+                "variable1": "`${emoji.msg.ERROR} 노래가 이미 일시 중지되었습니다!`",
+                "variable2": "`다시 시작: \\`${prefix}resume\\``",
+                "variable3": "``"
+            },
+            "play": {
+                "variable1": "`${emoji.msg.ERROR} 노래 제목이나 URL을 적어주세요.`",
+                "variable2": "``"
+            },
+            "playlist": {
+                "variable1": "`${emoji.msg.ERROR} 노래 재생 목록 제목이나 URL을 적어주세요.`",
+                "variable2": "``"
+            },
+            "playmusicmix": {
+                "variable1": "`:notes: __**기타 옵션은 다음과 같습니다.:**__`",
+                "variable2": "`>>> \\`\\`\\`blues, charts, chill, default, heavymetal, gaming, jazz, metal, magic-release, ncs, nocopyright, oldgaming, pop, remixes, rock, strange-fruits-gaming\\`\\`\\``",
+                "variablex_3": "`:muscle: **다른 유형을 재생:**`", "variable3": "`> \\`${prefix}playmusicmix <NAME>\\`\\n💡 **예시:**\\n> \\`${prefix}playmusicmix pop\\``",
+                "variable4": "``"
+            },
+            "playsc": {
+                "variable1": "`${emoji.msg.ERROR} 제목이나 URL을 적어주세요.`",
+                "variable2": "``"
+            },
+            "playskip": {
+                "variable1": "`${emoji.msg.ERROR} 제목이나 URL을 적어주세요.`",
+                "variable2": "``"
+            },
+            "playskipsc": {
+                "variable1": "`${emoji.msg.ERROR} 제목이나 URL을 적어주세요.`",
+                "variable2": "``"
+            },
+            "playsongoftheday": {
+                "variable1": "``"
+            },
+            "playtop": {
+                "variable1": "`${emoji.msg.ERROR} 제목이나 URL을 적어주세요.`"
+            },
+            "queue": {
+                "variablex_1": "`**0) 현재 곡**`", "variable1": "`**${player.queue.current.title.substr(0, 60)}** - \\`${player.queue.current.isStream ? `LIVE STREAM` : format(player.queue.current.duration).split(` | `)[0]}\\`\\n*request by: ${player.queue.current.requester.tag}*`",
+                "variable2": "`${emoji.msg.ERROR} 목록에 곡이 없습니다.`",
+                "variablex_3": "`**0) 현재 곡**`", "variable3": "`**${player.queue.current.title.substr(0, 60)}** - \\`${player.queue.current.isStream ? `LIVE STREAM` : format(player.queue.current.duration).split(` | `)[0]}\\`\\n*request by: ${player.queue.current.requester.tag}*`",
+                "variablex_4": "`**0) 현재 곡**`", "variable4": "`**${player.queue.current.title.substr(0, 60)}** - \\`${player.queue.current.isStream ? `LIVE STREAM` : format(player.queue.current.duration).split(` | `)[0]}\\`\\n*request by: ${player.queue.current.requester.tag}*`",
+                "variable5": "``"
+            },
+            "queuestatus": {
+                "variable1": "`**${message.guild.name}**의 목록 정보`",
+                "variable2": "`**접속 채널:** <#${player.voiceChannel}> ** 명령어 채널:** <#${player.textChannel}>`",
+                "variablex_3": "`${emoji.msg.autoplay_mode} Autoplay`", "variable3": "`\\`\\`\\`${player.get(`autoplay`) ? `✅ Enabled` : `${emoji.msg.ERROR} Disabled`}\\`\\`\\``",
+                "variablex_4": "`${emoji.msg.disk} 현재 곡: `", "variable4": "`${player.queue && player.queue.current ? `${player.playing ? `${emoji.msg.resume}` : `${emoji.msg.pause}`} [**${player.queue.current.title}**](${player.queue.current.uri})` : `\\`\\`\\`${emoji.msg.ERROR} 재생 안 함\\`\\`\\``}`",
+                "variablex_5": "`${emoji.msg.time} Progress: `", "variable5": "player.queue && player.queue.current ? createBar(player) : `\\`\\`\\`${emoji.msg.ERROR} 재생 안 함\\`\\`\\``",
+                "variable6": "``"
+            },
+            "radio": {
+                "variable1": "`${emoji.msg.ERROR} 올바른 라디오 방송국이 아님`",
+                "variable2": "`숫자 \\`1\\` ~ \\`183\\` 사이로 이용해주세요.`",
+                "variable3": "`${emoji.msg.ERROR} 볼륨 번호가 범위를 벗어남`",
+                "variable4": "`숫자 \\`1\\` ~ \\`150\\` 사이로 이용해주세요.`",
+                "variable5": "`${emoji.msg.ERROR} 라디오 방송국을 찾을 수 없음`",
+                "variable6": "`숫자 \\`1\\` ~ \\`183\\` 사이로 이용해주세요.`",
+                "variable7": "``"
+            },
+            "reconnect": {
+                "variable1": "`아직 설정이 완료되지 않았습니까? \\`${prefix}setup-radio\\` 사용해 보세요.`",
+                "variable2": "`아직 설정이 완료되지 않았습니까? \\`${prefix}setup-radio\\` 사용해 보세요.`",
+                "variable3": "``"
+            },
+            "removedupes": {
+                "variable1": "`${emoji.msg.cleared} 다음 위치의 곡을 제거완료함. : \\`${Number(args[0])}\\``",
+                "variable2": "``"
+            },
+            "removetrack": {
+                "variable1": "`${emoji.msg.ERROR} 제거할 곡을 추가하십시오!`",
+                "variable2": "`예시: \\`곡 제거: ${player.queue.size - 2 <= 0 ? player.queue.size : player.queue.size - 2 }\\``",
+                "variable3": "`${emoji.msg.ERROR} It has to be a valid Queue Number!`",
+                "variable4": "`예시: \\`곡 제거: ${player.queue.size - 2 <= 0 ? player.queue.size : player.queue.size - 2 }\\``",
+                "variable5": "`${emoji.msg.ERROR} Your Song must be in the Queue!`",
+                "variable6": "`예시: \\`곡 제거: ${player.queue.size - 2 <= 0 ? player.queue.size : player.queue.size - 2 }\\``",
+                "variable7": "`${emoji.msg.cleared} 다음 위치의 곡을 제거완료함. : \\`${Number(args[0])}\\``",
+                "variable8": "``"
+            },
+            "removevoteskip": {
+                "variable1": "`투표 제거!`",
+                "variable2": "`투표: \\`${player.get(`votes`)}\\` of \\`${voteamount}\\` 투표 필요`",
+                "variable3": "`${emoji.msg.ERROR} 아직 투표 안 함!!`",
+                "variable4": "`투표: \\`${player.get(`votes`)}\\` of \\`${voteamount}\\` 투표 필요`",
+                "variable5": "`${emoji.msg.ERROR} 투표를 제거할 수 없음.!`",
+                "variable6": "`아직 생성된 DJ 역할 설정이 없으므로 다음을 입력하여 생성합니다. \\`${prefix}adddj @DJ-Setup\\``",
+                "variable7": "``"
+            },
+            "restart": {
+                "variable1": "``"
+            },
+            "resume": {
+                "variable1": "`${emoji.msg.ERROR} 노래가 이미 재개되었습니다!`",
+                "variable2": "`멈출려면 다음을 입력하세요. : \\`${prefix}pause\\``",
+                "variable3": "``"
+            },
+            "rewind": {
+                "variable1": "`${emoji.msg.ERROR} 되감기는 \\`1\\` - \\`${player.queue.current.duration}\\` 사이로 입력해주세요!`",
+                "variable2": "`${emoji.msg.rewind} 노래 \\`${args[0]} 초 되감음\\` to: ${format(Number(player.position))}`",
+                "variable3": "``"
+            },
+            "search": {
+                "variable1": "`${emoji.msg.ERROR} 제목이나 URL을 적어주세요.`",
+                "variable2": "``"
+            },
+            "searchplaylist": {
+                "variable1": "`이 CMD는 아직 완료되지 않았습니다!`",
+                "variable2": "``"
+            },
+            "searchradio": {
+                "variable1": "`${emoji.msg.ERROR} What should be the search Type`",
+                "variable2": "`명령어: \\`${prefix}searchradio <TYPE> <Seach Query>\\`\\nValid Types: \\`country\\`, \\`city\\`, \\`name\\`, \\`genre\\`\\n예시: \\`${prefix}searchradio tag jazz\\`\\n예시: \\`${prefix}searchradio state Austria\\``",
+                "variable3": "`${emoji.msg.ERROR} What should I search for?`",
+                "variable4": "`명령어: \\`${prefix}searchradio <TYPE> <Seach Query>\\`\\nValid Types: \\`country\\`, \\`city\\`, \\`name\\`, \\`genre\\`\\n예시: \\`${prefix}searchradio tag jazz\\`\\n예시: \\`${prefix}searchradio state Austria\\``",
+                "variable5": "`${emoji.msg.ERROR} What should be the search Type`",
+                "variable6": "`명령어: \\`${prefix}searchradio <TYPE> <Seach Query>\\`\\nValid Types: \\`country\\`, \\`city\\`, \\`name\\`, \\`genre\\`\\n예시: \\`${prefix}searchradio tag jazz\\`\\n예시: \\`${prefix}searchradio state Austria\\``",
+                "variable7": "`Pick your Radio with the `INDEX Number``",
+                "variable8": "`${emoji.msg.ERROR} You didn't provide a selection`",
+                "variable9": "'${emoji.msg.ERROR} Cancelled selection.'",
+                "variable10": "`${emoji.msg.ERROR} The number you provided is not a Number within (1-${counter}).`",
+                "variable11": "`${emoji.msg.ERROR} The number you provided too small or too big (1-${counter}).`",
+                "variable12": "``",
+                "variable13": "``"
+            },
+            "searchsc": {
+                "variable1": "`${emoji.msg.ERROR} 제목이나 URL을 적어주세요.`",
+                "variable2": "``"
+            },
+            "searchsimilar": {
+                "variable1": "``"
+            },
+            "seek": {
+                "variable1": "`${emoji.msg.ERROR} 노래를 \\`0\\` - \\`${player.queue.current.duration}\\` 사이로  (시간)옮길 수 있습니다.`",
+                "variable2": "`노래 ${format(Number(args[0]) * 1000)}` 초로 옮김!",
+                "variable3": "``"
+            },
+            "shuffle": {
+                "variable1": "``"
+            },
+            "skip": {
+                "title": "⏹️ **재생을 중지하고 채널을 떠났습니다!**",
+                "title2": "⏭ **현재 곡을 건너 뜀!**",
+                "variable1": "`채널: <#${player.voiceChannel}>`",
+                "variable2": "``"
+            },
+            "stop": {
+                "variable1": "`${emoji.msg.stop} 채널을 중지하고 떠났습니다.`",
+                "variable2": "`${emoji.msg.ERROR} **현재 서버에 재생 중인 노래가 없습니다.**`",
+                "variable3": "`${emoji.msg.ERROR} **현재 서버에 재생 중인 노래가 없습니다.**`",
+                "variable4": "``"
+            },
+            "unshuffle": {
+                "variable1": "`${emoji.msg.ERROR} 대기열을 아직 섞지 않았습니다!`",
+                "variable2": "`노래 유형을 섞으려면: \\`${prefix}shuffle\\``",
+                "variable3": "`${emoji.msg.shuffle} **Un**목록을 섞음.`",
+                "variable4": "``"
+            },
+            "volume": {
+                "variable1": "`${emoji.msg.ERROR} 볼륨을 \\`1\\` - \\`150\\` 사이로 설정할 수 있습니다.`",
+                "variable2": "`**현재 볼륨: \\`${player.volume}%\\`**`",
+                "variable3": "`${emoji.msg.ERROR} 볼륨을 \\`1\\` - \\`150\\` 사이로 설정할 수 있습니다.`",
+                "variable4": "`**현재 볼륨: \\`${player.volume}%\\`**`",
+                "variable5": "`${emoji.msg.raise_volume} 볼륨 설정: \\`${player.volume} %\\``",
+                "variable6": "`**현재 볼륨: \\`${player.volume}%\\`**`",
+                "variable7": "``"
+            },
+            "voteskip": {
+                "variable1": "`${emoji.msg.SUCCESS} 투표 추가!`",
+                "variable2": "`투표: \\`${player.get(`votes`)}\\` of \\`${voteamount}\\` 필요합니다.\\n\\n> 투표가 완료 되어 스킵합니다. ⏭`",
+                "variable3": "`${emoji.msg.SUCCESS} 투표 추가!!`",
+                "variable4": "`투표: \\`${player.get(`votes`)}\\` of \\`${voteamount}\\` 필요합니다.`",
+                "variable5": "`${emoji.msg.ERROR} You have already Voted!!`",
+                "variable6": "`투표: \\`${player.get(`votes`)}\\` of \\`${voteamount}\\` 필요합니다.`",
+                "variable7": "`${emoji.msg.SUCCESS} ${emoji.msg.stop} 채널을 중지하고 떠났습니다.`",
+                "variable8": "`${emoji.msg.SUCCESS} 다음 노래: ${emoji.msg.skip_track}`",
+                "variable9": "``"
+            },
+            "addprevious": {
+                "variable1": "``"
+            },
+            "addsimilar": {
+                "variable1": "``"
+            },
+            "loopqueue": {
+                "variable1": "``"
+            },
+            "loopsong": {
+                "variable1": "``"
+            },
+            "playprevious": {
+                "variable1": "``"
+            }
+        },
+        "settings": {
+            "addbotchat": {
+                "variable1": "`${emoji.msg.ERROR} 다음에 대해 ping을 통해 채널을 추가하십시오. 예시: #channel!`",
+                "variable2": "`${emoji.msg.ERROR} ping을 통해 채널을 추가하십시오. 채널이 이 서버에 없는 것 같습니다!`",
+                "variable3": "`${emoji.msg.ERROR} 이 채널은 목록에 이미 있습니다.!`",
+                "variable4": "`${emoji.msg.SUCCESS} 봇챗 추가 \\`${channel.name}\\``",
+                "variable5": "`모든 봇 채팅:\\n> ${leftb}`",
+                "variable6": "``"
+            },
+            "adddj": {
+                "variable1": "`${emoji.msg.ERROR} ping을 통해 역할을 추가하십시오., @role!`",
+                "variable2": "`${emoji.msg.ERROR} 역할이 이 서버에 존재하지 않는 것 같습니다!`",
+                "variable3": "`${emoji.msg.ERROR} 이 역할은 목록에 있습니다!`",
+                "variable4": "`${emoji.msg.SUCCESS} DJ 역할 추가 \\`${role.name}\\``",
+                "variable5": "`모든 DJ 역할:\\n> ${leftb}`",
+                "variable6": "``"
+            },
+            "afk": {
+                "variable1": "`**Successfully __${player.get(`afk`) ? `Enabled` : `Disabled`}__ AFK MODE**`",
+                "variable2": "`**이제 ${player.get ('afk') ? '' : 'not'} 할 것이 없을 때 음성채널에 머무르겠습니다!**`",
+                "variable3": "``"
+            },
+            "defaultautoplay": {
+                "variable1": "`**Successfully __${client.settings.get(message.guild.id, `defaultap`) ? `Enabled` : `Disabled`}__ the Default Autoplay = ON**`",
+                "variable2": "`**이제${client.settings.get(message.guild.id, `defaultap`) ? `` : ` not`} use Autoplay = ON on 1. Track start!**`",
+                "variable3": "``"
+            },
+            "autoresume": {
+                "variable1": "`**Successfully __${client.settings.get(message.guild.id, `autoresume`) ? `Enabled` : `Disabled`}__ the Auto-Resume System = ON**`",
+                "variable2": "`**I will now${client.settings.get(message.guild.id, `autoresume`) ? `` : ` not`} recover the Queue - after a BOT-RESTART!**`",
+                "variable3": "``"
+            },
+            "defaultequalizer": {
+                "variable1": "`**Successfully __${client.settings.get(message.guild.id, `defaulteq`) ? `Enabled` : `Disabled`}__ the Default Equalizer (Music)**`",
+                "variable2": "`**I will now${client.settings.get(message.guild.id, `defaulteq`) ? `` : ` not`} use the Default Equalizer `Music` on 1. Track start!**`",
+                "variable3": "``"
+            },
+            "defaultvolume": {
+                "variable1": "`${emoji.msg.ERROR} 새 기본 볼륨을 추가하지 않았습니다.`",
+                "variable2": "`**현재 기본 볼륨: \\`${client.settings.get(message.guild.id, `defaultvolume`)}%\\`**`",
+                "variable3": "`${emoji.msg.ERROR} 올바른 새 기본 볼륨을 추가하지 않았습니다.`",
+                "variable4": "`*그것은 **Number**이여야 합니다.*\\n**현재 기본 볼륨: \\`${client.settings.get(message.guild.id, `defaultvolume`)}%\\`**`",
+                "variable5": "`${emoji.msg.ERROR} 올바른 새 기본 볼륨을 추가하지 않았습니다.`",
+                "variable6": "`*\\`150\\` ~\\`1\\` 사이여야 합니다.*\\n**현재 기본 볼륨: \\`${client.settings.get(message.guild.id, `defaultvolume`)}%\\`**`",
+                "variable7": "`**새 기본 볼륨을 다음으로 설정했습니다. : \\`${client.settings.get(message.guild.id, `defaultvolume`)}%\\`**`",
+                "variable8": "``"
+            },
+            "prefix": {
+                "variable1": "`${emoji.msg.ERROR} 새 접두사를 제공하십시오!`",
+                "variable2": "`현재 접두사: \\`${prefix}\\``",
+                "variable3": "`${emoji.msg.ERROR} 접두사에는 두 개의 공백이 있을 수 없습니다.`",
+                "variable4": "`${emoji.msg.ERROR} 접두사는 5글자 미만 이여야 합니다.`",
+                "variable5": "`${emoji.msg.SUCCESS} 새로운 접두사: **\\`${args[0]}\\`**`",
+                "variable6": "``"
+            },
+            "removebotchat": {
+                "variable1": "`${emoji.msg.ERROR} ping을 통해 채널을 추가하십시오., 예시: #channel!`",
+                "variable2": "`${emoji.msg.ERROR} 채널이 이 서버에 존재하지 않는 것 같습니다!`",
+                "variable3": "`${emoji.msg.ERROR} 이 채널이 봇 채널 설정에 없습니다!`",
+                "variable4": "`${emoji.msg.SUCCESS} 봇챗 제거: \\`${channel.name}\\``",
+                "variable5": "`모든 봇챗:\\n> ${leftb}`",
+                "variable6": "``"
+            },
+            "removedj": {
+                "variable1": "`${emoji.msg.ERROR} ping을 통해 역할을 추가하십시오., 예시: @role!`",
+                "variable2": "`${emoji.msg.ERROR} 역할이 이 서버에 없는 것 같습니다.`",
+                "variable3": "`${emoji.msg.ERROR} 이 역할은 이미 제거된 DJ-역할입니다.!`",
+                "variable4": "`${emoji.msg.SUCCESS} DJ 역할 제거: \\`${role.name}\\``",
+                "variable5": "`모든 DJ 역할:\\n> ${leftb}`",
+                "variable6": "``"
+            },
+            "reset": {
+                "variable1": "`${emoji.msg.ERROR} 이 명령에 대한 사용 권한이 없습니다. *서버-소유자만 해당*`",
+                "variable2": "`모든 설정을 재설정하시겠습니까?`",
+                "variable3": "`*회신:* **__\\`yes\\`__**`",
+                "variable4": "`${emoji.msg.SUCCESS} 모든 설정을 초기화했습니다.!`",
+                "variable5": "`접두사: \\`${config.prefix}\\`\\n더 이상 DJ 역할, 설정, 봇 채널 없음`",
+                "variable6": "`${emoji.msg.ERROR} 단어/시간이 초과(올바르지 않아) 취소되었습니다!`",
+                "variable7": "``"
+            },
+            "togglepruning": {
+                "variable1": "`**Successfully __${client.settings.get(message.guild.id, `playmsg`) ? `Enabled` : `Disabled`}__ the Play Message Sending**`",
+                "variable2": "`**I will now${client.settings.get(message.guild.id, `playmsg`) ? `` : ` not`} send Messages with Buttons when a Song starts**`",
+                "variable3": "``"
+            },
+            "toggleunknowncommandinfo": {
+                "variable1": "`${emoji.msg.SUCCESS} ${client.settings.get(message.guild.id, `unkowncmdmessage`) ? `Enabled`: `Disabled`} Unknown Command Information`",
+                "variable2": "``"
+            },
+            "setup-embed": {
+                "variable1": "`어떻게 하고 싶어요?`",
+                "variable2": "`1️⃣ **==**임베드의 **컬러** 변경\\n\\n2️⃣ **==**임베드의 **이미지** 변경\\n\\n3️⃣ **==**임베드의 **바닥글 텍스트 변경**\\n\\n4️⃣ **==** ${es.thumb ? `임베드용 섬네일**Disable**` : `임베드용 섬네일**Enable**`}\\n\\n\\n\\n*올바른 동작에 맞는 이모티콘을 가지고 반응하세요.*`",
+                "variable3": "`<:no:833101993668771842> 응답을 추가할 권한이 없습니다.`",
+                "variable4": "`<:no:833101993668771842> 시간이 만료 됐습니다.`",
+                "variable5": "`어떤 색을 원하십니까?`",
+                "variable6": "`Send it now!\\n\\nZum Beispiel에 올바른 **HEX CODE**를 사용하십시오.: **\\`#ffee22\\`** __with__ the \\`#\\``",
+                "variable7": "`<:no:833101993668771842> 올바른 색상을 추가하십시오.`",
+                "variable8": "`HEX COLOR는 다음과 같습니다: \\`#ffee22\\``",
+                "variable9": "`<:no:833101993668771842> 올바른 색상을 추가하십시오.`",
+                "variable10": "`HEX COLOR는 다음과 같습니다: \\`#ffee22\\``",
+                "variable11": "`${emoji.msg.SUCCESS} 새 임베드 색상: \\`${es.color}\\``",
+                "variable12": "`<:no:833101993668771842> 오류가 발생했습니다. 연락하시기 바랍니다.: `나를위한소녀#1793``",
+                "variable13": "``",
+                "variable14": "`<:no:833101993668771842> 시간이 만료 됐습니다.`",
+                "variable15": "`사용할 이미지를 선택하십시오.`",
+                "variable16": "`원본에서 이 이미지를 삭제할 수 없습니다! 링크를 이용해 주셔서 감사합니다.`",
+                "variable17": "`${emoji.msg.SUCCESS} 새 이미지 삽입은: \\`${es.link}\\``",
+                "variable18": "`<:no:833101993668771842> 오류가 발생했습니다. 연락하시기 바랍니다.: `나를위한소녀#1793``",
+                "variable19": "``",
+                "variable20": "`<:no:833101993668771842> 올바른 IMAGE-LINK를 추가하십시오.`",
+                "variable21": "`<:no:833101993668771842> 올바른 IMAGE-LINK를 추가하십시오.`",
+                "variable22": "`${emoji.msg.SUCCESS} 새 이미지 삽입은: \\`${es.link}\\``",
+                "variable23": "`<:no:833101993668771842> 오류가 발생했습니다. 연락하시기 바랍니다.: `나를위한소녀#1793``",
+                "variable24": "``",
+                "variable25": "`<:no:833101993668771842> 시간이 만료 됐습니다.`",
+                "variable26": "`Footer Text는 무엇인가요?`",
+                "variable27": "`텍스트는 매우 작고 임베드 하단에 있습니다.\\n\\n지금 텍스트를 입력하십시오!`",
+                "variable28": "`<:no:833101993668771842> 오류가 발생했습니다. 연락하시기 바랍니다.: `나를위한소녀#1793``",
+                "variable29": "``",
+                "variable30": "`<:no:833101993668771842> 시간이 만료 됐습니다.`",
+                "variable31": "`${emoji.msg.SUCCESS} 현재 축소판 그림 ${es.thumb ? `enabled`: `disabled`}`",
+                "variable32": "`${es.thumb ? `이제 임베드 메시지에 썸네일 추가 하겠습니다.`: `이제 임베드 메시지에 썸네일 추가 안하겠습니다.`}`",
+                "variable33": "`<:no:833101993668771842> 오류가 발생했습니다. 연락하시기 바랍니다.: `나를위한소녀#1793``",
+                "variable34": "``",
+                "variable35": "`<:no:833101993668771842> 연락처: `나를위한소녀#1793``",
+                "variable36": "``"
+            },
+            "setup-language": {
+                "variable1": "`***아래 선택에서 필요한 항목을 \\`선택\\`하십시오!***`",
+                "variable2": "`<:no:833101993668771842> ABGEBROCHEN the Setup!`",
+                "variable3": "`새 언어 선택`",
+                "variable4": "`현재 언어: **${languages[ls]}**\\n\\n***이 시스템은 아직 완료되지 않았습니다!***\\n**부분적으로만 작동하는 언어:**\\n> \\`English\\`, \\`India (Hindi)\\``",
+                "variable5": "`${emoji.msg.SUCCESS} 새로운 언어: **${languages[lang]}** (\\`${lang})\\``",
+                "variable6": "`${emoji.msg.SUCCESS} 언어 재설정 | 새 언어는 **KR korea**(kr)입니다.`",
+                "variable7": "`📑 현재 언어: ${thesettings}`",
+                "variable8": "`\\`\\`\\` ${e.message ? e.message : e.stack ? String(e.stack).substr(0, 2000) : String(e).substr(0, 2000)}\\`\\`\\``"
+            }
+        },
+        "customqueues": {
+            "savedqueue": {
+                "variable1": "`${emoji.msg.ERROR} 유형을 입력하지 않았습니다.`",
+                "variable2": "`명령어: \\`${prefix}savedqueue <Type> <Name> [Options]\\`\\n사용 가능한 유형:\\n\\`create\\`, \\`addcurrenttrack\\`, \\`addcurrentqueue\\`, \\`removetrack\\`, \\`removedupes\\`, \\`showall\\`, \\`createsave\\`, \\`delete\\`, \\`showdetails\\`, \\`play\\`, \\`shuffle\\``",
+                "variable3": "`${emoji.msg.ERROR} 저장된 목록 이름을 입력하지 않았습니다.`",
+                "variable4": "`명령어: \\`${prefix}savedqueue <Type> <Name>\\`\\n이름 정보:\\n\\`최대 10글자까지 가능합니다.\\``",
+                "variable5": "`${emoji.msg.ERROR} 저장된 목록 이름이 너무 깁니다.`",
+                "variable6": "`최대 길이는 \\`10\\`입니다.`",
+                "variable7": "`${emoji.msg.ERROR} 목록이 이미 있습니다!`",
+                "variable8": "`Delete it: \\`${prefix}savedqueue delete ${Name}\\`\\nShow its content: \\`${prefix}savedqueue showdetails ${Name}`",
+                "variable9": "`${emoji.msg.SUCCESS} ${Name}을 생성 완료!`",
+                "variable10": "`현재 **목록**을 추가합니다.: \\`${prefix}savedqueue addcurrentqueue ${Name}\\`\\n현재 **곡**을 추가합니다. : \\`${prefix}savedqueue addcurrenttrack ${Name}\\``",
+                "variable11": "`${emoji.msg.ERROR} 저장된 목록 이름을 입력하지 않았습니다.`",
+                "variable12": "`명령어: \\`${prefix}savedqueue <Type> <Name>\\`\\n이름 정보:\\n\\`최대 10글자까지 가능합니다.\\``",
+                "variable13": "`${emoji.msg.ERROR} 저장된 목록 이름이 너무 깁니다.`",
+                "variable14": "`최대 길이는 \\`10\\`입니다.`",
+                "variable15": "`${emoji.msg.ERROR} 목록이 아직 없습니다!`",
+                "variable16": "`다음을 사용하여 생성: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable17": "`${emoji.msg.ERROR} 재생 곡이 없습니다.`",
+                "variable18": "`${emoji.msg.ERROR} 재생 곡이 없습니다.!`",
+                "variable19": "`현재: \\`${client.queuesaves.get(message.author.id, `${Name}`).length} 곡\\`\\n\\n재생방법: \\`${prefix}savedqueue play ${Name}\\``",
+                "variable20": "`${emoji.msg.ERROR} 저장된 목록 이름을 입력하지 않았습니다.`",
+                "variable21": "`명령어: \\`${prefix}savedqueue <Type> <Name>\\`\\n이름 정보:\\n\\`최대 10글자까지 가능합니다.\\``",
+                "variable22": "`${emoji.msg.ERROR} 저장된 목록 이름이 너무 깁니다.`",
+                "variable23": "`최대 길이는 \\`10\\`입니다.`",
+                "variable24": "`${emoji.msg.ERROR} 목록이 없습니다!`",
+                "variable25": "`다음을 사용하여 생성: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable26": "`${emoji.msg.ERROR} 재생 곡이 없습니다.`",
+                "variable27": "`${emoji.msg.ERROR} 목록이 비어 있습니다.!`",
+                "variable28": "`${emoji.msg.SUCCESS} ${tracks.length} 트랙이 큐에 추가되었습니다. \\`${Name}\\``",
+                "variable29": "`현재: \\`${newqueue.length} Tracks\\`\\n\\n재생방법: \\`${prefix}savedqueue play ${Name}\\``",
+                "variable30": "`${emoji.msg.ERROR} 저장된 목록 이름을 입력하지 않았습니다.`",
+                "variable31": "`명령어: \\`${prefix}savedqueue removetrack <Name> [Options]\\`\\n이름 정보:\\n\\`최대 10글자까지 가능합니다.\\``",
+                "variable32": "`${emoji.msg.ERROR} 저장된 목록 이름이 너무 깁니다.`",
+                "variable33": "`최대 길이는 \\`10\\`입니다.`",
+                "variable34": "`${emoji.msg.ERROR} 옵션(제거할 트랙)을 입력하지 않았습니다. (ID OF IT))`",
+                "variable35": "`모든 트랙 보기: \\`${prefix}savedqueue showdetails ${Name}\\`명령어: \\`${prefix}savedqueue removetrack ${Name} <Song number>\\``",
+                "variable36": "`${emoji.msg.ERROR} 목록이 존재하지 않습니다!`",
+                "variable37": "`다음을 사용하여 생성: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable38": "`${emoji.msg.ERROR} 제공된 옵션이 범위를 벗어났습니다. (\\`0\\` - \\`${tracks.length-1}\\`)`",
+                "variable39": "`모든 트랙 보기: \\`${prefix}savedqueue showdetails ${Name}\\`명령어: \\`${prefix}savedqueue removetrack ${Name} <Song number>\\``",
+                "variable40": "`현재: \\`${client.queuesaves.get(message.author.id, `${Name}`).length} 곡\\`\\n\\n재생방법: \\`${prefix}savedqueue play ${Name}\\``",
+                "variable41": "`${emoji.msg.ERROR} 저장된 목록 이름을 입력하지 않았습니다.`",
+                "variable42": "`명령어: \\`${prefix}savedqueue <Type> <Name>\\`\\n이름 정보:\\n\\`최대 10글자까지 가능합니다.\\``",
+                "variable43": "`${emoji.msg.ERROR} 저장된 목록 이름이 너무 깁니다.`",
+                "variable44": "`최대 길이는 \\`10\\`입니다.`",
+                "variable45": "`${emoji.msg.ERROR} 목록이 존재하지 않습니다!`",
+                "variable46": "`다음을 사용하여 생성: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable47": "`${emoji.msg.ERROR} 저장된 목록 ${Name}이(가) 비어 있습니다!`",
+                "variable48": "`현재 **목록**을 추가합니다.: \\`${prefix}savedqueue addcurrentqueue ${Name}\\`\\n현재 **곡**을 추가합니다.: \\`${prefix}savedqueue addcurrenttrack ${Name}\\``",
+                "variable49": "`현재: \\`${client.queuesaves.get(message.author.id, `${Name}`).length} Tracks\\`\\n\\n재생방법: \\`${prefix}savedqueue play ${Name}\\``",
+                "variable50": "`${emoji.msg.ERROR} 저장된 목록 이름을 입력하지 않았습니다.`",
+                "variable51": "`명령어: \\`${prefix}savedqueue <Type> <Name>\\`\\n이름 정보:\\n\\`최대 10글자까지 가능합니다.\\``",
+                "variable52": "`${emoji.msg.ERROR} 저장된 목록 이름이 너무 깁니다.`",
+                "variable53": "`최대 길이는 \\`10\\`입니다.`",
+                "variable54": "`${emoji.msg.ERROR} 목록이 존재하지 않습니다!`",
+                "variable55": "`다음을 사용하여 생성: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable56": "`${emoji.msg.ERROR} 저장된 목록 ${Name}이(가) 비어 있습니다!`",
+                "variable57": "`현재 **목록**을 추가합니다.: \\`${prefix}savedqueue addcurrentqueue ${Name}\\`\\n현재 **곡**을 추가합니다.: \\`${prefix}savedqueue addcurrenttrack ${Name}\\``",
+                "variable58": "`현재: \\`${client.queuesaves.get(message.author.id, `${Name}`).length} Tracks\\`\\n\\n재생방법: \\`${prefix}savedqueue play ${Name}\\``",
+                "variable59": "`${emoji.msg.ERROR} 아직 저장된 목록이 없습니다.`",
+                "variable60": "`Create one with: \\`${prefix}savedqueue create <SavedQueueName>\\``",
+                "variable61": "`${emoji.msg.ERROR} 저장된 목록 이름을 입력하지 않았습니다.`",
+                "variable62": "`명령어: \\`${prefix}savedqueue <Type> <Name>\\`\\n이름 정보:\\n\\`최대 10글자까지 가능합니다.\\``",
+                "variable63": "`${emoji.msg.ERROR} 저장된 목록 이름이 너무 깁니다.`",
+                "variable64": "`최대 길이는 \\`10\\`입니다.`",
+                "variable65": "`${emoji.msg.ERROR} 목록이 이미 있습니다!`",
+                "variable66": "`삭제: \\`${prefix}savedqueue delete ${Name}\\`\\n내용 표시: \\`${prefix}savedqueue showdetails ${Name}`",
+                "variable67": "`${emoji.msg.ERROR} 재생 곡이 없습니다.`",
+                "variable68": "`${emoji.msg.ERROR} 목록이 비어 있습니다.!`",
+                "variable69": "`${emoji.msg.SUCCESS} ${Name}을(를) 생성하고 ${tracks.length}개의 트랙을 추가했습니다.`",
+                "variable70": "`재생방법: \\`${prefix}savedqueue play ${Name}\\`\\n현재 **목록**을 추가합니다.: \\`${prefix}savedqueue addcurrentqueue ${Name}\\`\\n현재 **곡**을 추가합니다.: \\`${prefix}savedqueue addcurrenttrack ${Name}\\``",
+                "variable71": "`${emoji.msg.ERROR} 저장된 목록 이름을 입력하지 않았습니다.`",
+                "variable72": "`명령어: \\`${prefix}savedqueue <Type> <Name>\\`\\n이름 정보:\\n\\`최대 10글자까지 가능합니다.\\``",
+                "variable73": "`${emoji.msg.ERROR} 저장된 목록 이름이 너무 깁니다.`",
+                "variable74": "`최대 길이는 \\`10\\`입니다.`",
+                "variable75": "`${emoji.msg.ERROR} 목록이 없습니다!`",
+                "variable76": "`다음을 사용하여 생성: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable77": "`${emoji.msg.SUCCESS} 목록 삭제 \\`${Name}\\``",
+                "variable78": "`${emoji.msg.ERROR} 저장된 목록 이름을 입력하지 않았습니다.`",
+                "variable79": "`명령어: \\`${prefix}savedqueue <Type> <Name>\\`\\n이름 정보:\\n\\`최대 10글자까지 가능합니다.\\``",
+                "variable80": "`${emoji.msg.ERROR} 저장된 목록 이름이 너무 깁니다.`",
+                "variable81": "`최대 길이는 \\`10\\`입니다.`",
+                "variable82": "`${emoji.msg.ERROR} 음성 채널에 가입해야 합니다.`",
+                "variable83": "`${emoji.msg.ERROR} 이 명령을 사용하려면 내 음성 채널에 있어야 해!`",
+                "variable84": "`Channelname: \\`${message.guild.channels.cache.get(player.voiceChannel).name}\\``",
+                "variable85": "`${emoji.msg.ERROR} 이 명령을 사용하려면 내 음성 채널에 있어야 해!`",
+                "variable86": "`Channelname: \\`🔈 ${mechannel.name}\\``",
+                "variable87": "`${emoji.msg.ERROR} 목록이 없습니다!`",
+                "variable88": "`다음을 사용하여 생성: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable89": "`Attempting to Load ${client.queuesaves.get(message.author.id, `${Name}`).length} Tracks`",
+                "variable90": "`It might take around about \\`${Math.ceil(client.queuesaves.get(message.author.id, `${Name}`).length / 2)} Seconds\\``",
+                "variable91": "`${emoji.msg.SUCCESS} Loaded ${client.queuesaves.get(message.author.id, `${Name}`).length} Tracks onto the current Queue`",
+                "variable92": "`${emoji.msg.ERROR} 저장된 목록 이름을 입력하지 않았습니다.`",
+                "variable93": "`명령어: \\`${prefix}savedqueue <Type> <Name>\\`\\n이름 정보:\\n\\`최대 10글자까지 가능합니다.\\``",
+                "variable94": "`${emoji.msg.ERROR} 저장된 목록 이름이 너무 깁니다.`",
+                "variable95": "`최대 길이는 \\`10\\`입니다.`",
+                "variable96": "`${emoji.msg.ERROR} 노래가 존재하지 않습니다!`",
+                "variable97": "`다음을 사용하여 생성: \\`${prefix}savedqueue create ${Name}\\``",
+                "variable98": "`${emoji.msg.ERROR} 올바른 유형을 입력하지 않았습니다.`",
+                "variable99": "`명령어: \\`${prefix}savedqueue <Type> <Name>\\`\\n올바른 유형:\\n\\`create\\`, \\`addcurrenttrack\\`, \\`addcurrentqueue\\`, \\`removetrack\\`, \\`removedupes\\`, \\`showall\\`, \\`createsave\\`, \\`delete\\`, \\`showdetails\\`, \\`play\\`, \\`shuffle\\``",
+                "variable100": "``"
+            }
+        },
+        "filter": {
+            "3d": {
+                "variable1": "`${emoji.msg.SUCCESS} \\`8D\\` 필터 적용`",
+                "variable2": "`참고: *필터 소리를 들을 때까지 최대 5초가 걸릴 수 있습니다*`",
+                "variable3": "``"
+            },
+            "bassboost": {
+                "variable1": "`${emoji.msg.ERROR} 베이스 부스트 레벨은 다음 중 하나여야 합니다.: \\`none\\`, \\`low\\`, \\`medium\\`, \\`high\\`, \\`earrape\\``",
+                "variable2": "`명령어: \\`${prefix}bassboost <Level>\\`\\n\\n예시: \\`${prefix}bassboost low\\``",
+                "variable3": "`${emoji.msg.SUCCESS} 배스부스트 설정: \\`${level}\\``",
+                "variable4": "`참고: *새 이퀄라이저를 들을 때까지 최대 5초가 걸릴 수 있습니다*`",
+                "variable5": "``"
+            },
+            "china": {
+                "variable1": "`${emoji.msg.SUCCESS} \\`CHINA\\` 필터 적용`",
+                "variable2": "`참고: *필터 소리를 들을 때까지 최대 5초가 걸릴 수 있습니다*`",
+                "variable3": "``"
+            },
+            "chipmunk": {
+                "variable1": "`${emoji.msg.SUCCESS} \\`CHIPMUNK\\ 필터 적용`",
+                "variable2": "`참고: *필터 소리를 들을 때까지 최대 5초가 걸릴 수 있습니다*`",
+                "variable3": "``"
+            },
+            "cleareq": {
+                "variable1": "`${emoji.msg.SUCCESS} 이퀄라이저 재설정`",
+                "variablex_2": "`${emoji.msg.equalizer} FILTER: `", "variable2": "`${emoji.msg.ERROR} Nothing`",
+                "variablex_3": "`${emoji.msg.equalizer} EQUALIZER: `", "variable3": "`${player.get(`eq`)}`",
+                "variable4": "`참고: *새 이퀄라이저를 들을 때까지 최대 5초가 걸릴 수 있습니다*`",
+                "variable5": "``"
+            },
+            "clearfilter": {
+                "variable1": "`${emoji.msg.SUCCESS} 이퀄라이저 재설정`",
+                "variablex_2": "`${emoji.msg.equalizer} FILTER: `", "variable2": "`${emoji.msg.ERROR} Nothing`",
+                "variablex_3": "`${emoji.msg.equalizer} EQUALIZER: `", "variable3": "`${player.get(`eq`)}`",
+                "variable4": "`참고: *새 필터 소리를 들을 때까지 최대 5초가 걸릴 수 있음*`",
+                "variable5": "``"
+            },
+            "darthvader": {
+                "variable1": "`${emoji.msg.SUCCESS} \\`DARTHVADER\\` 필터 적용`",
+                "variable2": "`참고: *필터 소리를 들을 때까지 최대 5초가 걸릴 수 있습니다*`",
+                "variable3": "``"
+            },
+            "equalizer": {
+                "variable1": "`${emoji.msg.ERROR} 이퀄라이저 레벨은 다음 중 하나여야 합니다.`",
+                "variable2": "`올바른 이퀄라이저:\\n\\`music\\`, \\`pop\\`, \\`electronic\\`, \\`classical\\`, \\`rock\\`, \\`full\\`, \\`light\\`, \\`gaming\\`, \\`bassboost\\`, \\`earrape\\`\\n\\n명령어: \\`${prefix}equalizer <Equalizer>\\`\\n\\n예시: \\`${prefix}equalizer music\\``",
+                "variable3": "`${emoji.msg.SUCCESS} 이퀄라이저 설정: \\`${level}\\``",
+                "variable4": "`참고: *새 이퀄라이저를 들을 때까지 최대 5초가 걸릴 수 있습니다*`",
+                "variable5": "``"
+            },
+            "nightcore": {
+                "variable1": "`${emoji.msg.SUCCESS} \\`NIGHTCORE\\` 필터 적용`",
+                "variable2": "`참고: *필터 소리를 들을 때까지 최대 5초가 걸릴 수 있습니다*`",
+                "variable3": "``"
+            },
+            "pitch": {
+                "variable1": "`${emoji.msg.ERROR} Multiplicator을 포함해주.`",
+                "variable2": "`명령어: \\`${prefix}pitch <Multiplicator>\\`\\n\\n예시: \\`${prefix}pitch 1.2\\``",
+                "variable3": "`${emoji.msg.ERROR} Multiplicator은 숫자여야 합니다.`",
+                "variable4": "`명령어: \\`${prefix}pitch <Multiplicator>\\`\\n\\n예시: \\`${prefix}pitch 1.2\\``",
+                "variable5": "`${emoji.msg.ERROR} Multiplicator 범위를 벗어났습니다. | 0 ~ 3 사이여야 합니다.`",
+                "variable6": "`명령어: \\`${prefix}pitch <Multiplicator>\\`\\n\\n예시: \\`${prefix}pitch 1.2\\``",
+                "variable7": "`${emoji.msg.SUCCESS} 피치가 \\`${args[0]}\\`로 설정되었습니다.`",
+                "variable8": "`참고: *필터 소리를 들을 때까지 최대 5초가 걸릴 수 있습니다*`",
+                "variable9": "``"
+            },
+            "rate": {
+                "variable1": "`${emoji.msg.ERROR} Multiplicator을 포함해주세요.`",
+                "variable2": "`명령어: \\`${prefix}speed <Multiplicator>\\`\\n\\n예시: \\`${prefix}speed 1.5\\``",
+                "variable3": "`${emoji.msg.ERROR} Multiplicator은 숫자여야 합니다.`",
+                "variable4": "`명령어: \\`${prefix}speed <Multiplicator>\\`\\n\\n예시: \\`${prefix}speed 1.5\\``",
+                "variable5": "`${emoji.msg.ERROR} Multiplicator 범위를 벗어났습니다. | 0 ~ 3 사이여야 합니다.`",
+                "variable6": "`명령어: \\`${prefix}speed <Multiplicator>\\`\\n\\n예시: \\`${prefix}speed 1.5\\``",
+                "variable7": "`${emoji.msg.SUCCESS} Speed 설정: \\`${args[0]}\\``",
+                "variable8": "`참고: *필터 소리를 들을 때까지 최대 5초가 걸릴 수 있습니다*`",
+                "variable9": "``"
+            },
+            "slowmo": {
+                "variable1": "`${emoji.msg.SUCCESS} \\`SLOWMO\\` 필터 적용`",
+                "variable2": "`참고: *필터 소리를 들을 때까지 최대 5초가 걸릴 수 있습니다*`",
+                "variable3": "``"
+            },
+            "speed": {
+                "variable1": "`${emoji.msg.ERROR} Multiplicator을 포함해주세요.`",
+                "variable2": "`명령어: \\`${prefix}rate <Multiplicator>\\`\\n\\n예시: \\`${prefix}rate 1.5\\``",
+                "variable3": "`${emoji.msg.ERROR} Multiplicator은 숫자여야 합니다.`",
+                "variable4": "`명령어: \\`${prefix}rate <Multiplicator>\\`\\n\\n예시: \\`${prefix}rate 1.5\\``",
+                "variable5": "`${emoji.msg.ERROR} Multiplicator 범위를 벗어났습니다. | 0 ~ 3 사이여야 합니다.`",
+                "variable6": "`명령어: \\`${prefix}rate <Multiplicator>\\`\\n\\n예시: \\`${prefix}rate 1.5\\``",
+                "variable7": "`${emoji.msg.SUCCESS} Rate 설정: \\`${args[0]}\\``",
+                "variable8": "`참고: *필터 소리를 들을 때까지 최대 5초가 걸릴 수 있습니다*`",
+                "variable9": "``"
+            },
+            "tremolo": {
+                "variable1": "`${emoji.msg.SUCCESS} \\`TREMOLO\\` 필터 적용`",
+                "variable2": "`참고: *필터 소리를 들을 때까지 최대 5초가 걸릴 수 있습니다*`",
+                "variable3": "``"
+            },
+            "vibrate": {
+                "variable1": "`${emoji.msg.SUCCESS} \\`VIBRATO\\` 필터 적용`",
+                "variable2": "`참고: *필터 소리를 들을 때까지 최대 5초가 걸릴 수 있습니다*`",
+                "variable3": "``"
+            },
+            "vibrato": {
+                "variable1": "`${emoji.msg.SUCCESS} \\`VIBRATE\\` 필터 적용`",
+                "variable2": "`참고: *필터 소리를 들을 때까지 최대 5초가 걸릴 수 있습니다*`",
+                "variable3": "``"
+            }
+        },
+        "owner": {
+            "changeavatar": {
+                "variable1": "`${emoji.msg.ERROR} 이 명령을 실행할 수 없습니다.`",
+                "variable2": "`명령어 사용가능한 사람: ${config.ownerIDS.map(id => `<@${id}>`)}`",
+                "variable3": "`${emoji.msg.SUCCESS} 성공적으로 봇 아바타를 바꾸었습니다!`",
+                "variable4": "``",
+                "variable5": "`${emoji.msg.ERROR} ERROR | 이미지를 아바타로 사용할 수 없습니다. \\`png\\` / \\`jpg\\` 확인하십시오.`",
+                "variable6": "`${emoji.msg.SUCCESS} 성공적으로 봇 아바타를 바꾸었습니다!`",
+                "variable7": "``",
+                "variable8": "`${emoji.msg.ERROR} ERROR | 이미지를 아바타로 사용할 수 없습니다. \\`png\\` / \\`jpg\\` / \\`webp\\` 확인하십시오.`",
+                "variable9": "`명령어: \\`${prefix}changeavatar <AVATARLINK/IMAGE>\\``",
+                "variable10": "``"
+            },
+            "changename": {
+                "variable1": "`${emoji.msg.ERROR} 이 명령을 실행할 수 없습니다.`",
+                "variable2": "`명령어 사용가능한 사람: ${config.ownerIDS.map(id => `<@${id}>`)}`",
+                "variable3": "`${emoji.msg.ERROR} 새 봇 이름을 추가해야 합니다.`",
+                "variable4": "`명령어: \\`${prefix}changename <New Bot Name>\\``",
+                "variable5": "`${emoji.msg.ERROR} 봇 이름이 너무 깁니다. 32자를 초과할 수 없습니다.`",
+                "variable6": "`${emoji.msg.SUCCESS} 바뀐 이름: \\`${user.username}\\``",
+                "variable7": "``",
+                "variable8": "``"
+            },
+            "changestatus": {
+                "variable1": "`${emoji.msg.ERROR} 이 명령을 실행할 수 없습니다.`",
+                "variable2": "`명령어 사용가능한 사람: ${config.ownerIDS.map(id => `<@${id}>`)}`",
+                "variable3": "`무엇을 하고 싶습니까?`",
+                "variable4": "`1️⃣ **== Change** 상황 **TEXT**\\n\\n2️⃣ **== Change** 상황 **TYPE**\\n\\n3️⃣ **== Change** 상황 **URL**\\n\\n🟢 **==** 변경 사항: Online/Idle/DnD state\\n\\n\\n\\n*올바른 행동에 따라 올바른 이모티콘으로 대응*`",
+                "variable5": "`${emoji.msg.ERROR} ERROR | 응답을 추가할 수 있는 권한이 없습니다.`",
+                "variable6": "`${emoji.msg.ERROR} ERROR | 시간이 다 되었습니다.`",
+                "variable7": "`상태에 표시할 텍스트를 선택하십시오.`",
+                "variable8": "`${emoji.msg.ERROR}  ERROR 파일 쓰기`",
+                "variable9": "``",
+                "variable10": "`${emoji.msg.SUCCESS}  새 상태를 설정했습니다.`",
+                "variable11": "`${emoji.msg.ERROR} ERROR | 시간이 다 되었습니다.`",
+                "variable12": "`What Type do you wanna use?`",
+                "variable13": "`${emoji.msg.ERROR} ERROR | 시간이 다 되었습니다.`",
+                "variable14": "`${emoji.msg.ERROR}  ERROR 파일 쓰기`",
+                "variable15": "``",
+                "variable16": "`${emoji.msg.SUCCESS}  새 상태를 설정했습니다.`",
+                "variable17": "`What Type do you wanna use?`",
+                "variable18": "`${emoji.msg.SUCCESS}  새 상태를 설정했습니다.`",
+                "variable19": "`${emoji.msg.SUCCESS}  새 상태를 설정했습니다.`",
+                "variable20": "`${emoji.msg.SUCCESS}  새 상태를 설정했습니다.`",
+                "variable21": "`${emoji.msg.ERROR} ERROR | 시간이 다 되었습니다.`",
+                "variable22": "스트리밍 중인 경우 Status에 표시할 URL은 무엇입니까?",
+                "variable23": "`${emoji.msg.ERROR} 올바른 URL이 아닙니다.`",
+                "variable24": "`${emoji.msg.ERROR} 올바른 Twitch URL이 아닙니다.`",
+                "variable25": "`${emoji.msg.ERROR}  ERROR 파일 쓰기`",
+                "variable26": "``",
+                "variable27": "`${emoji.msg.SUCCESS}  새 상태를 설정했습니다.`",
+                "variable28": "`${emoji.msg.ERROR} ERROR | 시간이 다 되었습니다.`",
+                "variable29": "`${emoji.msg.ERROR} ERROR | \\`나를위한소녀#1793\\`으로 문의하십시오.`",
+                "variable30": "``"
+            },
+            "cmdreload": {
+                "variable1": "`${emoji.msg.ERROR} 이 명령을 실행할 수 없습니다.! Only the Owner is allowed to run this Cmd`",
+                "variable2": "`${emoji.msg.ERROR} 인수를 포함하십시오.`",
+                "variable3": "`${emoji.msg.ERROR} 찾을 수 없음: \\`${args[0]}\\``",
+                "variable4": "`${emoji.msg.SUCCESS} Reloaded \\`${args[0]}\\``",
+                "variable5": "`${emoji.msg.ERROR} Could not reload: \\`${args[0]}\\``",
+                "variable6": "``"
+            },
+            "eval": {
+                "variable1": "`${emoji.msg.ERROR}  Error | 이 명령을 실행할 수 없습니다.!`",
+                "variable2": "`${emoji.msg.ERROR}  Error | 평가 인수를 하나 이상 포함해야 합니다.`",
+                "variable3": "`Development | Evaluation`",
+                "variable4": "`\\`\\`\\`` + splitDescription[0] + `\\`\\`\\``",
+                "variable5": "`${emoji.msg.ERROR}  ERROR | An error occurred!`",
+                "variable6": "``"
+            },
+            "leaveserver": {
+                "variable1": "`${emoji.msg.ERROR} 이 명령을 실행할 수 없습니다.! 소유자만 이 Cmd를 실행할 수 있습니다.`",
+                "variable2": "`${emoji.msg.ERROR} 탈퇴해야 할 길드를 추가해야 합니다.`",
+                "variable3": "`명령어: \\`${prefix}leaveserver <SERVERID>\\``",
+                "variable4": "`${emoji.msg.ERROR} 탈퇴 길드를 찾을 수 없습니다.`",
+                "variable5": "`${emoji.msg.SUCCESS} Leaft ${g.name} | ${g.id}`",
+                "variable6": "``"
+            }
+        }
+    },
+    "common": {
+        "deaf": "❌ 'DEAF' / 'SERVERDEAF'인 동안에는 이 명령을 실행할 수 없습니다.",
+        "usernotfound": "❌ 사용자를 찾을 수 없습니다.",
+        "rolenotfound": "❌ 역할을 찾을 수 없습니다.",
+        "erroroccur": "❌ 오류가 발생했습니다.",
+        "disabled": {
+            "title": "❌ **오류가 발생합니다.이 명령은 현재 disabled입니다.**",
+            "description": "**관리자는 다음과 같이 활성화할 수 있습니다.: `{prefix}setup-commands`**"
+        },
+        "nothing_playing": "❌ *현재 아무것도 재생하고 있지 않습니다.*",
+        "join_vc": "❌ *먼저 음성 채널에 가입해야 합니다!*",
+        "wrong_vc": "❌ **이 명령을 사용하려면 내 음성 채널에 있어야 해!**",
+        "not_connected": "❌ **음성 채널에 더 이상 연결되어 있지 않습니다!**",
+        "dms_disabled": "❌ **DM이 비활성화되었습니다!**",
+        "example": "예를들면",
+        "botchat": {
+            "title": "❌ **오류 | Bot Chat에 없습니다!**",
+            "description": "**이 길드에 봇 채팅 설정이 있습니다! 여기에서 봇 명령을 사용해 보십시오. :**"
+        },
+        "ping": "👍 **모든 명령 명령어를 보려면 '{prefix}help'!**",
+        "unknowncmd": {
+            "title": "❌ **명령 해제: '{prefix}help'를 시도해 보십시오.**",
+            "description": "**현재 서버의 접두사: `{prefix}`**\n\n*접두사를 사용하지 않고 **ping** me를 사용할 수도 있습니다!*\n\n**모든 명령 유형을 보려면 '{prefix}help [Cat/Cmd]'!**\n\n**사용 가능한 모든 설정을 보려면 '{prefix}setup'을(를) 입력해주세요!**"
+        },
+        "cooldown": "❌ '{commandname}' 명령을 재사용하기 전에 {time}초 더 기다리십시오.",
+        "premium": {
+            "title": "❌ **이 명령은 프리미엄 전용입니다!** 💰",
+            "description": "관리자는 다음을 입력하여 이 서버를 PREMIUM-GUID로 요청할 수 있습니다. : `{prefix}premium`"
+        },
+        "permissions": {
+            "title": "❌ **이 명령을 실행할 수 없습니다.!**",
+            "description": "**이 권한이 필요합니다. :**"
+        },
+        "missingroles": {
+            "title": "❌ **이 명령을 실행할 수 없습니다.!**",
+            "description": "**이 역할이 필요합니다. :**",
+            "description2": "**현재 재생 중인 곡의 요청자여야 합니다!**\nOR: **이 역할이 필요합니다.:**"
+        },
+        "nodjs": "DJ-Roles setupped! 모든 사람이 뮤직 명령을 사용할 수 있습니다.",
+        "nobotchannels": "설정된 봇 채널이 없습니다! 명령은 모든 채널에서 사용할 수 있습니다.",
+        "somethingwentwrong": "❌ **이 명령을 실행하는 동안 오류가 발생했습니다!**"
+    },
+    "handlers": {
+        "erelaevents": {
+            "client_events": {
+                "variable3": "`${emoji.msg.ERROR} 목록 재생이 종료됨 | 채널 비어 있음`",
+                "variable4": "`음성채널에 아무도 없어 자동으로 종료합니다.`"
+            },
+            "events": {
+                "variable1": "`${player.get(`autoplay`) ? `Enabled` : `Disabled`} 자동 실행 기능`"
+            }
+        },
+        "functionsjs": {
+            "functions": {
+                "variable1": "`\\`${client.channels.cache.get(player.voiceChannel).name}\\`에서 재생할 노래 목록: \\`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\\`이 비어있어 자동으로 종료합니다.`",
+                "variablex_2": "`역할이 추가되지 않음`","variable2": "`다음 항목을 추가합니다.: \\`${client.settings.get(guild.id, `prefix`)} setup-roster\\``",
+                "variablex_3": "`**__${role.name.toUpperCase()} [${[...role.members.values()].length}]__**`","variable3": "[...role.members.values()].length === 0 ? `> 아무도 이 역할을 가지고 있지 않습니다.` : role.members.map(member => `${the_roster_db.get(guild.id, `rosteremoji`)} <@${member.user.id}> | \\`${member.user.tag}\\``).join(`\\n`).substr(0, leftnum <= 1024 ? leftnum : 1024), the_roster_db.get(guild.id, `inline`)",
+                "variable4": "`올바른 'INDEX' 번호를 입력하여 스테이션을 선택하십시오!`",
+                "variable4_1": "`Example: `?radio 11``",
+                "variable5": "`올바른 'INDEX' 번호를 입력하여 스테이션을 선택하십시오!`",
+                "variable5_1": "`Example: `?radio 69``",
+                "variable6": "`올바른 'INDEX' 번호를 입력하여 스테이션을 선택하십시오!`",
+                "variable6_1": "`Example: `?radio 180``",
+                "variable7": "`${emoji.msg.ERROR} 최신 노래와 관련된 내용을 찾지 못했습니다!`",
+                "variable8": "`${emoji.msg.ERROR} 노래 목록 재생이 종료되었습니다..`",
+                "variable9": "`\\`${client.channels.cache.get(player.voiceChannel).name}\\`에서 재생할 노래 목록: \\`${ms(config.settings.LeaveOnEmpty_Queue.time_delay, { long: true })}\\`이 비어있어 자동으로 종료합니다.`",
+                "variable10": "`${user.member.user} | ${emoji.msg.ERROR} 권한을 주십시요., `MANGE CHANNELS` --> 채널을 만들 수 있어야 합니다. ...`",
+                "variable11": "`${user.member.user} | ${emoji.msg.ERROR} 권한을 주십시요., \\`MANGE CHANNELS\\` --> 채널을 만들 수 있어야 합니다. ...`",
+                "variable12": "-"
+            }
+        },
+        "playermanagerjs": {
+            "playermanager": {
+                "variable1": "`${emoji.msg.ERROR} 음성채널에 가입하려면 권한이 필요합니다.`",
+                "variable2": "`${emoji.msg.ERROR} 음성채널에서 말하려면 권한이 필요합니다.`",
+                "variable3": "`${emoji.msg.ERROR} 올바른 검색어가 없습니까? ... '나를위한소녀#1793'에 문의하십시오.`"
+            }
+        },
+        "playermanagers": {
+            "playlist": {
+                "variable1": "`${emoji.msg.ERROR} 오류 | 검색하는 동안 오류가 발생했습니다.:`",
+                "variable2": "``",
+                "variable3": "`다시 시도하십시오!`",
+                "variable4": "`:thumbsup: **Added Playlist 🩸 [${res.playlist.name}](${res.playlist.uri})**`"
+            },
+            "playtop": {
+                "variable1": "`다시 시도하십시오!`",
+                "variable2": "`:thumbsup: **대기중 :notes: [${res.tracks[0].title}](${res.tracks[0].uri})**`",
+                "variable3": "`다시 시도하십시오!`",
+                "variable4": "`**`+res.playlist.name+`**`",
+                "variablex_5": "`예상 재생 시간`","variable5": "time > 10 ? format(time).split(` | `)[0] : `NOW`",
+                "variable6": "`추가된: \\`${res.tracks[0].title}\\` - 목록에 연결\\n**채널:** ${res.tracks[0].author}\\n**노래 시간:** ${res.tracks[0].isStream ? `LIVE STREAM` : format(res.tracks[0].duration).split(` | `)[0]}\\n**예상 재생 시간:** ${time}\\n**목록에 위치:** ${player.queue.length}\\n${res.tracks[0].uri}`"
+            },
+            "request": {
+                "variable1": "`다시 시도하십시오!`",
+                "variable2": "`다시 시도하십시오!`"
+            },
+            "search": {
+                "variable1": "`${emoji.msg.ERROR} 오류 | 검색하는 동안 오류가 발생했습니다.:`",
+                "variable2": "``",
+                "variable3": "`${emoji.msg.ERROR} 오류 | 선택 항목을 제공하지 않았습니다.`",
+                "variable4": "'${emoji.msg.ERROR} 오류 | 선택이 취소되었습니다.'",
+                "variable5": "`:thumbsup: **대기중 :notes: [${track.title}](${track.uri})**`"
+            },
+            "similar": {
+                "variable1": "`${emoji.msg.ERROR} 오류 | 최신 곡과 관련된 내용을 찾을 수 없습니다.`",
+                "variable2": "`:thumbsup: **대기중 :notes: [${res.tracks[0].title}](${res.tracks[0].uri})**`",
+                "variable3": "`${emoji.msg.SUCCESS} 'INDEX 번호'로 노래 선택``",
+                "variable4": "`${emoji.msg.ERROR} 오류 | 선택 항목을 제공하지 않았습니다.`",
+                "variable5": "'${emoji.msg.ERROR} 오류 | 선택이 취소되었습니다.'",
+                "variable6": "`${emoji.msg.ERROR} 오류 | 제공하신 숫자가 너무 작거나 큽니다(1-${max}).`",
+                "variable7": "`다시 시도하십시오!`",
+                "variable8": "`:thumbsup: **대기중 :notes: [${track.title}](${track.uri})**`"
+            },
+            "skiptrack": {
+                "variable1": "`${emoji.msg.ERROR} 오류 | 검색하는 동안 오류가 발생했습니다.:`",
+                "variable2": "``",
+                "variable3": "`다시 시도하십시오!`"
+            },
+            "song": {
+                "variable1": "`${emoji.msg.ERROR} 오류 | 검색하는 동안 오류가 발생했습니다.:`",
+                "variable2": "``",
+                "variable3": "`다시 시도하십시오!`",
+                "variable4": "`:thumbsup: **대기중 :notes: [${res.tracks[0].title}](${res.tracks[0].uri})**`",
+                "variable5": "`다시 시도하십시오!`"
+            }
+        }
+    }
+}
