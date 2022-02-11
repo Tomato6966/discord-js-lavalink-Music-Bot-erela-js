@@ -74,12 +74,13 @@ Well then skip step **` 5. `**
       "nodes": [
          {
             "host": "lava.link",
-            "port": 2333,
-            "password": "youshallnotpass"
+            "port": 80,
+            "password": "anything as password"
          }
       ]
 },
 ```
+> Find more hosts [here](https://lavalink.darrennathanael.com/#how2host)
 
 <br/>
 
