@@ -73,9 +73,9 @@ Well then skip step **` 5. `**
 "clientsettings": {
       "nodes": [
          {
-            "host": "lavalink.eu",
+            "host": "lava.link",
             "port": 2333,
-            "password": "Raccoon"
+            "password": "youshallnotpass"
          }
       ]
 },
