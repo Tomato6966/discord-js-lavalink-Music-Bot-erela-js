@@ -56,5 +56,5 @@ module.exports = {
  * @INFO
  * Please mention Him / Milrato Development, when using this Code!
  * @INFO
- * Fixed Almazmsi
+ * Fix Almazmsi | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js/issues/100
  */
