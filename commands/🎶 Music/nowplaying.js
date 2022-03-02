@@ -28,9 +28,9 @@ module.exports = {
         ]
       });
     const embed = new MessageEmbed()
-      .setAuthor(client.getFooter(`Current song playing:`, message.guild.iconURL({
-        dynamic: true
-      })))
+      //.setAuthor(client.getFooter(`Current song playing:`, message.guild.iconURL({
+        //dynamic: true
+      //})))
       .setThumbnail(`https://img.youtube.com/vi/${player.queue.current.identifier}/mqdefault.jpg`)
       .setURL(player.queue.current.uri)
       .setColor(es.color)
@@ -56,4 +56,5 @@ module.exports = {
  * @INFO
  * Please mention Him / Milrato Development, when using this Code!
  * @INFO
+ * Fix Almazmsi | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js/issues/100
  */

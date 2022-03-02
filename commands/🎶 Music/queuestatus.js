@@ -35,7 +35,7 @@ module.exports = {
 
     embed.addField(eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variablex_4"]), eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variable4"]))
     if (player.queue && player.queue.current) {
-      embed.addField(eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variablex_5"]), eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variable5"]))
+     // embed.addField(eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variablex_5"]), eval(client.la[ls]["cmds"]["music"]["queuestatus"]["variable5"]))
     }
     message.reply({
       embeds: [embed]
@@ -51,4 +51,5 @@ module.exports = {
  * @INFO
  * Please mention Him / Milrato Development, when using this Code!
  * @INFO
+ * Fix Almazmsi | https://github.com/Tomato6966/discord-js-lavalink-Music-Bot-erela-js/issues/100
  */
