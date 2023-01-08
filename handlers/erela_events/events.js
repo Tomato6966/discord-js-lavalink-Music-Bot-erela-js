@@ -326,6 +326,9 @@ module.exports = (client) => {
         started = false;
       }, 5000)
     })
+.on("playerDisconnect", async (player) => {
+if (player) return player.destroy()
+})
     .on(`playerCreate`, async (player) => {
       playercreated.set(player.guild, true)
       //for checking the relevant messages
