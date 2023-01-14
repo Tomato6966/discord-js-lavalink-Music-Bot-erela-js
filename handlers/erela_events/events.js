@@ -436,7 +436,10 @@ module.exports = (client) => {
         }, client.ws.ping * 2);
       }
     })
-    .on(`playerDestroy`, async (player) => {
+    	.on("playerDisconnect", async (player) => {
+		if (player) return player.destroy()
+	})
+.on(`playerDestroy`, async (player) => {
       //clear the interval for the music system
       clearInterval(playerintervals.get(player.guild))
       playerintervals.delete(player.guild);
