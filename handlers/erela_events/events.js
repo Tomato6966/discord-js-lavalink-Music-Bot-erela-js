@@ -454,6 +454,12 @@ module.exports = (client) => {
       }
 
     })
+  
+  //solution channel <#null>
+  .on("playerDisconnect", async (player) => {
+      if (player) return player.destroy()
+    })
+
     .on(`trackStart`, async (player, track) => {
       try {
         try {
