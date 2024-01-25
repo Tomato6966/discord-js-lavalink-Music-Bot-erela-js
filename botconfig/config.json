@@ -5,8 +5,8 @@
       "442355791412854784"
    ],
    "status": {
-      "text": "{prefix}help | played {songsplayed} Songs on {guildcount} Guilds | Support: discord.gg/milrato",
-      "text2": "By: milrato.dev",
+      "text": "{prefix}help | played {songsplayed} Songs on {guildcount} Guilds | Support: https://discord.gg/secretw",
+      "text2": "By: ctrl",
       "type": "PLAYING",
       "url": "https://twitch.tv/#"
    },
